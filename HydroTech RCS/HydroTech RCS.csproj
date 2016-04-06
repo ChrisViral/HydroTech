@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A6616A0F-8958-4DCD-BE81-C6B0943B1EBA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HydroTech_RCS</RootNamespace>
+    <AssemblyName>HydroTech RCS</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Output\GameData\HydroTech\Plugins\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HydroTech_FC, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\GameData\HydroTech\Plugins\HydroTech_FC.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KSPUtil">
+      <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\KSPUtil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Autopilots\APDockAssist0.cs" />
+    <Compile Include="Autopilots\APDockAssist1.cs" />
+    <Compile Include="Autopilots\APLanding0.cs" />
+    <Compile Include="Autopilots\APLanding1.cs" />
+    <Compile Include="Autopilots\APLanding2.cs" />
+    <Compile Include="Autopilots\APPreciseControl.cs" />
+    <Compile Include="Autopilots\APTranslation.cs" />
+    <Compile Include="Autopilots\ASAS\CalculatorDocking.cs" />
+    <Compile Include="Autopilots\ASAS\CalculatorHoldDir.cs" />
+    <Compile Include="Autopilots\ASAS\CalculatorKillRotation.cs" />
+    <Compile Include="Autopilots\ASAS\CalculatorLanding.cs" />
+    <Compile Include="Autopilots\Autopilot.cs" />
+    <Compile Include="Autopilots\Modules\CalculatorDescent.cs" />
+    <Compile Include="Autopilots\Modules\CalculatorEngineThrust.cs" />
+    <Compile Include="Autopilots\Modules\CalculatorRCSThrust.cs" />
+    <Compile Include="Autopilots\Modules\CalculatorVesselInfoBasic.cs" />
+    <Compile Include="Autopilots\Modules\DetectorGroundContact.cs" />
+    <Compile Include="Constants\Autopilots\Acceleration.cs" />
+    <Compile Include="Constants\Autopilots\Angle.cs" />
+    <Compile Include="Constants\Autopilots\AngularAcc.cs" />
+    <Compile Include="Constants\Autopilots\AngularV.cs" />
+    <Compile Include="Constants\Autopilots\Default.cs" />
+    <Compile Include="Constants\Autopilots\Position.cs" />
+    <Compile Include="Constants\Autopilots\Rotation.cs" />
+    <Compile Include="Constants\Autopilots\String.cs" />
+    <Compile Include="Constants\Autopilots\Translation.cs" />
+    <Compile Include="Constants\Autopilots\Velocity.cs" />
+    <Compile Include="Constants\Core\Behaviours.cs" />
+    <Compile Include="Constants\Core\CoreConstants.cs" />
+    <Compile Include="Constants\Core\EventStrings.cs" />
+    <Compile Include="Constants\Panels\PanelTitles.cs" />
+    <Compile Include="Constants\Panels\WindowPositions.cs" />
+    <Compile Include="Constants\PartModules\ConfigNodes.cs" />
+    <Compile Include="Constants\Units\UnitStrings.cs" />
+    <Compile Include="HydroJebCore.cs" />
+    <Compile Include="Panels\IPanelEditor.cs" />
+    <Compile Include="Panels\Panel.cs" />
+    <Compile Include="Panels\PanelDebug.cs" />
+    <Compile Include="Panels\PanelDockAssist0.cs" />
+    <Compile Include="Panels\PanelDockAssist1.cs" />
+    <Compile Include="Panels\PanelDockAssist2.cs" />
+    <Compile Include="Panels\PanelDockAssist3.cs" />
+    <Compile Include="Panels\PanelDockAssist4.cs" />
+    <Compile Include="Panels\PanelDockAssistEditorAid0.cs" />
+    <Compile Include="Panels\PanelDockAssistEditorAid1.cs" />
+    <Compile Include="Panels\PanelLanding0.cs" />
+    <Compile Include="Panels\PanelLanding1.cs" />
+    <Compile Include="Panels\PanelLandingAdvInfo.cs" />
+    <Compile Include="Panels\PanelMain.cs" />
+    <Compile Include="Panels\PanelMainThrottle.cs" />
+    <Compile Include="Panels\PanelPreciseControl0.cs" />
+    <Compile Include="Panels\PanelPreciseControl1.cs" />
+    <Compile Include="Panels\PanelRCSThrustInfo0.cs" />
+    <Compile Include="Panels\PanelRCSThrustInfo1.cs" />
+    <Compile Include="Panels\PanelTranlation0.cs" />
+    <Compile Include="Panels\PanelTranslation1.cs" />
+    <Compile Include="Panels\PanelwAP.cs" />
+    <Compile Include="Panels\UI\UIMultiPageList.cs" />
+    <Compile Include="Panels\UI\UISingleSelectionList.cs" />
+    <Compile Include="PartModules\Base\HydroPartModulewPanel.cs" />
+    <Compile Include="PartModules\Base\ModuleActiveIndicator.cs" />
+    <Compile Include="PartModules\Base\PartModuleInterfaces.cs" />
+    <Compile Include="PartModules\ModuleActiveHydroJebIndicator.cs" />
+    <Compile Include="PartModules\ModuleDockAssistCam.cs" />
+    <Compile Include="PartModules\ModuleDockAssistTarget.cs" />
+    <Compile Include="PartModules\ModuleHydroASAS.cs" />
+    <Compile Include="PartModules\ModulePartRename.cs" />
+    <Compile Include="Parts\PartDockAssistCam.cs" />
+    <Compile Include="Parts\PartJeb.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Output\*" "D:\Games\KSP Modding\*" /D /E /C /R /I /K /Y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
