@@ -17,39 +17,39 @@ public class HydroJeb : Part
     protected override void onEditorUpdate()
     {
         base.onEditorUpdate();
-        HydroJebCore.onEditorUpdate(this);
+        HydroJebCore.OnEditorUpdate(this);
     }
     protected override void onFlightStart()
     {
         base.onFlightStart();
         SetIcon();
-        HydroJebCore.onFlightStart(this);
+        HydroJebCore.OnFlightStart(this);
     }
     protected override void onGamePause()
     {
         base.onGamePause();
-        HydroJebCore.onGamePause(this);
+        HydroJebCore.OnGamePause(this);
     }
     protected override void onGameResume()
     {
         base.onGameResume();
-        HydroJebCore.onGameResume(this);
+        HydroJebCore.OnGameResume(this);
     }
     protected override void onPartDestroy()
     {
         base.onPartDestroy();
-        HydroJebCore.onPartDestroy(this);
+        HydroJebCore.OnPartDestroy(this);
     }
     protected override void onPartStart()
     {
         base.onPartStart();
         SetIcon();
-        HydroJebCore.onPartStart(this);
+        HydroJebCore.OnPartStart(this);
     }
     protected override void onPartUpdate()
     {
         base.onPartUpdate();
-        HydroJebCore.onPartUpdate(this);
+        HydroJebCore.OnPartUpdate(this);
         double electricChargeConsumptionRate = 0.0;
         if (isActiveJeb())
         {

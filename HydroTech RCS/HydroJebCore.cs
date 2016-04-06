@@ -50,7 +50,7 @@ namespace HydroTech_RCS
         public static readonly FileName.Folder PanelSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "panels");
         #endregion
 
-        // Core #1: Autopilot (HydroJeb)
+        #region Core #1: Autopilot (HydroJeb)
         #region Fields
         public static bool isReady = true;
         public static bool electricity;
@@ -65,6 +65,14 @@ namespace HydroTech_RCS
         public static Dictionary<int, IPanelEditor> panelsEditor = new Dictionary<int, IPanelEditor>();
         #endregion
 
+        #region Properties
+        private static bool MainPanel
+        {
+            get { return panels[PanelIDs.Main].PanelShown; }
+            set { panels[PanelIDs.Main].PanelShown = value; }
+        }
+        #endregion
+
         #region Methods
         //TODO: change from deprecated RenderingManager to the AppLauncher
         private static void AddMainButton()
@@ -76,15 +84,17 @@ namespace HydroTech_RCS
         {
             //HydroRenderingManager.RemoveFromPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
         }
-
-        public static void onEditorUpdate(HydroJeb jeb)
+        
+        public static void OnEditorUpdate(HydroJeb jeb)
         {
             try
             {
                 jebsEditor.OnUpdate();
                 activeVesselRCS.OnEditorUpdate();
                 foreach (IPanelEditor p in panelsEditor.Values)
+                {
                     p.OnEditorUpdate();
+                }
             }
             catch (Exception e)
             {
@@ -92,29 +102,35 @@ namespace HydroTech_RCS
             }
         }
 
-        public static void onFlightStart(HydroJeb jeb)
+        public static void OnFlightStart(HydroJeb jeb)
         {
             try
             {
-                if (jebsEditor.Count != 0) // Check for jebsEditor
+                if (jebsEditor.Count != 0) //Check for jebsEditor
                 {
                     jebsEditor.Clear();
                     foreach (IPanelEditor p in panelsEditor.Values)
+                    {
                         p.HideInEditor();
+                    }
                 }
                 jebs.OnStart();
-                if (!jebs.Contains(jeb))
-                    jebs.Add(jeb);
-                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 1)
-                    return;
+                if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
+                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 1) { return; }
                 HydroFlightCameraManager.onFlightStart();
                 foreach (RCSAutopilot ap in autopilots.Values)
+                {
                     ap.OnFlightStart();
+                }
                 foreach (Panel panel in panels.Values)
+                {
                     panel.onFlightStart();
+                }
                 HydroFlightInputManager.onFlightStart();
                 if (HydroRenderingManager.Contains(ManagerConsts.RenderMgr_queueSpot))
+                {
                     RemoveMainButton();
+                }
                 AddMainButton();
                 electricity = true;
             }
@@ -123,23 +139,22 @@ namespace HydroTech_RCS
                 ExceptionHandler(e, "HydroJebCore.onFlightStart(HydroJeb)");
             }
         }
-
-        public static void onGamePause(HydroJeb jeb)
+        
+        public static void OnGamePause(HydroJeb jeb)
         {
             try
             {
-                if (jebs.Contains(jeb))
-                    jebs.Remove(jeb);
-                else
-                    return;
-                if (jeb.vessel != GameStates.ActiveVessel)
-                    return;
-                if (jebs.CountActive != 0)
-                    return;
+                if (!jebs.Contains(jeb)) { jebs.Remove(jeb); }
+                else { return; }
+                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 0) { return; }
                 foreach (Panel panel in panels.Values)
+                {
                     panel.onGamePause();
+                }
                 foreach (RCSAutopilot ap in autopilots.Values)
+                {
                     ap.onGamePause();
+                }
                 RemoveMainButton();
             }
             catch (Exception e)
@@ -148,18 +163,20 @@ namespace HydroTech_RCS
             }
         }
 
-        public static void onGameResume(HydroJeb jeb)
+        public static void OnGameResume(HydroJeb jeb)
         {
             try
             {
-                if (!jebs.Contains(jeb))
-                    jebs.Add(jeb);
-                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 1)
-                    return;
+                if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
+                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 1) { return; }
                 foreach (RCSAutopilot ap in autopilots.Values)
+                {
                     ap.onGameResume();
+                }
                 foreach (Panel panel in panels.Values)
+                {
                     panel.onGameResume();
+                }
                 AddMainButton();
             }
             catch (Exception e)
@@ -168,33 +185,33 @@ namespace HydroTech_RCS
             }
         }
 
-        public static void onPartDestroy(HydroJeb jeb)
+        public static void OnPartDestroy(HydroJeb jeb)
         {
             try
             {
                 if (GameStates.InEditor)
                 {
-                    if (jebsEditor.Contains(jeb))
-                        jebsEditor.Remove(jeb);
-                    else
-                        return;
-                    if (jebsEditor.Count != 0)
-                        return;
+                    if (jebsEditor.Contains(jeb)) { jebsEditor.Remove(jeb); }
+                    else { return; }
+                    if (jebsEditor.Count != 0) { return; }
                     foreach (IPanelEditor p in panelsEditor.Values)
+                    {
                         p.HideInEditor();
+                    }
                 }
                 else if (GameStates.InFlight)
                 {
-                    if (jebs.Contains(jeb))
-                        jebs.Remove(jeb);
-                    else
-                        return;
-                    if (jebs.CountActive != 0)
-                        return;
+                    if (jebs.Contains(jeb)) { jebs.Remove(jeb); }
+                    else { return; }
+                    if (jebs.CountActive != 0) { return; }
                     foreach (Panel panel in panels.Values)
+                    {
                         panel.OnDeactivate();
+                    }
                     foreach (RCSAutopilot ap in autopilots.Values)
+                    {
                         ap.OnDeactivate();
+                    }
                     RemoveMainButton();
                 }
             }
@@ -204,22 +221,27 @@ namespace HydroTech_RCS
             }
         }
 
-        public static void onPartStart(HydroJeb jeb)
+        public static void OnPartStart(HydroJeb jeb)
         {
             try
             {
-                if (!GameStates.InEditor)
-                    return;
+                if (!GameStates.InEditor) { return; }                   
                 bool clear;
                 jebsEditor.OnStart(out clear);
                 if (clear)
+                {
                     foreach (IPanelEditor p in panelsEditor.Values)
+                    {
                         p.HideInEditor();
+                    }
+                }
                 jebsEditor.Add(jeb);
                 if (jebsEditor.Count == 1)
                 {
                     foreach (IPanelEditor p in panelsEditor.Values)
+                    {
                         p.ShowInEditor();
+                    }
                 }
             }
             catch (Exception e)
@@ -228,7 +250,7 @@ namespace HydroTech_RCS
             }
         }
 
-        public static void onPartUpdate(HydroJeb jeb)
+        public static void OnPartUpdate(HydroJeb jeb)
         {
             try
             {
@@ -236,31 +258,38 @@ namespace HydroTech_RCS
                 if (jebs.CountActive == 0)
                 {
                     foreach (Panel panel in panels.Values)
+                    {
                         panel.OnDeactivate();
+                    }
                     foreach (RCSAutopilot ap in autopilots.Values)
+                    {
                         ap.OnDeactivate();
+                    }
                     if (HydroRenderingManager.Contains(ManagerConsts.RenderMgr_queueSpot))
+                    {
                         RemoveMainButton();
+                    }
                 }
                 else
                 {
-                    if (!isActiveJeb(jeb))
-                        return;
+                    if (!isActiveJeb(jeb)) { return; }
                     activeVesselRCS.OnUpdate(GameStates.ActiveVessel);
                     HydroFlightCameraManager.OnUpdate();
                     HydroFlightInputManager.OnUpdate();
                     foreach (RCSAutopilot ap in autopilots.Values)
+                    {
                         ap.OnUpdate();
+                    }
                     foreach (Panel panel in panels.Values)
+                    {
                         panel.OnUpdate();
+                    }
                     if (!HydroRenderingManager.Contains(ManagerConsts.RenderMgr_queueSpot))
+                    {
                         AddMainButton();
-                    if (!isReady)
-                        mainBtnColor = Color.yellow;
-                    else if (!electricity)
-                        mainBtnColor = Color.red;
-                    else
-                        mainBtnColor = Color.green;
+                    }
+                    if (!isReady) { mainBtnColor = Color.yellow; }
+                    else { mainBtnColor = electricity ? Color.green : Color.red; }                      
                 }
             }
             catch (Exception e)
@@ -269,26 +298,19 @@ namespace HydroTech_RCS
             }
         }
 
-        private static bool MainPanel
-        {
-            get { return panels[PanelIDs.Main].PanelShown; }
-            set { panels[PanelIDs.Main].PanelShown = value; }
-        }
-
-        private static void drawGUI()
+        private static void DrawGUI()
         {
             GUI.skin = HighLogic.Skin;
             bool mainBtnRespond = electricity && isReady;
-            if (GUI.Button(
-                    WindowPositions.MainButton,
-                    mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb",
-                    Panel.BtnStyle(mainBtnColor)
-                ) && mainBtnRespond)
+            if (GUI.Button(WindowPositions.MainButton,mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb", Panel.BtnStyle(mainBtnColor)) && mainBtnRespond)
+            {
                 MainPanel = !MainPanel;
+            }
         }
         #endregion
+        #endregion
 
-        //Core #2: Docking Assistant (HydroDockAssistCam, HydroDockAssistTarget)
+        #region Core #2: Docking Assistant (HydroDockAssistCam, HydroDockAssistTarget)
         #region Fields
         public static HydroPartModuleList dockCams = new HydroPartModuleList();
         public static HydroPartModuleList dockTargets = new HydroPartModuleList();
@@ -299,8 +321,7 @@ namespace HydroTech_RCS
         {
             try
             {
-                if (!dockCams.Contains(mcam))
-                    dockCams.Add(mcam);
+                if (!dockCams.Contains(mcam)) { dockCams.Add(mcam); }
                 dockCams.OnUpdate();
             }
             catch (Exception e)
@@ -313,8 +334,7 @@ namespace HydroTech_RCS
         {
             try
             {
-                if (!dockTargets.Contains(mtgt))
-                    dockTargets.Add(mtgt);
+                if (!dockTargets.Contains(mtgt)) { dockTargets.Add(mtgt); }
                 dockTargets.OnUpdate();
             }
             catch (Exception e)
@@ -323,7 +343,11 @@ namespace HydroTech_RCS
             }
         }
 
-        private static void ExceptionHandler(Exception e, String funcName) { GameBehaviours.ExceptionHandler(e, funcName); }
-        #endregion      
+        private static void ExceptionHandler(Exception e, string funcName)
+        {
+            GameBehaviours.ExceptionHandler(e, funcName);
+        }
+        #endregion
+        #endregion
     }
 }
