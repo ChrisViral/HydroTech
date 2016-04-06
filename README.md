@@ -1,0 +1,13 @@
+## LICENSE
+
+Copyright (c) 2016 Christophe Savard
+
+License under [CC-BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+---
+
+### ORIGINAL LICENSE:
+
+3D Models and textures: do not modify for own use unless permission given.
+
+Plugin: feel free to use any part of my code, but making derived classes is encouraged as I have a lot of methods virtual
