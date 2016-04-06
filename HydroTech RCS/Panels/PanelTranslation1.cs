@@ -1,59 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using HydroTech_RCS.Autopilots;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using Autopilots;
-
     public partial class PanelTranslation
     {
-        protected APTranslation.TransDir tempTransMode;
-        protected String X_Text;
-        protected String Y_Text;
-        protected String Z_Text;
-        protected String Rate_Text;
-        protected bool tempRespond;
+        protected string rateText;
         protected bool tempHoldOrient;
+        protected bool tempRespond;
+        protected APTranslation.TransDir tempTransMode;
+        protected string xText;
+        protected string yText;
+        protected string zText;
 
         protected override bool Settings
         {
             set
             {
-                if (value != _Settings)
+                if (value != this.settings)
                 {
                     if (value)
                     {
-                        tempTransMode = Trans_Mode;
-                        tempRespond = respond;
-                        tempHoldOrient = HoldOrient;
+                        this.tempTransMode = TransMode;
+                        this.tempRespond = Respond;
+                        this.tempHoldOrient = HoldOrient;
 
-                        X_Text = thrustVector.x.ToString("#0.00");
-                        Y_Text = thrustVector.y.ToString("#0.00");
-                        Z_Text = thrustVector.z.ToString("#0.00");
-                        Rate_Text = thrustRate.ToString("#0.0");
+                        this.xText = ThrustVector.x.ToString("#0.00");
+                        this.yText = ThrustVector.y.ToString("#0.00");
+                        this.zText = ThrustVector.z.ToString("#0.00");
+                        this.rateText = ThrustRate.ToString("#0.0");
                     }
                     else
                     {
-                        Trans_Mode = tempTransMode;
-                        respond = tempRespond;
-                        HoldOrient = tempHoldOrient;
+                        TransMode = this.tempTransMode;
+                        Respond = this.tempRespond;
+                        HoldOrient = this.tempHoldOrient;
 
-                        if (tempTransMode == APTranslation.TransDir.ADVANCED)
+                        if (this.tempTransMode == APTranslation.TransDir.ADVANCED)
                         {
-                            float X, Y, Z;
-                            if (float.TryParse(X_Text, out X)
-                                && float.TryParse(Y_Text, out Y)
-                                && float.TryParse(Z_Text, out Z)
-                                && (X != 0.0F || Y != 0.0F || Z != 0.0F))
-                                thrustVector = new Vector3(X, Y, Z).normalized;
+                            float x, y, z;
+                            if (float.TryParse(this.xText, out x) && float.TryParse(this.yText, out y) && float.TryParse(this.zText, out z) && ((x != 0.0F) || (y != 0.0F) || (z != 0.0F))) { ThrustVector = new Vector3(x, y, z).normalized; }
                         }
 
                         float tryParse;
-                        if (float.TryParse(Rate_Text, out tryParse) && tryParse >= 0.0F && tryParse <= 1.0F)
-                            thrustRate = tryParse;
+                        if (float.TryParse(this.rateText, out tryParse) && (tryParse >= 0.0F) && (tryParse <= 1.0F)) { ThrustRate = tryParse; }
                     }
                 }
                 base.Settings = value;
@@ -67,59 +58,54 @@ namespace HydroTech_RCS.Panels
             for (int i = 0; i <= 6; i++)
             {
                 APTranslation.TransDir x = (APTranslation.TransDir)i;
-                if (GUILayout.Button(x.ToString(), tempTransMode == x ? BtnStyle(Color.green) : BtnStyle()))
+                if (GUILayout.Button(x.ToString(), this.tempTransMode == x ? BtnStyle(Color.green) : BtnStyle()))
                 {
-                    tempTransMode = x;
-                    if (i != 6)
-                        ResetHeight();
+                    this.tempTransMode = x;
+                    if (i != 6) { ResetHeight(); }
                 }
                 if (i % 2 == 1)
                 {
                     GUILayout.EndVertical();
-                    if (i != 5)
-                        GUILayout.BeginVertical();
+                    if (i != 5) { GUILayout.BeginVertical(); }
                     else
-                        GUILayout.EndHorizontal();
+                    { GUILayout.EndHorizontal(); }
                 }
             }
-            if (tempTransMode == APTranslation.TransDir.ADVANCED)
+            if (this.tempTransMode == APTranslation.TransDir.ADVANCED)
             {
                 GUILayout.BeginVertical();
                 GUILayout.Label("X(+RIGHT)=");
-                X_Text = GUILayout.TextField(X_Text);
+                this.xText = GUILayout.TextField(this.xText);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginVertical();
                 GUILayout.Label("Y(+DOWN)=");
-                Y_Text = GUILayout.TextField(Y_Text);
+                this.yText = GUILayout.TextField(this.yText);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginVertical();
                 GUILayout.Label("Z(+FORWARD)=");
-                Z_Text = GUILayout.TextField(Z_Text);
+                this.zText = GUILayout.TextField(this.zText);
                 GUILayout.EndHorizontal();
 
-                float X, Y, Z;
-                if (float.TryParse(X_Text, out X)
-                    && float.TryParse(Y_Text, out Y)
-                    && float.TryParse(Z_Text, out Z)
-                    && (X != 0.0F || Y != 0.0F || Z != 0.0F))
+                float x, y, z;
+                if (float.TryParse(this.xText, out x) && float.TryParse(this.yText, out y) && float.TryParse(this.zText, out z) && ((x != 0.0F) || (y != 0.0F) || (z != 0.0F)))
                 {
-                    Vector3 tempThrustVector = new Vector3(X, Y, Z).normalized;
+                    Vector3 tempThrustVector = new Vector3(x, y, z).normalized;
                     GUILayout.Label("Normalized vector:");
                     GUILayout.Label(tempThrustVector.ToString("#0.00"));
                 }
                 else
-                    GUILayout.Label("Invalid input", LabelStyle(Color.red));
+                { GUILayout.Label("Invalid input", LabelStyle(Color.red)); }
             }
             GUILayout.BeginHorizontal();
             GUILayout.Label("Thrust rate (0~1)");
-            Rate_Text = GUILayout.TextField(Rate_Text);
+            this.rateText = GUILayout.TextField(this.rateText);
             GUILayout.EndHorizontal();
-            tempRespond = GUILayout.Toggle(tempRespond, "Respond to main throttle");
-            tempHoldOrient = GUILayout.Toggle(tempHoldOrient, "Hold current orientation");
+            this.tempRespond = GUILayout.Toggle(this.tempRespond, "Respond to main throttle");
+            this.tempHoldOrient = GUILayout.Toggle(this.tempHoldOrient, "Hold current orientation");
 
-            base.DrawSettingsUI();
+            DrawSettingsUi();
         }
     }
 }

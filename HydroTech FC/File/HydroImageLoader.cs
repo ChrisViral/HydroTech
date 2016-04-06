@@ -1,46 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using UnityEngine;
 
 namespace HydroTech_FC
 {
-    using UnityEngine;
-
     public class HydroImageLoader
     {
-        public HydroImageLoader(
-            FileName fileName,
-            int width,
-            int height,
-            TextureFormat format = TextureFormat.ARGB32
-            )
+        private FileName filename;
+
+        public Texture2D image;
+
+        public Vector2 Size
         {
-            filename = new FileName(fileName);
-            image = new Texture2D(width, height, format, false);
-        }
-        public HydroImageLoader(
-            FileName fileName,
-            Vector2 size,
-            TextureFormat format = TextureFormat.ARGB32
-            )
-        {
-            filename = new FileName(fileName);
-            image = new Texture2D((int)size.x, (int)size.y, format, false);
+            get { return this.image.texelSize; }
         }
 
-        public Texture2D image = null;
-        private FileName filename = null;
+        public int Width
+        {
+            get { return this.image.width; }
+        }
 
-        public Vector2 Size { get { return image.texelSize; } }
-        public int Width { get { return image.width; } }
-        public int Height { get { return image.height; } }
+        public int Height
+        {
+            get { return this.image.height; }
+        }
+
+        public HydroImageLoader(FileName fileName, int width, int height, TextureFormat format = TextureFormat.ARGB32)
+        {
+            this.filename = new FileName(fileName);
+            this.image = new Texture2D(width, height, format, false);
+        }
+
+        public HydroImageLoader(FileName fileName, Vector2 size, TextureFormat format = TextureFormat.ARGB32)
+        {
+            this.filename = new FileName(fileName);
+            this.image = new Texture2D((int)size.x, (int)size.y, format, false);
+        }
 
         public void Load()
         {
-            new WWW(filename.WWWForm).LoadImageIntoTexture(image);
+            new WWW(this.filename.WwwForm).LoadImageIntoTexture(this.image);
         }
 
-        public static implicit operator Texture2D(HydroImageLoader loader) { return loader.image; }
+        public static implicit operator Texture2D(HydroImageLoader loader)
+        {
+            return loader.image;
+        }
     }
 }

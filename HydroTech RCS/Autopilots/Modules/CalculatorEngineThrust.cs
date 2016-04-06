@@ -1,49 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots.Modules
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using ASAS;
-
     public class CalculatorEngineThrust : CalculatorVesselInfoBasic
     {
-        protected Vector3 chosenDir = Vector3.down;
-        public void SetVector(Vector3 vec) { chosenDir = vec; }
-        public void SetWorldVector(Vector3 wrldVec)
-        {
-            chosenDir = SwitchTransformCalculator.VectorTransform(
-                wrldVec,
-                transformRight,
-                transformDown,
-                transformForward
-                );
-        }
+        protected float maxThrust;
 
-        protected float _MinThrust = 0.0F;
+        protected float minThrust;
+        protected Vector3 chosenDir = Vector3.down;
+
         public float MinThrust
         {
-            get { return _MinThrust; }
-            protected set { _MinThrust = value; }
+            get { return this.minThrust; }
+            protected set { this.minThrust = value; }
         }
-        public float MinAcc { get { return MinThrust / Mass; } }
-        protected float _MaxThrust = 0.0F;
+
+        public float MinAcc
+        {
+            get { return this.MinThrust / this.Mass; }
+        }
+
         public float MaxThrust
         {
-            get { return _MaxThrust; }
-            protected set { _MaxThrust = value; }
+            get { return this.maxThrust; }
+            protected set { this.maxThrust = value; }
         }
-        public float MaxAcc { get { return MaxThrust / Mass; } }
+
+        public float MaxAcc
+        {
+            get { return this.MaxThrust / this.Mass; }
+        }
+
+        public void SetVector(Vector3 vec)
+        {
+            this.chosenDir = vec;
+        }
+
+        public void SetWorldVector(Vector3 wrldVec)
+        {
+            this.chosenDir = SwitchTransformCalculator.VectorTransform(wrldVec, this.transformRight, this.transformDown, this.transformForward);
+        }
 
         protected override void Calculate()
         {
             base.Calculate();
-            MinThrust = 0;
-            MaxThrust = 0;
-            foreach (Part p in partList)
+            this.MinThrust = 0;
+            this.MaxThrust = 0;
+            foreach (Part p in this.partList)
             {
                 foreach (PartModule pm in p.Modules)
                 {
@@ -54,17 +58,12 @@ namespace HydroTech_RCS.Autopilots.Modules
                         {
                             foreach (Transform trans in meng.thrustTransforms)
                             {
-                                Vector3 thrustVector = SwitchTransformCalculator.VectorTransform(
-                                    trans.up,
-                                    transformRight,
-                                    transformDown,
-                                    transformForward
-                                    );
-                                float thrustUnit = 1;// HMaths.DotProduct(thrustVector, chosenDir);
+                                Vector3 thrustVector = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward);
+                                float thrustUnit = 1; // HMaths.DotProduct(thrustVector, chosenDir);
                                 if (thrustUnit > 0.0F)
                                 {
-                                    MinThrust += thrustUnit * meng.minThrust;
-                                    MaxThrust += thrustUnit * meng.maxThrust;
+                                    this.MinThrust += thrustUnit * meng.minThrust;
+                                    this.MaxThrust += thrustUnit * meng.maxThrust;
                                 }
                             }
                         }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HydroTech_RCS.Constants.Autopilots
 {
@@ -9,56 +6,59 @@ namespace HydroTech_RCS.Constants.Autopilots
     {
         public static class Str
         {
-            public const String nameString = "TranslationAP";
+            public const string nameString = "TranslationAP";
         }
     }
+
     namespace Landing
     {
         public static class Str
         {
-            public const String nameString = "LandingAP";
-
             public static class Status
             {
-                public const String DISENGAGED = "Disengaged";
-                public const String IDLE = "Idle";
-                public const String DECELERATE = "Decelerating";
-                public const String DESCEND = "Final Descent";
-                public const String VERTICAL = "Vertical braking";
-                public const String HORIZONTAL = "Horizontal braking";
-                public const String WARP = "Warping";
-                public const String AVOID = "Avoiding contact";
-                public const String LANDED = "Holding orientation";
-                public const String FLOAT = "Holding altitude";
+                public const string disengaged = "Disengaged";
+                public const string idle = "Idle";
+                public const string decelerate = "Decelerating";
+                public const string descend = "Final Descent";
+                public const string vertical = "Vertical braking";
+                public const string horizontal = "Horizontal braking";
+                public const string warp = "Warping";
+                public const string avoid = "Avoiding contact";
+                public const string landed = "Holding orientation";
+                public const string FLOAT = "Holding altitude";
             }
 
             public static class Warning
             {
-                public const String LANDED = "Landed";
-                public const String WARP = "Safe to warp";
-                public const String SAFE = "Safe to land";
-                public const String OK = "Ready to land";
-                public const String DANGER = "Dangerous to land";
-                public const String LOWTWR = "TWR too low";
-                public const String OUTSYNC = "Outside of synchronous altitude";
-                public const String FINAL = "Close to ground";
-                public const String FLOAT = FINAL;
+                public const string landed = "Landed";
+                public const string warp = "Safe to warp";
+                public const string safe = "Safe to land";
+                public const string ok = "Ready to land";
+                public const string danger = "Dangerous to land";
+                public const string lowtwr = "TWR too low";
+                public const string outsync = "Outside of synchronous altitude";
+                public const string final = "Close to ground";
+                public const string FLOAT = final;
             }
+
+            public const string nameString = "LandingAP";
         }
     }
+
     namespace Docking
     {
         public static class Str
         {
-            public const String nameString = "DockAP.Active";
-            public const String nameString_Target = "DockAP.Target";
+            public const string nameString = "DockAP.Active";
+            public const string nameStringTarget = "DockAP.Target";
         }
     }
+
     namespace PreciseControl
     {
         public static class Str
         {
-            public const String nameString = "PreciseAP";
+            public const string nameString = "PreciseAP";
         }
     }
 }

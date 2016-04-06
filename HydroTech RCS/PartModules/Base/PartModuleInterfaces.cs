@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace HydroTech_RCS.PartModules.Base
+﻿namespace HydroTech_RCS.PartModules.Base
 {
     public interface IPartPreview
     {
         void DoPreview();
     }
 
-    public interface IDAPartEditorAid
+    public interface IDaPartEditorAid
     {
         void ShowEditorAid();
+
         void HideEditorAid();
     }
 }

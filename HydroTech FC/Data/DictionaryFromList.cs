@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace HydroTech_FC
 {
-    public class DictionaryFromList<T, U> : Dictionary<T, U>
-        where U : struct
+    public class DictionaryFromList<T, TU> : Dictionary<T, TU> where TU : struct
     {
-        public DictionaryFromList(List<T> keys, U defVal = default(U)) { keyList = keys; defaultValue = defVal; }
+        protected TU defaultValue;
 
-        protected List<T> keyList = null;
-        protected U defaultValue = new U();
+        protected List<T> keyList;
+
+        public DictionaryFromList(List<T> keys, TU defVal = default(TU))
+        {
+            this.keyList = keys;
+            this.defaultValue = defVal;
+        }
 
         public virtual void OnUpdate()
         {
-            foreach (T item in keyList)
-                if (!ContainsKey(item))
-                    Add(item, defaultValue);
+            foreach (T item in this.keyList) { if (!ContainsKey(item)) { Add(item, this.defaultValue); } }
             List<T> keysToRemove = new List<T>();
-            foreach (T item in Keys)
-                if (!keyList.Contains(item))
-                    keysToRemove.Add(item);
-            foreach (T item in keysToRemove)
-                Remove(item);
+            foreach (T item in this.Keys) { if (!this.keyList.Contains(item)) { keysToRemove.Add(item); } }
+            foreach (T item in keysToRemove) { Remove(item); }
         }
     }
 }

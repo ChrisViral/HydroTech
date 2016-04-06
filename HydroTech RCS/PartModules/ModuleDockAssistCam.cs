@@ -1,157 +1,225 @@
 ﻿#define BUGFIX_0_3_8_1
 #define BUGFIX_0_5_X3
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using UnityEngine;
 using HydroTech_FC;
 using HydroTech_RCS;
-using HydroTech_RCS.PartModules.Base;
 using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Autopilots.ASAS;
-using HydroTech_RCS.Panels;
 using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Panels;
+using HydroTech_RCS.PartModules.Base;
+using UnityEngine;
 
-public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorAid
+public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorAid
 {
-    public Vector3 Dir { get { return ReverseTransform_PartConfig(camForward); } }
-    public Vector3 Down { get { return ReverseTransform_PartConfig(-camUp); } }
-    public Vector3 Right { get { return HMaths.CrossProduct(Down, Dir); } }
+    public static ModuleDockAssistCam activeCam;
+
+    protected bool camActivate;
+
+    protected bool isOnActiveVessel;
+
+    [KSPField(isPersistant = true)]
+    public float camClip = 0.01F;
+
+    [KSPField(isPersistant = true)]
+    public Vector3 camCrossPos = Vector3.zero;
+
+    [KSPField(isPersistant = true)]
+    public float camDefFoV = 60.0F;
+
+    [KSPField(isPersistant = true)]
+    public Vector3 camForward = Vector3.forward;
+
+    // Camera settings learned from Fixed Camera
+    [KSPField(isPersistant = true)]
+    public Vector3 camPos = Vector3.zero;
+
+    [KSPField(isPersistant = true)]
+    public Vector3 camUp = Vector3.up;
+
+    LineRenderer lineDir;
+    LineRenderer lineRight;
+    LineRenderer lineUp;
+    public int mag = 1;
+
+    [KSPField(isPersistant = true)]
+    public Vector3 previewForward = -Vector3.forward;
+
+    [KSPField(isPersistant = true)]
+    public float previewFoV = 90.0F;
+
+    [KSPField(isPersistant = true)]
+    public Vector3 previewPos = Vector3.forward;
+
+    [KSPField(isPersistant = true)]
+    public Vector3 previewUp = Vector3.up;
+
+    public Vector3 Dir
+    {
+        get { return ReverseTransform_PartConfig(this.camForward); }
+    }
+
+    public Vector3 Down
+    {
+        get { return ReverseTransform_PartConfig(-this.camUp); }
+    }
+
+    public Vector3 Right
+    {
+        get { return HMaths.CrossProduct(this.Down, this.Dir); }
+    }
+
+    public Vector3 Pos
+    {
+        get { return this.part.Rigidbody.worldCenterOfMass + ReverseTransform_PartConfig(this.camPos); }
+    }
+
+    public Vector3 CrossPos
+    {
+        get { return this.part.Rigidbody.worldCenterOfMass + ReverseTransform_PartConfig(this.camCrossPos); }
+    }
+
+    public Transform VesselTransform
+    {
+        get { return this.vessel.ReferenceTransform; }
+    }
+
+    public bool CamActivate
+    {
+        get { return this.camActivate; }
+        set
+        {
+            if (!this.camActivate && value)
+            {
+                if (activeCam == null) { HydroFlightCameraManager.SaveCurrent(); }
+                HydroFlightCameraManager.SetCallback(DoCamera);
+                activeCam = this;
+            }
+            else if (this.camActivate && !value)
+            {
+                HydroFlightCameraManager.RetrieveLast();
+                this.mag = 1;
+                activeCam = null;
+            }
+            this.camActivate = value;
+        }
+    }
+
+    protected static APDockAssist Da
+    {
+        get { return APDockAssist.TheAutopilot; }
+    }
+
+    protected static PanelDockAssist Panel
+    {
+        get { return PanelDockAssist.ThePanel; }
+    }
+
+    protected static ModuleDockAssistCam CurCam
+    {
+        get { return Da.Cam; }
+        set { Da.Cam = value; }
+    }
+
+    public ModulePartRename ModuleRename
+    {
+        get { return (ModulePartRename)this.part.Modules["ModulePartRename"]; }
+    }
+
+    public void ShowEditorAid()
+    {
+        this.lineDir.SetWidth(0.01F, 0.01F);
+        this.lineDir.SetPosition(0, Vector3.zero);
+        this.lineDir.SetPosition(1, this.camForward);
+        this.lineUp.SetWidth(0.01F, 0.01F);
+        this.lineUp.SetPosition(0, Vector3.zero);
+        this.lineUp.SetPosition(1, this.camUp);
+        this.lineRight.SetWidth(0.01F, 0.01F);
+        this.lineRight.SetPosition(0, Vector3.zero);
+        this.lineRight.SetPosition(1, HMaths.CrossProduct(this.camForward, this.camUp));
+    }
+
+    public void HideEditorAid()
+    {
+        this.lineDir.SetWidth(0.0F, 0.0F);
+        this.lineDir.SetPosition(0, Vector3.zero);
+        this.lineDir.SetPosition(1, Vector3.zero);
+        this.lineUp.SetWidth(0.0F, 0.0F);
+        this.lineUp.SetPosition(0, Vector3.zero);
+        this.lineUp.SetPosition(1, Vector3.zero);
+        this.lineRight.SetWidth(0.0F, 0.0F);
+        this.lineRight.SetPosition(0, Vector3.zero);
+        this.lineRight.SetPosition(1, Vector3.zero);
+    }
+
+    public void DoPreview()
+    {
+        HydroFlightCameraManager.SetNullTarget();
+        HydroFlightCameraManager.SetTransformParent(this.transform);
+        HydroFlightCameraManager.SetFoV(this.previewFoV);
+        HydroFlightCameraManager.SetPosition(this.previewPos);
+        HydroFlightCameraManager.SetRotation(this.previewForward, this.previewUp);
+    }
 
     public Vector3 VectorTransform(Vector3 vec)
     {
-        return SwitchTransformCalculator.VectorTransform(vec, Right, Down, Dir);
+        return SwitchTransformCalculator.VectorTransform(vec, this.Right, this.Down, this.Dir);
     }
+
     public static Vector3 VectorTransform(Vector3 vec, ModuleDockAssistCam mcam)
     {
         return mcam.VectorTransform(vec);
     }
 
-    public Vector3 Pos { get { return part.Rigidbody.worldCenterOfMass + ReverseTransform_PartConfig(camPos); } }
-    public Vector3 CrossPos { get { return part.Rigidbody.worldCenterOfMass + ReverseTransform_PartConfig(camCrossPos); } }
-    public Transform VesselTransform { get { return vessel.ReferenceTransform; } }
-
-    // Camera settings learned from Fixed Camera
-    [KSPField(isPersistant = true)]
-    public Vector3 camPos = Vector3.zero;
-    [KSPField(isPersistant = true)]
-    public Vector3 camForward = Vector3.forward;
-    [KSPField(isPersistant = true)]
-    public Vector3 camUp = Vector3.up;
-    [KSPField(isPersistant = true)]
-    public float camDefFoV = 60.0F;
-    public int mag = 1;
-    [KSPField(isPersistant = true)]
-    public float camClip = 0.01F;
-    [KSPField(isPersistant = true)]
-    public Vector3 camCrossPos = Vector3.zero;
     public void DoCamera()
     {
         HydroFlightCameraManager.SetNullTarget();
-        HydroFlightCameraManager.SetTransformParent(transform);
-        HydroFlightCameraManager.SetPosition(camPos);
-        HydroFlightCameraManager.SetRotation(camForward, camUp);
-        HydroFlightCameraManager.SetFoV(camDefFoV / mag);
-        HydroFlightCameraManager.SetNearClipPlane(camClip);
+        HydroFlightCameraManager.SetTransformParent(this.transform);
+        HydroFlightCameraManager.SetPosition(this.camPos);
+        HydroFlightCameraManager.SetRotation(this.camForward, this.camUp);
+        HydroFlightCameraManager.SetFoV(this.camDefFoV / this.mag);
+        HydroFlightCameraManager.SetNearClipPlane(this.camClip);
     }
 
-    [KSPField(isPersistant = true)]
-    public Vector3 previewPos = Vector3.forward;
-    [KSPField(isPersistant = true)]
-    public Vector3 previewForward = -Vector3.forward;
-    [KSPField(isPersistant = true)]
-    public Vector3 previewUp = Vector3.up;
-    [KSPField(isPersistant = true)]
-    public float previewFoV = 90.0F;
-    public void DoPreview()
-    {
-        HydroFlightCameraManager.SetNullTarget();
-        HydroFlightCameraManager.SetTransformParent(transform);
-        HydroFlightCameraManager.SetFoV(previewFoV);
-        HydroFlightCameraManager.SetPosition(previewPos);
-        HydroFlightCameraManager.SetRotation(previewForward, previewUp);
-    }
-
-    public static ModuleDockAssistCam ActiveCam = null;
-
-    protected bool _CamActivate = false;
-    public bool CamActivate
-    {
-        get { return _CamActivate; }
-        set
-        {
-            if (!_CamActivate && value)
-            {
-                if (ActiveCam == null)
-                    HydroFlightCameraManager.SaveCurrent();
-                HydroFlightCameraManager.SetCallback(DoCamera);
-                ActiveCam = this;
-            }
-            else if (_CamActivate && !value)
-            {
-                HydroFlightCameraManager.RetrieveLast();
-                mag = 1;
-                ActiveCam = null;
-            }
-            _CamActivate = value;
-        }
-    }
-
-    protected static APDockAssist DA { get { return APDockAssist.theAutopilot; } }
-    protected static PanelDockAssist panel { get { return PanelDockAssist.thePanel; } }
-    protected static ModuleDockAssistCam CurCam
-    {
-        get { return DA.cam; }
-        set { DA.cam = value; }
-    }
-
-    protected bool _IsOnActiveVessel = false;
     public bool IsOnActiveVessel()
     {
-        if (vessel != FlightGlobals.ActiveVessel)
+        if (this.vessel != FlightGlobals.ActiveVessel)
         {
-            if (_IsOnActiveVessel && CurCam == this)
+            if (this.isOnActiveVessel && (CurCam == this))
             {
-                panel.ResetHeight();
-                if (CamActivate)
-                    CamActivate = false;
+                Panel.ResetHeight();
+                if (this.CamActivate) { this.CamActivate = false; }
             }
-            _IsOnActiveVessel = false;
+            this.isOnActiveVessel = false;
         }
         else
-            _IsOnActiveVessel = true;
-        return _IsOnActiveVessel;
+        { this.isOnActiveVessel = true; }
+        return this.isOnActiveVessel;
     }
 
     public Vector3 RelPos()
     {
-        Vector3 r = Pos - vessel.findWorldCenterOfMass();
-        return SwitchTransformCalculator.VectorTransform(r, vessel.ReferenceTransform);
+        Vector3 r = this.Pos - this.vessel.findWorldCenterOfMass();
+        return SwitchTransformCalculator.VectorTransform(r, this.vessel.ReferenceTransform);
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
         HydroJebCore.OnUpdate(this);
-        if (CamActivate)
-            part.RequestResource("ElectricCharge", Behaviours.Electric_Consumption_Camera * TimeWarp.deltaTime);
+        if (this.CamActivate) { this.part.RequestResource("ElectricCharge", Behaviours.electricConsumptionCamera * TimeWarp.deltaTime); }
     }
 
     public override void OnFlightStart()
     {
         base.OnFlightStart();
 #if BUGFIX_0_3_8_1
-        if (part.name == "HydroTech.DA.1m")
-            camCrossPos.Set(0, 0.065F, -0.75F);
+        if (this.part.name == "HydroTech.DA.1m") { this.camCrossPos.Set(0, 0.065F, -0.75F); }
 #endif
 #if BUGFIX_0_5_X3
-        if (part.name == "HydroTech.DA.2m")
+        if (this.part.name == "HydroTech.DA.2m")
         {
-            camPos.Set(0, -0.025F, -1.375F);
-            camCrossPos.Set(0, 0.065F, -1.375F);
+            this.camPos.Set(0, -0.025F, -1.375F);
+            this.camCrossPos.Set(0, 0.065F, -1.375F);
         }
 #endif
     }
@@ -159,89 +227,54 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorA
     public override void OnDestroy()
     {
         base.OnDestroy();
-        if (!GameStates.InFlight)
-            return;
+        if (!GameStates.InFlight) { return; }
         if (this == CurCam)
         {
             CurCam = null;
-            panel.ResetHeight();
-            if (CamActivate)
-                CamActivate = false;
+            Panel.ResetHeight();
+            if (this.CamActivate) { this.CamActivate = false; }
         }
     }
 
-    public ModulePartRename ModuleRename { get { return (ModulePartRename)part.Modules["ModulePartRename"]; } }
     public override string ToString()
     {
-        if (ModuleRename.Renamed)
-            return ModuleRename.nameString;
-        else
-            return RelPos().ToString("#0.00");
+        if (this.ModuleRename.Renamed) { return this.ModuleRename.nameString; }
+        return RelPos().ToString("#0.00");
     }
 
-    LineRenderer lineDir = null;
-    LineRenderer lineUp = null;
-    LineRenderer lineRight = null;
-
-    public override void OnStart(PartModule.StartState state)
+    public override void OnStart(StartState state)
     {
         base.OnStart(state);
         if (state == StartState.Editor)
         {
             GameObject obj = new GameObject("DockCamLine");
-            lineDir = obj.AddComponent<LineRenderer>();
-            lineDir.transform.parent = transform;
-            lineDir.useWorldSpace = false;
-            lineDir.transform.localPosition = camPos;
-            lineDir.transform.localEulerAngles = Vector3.zero;
-            lineDir.material = new Material(Shader.Find("Particles/Additive"));
-            lineDir.SetColors(Color.blue, Color.blue);
-            lineDir.SetVertexCount(2);
+            this.lineDir = obj.AddComponent<LineRenderer>();
+            this.lineDir.transform.parent = this.transform;
+            this.lineDir.useWorldSpace = false;
+            this.lineDir.transform.localPosition = this.camPos;
+            this.lineDir.transform.localEulerAngles = Vector3.zero;
+            this.lineDir.material = new Material(Shader.Find("Particles/Additive"));
+            this.lineDir.SetColors(Color.blue, Color.blue);
+            this.lineDir.SetVertexCount(2);
             GameObject obj2 = new GameObject("DockCamLine2");
-            lineUp = obj2.AddComponent<LineRenderer>();
-            lineUp.transform.parent = transform;
-            lineUp.useWorldSpace = false;
-            lineUp.transform.localPosition = camPos;
-            lineUp.transform.localEulerAngles = Vector3.zero;
-            lineUp.material = new Material(Shader.Find("Particles/Additive"));
-            lineUp.SetColors(Color.green, Color.green);
-            lineUp.SetVertexCount(2);
+            this.lineUp = obj2.AddComponent<LineRenderer>();
+            this.lineUp.transform.parent = this.transform;
+            this.lineUp.useWorldSpace = false;
+            this.lineUp.transform.localPosition = this.camPos;
+            this.lineUp.transform.localEulerAngles = Vector3.zero;
+            this.lineUp.material = new Material(Shader.Find("Particles/Additive"));
+            this.lineUp.SetColors(Color.green, Color.green);
+            this.lineUp.SetVertexCount(2);
             GameObject obj3 = new GameObject("DockCamLine3");
-            lineRight = obj3.AddComponent<LineRenderer>();
-            lineRight.transform.parent = transform;
-            lineRight.useWorldSpace = false;
-            lineRight.transform.localPosition = camPos;
-            lineRight.transform.localEulerAngles = Vector3.zero;
-            lineRight.material = new Material(Shader.Find("Particles/Additive"));
-            lineRight.SetColors(Color.gray, Color.gray);
-            lineRight.SetVertexCount(2);
+            this.lineRight = obj3.AddComponent<LineRenderer>();
+            this.lineRight.transform.parent = this.transform;
+            this.lineRight.useWorldSpace = false;
+            this.lineRight.transform.localPosition = this.camPos;
+            this.lineRight.transform.localEulerAngles = Vector3.zero;
+            this.lineRight.material = new Material(Shader.Find("Particles/Additive"));
+            this.lineRight.SetColors(Color.gray, Color.gray);
+            this.lineRight.SetVertexCount(2);
             HideEditorAid();
         }
-    }
-
-    public void ShowEditorAid()
-    {
-        lineDir.SetWidth(0.01F, 0.01F);
-        lineDir.SetPosition(0, Vector3.zero);
-        lineDir.SetPosition(1, camForward);
-        lineUp.SetWidth(0.01F, 0.01F);
-        lineUp.SetPosition(0, Vector3.zero);
-        lineUp.SetPosition(1, camUp);
-        lineRight.SetWidth(0.01F, 0.01F);
-        lineRight.SetPosition(0, Vector3.zero);
-        lineRight.SetPosition(1, HMaths.CrossProduct(camForward, camUp));
-    }
-
-    public void HideEditorAid()
-    {
-        lineDir.SetWidth(0.0F, 0.0F);
-        lineDir.SetPosition(0, Vector3.zero);
-        lineDir.SetPosition(1, Vector3.zero);
-        lineUp.SetWidth(0.0F, 0.0F);
-        lineUp.SetPosition(0, Vector3.zero);
-        lineUp.SetPosition(1, Vector3.zero);
-        lineRight.SetWidth(0.0F, 0.0F);
-        lineRight.SetPosition(0, Vector3.zero);
-        lineRight.SetPosition(1, Vector3.zero);
     }
 }

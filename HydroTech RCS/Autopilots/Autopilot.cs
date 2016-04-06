@@ -1,79 +1,108 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
+using HydroTech_FC;
+using HydroTech_RCS.Autopilots.Modules;
+using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using ASAS;
-    using Modules;
-
-    abstract public class RCSAutopilot : LoadSaveFileBasic
+    public abstract class RcsAutopilot : LoadSaveFileBasic
     {
-        ~RCSAutopilot()
-        {
-            engaged = false;
-            active = false;
-        }
+        protected bool _Active;
 
-        protected bool _Active = false;
-        public virtual bool active
+        protected bool _Engaged;
+
+        protected Vessel drivingVessel;
+
+        public virtual bool Active
         {
-            get { return _Active; }
+            get { return this._Active; }
             set
             {
-                if (engaged && value != _Active)
+                if (this.Engaged && (value != this._Active))
                 {
-                    if (value)
-                        AddDrive();
+                    if (value) { AddDrive(); }
                     else
-                        RemoveDrive();
+                    { RemoveDrive(); }
                 }
-                _Active = value;
+                this._Active = value;
             }
         }
 
-        protected bool _Engaged = false;
-        public virtual bool engaged
+        public virtual bool Engaged
         {
-            get { return active && _Engaged; }
+            get { return this.Active && this._Engaged; }
             set
             {
-                if (!active)
-                    return;
-                if (!_Engaged && value)
+                if (!this.Active) { return; }
+                if (!this._Engaged && value)
                 {
                     AddDrive();
                     RemoveOtherAutopilots();
                 }
-                else if (_Engaged && !value)
-                    RemoveDrive();
-                _Engaged = value;
+                else if (this._Engaged && !value) { RemoveDrive(); }
+                this._Engaged = value;
             }
         }
 
-        protected static Vessel ActiveVessel { get { return GameStates.ActiveVessel; } }
-        protected static CalculatorRCSThrust RCSActive { get { return HydroJebCore.activeVesselRCS; } }
+        protected static Vessel ActiveVessel
+        {
+            get { return GameStates.ActiveVessel; }
+        }
 
-        protected virtual String nameString { get { return "Autopilot"; } }
+        protected static CalculatorRcsThrust RcsActive
+        {
+            get { return HydroJebCore.activeVesselRcs; }
+        }
 
-        protected Vessel drivingVessel = null;
+        protected virtual string NameString
+        {
+            get { return "Autopilot"; }
+        }
+
+        public static RcsAutopilot EngagedAutopilot
+        {
+            get
+            {
+                foreach (RcsAutopilot ap in HydroJebCore.autopilots.Values)
+                {
+                    if (ap.Engaged) { return ap; }
+                }
+                return null;
+            }
+        }
+
+        public static bool AutopilotEngaged
+        {
+            get { return EngagedAutopilot != null; }
+        }
+
+        ~RcsAutopilot()
+        {
+            this.Engaged = false;
+            this.Active = false;
+        }
+
         protected void AddDrive()
         {
-            HydroFlightInputManager.AddOnFlyByWire(ActiveVessel, nameString, DriveAutopilot);
-            drivingVessel = ActiveVessel;
-        }
-        protected void RemoveDrive()
-        {
-            HydroFlightInputManager.RemoveOnFlyByWire(ActiveVessel, nameString, DriveAutopilot);
-            drivingVessel = null;
+            HydroFlightInputManager.AddOnFlyByWire(ActiveVessel, this.NameString, DriveAutopilot);
+            this.drivingVessel = ActiveVessel;
         }
 
-        protected static void TurnOnRCS(Vessel vessel) { HydroActionGroupManager.SetState(vessel, KSPActionGroup.RCS, true); }
-        protected static void TurnOffSAS(Vessel vessel) { HydroActionGroupManager.SetState(vessel, KSPActionGroup.SAS, false); }
+        protected void RemoveDrive()
+        {
+            HydroFlightInputManager.RemoveOnFlyByWire(ActiveVessel, this.NameString, DriveAutopilot);
+            this.drivingVessel = null;
+        }
+
+        protected static void TurnOnRcs(Vessel vessel)
+        {
+            HydroActionGroupManager.SetState(vessel, KSPActionGroup.RCS, true);
+        }
+
+        protected static void TurnOffSas(Vessel vessel)
+        {
+            HydroActionGroupManager.SetState(vessel, KSPActionGroup.SAS, false);
+        }
 
         protected void RemoveUserInput(FlightCtrlState ctrlState)
         {
@@ -93,62 +122,60 @@ namespace HydroTech_RCS.Autopilots
 
         protected void RemoveOtherAutopilots()
         {
-            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values)
-                if (ap != this)
-                    ap.engaged = false;
+            foreach (RcsAutopilot ap in HydroJebCore.autopilots.Values) { if (ap != this) { ap.Engaged = false; } }
         }
-
-        public static RCSAutopilot EngagedAutopilot
-        {
-            get
-            {
-                foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values)
-                    if (ap.engaged)
-                        return ap;
-                return null;
-            }
-        }
-        public static bool AutopilotEngaged { get { return EngagedAutopilot != null; } }
 
         public virtual void OnFlightStart()
         {
             Load();
-            active = true;
-            if (engaged && drivingVessel != ActiveVessel)
+            this.Active = true;
+            if (this.Engaged && (this.drivingVessel != ActiveVessel))
             {
-                drivingVessel = null;
-                _Engaged = false;
+                this.drivingVessel = null;
+                this._Engaged = false;
             }
-            engaged = false;
+            this.Engaged = false;
         }
-        public virtual void onGamePause() { active = false; }
-        public virtual void onGameResume() { active = true; }
-        public virtual void OnDeactivate() { active = false; }
+
+        public virtual void OnGamePause()
+        {
+            this.Active = false;
+        }
+
+        public virtual void OnGameResume()
+        {
+            this.Active = true;
+        }
+
+        public virtual void OnDeactivate()
+        {
+            this.Active = false;
+        }
 
         public virtual void OnUpdate()
         {
-            active = HydroJebCore.electricity;
-            if (engaged)
+            this.Active = HydroJebCore.electricity;
+            if (this.Engaged)
             {
-                if (drivingVessel != ActiveVessel)
+                if (this.drivingVessel != ActiveVessel)
                 {
-                    if (drivingVessel != null)
-                    {
-                        HydroFlightInputManager.RemoveOnFlyByWire(drivingVessel, nameString, DriveAutopilot);
-                    }
+                    if (this.drivingVessel != null) { HydroFlightInputManager.RemoveOnFlyByWire(this.drivingVessel, this.NameString, DriveAutopilot); }
                     AddDrive();
                 }
             }
-            if (needSave)
-                Save();
+            if (this.needSave) { Save(); }
         }
 
-        public void MakeSaveAtNextUpdate() { needSave = true; }
+        public void MakeSaveAtNextUpdate()
+        {
+            this.needSave = true;
+        }
 
         protected static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
         {
             return SwitchTransformCalculator.VectorTransform(vec, x, y, z);
         }
+
         protected static Vector3 VectorTransform(Vector3 vec, Transform trans)
         {
             return SwitchTransformCalculator.VectorTransform(vec, trans);
@@ -158,31 +185,34 @@ namespace HydroTech_RCS.Autopilots
         {
             return SwitchTransformCalculator.ReverseVectorTransform(vec, x, y, z);
         }
+
         protected static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
         {
             return SwitchTransformCalculator.ReverseVectorTransform(vec, trans);
         }
 
 #if DEBUG
-        public static String StringCtrlState(FlightCtrlState ctrlState)
+        public static string StringCtrlState(FlightCtrlState ctrlState)
         {
-            return "yaw = " + ctrlState.yaw.ToString("#0.000")
-                + ", roll = " + ctrlState.roll.ToString("#0.000")
-                + ", pitch = " + ctrlState.pitch.ToString("#0.000")
-                + "\nX = " + ctrlState.X.ToString("#0.000")
-                + ", Y = " + ctrlState.Y.ToString("#0.000")
-                + ", Z = " + ctrlState.Z.ToString("#0.000");
+            return "yaw = " + ctrlState.yaw.ToString("#0.000") + ", roll = " + ctrlState.roll.ToString("#0.000") + ", pitch = " + ctrlState.pitch.ToString("#0.000") + "\nX = " + ctrlState.X.ToString("#0.000") + ", Y = " + ctrlState.Y.ToString("#0.000") + ", Z = " + ctrlState.Z.ToString("#0.000");
         }
-        public static void PrintCtrlState(FlightCtrlState ctrlState) { print(StringCtrlState(ctrlState)); }
 
-        public static String StringAllAPStatus()
+        public static void PrintCtrlState(FlightCtrlState ctrlState)
         {
-            String msg = (AutopilotEngaged ? "Autopilot engaged" : "No autopilot engaged");
-            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values)
-                msg += "\n" + ap.nameString + " " + ap.engaged;
+            print(StringCtrlState(ctrlState));
+        }
+
+        public static string StringAllAPStatus()
+        {
+            string msg = AutopilotEngaged ? "Autopilot engaged" : "No autopilot engaged";
+            foreach (RcsAutopilot ap in HydroJebCore.autopilots.Values) { msg += "\n" + ap.NameString + " " + ap.Engaged; }
             return msg;
         }
-        public static void PrintAllAPStatus() { print(StringAllAPStatus()); }
+
+        public static void PrintAllAPStatus()
+        {
+            print(StringAllAPStatus());
+        }
 #endif
     }
 }

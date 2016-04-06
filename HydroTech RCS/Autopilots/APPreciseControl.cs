@@ -1,88 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Constants.Autopilots.PreciseControl;
+using HydroTech_RCS.Constants.Core;
 
 namespace HydroTech_RCS.Autopilots
 {
-    using HydroTech_FC;
-    using Constants.Core;
-    using Constants.Autopilots.PreciseControl;
-
-    public class APPreciseControl : RCSAutopilot
+    public class APPreciseControl : RcsAutopilot
     {
-        public static APPreciseControl theAutopilot { get { return (APPreciseControl)HydroJebCore.autopilots[AutopilotIDs.Precise]; } }
+        public static APPreciseControl TheAutopilot
+        {
+            get { return (APPreciseControl)HydroJebCore.autopilots[AutopilotIDs.precise]; }
+        }
+
+        protected override string nameString
+        {
+            get { return Str.nameString; }
+        }
 
         public APPreciseControl()
         {
-            fileName = new FileName("precise", "cfg", HydroJebCore.AutopilotSaveFolder);
+            this.fileName = new FileName("precise", "cfg", HydroJebCore.autopilotSaveFolder);
         }
-
-        protected override string nameString { get { return Str.nameString; } }
-
-        #region public variables for user input
-
-        #region bool
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "byRate")]
-        public bool byRate = Default.BOOL.byRate;
-
-        #endregion
-
-        #region float
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "RotationRate")]
-        public float RotationRate = Default.FLOAT.RotationRate;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "TranslationRate")]
-        public float TranslationRate = Default.FLOAT.TranslationRate;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "AngularAcc")]
-        public float AngularAcc = Default.FLOAT.AngularAcc;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "Acc")]
-        public float Acc = Default.FLOAT.Acc;
-
-        #endregion
-
-        #region override
-
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            byRate = Default.BOOL.byRate;
-            RotationRate = Default.FLOAT.RotationRate;
-            TranslationRate = Default.FLOAT.TranslationRate;
-            AngularAcc = Default.FLOAT.AngularAcc;
-            Acc = Default.FLOAT.Acc;
-        }
-
-        #endregion
-
-        #endregion
 
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
         {
             base.DriveAutopilot(ctrlState);
-            if (byRate)
+            if (this.byRate)
             {
-                ctrlState.yaw *= RotationRate;
-                ctrlState.roll *= RotationRate;
-                ctrlState.pitch *= RotationRate;
-                ctrlState.X *= TranslationRate;
-                ctrlState.Y *= TranslationRate;
-                ctrlState.Z *= TranslationRate;
+                ctrlState.yaw *= this.rotationRate;
+                ctrlState.roll *= this.rotationRate;
+                ctrlState.pitch *= this.rotationRate;
+                ctrlState.X *= this.translationRate;
+                ctrlState.Y *= this.translationRate;
+                ctrlState.Z *= this.translationRate;
             }
             else
             {
-                RCSActive.MakeRotation(ctrlState, AngularAcc);
-                RCSActive.MakeTranslation(ctrlState, Acc);
+                RcsActive.MakeRotation(ctrlState, this.angularAcc);
+                RcsActive.MakeTranslation(ctrlState, this.acc);
             }
         }
+
+        #region public variables for user input
+
+        #region bool
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "byRate")]
+        public bool byRate = Default.Bool.byRate;
+        #endregion
+
+        #region float
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "RotationRate")]
+        public float rotationRate = Default.Float.rotationRate;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TranslationRate")]
+        public float translationRate = Default.Float.translationRate;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AngularAcc")]
+        public float angularAcc = Default.Float.angularAcc;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Acc")]
+        public float acc = Default.Float.acc;
+        #endregion
+
+        #region override
+        protected override void LoadDefault()
+        {
+            base.LoadDefault();
+            this.byRate = Default.Bool.byRate;
+            this.rotationRate = Default.Float.rotationRate;
+            this.translationRate = Default.Float.translationRate;
+            this.angularAcc = Default.Float.angularAcc;
+            this.acc = Default.Float.acc;
+        }
+        #endregion
+
+        #endregion
     }
 }

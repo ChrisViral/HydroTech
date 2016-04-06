@@ -3,128 +3,169 @@
 #endif
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using HydroTech_FC;
+using HydroTech_RCS.Constants.Core;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using Constants.Core;
-
-    abstract public class Panel : LoadSaveFileBasic
+    public abstract class Panel : LoadSaveFileBasic
     {
-        ~Panel()
+        protected bool active;
+
+        [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "PanelShown")]
+        public bool panelShown;
+
+        [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "WindowPos", cmd = CMD.Rect_TopLeft)]
+        public Rect windowRect;
+
+        protected abstract int PanelId { get; }
+        public abstract string PanelTitle { get; }
+
+        protected int QueueSpot
         {
-            PanelShown = false;
+            get { return this.PanelId + ManagerConsts.renderMgrQueueSpot; }
         }
 
-        abstract protected int PanelID { get; }
-        abstract public String PanelTitle { get; }
-
-        [HydroSLNodeInfo(name = "PANEL")]
-        [HydroSLField(saveName = "WindowPos", cmd = CMD.Rect_TopLeft)]
-        public Rect windowRect = new Rect();
-
-        abstract protected void SetDefaultWindowRect();
-
-        public void ResetHeight() { windowRect.height = 0; }
-
-        protected int QueueSpot { get { return PanelID + ManagerConsts.RenderMgr_queueSpot; } }
-        protected void AddPanel() { HydroRenderingManager.AddToPostDrawQueue(QueueSpot, drawGUI); }
-        protected void RemovePanel() { HydroRenderingManager.RemoveFromPostDrawQueue(QueueSpot, drawGUI); }
-
-        protected bool _Active = false;
         public virtual bool Active
         {
-            get { return _Active; }
+            get { return this.active; }
             set
             {
-                if (PanelShown && value != _Active)
+                if (this.PanelShown && (value != this.active))
                 {
-                    if (value)
-                        AddPanel();
+                    if (value) { AddPanel(); }
                     else
-                        RemovePanel();
+                    { RemovePanel(); }
                 }
-                _Active = value;
+                this.active = value;
             }
         }
 
-        [HydroSLNodeInfo(name = "PANEL")]
-        [HydroSLField(saveName = "PanelShown")]
-        public bool _PanelShown = false;
         public virtual bool PanelShown
         {
-            get { return _PanelShown; }
+            get { return this.panelShown; }
             set
             {
-                if (!Active)
-                    return;
-                if (value != _PanelShown)
+                if (!this.Active) { return; }
+                if (value != this.panelShown)
                 {
-                    if (value)
-                        AddPanel();
+                    if (value) { AddPanel(); }
                     else
-                        RemovePanel();
-                    needSave = true;
+                    { RemovePanel(); }
+                    this.needSave = true;
                 }
-                _PanelShown = value;
+                this.panelShown = value;
             }
         }
 
-        public static GUIStyle BtnStyle() { return GameGUI.Button.Style(); }
-        public static GUIStyle BtnStyle(Color textColor) { return GameGUI.Button.Style(textColor); }
-        public static GUIStyle BtnStyle_Wrap() { return GameGUI.Button.Wrap(); }
-        public static GUIStyle BtnStyle_Wrap(Color textColor) { return GameGUI.Button.Wrap(textColor); }
-
-        public static GUIStyle LabelStyle() { return GameGUI.Label.Style(); }
-        public static GUIStyle LabelStyle(Color textColor) { return GameGUI.Label.Style(textColor); }
-
-        protected virtual bool LayoutEngageBtn(bool _En)
+        ~Panel()
         {
-            GUIStyle Engage_Btn_Style = BtnStyle(_En ? Color.red : Color.blue);
-            String Engage_Btn_Text = _En ? "DISENGAGE" : "ENGAGE";
-            return GUILayout.Button(Engage_Btn_Text, Engage_Btn_Style);
+            this.PanelShown = false;
         }
 
-        abstract protected void WindowGUI(int WindowID);
-        public virtual void drawGUI()
+        protected abstract void SetDefaultWindowRect();
+
+        public void ResetHeight()
+        {
+            this.windowRect.height = 0;
+        }
+
+        protected void AddPanel()
+        {
+            HydroRenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGui);
+        }
+
+        protected void RemovePanel()
+        {
+            HydroRenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGui);
+        }
+
+        public static GUIStyle BtnStyle()
+        {
+            return GameGUI.Button.Style();
+        }
+
+        public static GUIStyle BtnStyle(Color textColor)
+        {
+            return GameGUI.Button.Style(textColor);
+        }
+
+        public static GUIStyle BtnStyle_Wrap()
+        {
+            return GameGUI.Button.Wrap();
+        }
+
+        public static GUIStyle BtnStyle_Wrap(Color textColor)
+        {
+            return GameGUI.Button.Wrap(textColor);
+        }
+
+        public static GUIStyle LabelStyle()
+        {
+            return GameGUI.Label.Style();
+        }
+
+        public static GUIStyle LabelStyle(Color textColor)
+        {
+            return GameGUI.Label.Style(textColor);
+        }
+
+        protected virtual bool LayoutEngageBtn(bool en)
+        {
+            GUIStyle engageBtnStyle = BtnStyle(en ? Color.red : Color.blue);
+            string engageBtnText = en ? "DISENGAGE" : "ENGAGE";
+            return GUILayout.Button(engageBtnText, engageBtnStyle);
+        }
+
+        protected abstract void WindowGui(int windowId);
+
+        public virtual void DrawGui()
         {
             GUI.skin = HighLogic.Skin;
-            Rect newWindowRect = GUILayout.Window(
-                QueueSpot,
-                windowRect, WindowGUI, PanelTitle);
-            if (newWindowRect.xMin != windowRect.xMin || newWindowRect.yMin != windowRect.yMin)
-                needSave = true;
-            windowRect = newWindowRect;
+            Rect newWindowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGui, this.PanelTitle);
+            if ((newWindowRect.xMin != this.windowRect.xMin) || (newWindowRect.yMin != this.windowRect.yMin)) { this.needSave = true; }
+            this.windowRect = newWindowRect;
         }
 
-        public virtual void onFlightStart()
+        public virtual void OnFlightStart()
         {
-            Active = true;
-            bool tempPanelShown = PanelShown;
+            this.Active = true;
+            bool tempPanelShown = this.PanelShown;
             Load();
-            if (PanelShown && !tempPanelShown)
-                AddPanel();
+            if (this.PanelShown && !tempPanelShown) { AddPanel(); }
         }
 
-        public virtual void onGamePause() { Active = false; }
-        public virtual void onGameResume() { Active = true; }
-        public virtual void OnDeactivate() { Active = false; }
-        public virtual void OnActivate() { Active = true; }
+        public virtual void OnGamePause()
+        {
+            this.Active = false;
+        }
+
+        public virtual void OnGameResume()
+        {
+            this.Active = true;
+        }
+
+        public virtual void OnDeactivate()
+        {
+            this.Active = false;
+        }
+
+        public virtual void OnActivate()
+        {
+            this.Active = true;
+        }
+
         public virtual void OnUpdate()
         {
-            Active = HydroJebCore.electricity;
-            if (needSave)
-                Save();
+            this.Active = HydroJebCore.electricity;
+            if (this.needSave) { Save(); }
         }
 
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            _PanelShown = false;
+            this.panelShown = false;
             SetDefaultWindowRect();
         }
     }

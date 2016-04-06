@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace HydroTech_FC
 {
@@ -13,85 +12,72 @@ namespace HydroTech_FC
     {
         public class HydroFlightInputCallback
         {
-            public HydroFlightInputCallback(Vessel v, String str, FlightInputCallback cb)
-            {
-                vessel = v;
-                nameString = str;
-                callback = cb;
-            }
+            public FlightInputCallback callback;
+            public string nameString = "";
 
-            public Vessel vessel = null;
-            public String nameString = "";
-            public FlightInputCallback callback = null;
+            public Vessel vessel;
+
+            public HydroFlightInputCallback(Vessel v, string str, FlightInputCallback cb)
+            {
+                this.vessel = v;
+                this.nameString = str;
+                this.callback = cb;
+            }
         }
 
         private class HydroFlightInputHandler
         {
+            public Dictionary<string, FlightInputCallback> flightInputList = new Dictionary<string, FlightInputCallback>();
+
+            public bool isDestroyed;
+
+            public Vessel vessel;
+            public Part vesselRootPart;
+
             public HydroFlightInputHandler(Vessel v)
             {
-                vessel = v;
-                vesselRootPart = v.rootPart;
+                this.vessel = v;
+                this.vesselRootPart = v.rootPart;
             }
-
-            public Vessel vessel = null;
-            public Part vesselRootPart = null;
-            public bool isDestroyed = false;
-            public Dictionary<String, FlightInputCallback> flightInputList
-                = new Dictionary<string, FlightInputCallback>();
         }
 
         private static List<HydroFlightInputHandler> handlerList = new List<HydroFlightInputHandler>();
 
         private static bool ContainsVessel(Vessel vessel)
         {
-            if (vessel == null)
-                throw (new Exception("HydroFlightInputManager.ContainsVessel: vessel is null"));
-            foreach (HydroFlightInputHandler handler in handlerList)
-                if (handler.vessel == vessel)
-                    return true;
+            if (vessel == null) { throw new Exception("HydroFlightInputManager.ContainsVessel: vessel is null"); }
+            foreach (HydroFlightInputHandler handler in handlerList) { if (handler.vessel == vessel) { return true; } }
             return false;
         }
 
-        public static bool ContainsNameString(String str)
+        public static bool ContainsNameString(string str)
         {
-            foreach (HydroFlightInputHandler handler in handlerList)
-                if (!handler.isDestroyed && handler.flightInputList.Keys.Contains(str))
-                    return true;
+            foreach (HydroFlightInputHandler handler in handlerList) { if (!handler.isDestroyed && handler.flightInputList.Keys.Contains(str)) { return true; } }
             return false;
         }
 
-        private static Dictionary<String, FlightInputCallback> InputList(Vessel vessel)
+        private static Dictionary<string, FlightInputCallback> InputList(Vessel vessel)
         {
             HydroFlightInputHandler h = null;
             try { h = Handler(vessel); }
-            catch (Exception)
-            {
-                throw (new Exception("HydroFlightInputHandler.InputList fail: vessel not found; please check before calling"));
+            catch (Exception) {
+                throw new Exception("HydroFlightInputHandler.InputList fail: vessel not found; please check before calling");
             }
             return h.flightInputList;
         }
 
         private static HydroFlightInputHandler Handler(Vessel vessel)
         {
-            foreach (HydroFlightInputHandler handler in handlerList)
-                if (handler.vessel == vessel)
-                    return handler;
-            throw (new Exception("HydroFlightInputHandler.Handler fail: vessel not found; please check before calling"));
+            foreach (HydroFlightInputHandler handler in handlerList) { if (handler.vessel == vessel) { return handler; } }
+            throw new Exception("HydroFlightInputHandler.Handler fail: vessel not found; please check before calling");
         }
 
         public static void AddOnFlyByWire(HydroFlightInputCallback callback)
         {
-            if (callback.vessel == null)
-                throw (new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding "
-                    + callback.nameString + ": vessel is null"));
-            if (!ContainsVessel(callback.vessel))
-                handlerList.Add(new HydroFlightInputHandler(callback.vessel));
-            if (InputList(callback.vessel).Values.Contains(callback.callback))
-                throw (new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding "
-                    + callback.nameString + ": OnFlyByWire already added"));
-            if (ContainsNameString(callback.nameString))
-                throw (new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding "
-                    + callback.nameString + ": duplicate nameString"));
+            if (callback.vessel == null) { throw new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding " + callback.nameString + ": vessel is null"); }
+            if (!ContainsVessel(callback.vessel)) { handlerList.Add(new HydroFlightInputHandler(callback.vessel)); }
+            if (InputList(callback.vessel).Values.Contains(callback.callback)) { throw new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding " + callback.nameString + ": OnFlyByWire already added"); }
+            if (ContainsNameString(callback.nameString)) { throw new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding " + callback.nameString + ": duplicate nameString"); }
             InputList(callback.vessel).Add(callback.nameString, callback.callback);
             callback.vessel.OnFlyByWire += callback.callback;
 #if HANDLER_SHOW_ADD_REMOVE
@@ -103,22 +89,13 @@ namespace HydroTech_FC
 
         public static void RemoveOnFlyByWire(HydroFlightInputCallback callback)
         {
-            if (callback.vessel == null)
-                throw (new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing "
-                    + callback.nameString + ": vessel is null"));
-            if (!ContainsVessel(callback.vessel))
-                throw (new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing "
-                    + callback.nameString + ": vessel does not have OnFlyByWire"));
-            if (!InputList(callback.vessel).Values.Contains(callback.callback))
-                throw (new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing "
-                    + callback.nameString + ": OnFlyByWire not found"));
-            if (!InputList(callback.vessel).Keys.Contains(callback.nameString))
-                throw (new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing "
-                    + callback.nameString + ": nameString not found"));
+            if (callback.vessel == null) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": vessel is null"); }
+            if (!ContainsVessel(callback.vessel)) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": vessel does not have OnFlyByWire"); }
+            if (!InputList(callback.vessel).Values.Contains(callback.callback)) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": OnFlyByWire not found"); }
+            if (!InputList(callback.vessel).Keys.Contains(callback.nameString)) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": nameString not found"); }
             InputList(callback.vessel).Remove(callback.nameString);
             callback.vessel.OnFlyByWire -= callback.callback;
-            if (InputList(callback.vessel).Count == 0)
-                handlerList.Remove(Handler(callback.vessel));
+            if (InputList(callback.vessel).Count == 0) { handlerList.Remove(Handler(callback.vessel)); }
 #if HANDLER_SHOW_ADD_REMOVE
             print("Removed an OnFlyByWire, vessel " + (callback.vessel == GameStates.ActiveVessel ? "==" : "!=")
                 + " ActiveVessel, name = " + callback.nameString);
@@ -126,16 +103,17 @@ namespace HydroTech_FC
 #endif
         }
 
-        public static void AddOnFlyByWire(Vessel vessel, String nameString, FlightInputCallback callback)
+        public static void AddOnFlyByWire(Vessel vessel, string nameString, FlightInputCallback callback)
         {
             AddOnFlyByWire(new HydroFlightInputCallback(vessel, nameString, callback));
         }
-        public static void RemoveOnFlyByWire(Vessel vessel, String nameString, FlightInputCallback callback)
+
+        public static void RemoveOnFlyByWire(Vessel vessel, string nameString, FlightInputCallback callback)
         {
             RemoveOnFlyByWire(new HydroFlightInputCallback(vessel, nameString, callback));
         }
 
-        public static void onFlightStart()
+        public static void OnFlightStart()
         {
             handlerList.Clear();
         }
@@ -149,8 +127,7 @@ namespace HydroTech_FC
                 {
                     foreach (Vessel v in FlightGlobals.Vessels)
                     {
-                        if (v.packed || ContainsVessel(v))
-                            continue;
+                        if (v.packed || ContainsVessel(v)) { continue; }
                         if (v.rootPart == handler.vesselRootPart)
                         {
 #if HANDLER_SHOW_ADD_REMOVE
@@ -170,11 +147,12 @@ namespace HydroTech_FC
                         handler.isDestroyed = true;
                     }
                     else
-                        handler.vesselRootPart = handler.vessel.rootPart;
+                    { handler.vesselRootPart = handler.vessel.rootPart; }
                 }
             }
             foreach (HydroFlightInputHandler h in listToRemove)
-            {/*
+            {
+                /*
                 foreach (FlightInputCallback callback in h.flightInputList.Values)
                     h.vesselRootPart.vessel.OnFlyByWire -= callback;*/
                 handlerList.Remove(h);

@@ -1,120 +1,113 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Autopilots.Modules;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using Constants.Core;
-    using Constants.Panels;
-    using Autopilots.Modules;
-
-    public partial class PanelRCSThrustInfo : Panel, IPanelEditor
+    public partial class PanelRcsThrustInfo : Panel, IPanelEditor
     {
-        public static PanelRCSThrustInfo thePanel { get { return (PanelRCSThrustInfo)HydroJebCore.panels[PanelIDs.RCSInfo]; } }
+        protected bool panelShownEditor;
 
-        public PanelRCSThrustInfo()
-        {
-            fileName = new FileName("rcsinfo", "cfg", HydroJebCore.PanelSaveFolder);
-        }
+        protected bool editor;
 
-        protected override int PanelID { get { return PanelIDs.RCSInfo; } }
-        public override string PanelTitle
-        {
-            get
-            {
-                return (editor && editorHide) ?
-                    PanelTitles.RCSInfo_EditorHide
-                    : PanelTitles.RCSInfo;
-            }
-        }
+        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
+        public bool editorHide;
 
-        [HydroSLNodeInfo(name = "PANELEDITOR")]
-        [HydroSLField(saveName = "WindowPos", cmd = CMD.Rect_TopLeft)]
-        public Rect windowRectEditor = new Rect();
-
-        protected override void SetDefaultWindowRect()
-        {
-            windowRect = WindowPositions.RCSInfo;
-            windowRectEditor = WindowPositions.RCSInfo_Editor;
-        }
-
-        protected bool editor = false;
-
-        [HydroSLNodeInfo(name = "PANELEDITOR")]
-        [HydroSLField(saveName = "Minimized")]
-        public bool editorHide = false;
-
-        [HydroSLNodeInfo(name = "PANELEDITOR")]
-        [HydroSLNodeInfo(i = 1, name = "SETTINGS")]
-        [HydroSLField(saveName = "ShowRotation")]
+        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLNodeInfo(i = 1, name = "SETTINGS"), HydroSLField(saveName = "ShowRotation")]
         public bool showRotation = true;
 
-        protected bool _PanelShown_Editor = false;
+        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "WindowPos", cmd = CMD.Rect_TopLeft)]
+        public Rect windowRectEditor;
+
+        public static PanelRcsThrustInfo ThePanel
+        {
+            get { return (PanelRcsThrustInfo)HydroJebCore.panels[PanelIDs.rcsInfo]; }
+        }
+
+        protected override int PanelID
+        {
+            get { return PanelIDs.rcsInfo; }
+        }
+
+        public override string PanelTitle
+        {
+            get { return this.editor && this.editorHide ? PanelTitles.rcsInfoEditorHide : PanelTitles.rcsInfo; }
+        }
+
         public override bool PanelShown
         {
             get
             {
-                if (editor)
-                    return _PanelShown_Editor;
-                else
-                    return base.PanelShown;
+                if (this.editor) { return this.panelShownEditor; }
+                return base.PanelShown;
             }
             set
             {
-                if (editor)
+                if (this.editor)
                 {
-                    if (!Active)
-                        return;
-                    if (value != _PanelShown_Editor)
+                    if (!this.Active) { return; }
+                    if (value != this.panelShownEditor)
                     {
-                        if (value)
-                            AddPanel();
+                        if (value) { AddPanel(); }
                         else
-                            RemovePanel();
+                        { RemovePanel(); }
                     }
-                    _PanelShown_Editor = value;
+                    this.panelShownEditor = value;
                 }
                 else
-                    base.PanelShown = value;
+                { base.PanelShown = value; }
             }
+        }
+
+        protected static CalculatorRcsThrust TheCalculator
+        {
+            get { return HydroJebCore.activeVesselRcs; }
+        }
+
+        public PanelRcsThrustInfo()
+        {
+            this.fileName = new FileName("rcsinfo", "cfg", HydroJebCore.panelSaveFolder);
         }
 
         public void ShowInEditor()
         {
-            Active = true;
-            editor = true;
+            this.Active = true;
+            this.editor = true;
             Load();
             AddPanel();
         }
+
         public void HideInEditor()
         {
-            PanelShown = false;
-            Active = false;
-        }
-        public void OnEditorUpdate()
-        {
-            if (needSave)
-                Save();
+            this.PanelShown = false;
+            this.Active = false;
         }
 
-        protected static CalculatorRCSThrust theCalculator { get { return HydroJebCore.activeVesselRCS; } }
+        public void OnEditorUpdate()
+        {
+            if (this.needSave) { Save(); }
+        }
+
+        protected override void SetDefaultWindowRect()
+        {
+            this.windowRect = WindowPositions.rcsInfo;
+            this.windowRectEditor = WindowPositions.rcsInfoEditor;
+        }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if (theCalculator.AllRCSEnabledChanged)
-                ResetHeight();
+            if (TheCalculator.AllRcsEnabledChanged) { ResetHeight(); }
         }
 
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            _PanelShown_Editor = true;
-            editorHide = false;
-            showRotation = true;
+            this.panelShownEditor = true;
+            this.editorHide = false;
+            this.showRotation = true;
         }
     }
 }

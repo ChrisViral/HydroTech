@@ -1,157 +1,165 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Autopilots.ASAS;
+using HydroTech_RCS.Constants.Autopilots.Translation;
+using HydroTech_RCS.Constants.Core;
+using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using ASAS;
-    using Constants.Core;
-    using Constants.Autopilots.Translation;
-
-    public class APTranslation : RCSAutopilot
+    public class APTranslation : RcsAutopilot
     {
-        public static APTranslation theAutopilot { get { return (APTranslation)HydroJebCore.autopilots[AutopilotIDs.Translation]; } }
-
-        public APTranslation()
+        public enum TransDir
         {
-            fileName = new FileName("translation", "cfg", HydroJebCore.AutopilotSaveFolder);
-        }
-
-        protected override string nameString { get { return Str.nameString; } }
-
-        public enum TransDir { RIGHT, LEFT, DOWN, UP, FORWARD, BACKWARD, ADVANCED }
-
-        #region public variables for user input
-
-        #region bool
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "MainThr")]
-        public bool mainThrottleRespond = Default.BOOL.mainThrottleRespond;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "HoldDir")]
-        public bool _HoldOrient = Default.BOOL.HoldOrient;
-        public bool HoldOrient
-        {
-            get { return _HoldOrient; }
-            set
-            {
-                if (value && !_HoldOrient)
-                {
-                    curOrient = ActiveVessel.ReferenceTransform.up;
-                    curRoll = ActiveVessel.ReferenceTransform.right;
-                }
-                _HoldOrient = value;
-            }
-        }
-
-        #endregion
-
-        #region float
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "ThrustRate")]
-        public float thrustRate = Default.FLOAT.thrustRate;
-
-        #endregion
-
-        #region misc
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "TransMode")]
-        public TransDir _Trans_Mode = Default.MISC.Trans_Mode;
-        public TransDir Trans_Mode
-        {
-            get { return _Trans_Mode; }
-            set
-            {
-                thrustVector = GetVector(value);
-                _Trans_Mode = value;
-            }
-        }
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "Vector")]
-        public Vector3 thrustVector = Default.MISC.thrustVector;
-
-        #endregion
-
-        #region override
-
-        public override bool engaged
-        {
-            set
-            {
-                if (!active)
-                    return;
-                if (HoldOrient)
-                {
-                    HoldOrient = false;
-                    HoldOrient = true;
-                }
-                base.engaged = value;
-            }
-        }
-
-        #endregion
-
-        #endregion
-
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            HoldOrient = Default.BOOL.HoldOrient;
-            mainThrottleRespond = Default.BOOL.mainThrottleRespond;
-            thrustRate = Default.FLOAT.thrustRate;
-            Trans_Mode = Default.MISC.Trans_Mode;
+            RIGHT,
+            LEFT,
+            DOWN,
+            UP,
+            FORWARD,
+            BACKWARD,
+            ADVANCED
         }
 
         protected Vector3 curOrient;
         protected Vector3 curRoll;
 
+        public static APTranslation TheAutopilot
+        {
+            get { return (APTranslation)HydroJebCore.autopilots[AutopilotIDs.translation]; }
+        }
+
+        protected override string nameString
+        {
+            get { return Str.nameString; }
+        }
+
+        public APTranslation()
+        {
+            this.fileName = new FileName("translation", "cfg", HydroJebCore.autopilotSaveFolder);
+        }
+
+        protected override void LoadDefault()
+        {
+            base.LoadDefault();
+            this.HoldOrient = Default.Bool.holdOrient;
+            this.mainThrottleRespond = Default.Bool.mainThrottleRespond;
+            this.thrustRate = Default.Float.thrustRate;
+            this.TransMode = Default.Misc.transMode;
+        }
+
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
         {
             base.DriveAutopilot(ctrlState);
 
-            if (HoldOrient)
+            if (this.HoldOrient)
             {
                 HydroActionGroupManager.ActiveVessel.SAS = false;
                 HoldDirStateCalculator stateCal = new HoldDirStateCalculator();
-                stateCal.Calculate(curOrient, curRoll, ActiveVessel);
+                stateCal.Calculate(this.curOrient, this.curRoll, ActiveVessel);
                 stateCal.SetCtrlStateRotation(ctrlState);
             }
 
-            float RealThrustRate = thrustRate * (mainThrottleRespond ? ctrlState.mainThrottle : 1.0F);
-            ctrlState.X = -thrustVector.x * RealThrustRate;
-            ctrlState.Y = -thrustVector.y * RealThrustRate;
-            ctrlState.Z = -thrustVector.z * RealThrustRate;
+            float realThrustRate = this.thrustRate * (this.mainThrottleRespond ? ctrlState.mainThrottle : 1.0F);
+            ctrlState.X = -this.thrustVector.x * realThrustRate;
+            ctrlState.Y = -this.thrustVector.y * realThrustRate;
+            ctrlState.Z = -this.thrustVector.z * realThrustRate;
         }
 
-        public static Vector3 GetUnitVector(TransDir Dir)
+        public static Vector3 GetUnitVector(TransDir dir)
         {
-            Vector3 Vec = new Vector3(0.0F, 0.0F, 0.0F);
-            switch (Dir)
+            Vector3 vec = new Vector3(0.0F, 0.0F, 0.0F);
+            switch (dir)
             {
-                case TransDir.RIGHT: Vec.x = 1.0F; break;
-                case TransDir.LEFT: Vec.x = -1.0F; break;
-                case TransDir.DOWN: Vec.y = 1.0F; break;
-                case TransDir.UP: Vec.y = -1.0F; break;
-                case TransDir.FORWARD: Vec.z = 1.0F; break;
-                case TransDir.BACKWARD: Vec.z = -1.0F; break;
+                case TransDir.RIGHT:
+                    vec.x = 1.0F;
+                    break;
+                case TransDir.LEFT:
+                    vec.x = -1.0F;
+                    break;
+                case TransDir.DOWN:
+                    vec.y = 1.0F;
+                    break;
+                case TransDir.UP:
+                    vec.y = -1.0F;
+                    break;
+                case TransDir.FORWARD:
+                    vec.z = 1.0F;
+                    break;
+                case TransDir.BACKWARD:
+                    vec.z = -1.0F;
+                    break;
             }
-            return Vec;
+            return vec;
         }
 
-        protected Vector3 GetVector(TransDir Dir)
+        protected Vector3 GetVector(TransDir dir)
         {
-            if (Dir != TransDir.ADVANCED)
-                return GetUnitVector(Dir);
-            else
-                return thrustVector;
+            if (dir != TransDir.ADVANCED) { return GetUnitVector(dir); }
+            return this.thrustVector;
         }
+
+        #region public variables for user input
+
+        #region bool
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
+        public bool mainThrottleRespond = Default.Bool.mainThrottleRespond;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
+        public bool holdOrient = Default.Bool.holdOrient;
+
+        public bool HoldOrient
+        {
+            get { return this.holdOrient; }
+            set
+            {
+                if (value && !this.holdOrient)
+                {
+                    this.curOrient = ActiveVessel.ReferenceTransform.up;
+                    this.curRoll = ActiveVessel.ReferenceTransform.right;
+                }
+                this.holdOrient = value;
+            }
+        }
+        #endregion
+
+        #region float
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
+        public float thrustRate = Default.Float.thrustRate;
+        #endregion
+
+        #region misc
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TransMode")]
+        public TransDir transMode = Default.Misc.transMode;
+
+        public TransDir TransMode
+        {
+            get { return this.transMode; }
+            set
+            {
+                this.thrustVector = GetVector(value);
+                this.transMode = value;
+            }
+        }
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
+        public Vector3 thrustVector = Default.Misc.thrustVector;
+        #endregion
+
+        #region override
+        public override bool engaged
+        {
+            set
+            {
+                if (!this.Active) { return; }
+                if (this.HoldOrient)
+                {
+                    this.HoldOrient = false;
+                    this.HoldOrient = true;
+                }
+                this.Engaged = value;
+            }
+        }
+        #endregion
+
+        #endregion
     }
 }

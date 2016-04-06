@@ -1,33 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using Constants.Core;
-    using Constants.Panels;
-
     public class PanelMain : Panel
     {
-        public PanelMain()
+        protected override int PanelID
         {
-            fileName = new HydroTech_FC.FileName("main", "cfg", HydroJebCore.PanelSaveFolder);
+            get { return PanelIDs.main; }
         }
 
-        protected override int PanelID { get { return PanelIDs.Main; } }
-        public override string PanelTitle { get { return PanelTitles.Main; } }
+        public override string PanelTitle
+        {
+            get { return PanelTitles.main; }
+        }
 
-        protected override void SetDefaultWindowRect() { windowRect = WindowPositions.Main; }
+        public PanelMain()
+        {
+            this.fileName = new FileName("main", "cfg", HydroJebCore.panelSaveFolder);
+        }
 
-        protected override void WindowGUI(int WindowID)
+        protected override void SetDefaultWindowRect()
+        {
+            this.windowRect = WindowPositions.main;
+        }
+
+        protected override void WindowGUI(int windowId)
         {
             GUILayout.BeginVertical();
             foreach (Panel panel in HydroJebCore.panels.Values)
             {
-                if (panel == this)
-                    continue;
+                if (panel == this) { continue; }
                 panel.PanelShown = GUILayout.Toggle(panel.PanelShown, panel.PanelTitle);
             }
             GUILayout.EndVertical();
@@ -36,7 +41,7 @@ namespace HydroTech_RCS.Panels
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            _PanelShown = true;
+            this.panelShown = true;
         }
     }
 }

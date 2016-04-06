@@ -1,114 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Constants.Autopilots.Landing;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Panels;
 
 namespace HydroTech_RCS.Autopilots
 {
-    using HydroTech_FC;
-    using Constants.Core;
-    using Constants.Autopilots.Landing;
-    using Panels;
-
-    public partial class APLanding : RCSAutopilot
+    public partial class APLanding : RcsAutopilot
     {
-        public static APLanding theAutopilot { get { return (APLanding)HydroJebCore.autopilots[AutopilotIDs.Landing]; } }
-        public static PanelLanding panel { get { return PanelLanding.thePanel; } }
+        public enum Indicator
+        {
+            LANDED,
+            SAFE,
+            WARP,
+            OK,
+            DANGER,
+            LOWTWR,
+            OUTSYNC,
+            FINAL,
+            HOVER
+        }
+
+        public enum Status
+        {
+            DISENGAGED,
+            IDLE,
+            HORIZONTAL,
+            VERTICAL,
+            DECELERATE,
+            DESCEND,
+            AVOID,
+            WARP,
+            LANDED,
+            HOVER
+        }
+
+        public static APLanding TheAutopilot
+        {
+            get { return (APLanding)HydroJebCore.autopilots[AutopilotIDs.landing]; }
+        }
+
+        public static PanelLanding Panel
+        {
+            get { return PanelLanding.ThePanel; }
+        }
+
+        protected override string nameString
+        {
+            get { return Str.nameString; }
+        }
 
         public APLanding()
         {
-            fileName = new FileName("landing", "cfg", HydroJebCore.AutopilotSaveFolder);
+            this.fileName = new FileName("landing", "cfg", HydroJebCore.autopilotSaveFolder);
         }
-
-        protected override string nameString { get { return Str.nameString; } }
-
-        public enum Status { DISENGAGED, IDLE, HORIZONTAL, VERTICAL, DECELERATE, DESCEND, AVOID, WARP, LANDED, HOVER }
-        public enum Indicator { LANDED, SAFE, WARP, OK, DANGER, LOWTWR, OUTSYNC, FINAL, HOVER }
-
-        #region public variables for user input
-
-        #region bool
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "PointUp")]
-        public bool VABPod = Default.BOOL.VABPod;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "UseEngines")]
-        public bool _Engines = Default.BOOL.Engine;
-        public bool Engines
-        {
-            get { return _Engines; }
-            set
-            {
-                if (value != _Engines)
-                    panel.ResetHeight();
-                _Engines = value;
-            }
-        }
-
-        [HydroSLNodeInfo(name = "SETTIINGS")]
-        [HydroSLField(saveName = "BurnRetro", isTesting = true)]
-        public bool burnRetro = Default.BOOL.burnRetro;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "Touchdown")]
-        public bool touchdown = Default.BOOL.touchdown;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "TrueAlt")]
-        public bool useTrueAlt = Default.BOOL.useTrueAlt;
-
-        #endregion
-
-        #region float
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "TouchdownSpeed")]
-        public float safeTouchDownSpeed = Default.FLOAT.safeTouchDownSpeed;
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "MaxThrottle")]
-        public float maxThrottle = Default.FLOAT.maxThrottle;
-        public float MaxThrottle
-        {
-            get { return maxThrottle * 100; }
-            set { maxThrottle = value / 100; }
-        }
-
-        [HydroSLNodeInfo(name = "SETTINGS")]
-        [HydroSLField(saveName = "Altitude")]
-        public float altKeep = Default.FLOAT.altKeep;
-
-        #endregion
-
-        #region override
-
-        public override bool engaged
-        {
-            set
-            {
-                if (value != _Engaged)
-                    panel.ResetHeight();
-                base.engaged = value;
-            }
-        }
-
-        #endregion
-
-        #endregion
 
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            VABPod = Default.BOOL.VABPod;
-            _Engines = Default.BOOL.Engine;
-            burnRetro = Default.BOOL.burnRetro;
-            touchdown = Default.BOOL.touchdown;
-            useTrueAlt = Default.BOOL.useTrueAlt;
-            safeTouchDownSpeed = Default.FLOAT.safeTouchDownSpeed;
-            maxThrottle = Default.FLOAT.maxThrottle;
-            altKeep = Default.FLOAT.altKeep;
+            this.vabPod = Default.Bool.vabPod;
+            this.engines = Default.Bool.engine;
+            this.burnRetro = Default.Bool.burnRetro;
+            this.touchdown = Default.Bool.touchdown;
+            this.useTrueAlt = Default.Bool.useTrueAlt;
+            this.safeTouchDownSpeed = Default.Float.safeTouchDownSpeed;
+            this.maxThrottle = Default.Float.maxThrottle;
+            this.altKeep = Default.Float.altKeep;
         }
+
+        #region public variables for user input
+
+        #region bool
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "PointUp")]
+        public bool vabPod = Default.Bool.vabPod;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "UseEngines")]
+        public bool engines = Default.Bool.engine;
+
+        public bool Engines
+        {
+            get { return this.engines; }
+            set
+            {
+                if (value != this.engines) { Panel.ResetHeight(); }
+                this.engines = value;
+            }
+        }
+
+        [HydroSLNodeInfo(name = "SETTIINGS"), HydroSLField(saveName = "BurnRetro", isTesting = true)]
+        public bool burnRetro = Default.Bool.burnRetro;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Touchdown")]
+        public bool touchdown = Default.Bool.touchdown;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TrueAlt")]
+        public bool useTrueAlt = Default.Bool.useTrueAlt;
+        #endregion
+
+        #region float
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TouchdownSpeed")]
+        public float safeTouchDownSpeed = Default.Float.safeTouchDownSpeed;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MaxThrottle")]
+        public float maxThrottle = Default.Float.maxThrottle;
+
+        public float MaxThrottle
+        {
+            get { return this.maxThrottle * 100; }
+            set { this.maxThrottle = value / 100; }
+        }
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Altitude")]
+        public float altKeep = Default.Float.altKeep;
+        #endregion
+
+        #region override
+        public override bool engaged
+        {
+            set
+            {
+                if (value != this._Engaged) { Panel.ResetHeight(); }
+                this.Engaged = value;
+            }
+        }
+        #endregion
+
+        #endregion
     }
 }

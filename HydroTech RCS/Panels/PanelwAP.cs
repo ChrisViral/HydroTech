@@ -1,68 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-
-    abstract public class PanelwAP : Panel
+    public abstract class PanelwAP : Panel
     {
-        abstract protected bool Engaged { get; set; }
-        abstract protected void MakeAPSave();
+        protected bool settings;
+        protected abstract bool Engaged { get; set; }
 
-        protected bool _Settings = false;
         protected virtual bool Settings
         {
-            get { return _Settings; }
+            get { return this.settings; }
             set
             {
-                if (value != _Settings)
+                if (value != this.settings)
                 {
-                    if (!value)
-                        MakeAPSave();
+                    if (!value) { MakeAPSave(); }
                     ResetHeight();
                 }
-                _Settings = value;
+                this.settings = value;
             }
         }
 
-        protected virtual void DrawSettingsUI()
+        protected abstract void MakeAPSave();
+
+        protected virtual void DrawSettingsUi()
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("OK"))
-                Settings = false;
-            if (Engaged && GUILayout.Button("Apply"))
+            if (GUILayout.Button("OK")) { this.Settings = false; }
+            if (this.Engaged && GUILayout.Button("Apply"))
             {
-                Settings = false;
-                Settings = true;
+                this.Settings = false;
+                this.Settings = true;
             }
             if (GUILayout.Button("Cancel"))
             {
-                _Settings = false;
+                this.settings = false;
                 ResetHeight();
             }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button(
-                (Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE"),
-                BtnStyle_Wrap(Engaged ? Color.red : Color.green)
-                ))
+            if (GUILayout.Button(this.Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE", BtnStyle_Wrap(this.Engaged ? Color.red : Color.green)))
             {
-                if (!Engaged)
+                if (!this.Engaged)
                 {
-                    Settings = false;
-                    Settings = true;
+                    this.Settings = false;
+                    this.Settings = true;
                 }
-                Engaged = !Engaged;
+                this.Engaged = !this.Engaged;
             }
         }
 
         public override void onFlightStart()
         {
-            base.onFlightStart();
-            _Settings = false;
+            OnFlightStart();
+            this.settings = false;
         }
     }
 }

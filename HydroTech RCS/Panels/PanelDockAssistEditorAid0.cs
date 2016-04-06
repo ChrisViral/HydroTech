@@ -1,54 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using HydroTech_RCS.Panels.UI;
 
 namespace HydroTech_RCS.Panels
 {
-    using HydroTech_FC;
-    using UI;
-    using Constants.Core;
-    using Constants.Panels;
-
     public partial class PanelDockAssistEditorAid : Panel, IPanelEditor
     {
-        public PanelDockAssistEditorAid()
+        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
+        public bool editorHide;
+
+        protected override int PanelID
         {
-            fileName = new FileName("dockeditor", "cfg", HydroJebCore.PanelSaveFolder);
-            cams = new AffiliationList<Part, ModuleDockAssistCam>(
-                null, // EditorLogic.SortedShipList has not been initialized yet
-                (AffiliationList<Part, ModuleDockAssistCam>.GetItemFunction_Multi)GetCam
-                );
-            targets = new AffiliationList<Part, ModuleDockAssistTarget>(
-                null,
-                (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunction_Multi)GetTgt
-                );
-            camset = new DictionaryFromList<ModuleDockAssistCam, DAEditorSet>(cams, new DAEditorSet(false));
-            tgtset = new DictionaryFromList<ModuleDockAssistTarget, DAEditorSet>(targets, new DAEditorSet(false));
-            camUI = new MultiPageListUI<ModuleDockAssistCam>(cams, 2);
-            tgtUI = new MultiPageListUI<ModuleDockAssistTarget>(targets, 2);
+            get { return PanelIDs.dock; }
         }
 
-        protected override int PanelID { get { return PanelIDs.Dock; } }
         public override string PanelTitle
         {
-            get
-            {
-                return editorHide ?
-                    PanelTitles.DockAssistEditorAid_Hide
-                    : PanelTitles.DockAssistEditorAid;
-            }
+            get { return this.editorHide ? PanelTitles.dockAssistEditorAidHide : PanelTitles.dockAssistEditorAid; }
         }
 
-        protected override void SetDefaultWindowRect() { windowRect = WindowPositions.DockAssistEditor; }
-
-        [HydroSLNodeInfo(name = "PANELEDITOR")]
-        [HydroSLField(saveName = "Minimized")]
-        public bool editorHide = false;
+        public PanelDockAssistEditorAid()
+        {
+            this.fileName = new FileName("dockeditor", "cfg", HydroJebCore.panelSaveFolder);
+            this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, // EditorLogic.SortedShipList has not been initialized yet
+                (AffiliationList<Part, ModuleDockAssistCam>.GetItemFunction_Multi)GetCam);
+            this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunction_Multi)GetTgt);
+            this.camset = new DictionaryFromList<ModuleDockAssistCam, DaEditorSet>(this.cams, new DaEditorSet(false));
+            this.tgtset = new DictionaryFromList<ModuleDockAssistTarget, DaEditorSet>(this.targets, new DaEditorSet(false));
+            this.camUi = new MultiPageListUi<ModuleDockAssistCam>(this.cams, 2);
+            this.tgtUi = new MultiPageListUi<ModuleDockAssistTarget>(this.targets, 2);
+        }
 
         public void ShowInEditor()
         {
-            Active = true;
+            this.Active = true;
             Load();
             AddPanel();
             OnEditorUpdate();
@@ -57,30 +43,34 @@ namespace HydroTech_RCS.Panels
 
         public void HideInEditor()
         {
-            PanelShown = false;
-            Active = false;
+            this.PanelShown = false;
+            this.Active = false;
         }
 
         public void OnEditorUpdate()
         {
-            cams.SetParent(EditorLogic.SortedShipList);
-            targets.SetParent(EditorLogic.SortedShipList);
-            cams.OnUpdate();
-            targets.OnUpdate();
-            camset.OnUpdate();
-            tgtset.OnUpdate();
-            camUI.OnUpdate();
-            tgtUI.OnUpdate();
-            if (needSave)
-                Save();
+            this.cams.SetParent(EditorLogic.SortedShipList);
+            this.targets.SetParent(EditorLogic.SortedShipList);
+            this.cams.OnUpdate();
+            this.targets.OnUpdate();
+            this.camset.OnUpdate();
+            this.tgtset.OnUpdate();
+            this.camUi.OnUpdate();
+            this.tgtUi.OnUpdate();
+            if (this.needSave) { Save(); }
+        }
+
+        protected override void SetDefaultWindowRect()
+        {
+            this.windowRect = WindowPositions.dockAssistEditor;
         }
 
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            _PanelShown = true;
-            editorHide = false;
-            showCams = true;
+            this.panelShown = true;
+            this.editorHide = false;
+            this.showCams = true;
         }
     }
 }

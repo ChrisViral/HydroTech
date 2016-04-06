@@ -1,94 +1,118 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using UnityEngine;
 using HydroTech_FC;
 using HydroTech_RCS;
-using HydroTech_RCS.PartModules.Base;
-using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Autopilots.ASAS;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Panels;
+using HydroTech_RCS.PartModules.Base;
+using UnityEngine;
+
 #if DEBUG
-public class ModuleHydroASAS : HydroPartModulewPanel
+public class ModuleHydroAsas : HydroPartModulewPanel
 {
-    public enum ASASMode { NONE = 0, HOLDDIR = 1, KILLROT = 2 }
+    public enum AsasMode
+    {
+        NONE = 0,
+        HOLDDIR = 1,
+        KILLROT = 2
+    }
+
+    protected static bool registered;
+
+    private bool asas;
+    private Vector3 dir;
 
     [KSPField(guiActive = true, guiName = "ASAS Mode")]
-    public ASASMode mode = ASASMode.NONE;
+    public AsasMode mode = AsasMode.NONE;
+
     [KSPField(isPersistant = true)]
-    public int Mode = 0;
+    public int Mode;
+
+    private Vector3 right;
+
     [KSPField(isPersistant = true, guiActive = true, guiName = "ASAS Strength")]
     public float strength = 1.0F;
 
-    private bool ASAS = false;
-    private bool ASASState { get { return HydroActionGroupManager.ActiveVessel.SAS; } }
-    private Vector3 dir = new Vector3();
-    private Vector3 right = new Vector3();
-    private void SetDir() { dir = ActiveVessel.transform.up; right = ActiveVessel.transform.right; }
-    private Vessel ActiveVessel { get { return GameStates.ActiveVessel; } }
+    private AsasMode tempMode = AsasMode.NONE;
+    private string tempStrengthText = "1.00";
+
+    private bool AsasState
+    {
+        get { return HydroActionGroupManager.ActiveVessel.SAS; }
+    }
+
+    private Vessel ActiveVessel
+    {
+        get { return GameStates.ActiveVessel; }
+    }
+
+    protected override int QueueSpot
+    {
+        get { return ManagerConsts.renderMgrModuleHydroAsas; }
+    }
+
+    protected override string PanelTitle
+    {
+        get { return "ASAS Behaviour"; }
+    }
+
+    protected override bool Registered
+    {
+        get { return registered; }
+        set { registered = value; }
+    }
+
+    private void SetDir()
+    {
+        this.dir = this.ActiveVessel.transform.up;
+        this.right = this.ActiveVessel.transform.right;
+    }
 
     public override void OnLoad(ConfigNode node)
     {
         base.OnLoad(node);
-        mode = (ASASMode)Mode;
-        tempMode = mode;
-        tempStrength_Text = strength.ToString("#0.00");
+        this.mode = (AsasMode)this.Mode;
+        this.tempMode = this.mode;
+        this.tempStrengthText = this.strength.ToString("#0.00");
     }
 
     public override void OnSave(ConfigNode node)
     {
-        Mode = (int)mode;
+        this.Mode = (int)this.mode;
         base.OnSave(node);
     }
 
     [KSPEvent(guiActive = true, guiName = "Set ASAS Behaviour")]
-    public void SetASAS()
+    public void SetAsas()
     {
-        if (!PanelShown)
-            PanelShown = true;
+        if (!this.PanelShown) { this.PanelShown = true; }
     }
 
-    protected override int QueueSpot { get { return ManagerConsts.RenderMgr_ModuleHydroASAS; } }
-    protected override string PanelTitle { get { return "ASAS Behaviour"; } }
-
-    protected static bool _Registered = false;
-    protected override bool Registered
-    {
-        get { return _Registered; }
-        set { _Registered = value; }
-    }
-
-    private ASASMode tempMode = ASASMode.NONE;
-    private String tempStrength_Text = "1.00";
-    protected override void windowGUI(int ID)
+    protected override void windowGUI(int id)
     {
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("HOLDDIR", tempMode == ASASMode.HOLDDIR ? BtnStyle(Color.green) : BtnStyle()))
-            tempMode = ASASMode.HOLDDIR;
-        if (GUILayout.Button("KILLROT", tempMode == ASASMode.KILLROT ? BtnStyle(Color.green) : BtnStyle()))
-            tempMode = ASASMode.KILLROT;
-        if (GUILayout.Button("NONE", tempMode == ASASMode.NONE ? BtnStyle(Color.green) : BtnStyle()))
-            tempMode = ASASMode.NONE;
+        if (GUILayout.Button("HOLDDIR", this.tempMode == AsasMode.HOLDDIR ? BtnStyle(Color.green) : BtnStyle())) { this.tempMode = AsasMode.HOLDDIR; }
+        if (GUILayout.Button("KILLROT", this.tempMode == AsasMode.KILLROT ? BtnStyle(Color.green) : BtnStyle())) { this.tempMode = AsasMode.KILLROT; }
+        if (GUILayout.Button("NONE", this.tempMode == AsasMode.NONE ? BtnStyle(Color.green) : BtnStyle())) { this.tempMode = AsasMode.NONE; }
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
         GUILayout.Label("Strength: ");
-        tempStrength_Text = GUILayout.TextField(tempStrength_Text);
+        this.tempStrengthText = GUILayout.TextField(this.tempStrengthText);
         GUILayout.EndHorizontal();
         float tryParse;
-        bool parseOK = float.TryParse(tempStrength_Text, out tryParse);
+        bool parseOk = float.TryParse(this.tempStrengthText, out tryParse);
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("OK", parseOK ? BtnStyle() : BtnStyle(Color.red)) && parseOK)
+        if (GUILayout.Button("OK", parseOk ? BtnStyle() : BtnStyle(Color.red)) && parseOk)
         {
-            mode = tempMode;
-            strength = tryParse;
-            PanelShown = false;
+            this.mode = this.tempMode;
+            this.strength = tryParse;
+            this.PanelShown = false;
         }
         if (GUILayout.Button("Cancel"))
         {
-            tempMode = mode;
-            tempStrength_Text = strength.ToString("#0.00");
-            PanelShown = false;
+            this.tempMode = this.mode;
+            this.tempStrengthText = this.strength.ToString("#0.00");
+            this.PanelShown = false;
         }
         GUILayout.EndHorizontal();
     }
@@ -96,52 +120,48 @@ public class ModuleHydroASAS : HydroPartModulewPanel
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (!HydroJebCore.isActiveJeb((HydroJeb)part))
-            return;
-        if (ASASState != ASAS)
+        if (!HydroJebCore.IsActiveJeb((HydroJeb)this.part)) { return; }
+        if (this.AsasState != this.asas)
         {
-            if (!ASAS)
+            if (!this.asas)
             {
                 SetDir();
-                ASAS = true;
-                ActiveVessel.OnFlyByWire += Drive;
+                this.asas = true;
+                this.ActiveVessel.OnFlyByWire += Drive;
             }
             else
             {
-                ASAS = false;
-                ActiveVessel.OnFlyByWire -= Drive;
+                this.asas = false;
+                this.ActiveVessel.OnFlyByWire -= Drive;
             }
         }
     }
 
     private void Drive(FlightCtrlState ctrlState)
     {
-        HydroTech_RCS.Panels.PanelDebug.thePanel.RemoveWatch("HoldDirCal");
-        HydroTech_RCS.Panels.PanelDebug.thePanel.RemoveWatch("_aV");
-        if (!HydroJebCore.isActiveJeb((HydroJeb)part) || !ASASState)
-            return;
-        bool userInput = ctrlState.yaw != 0 || ctrlState.roll != 0 || ctrlState.pitch != 0;
+        PanelDebug.ThePanel.RemoveWatch("HoldDirCal");
+        PanelDebug.ThePanel.RemoveWatch("_aV");
+        if (!HydroJebCore.IsActiveJeb((HydroJeb)this.part) || !this.AsasState) { return; }
+        bool userInput = (ctrlState.yaw != 0) || (ctrlState.roll != 0) || (ctrlState.pitch != 0);
         if (userInput)
         {
             SetDir();
             return;
         }
-        if (mode == ASASMode.HOLDDIR)
+        if (this.mode == AsasMode.HOLDDIR)
         {
             HoldDirStateCalculator cal = new HoldDirStateCalculator();
-            cal.Calculate(dir, right, ActiveVessel);
-            cal.RotationMultiplier(strength);
-            HydroTech_RCS.Panels.PanelDebug.thePanel.AddWatch("HoldDirCal", cal);
+            cal.Calculate(this.dir, this.right, this.ActiveVessel);
+            cal.RotationMultiplier(this.strength);
+            PanelDebug.ThePanel.AddWatch("HoldDirCal", cal);
             cal.SetCtrlStateRotation(ctrlState);
         }
-        else if (mode == ASASMode.KILLROT)
+        else if (this.mode == AsasMode.KILLROT)
         {
             KillRotationCalculator cal = new KillRotationCalculator();
-            cal.Calculate(ActiveVessel);
+            cal.Calculate(this.ActiveVessel);
             cal.SetCtrlStateRotation(ctrlState);
         }
-        else
-            return;
     }
 }
 #endif

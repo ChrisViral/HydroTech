@@ -1,84 +1,93 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Autopilots;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using Autopilots;
-    using Constants.Core;
-    using Constants.Panels;
-
     public partial class PanelTranslation : PanelwAP
     {
-        public PanelTranslation()
+        protected override int PanelID
         {
-            fileName = new FileName("translation", "cfg", HydroJebCore.PanelSaveFolder);
+            get { return PanelIDs.translation; }
         }
 
-        protected override int PanelID { get { return PanelIDs.Translation; } }
-        public override string PanelTitle { get { return PanelTitles.Translation; } }
+        public override string PanelTitle
+        {
+            get { return PanelTitles.translation; }
+        }
 
-        protected override void SetDefaultWindowRect() { windowRect = WindowPositions.Translation; }
-
-        protected static APTranslation TA { get { return APTranslation.theAutopilot; } }
-
-        protected override void MakeAPSave() { TA.MakeSaveAtNextUpdate(); }
+        protected static APTranslation Ta
+        {
+            get { return APTranslation.TheAutopilot; }
+        }
 
         protected override bool Engaged
         {
-            get { return TA.engaged; }
-            set { TA.engaged = value; }
-        }
-        protected static APTranslation.TransDir Trans_Mode
-        {
-            get { return TA.Trans_Mode; }
-            set { TA.Trans_Mode = value; }
-        }
-        protected static Vector3 thrustVector
-        {
-            get { return TA.thrustVector; }
-            set { TA.thrustVector = value; }
-        }
-        protected static float thrustRate
-        {
-            get { return TA.thrustRate; }
-            set { TA.thrustRate = value; }
-        }
-        protected static bool respond
-        {
-            get { return TA.mainThrottleRespond; }
-            set { TA.mainThrottleRespond = value; }
-        }
-        protected static bool HoldOrient
-        {
-            get { return TA.HoldOrient; }
-            set { TA.HoldOrient = value; }
+            get { return Ta.engaged; }
+            set { Ta.engaged = value; }
         }
 
-        protected override void WindowGUI(int WindowID)
+        protected static APTranslation.TransDir TransMode
         {
-            if (Settings)
-                DrawSettingsUI();
+            get { return Ta.TransMode; }
+            set { Ta.TransMode = value; }
+        }
+
+        protected static Vector3 ThrustVector
+        {
+            get { return Ta.thrustVector; }
+            set { Ta.thrustVector = value; }
+        }
+
+        protected static float ThrustRate
+        {
+            get { return Ta.thrustRate; }
+            set { Ta.thrustRate = value; }
+        }
+
+        protected static bool Respond
+        {
+            get { return Ta.mainThrottleRespond; }
+            set { Ta.mainThrottleRespond = value; }
+        }
+
+        protected static bool HoldOrient
+        {
+            get { return Ta.HoldOrient; }
+            set { Ta.HoldOrient = value; }
+        }
+
+        public PanelTranslation()
+        {
+            this.fileName = new FileName("translation", "cfg", HydroJebCore.panelSaveFolder);
+        }
+
+        protected override void SetDefaultWindowRect()
+        {
+            this.windowRect = WindowPositions.translation;
+        }
+
+        protected override void MakeAPSave()
+        {
+            Ta.MakeSaveAtNextUpdate();
+        }
+
+        protected override void WindowGUI(int windowId)
+        {
+            if (this.Settings) { DrawSettingsUI(); }
             else
             {
                 GUILayout.Label("Translation direction");
-                GUILayout.TextArea(
-                    Trans_Mode == APTranslation.TransDir.ADVANCED ?
-                    thrustVector.ToString("#0.00") :
-                    Trans_Mode.ToString()
-                    );
-                GUILayout.Label("Thrust rate: " + thrustRate.ToString("#0.00"));
-                GUILayout.Label("Respond to main throttle: " + respond);
+                GUILayout.TextArea(TransMode == APTranslation.TransDir.ADVANCED ? ThrustVector.ToString("#0.00") : TransMode.ToString());
+                GUILayout.Label("Thrust rate: " + ThrustRate.ToString("#0.00"));
+                GUILayout.Label("Respond to main throttle: " + Respond);
                 GUILayout.Label("Hold current orientation: " + HoldOrient);
 
-                if (GUILayout.Button("Change settings"))
-                    Settings = true;
+                if (GUILayout.Button("Change settings")) { this.Settings = true; }
 
-                if (LayoutEngageBtn(Engaged))
-                    Engaged = !Engaged;
+                if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
             }
 
             GUI.DragWindow();

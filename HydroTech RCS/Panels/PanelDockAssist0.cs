@@ -1,149 +1,191 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using HydroTech_FC;
+using HydroTech_RCS.Autopilots;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using HydroTech_RCS.Panels.UI;
 
 namespace HydroTech_RCS.Panels
 {
-    using HydroTech_FC;
-    using Autopilots;
-    using UI;
-    using Constants.Core;
-    using Constants.Panels;
-
     public partial class PanelDockAssist : PanelwAP
     {
-        public static PanelDockAssist thePanel { get { return (PanelDockAssist)HydroJebCore.panels[PanelIDs.Dock]; } }
+        protected SingleSelectionListUi<HydroPartModule> camListUi;
 
-        public PanelDockAssist()
+        protected SubList<HydroPartModule> targetList;
+        protected SingleSelectionListUi<HydroPartModule> targetListUi;
+
+        protected Vessel targetVessel = null;
+        protected AffiliationList<HydroPartModule, Vessel> targetVesselList;
+        protected SingleSelectionListUi<Vessel> targetVesselListUi;
+
+        public static PanelDockAssist ThePanel
         {
-            fileName = new FileName("dock", "cfg", HydroJebCore.PanelSaveFolder);
-            camListUI = new SingleSelectionListUI<HydroPartModule>(HydroJebCore.dockCams.listActiveVessel);
-            targetVesselList = new AffiliationList<HydroPartModule, Vessel>(
-                HydroJebCore.dockTargets.listInactiveVessel,
-                (AffiliationList<HydroPartModule, Vessel>.GetItemFunction_Single)GetTargetVessel
-                );
-            targetVesselListUI = new SingleSelectionListUI<Vessel>(targetVesselList);
-            targetList = new SubList<HydroPartModule>(HydroJebCore.dockTargets.listInactiveVessel, isOnTargetVessel);
-            targetListUI = new SingleSelectionListUI<HydroPartModule>(targetList);
+            get { return (PanelDockAssist)HydroJebCore.panels[PanelIDs.dock]; }
         }
 
-        protected override int PanelID { get { return PanelIDs.Dock; } }
-        public override string PanelTitle { get { return PanelTitles.Docking; } }
+        protected override int PanelID
+        {
+            get { return PanelIDs.dock; }
+        }
 
-        protected override void SetDefaultWindowRect() { windowRect = WindowPositions.Docking; }
+        public override string PanelTitle
+        {
+            get { return PanelTitles.docking; }
+        }
 
-        protected static APDockAssist DA { get { return APDockAssist.theAutopilot; } }
-
-        protected override void MakeAPSave() { DA.MakeSaveAtNextUpdate(); }
+        protected static APDockAssist Da
+        {
+            get { return APDockAssist.TheAutopilot; }
+        }
 
         protected override bool Engaged
         {
-            get { return DA.engaged; }
-            set { DA.engaged = value; }
+            get { return Da.engaged; }
+            set { Da.engaged = value; }
         }
+
         protected static ModuleDockAssistCam Cam
         {
-            get { return DA.cam; }
-            set { DA.cam = value; }
+            get { return Da.Cam; }
+            set { Da.Cam = value; }
         }
+
         protected static ModuleDockAssistTarget Target
         {
-            get { return DA.target; }
-            set { DA.target = value; }
+            get { return Da.target; }
+            set { Da.target = value; }
         }
-        protected static bool NullCamera() { return DA.NullCamera(); }
-        protected static bool NullTarget() { return DA.NullTarget(); }
+
         protected static bool Manual
         {
-            get { return DA.manual; }
-            set { DA.manual = value; }
+            get { return Da.Manual; }
+            set { Da.Manual = value; }
         }
+
         protected static bool ShowLine
         {
-            get { return DA.showLine; }
-            set { DA.showLine = value; }
+            get { return Da.ShowLine; }
+            set { Da.ShowLine = value; }
         }
+
         protected static bool AutoOrient
         {
-            get { return DA.autoOrient; }
-            set { DA.autoOrient = value; }
+            get { return Da.AutoOrient; }
+            set { Da.AutoOrient = value; }
         }
+
         protected static bool KillRelV
         {
-            get { return DA.killRelV; }
-            set { DA.killRelV = value; }
+            get { return Da.KillRelV; }
+            set { Da.KillRelV = value; }
         }
+
         protected static bool CamView
         {
-            get { return DA.camView; }
-            set { DA.camView = value; }
+            get { return Da.CamView; }
+            set { Da.CamView = value; }
         }
+
         protected static int CamMag
         {
-            get 
+            get
             {
-                if (Cam == null)
-                    throw (new Exception("PanelDockAssist.CamMag<get> before a camera is selected"));
-                return Cam.mag; 
+                if (Cam == null) { throw new Exception("PanelDockAssist.CamMag<get> before a camera is selected"); }
+                return Cam.mag;
             }
-            set 
+            set
             {
-                if (Cam == null)
-                    throw (new Exception("PanelDockAssist.CamMag<set> before a camera is selected"));
+                if (Cam == null) { throw new Exception("PanelDockAssist.CamMag<set> before a camera is selected"); }
                 Cam.mag = value;
             }
         }
+
         protected static float AngularAcc
         {
-            get { return DA.angularAcc; }
-            set { DA.angularAcc = value; }
+            get { return Da.angularAcc; }
+            set { Da.angularAcc = value; }
         }
+
         protected static float Acc
         {
-            get { return DA.acc; }
-            set { DA.acc = value; }
+            get { return Da.acc; }
+            set { Da.acc = value; }
         }
-        protected static float FSSpeed
+
+        protected static float FsSpeed
         {
-            get { return DA.finalStageSpeed; }
-            set { DA.finalStageSpeed = value; }
+            get { return Da.finalStageSpeed; }
+            set { Da.finalStageSpeed = value; }
         }
-        protected static bool TargetHasJeb() { return DA.TargetHasJeb(); }
+
         protected static bool DriveTarget
         {
-            get { return DA.driveTarget; }
-            set { DA.driveTarget = value; }
+            get { return Da.DriveTarget; }
+            set { Da.DriveTarget = value; }
         }
 
-        protected SingleSelectionListUI<HydroPartModule> camListUI = null;
+        public PanelDockAssist()
+        {
+            this.fileName = new FileName("dock", "cfg", HydroJebCore.panelSaveFolder);
+            this.camListUi = new SingleSelectionListUi<HydroPartModule>(HydroJebCore.dockCams.listActiveVessel);
+            this.targetVesselList = new AffiliationList<HydroPartModule, Vessel>(HydroJebCore.dockTargets.listInactiveVessel, (AffiliationList<HydroPartModule, Vessel>.GetItemFunction_Single)GetTargetVessel);
+            this.targetVesselListUi = new SingleSelectionListUi<Vessel>(this.targetVesselList);
+            this.targetList = new SubList<HydroPartModule>(HydroJebCore.dockTargets.listInactiveVessel, IsOnTargetVessel);
+            this.targetListUi = new SingleSelectionListUi<HydroPartModule>(this.targetList);
+        }
 
-        protected Vessel TargetVessel = null;
-        protected AffiliationList<HydroPartModule, Vessel> targetVesselList = null;
-        protected Vessel GetTargetVessel(HydroPartModule mtgt) { return mtgt.vessel; }
-        protected SingleSelectionListUI<Vessel> targetVesselListUI = null;
+        protected override void SetDefaultWindowRect()
+        {
+            this.windowRect = WindowPositions.docking;
+        }
 
-        protected SubList<HydroPartModule> targetList = null;
-        protected bool isOnTargetVessel(HydroPartModule pm) { return pm.vessel == TargetVessel; }
-        protected SingleSelectionListUI<HydroPartModule> targetListUI = null;
+        protected override void MakeAPSave()
+        {
+            Da.MakeSaveAtNextUpdate();
+        }
+
+        protected static bool NullCamera()
+        {
+            return Da.NullCamera();
+        }
+
+        protected static bool NullTarget()
+        {
+            return Da.NullTarget();
+        }
+
+        protected static bool TargetHasJeb()
+        {
+            return Da.TargetHasJeb();
+        }
+
+        protected Vessel GetTargetVessel(HydroPartModule mtgt)
+        {
+            return mtgt.vessel;
+        }
+
+        protected bool IsOnTargetVessel(HydroPartModule pm)
+        {
+            return pm.vessel == this.targetVessel;
+        }
 
         public override void onFlightStart()
         {
             base.onFlightStart();
-            ChoosingCamera = false;
-            ChoosingTarget = false;
+            this.ChoosingCamera = false;
+            this.ChoosingTarget = false;
         }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
 
-            targetVesselList.OnUpdate();
-            targetList.OnUpdate();
+            this.targetVesselList.OnUpdate();
+            this.targetList.OnUpdate();
 
-            camListUI.OnUpdate();
-            targetVesselListUI.OnUpdate();
-            targetListUI.OnUpdate();
+            this.camListUi.OnUpdate();
+            this.targetVesselListUi.OnUpdate();
+            this.targetListUi.OnUpdate();
         }
     }
 }

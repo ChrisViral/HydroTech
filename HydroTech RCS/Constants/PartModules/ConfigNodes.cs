@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HydroTech_RCS.Constants.PartModules
 {
@@ -9,7 +6,7 @@ namespace HydroTech_RCS.Constants.PartModules
     {
         public static class ConfigNodes
         {
-            public const String Name = "PartNewName";
+            public const string name = "PartNewName";
         }
     }
 }

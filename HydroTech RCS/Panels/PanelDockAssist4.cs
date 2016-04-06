@@ -1,200 +1,162 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.PartModules.Base;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using Constants.Core;
-    using PartModules.Base;
-
     public partial class PanelDockAssist // Choosing target
     {
-        protected Vessel _PreviewVessel = null;
+        protected bool choosingTarget;
+
+        protected bool choosingVessel;
+        protected Vessel previewVessel;
+
         protected Vessel PreviewVessel
         {
-            get { return _PreviewVessel; }
+            get { return this.previewVessel; }
             set
             {
-                if (value != _PreviewVessel)
+                if (value != this.previewVessel)
                 {
-                    if (value == null)
-                        HydroFlightCameraManager.RetrieveLast();
+                    if (value == null) { HydroFlightCameraManager.RetrieveLast(); }
                     else
                     {
-                        if (_PreviewVessel == null && PreviewPart == null)
-                            HydroFlightCameraManager.SaveCurrent();
+                        if ((this.previewVessel == null) && (this.PreviewPart == null)) { HydroFlightCameraManager.SaveCurrent(); }
                         HydroFlightCameraManager.SetCallback(DoPreviewVessel);
                     }
-                    _PreviewVessel = value;
+                    this.previewVessel = value;
                 }
             }
         }
-        protected void DoPreviewVessel()
-        {
-            HydroFlightCameraManager.SetFoV(Behaviours.DefaultFoV_PreviewVessel);
-            HydroFlightCameraManager.SetTarget(PreviewVessel);
-        }
 
-        protected bool _ChoosingVessel = false;
         protected bool ChoosingVessel
         {
-            get { return _ChoosingVessel; }
+            get { return this.choosingVessel; }
             set
             {
-                if (value != _ChoosingVessel)
+                if (value != this.choosingVessel)
                 {
                     ResetHeight();
                     if (value)
                     {
-                        targetVesselListUI.SetSelectionToItem(TargetVessel);
-                        targetVesselListUI.SetToCurSelPage();
+                        this.targetVesselListUi.SetSelectionToItem(this.targetVessel);
+                        this.targetVesselListUi.SetToCurSelPage();
                     }
                 }
-                _ChoosingVessel = value;
+                this.choosingVessel = value;
             }
         }
 
-        protected bool _ChoosingTarget = false;
         protected bool ChoosingTarget
         {
-            get { return _ChoosingTarget; }
+            get { return this.choosingTarget; }
             set
             {
-                if (value != _ChoosingTarget)
+                if (value != this.choosingTarget)
                 {
                     ResetHeight();
                     if (value)
                     {
-                        DA.cameraPaused = true;
-                        if (TargetVessel == null)
-                            ChoosingVessel = true;
+                        Da.CameraPaused = true;
+                        if (this.targetVessel == null) { this.ChoosingVessel = true; }
                         else
-                            PreviewVessel = TargetVessel;
-                        targetListUI.SetSelectionToItem(Target);
-                        targetListUI.SetToCurSelPage();
-                        targetListUI.SetSelectionToItem(null);
+                        { this.PreviewVessel = this.targetVessel; }
+                        this.targetListUi.SetSelectionToItem(Target);
+                        this.targetListUi.SetToCurSelPage();
+                        this.targetListUi.SetSelectionToItem(null);
                     }
                     else
                     {
-                        PreviewPart = null;
-                        targetListUI.SetSelectionToItem(null);
-                        DA.cameraPaused = false;
+                        this.PreviewPart = null;
+                        this.targetListUi.SetSelectionToItem(null);
+                        Da.CameraPaused = false;
                     }
                 }
-                _ChoosingTarget = value;
+                this.choosingTarget = value;
             }
         }
 
-        protected virtual void drawVesselBtn(Vessel v)
+        protected void DoPreviewVessel()
         {
-            if (v == null)
-                GUILayout.Button("");
-            else
-            {
-                if (GUILayout.Button(
-                    v.vesselName,
-                    v == TargetVessel ?
-                    v == PreviewVessel ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green)
-                    :
-                    v == PreviewVessel ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap()
-                    ))
-                    targetVesselListUI.SetSelectionToItem(v);
-            }
+            HydroFlightCameraManager.SetFoV(Behaviours.defaultFoVPreviewVessel);
+            HydroFlightCameraManager.SetTarget(this.PreviewVessel);
         }
 
-        protected virtual void drawTargetBtn(HydroPartModule mtgt)
+        protected virtual void DrawVesselBtn(Vessel v)
         {
-            if (mtgt == null)
-                GUILayout.Button("");
+            if (v == null) { GUILayout.Button(""); }
             else
-            {
-                if (GUILayout.Button(
-                    ((ModuleDockAssistTarget)mtgt).ToString(),
-                    mtgt == Target ?
-                    (IPartPreview)mtgt == PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green)
-                    :
-                    (IPartPreview)mtgt == PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap()
-                    ))
-                    targetListUI.SetSelectionToItem(mtgt);
-            }
+            { if (GUILayout.Button(v.vesselName, v == this.targetVessel ? v == this.PreviewVessel ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : v == this.PreviewVessel ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.targetVesselListUi.SetSelectionToItem(v); } }
         }
 
-        protected void DrawChoosingVesselUI()
+        protected virtual void DrawTargetBtn(HydroPartModule mtgt)
+        {
+            if (mtgt == null) { GUILayout.Button(""); }
+            else
+            { if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.targetListUi.SetSelectionToItem(mtgt); } }
+        }
+
+        protected void DrawChoosingVesselUi()
         {
             GUILayout.Label("Vessel:");
-            bool pageChanged; bool noTargetVessel;
-            targetVesselListUI.OnDrawUI(drawVesselBtn, out pageChanged, out noTargetVessel);
-            PreviewVessel = targetVesselListUI.curSelect;
-            if (pageChanged)
-                ResetHeight();
-            if (noTargetVessel)
-                GUILayout.Label("Nothing in sight");
+            bool pageChanged;
+            bool noTargetVessel;
+            this.targetVesselListUi.OnDrawUi(DrawVesselBtn, out pageChanged, out noTargetVessel);
+            this.PreviewVessel = this.targetVesselListUi.CurSelect;
+            if (pageChanged) { ResetHeight(); }
+            if (noTargetVessel) { GUILayout.Label("Nothing in sight"); }
             GUILayout.BeginHorizontal();
-            if (PreviewVessel == null)
-                GUILayout.Button("OK", BtnStyle(Color.red));
-            else
-                if (GUILayout.Button("OK"))
-                {
-                    TargetVessel = PreviewVessel;
-                    ChoosingVessel = false;
-                }
+            if (this.PreviewVessel == null) { GUILayout.Button("OK", BtnStyle(Color.red)); }
+            else if (GUILayout.Button("OK"))
+            {
+                this.targetVessel = this.PreviewVessel;
+                this.ChoosingVessel = false;
+            }
             if (GUILayout.Button("Cancel"))
             {
-                ChoosingVessel = false;
-                if (TargetVessel == null)
+                this.ChoosingVessel = false;
+                if (this.targetVessel == null)
                 {
-                    ChoosingTarget = false;
-                    PreviewVessel = null;
+                    this.ChoosingTarget = false;
+                    this.PreviewVessel = null;
                 }
             }
             GUILayout.EndHorizontal();
         }
 
-        protected void DrawChoosingTargetUI()
+        protected void DrawChoosingTargetUi()
         {
             GUILayout.Label("Vessel");
-            if (GUILayout.Button(
-                TargetVessel.vesselName,
-                targetVesselList.Contains(TargetVessel) ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)
-                ))
-                ChoosingVessel = true;
+            if (GUILayout.Button(this.targetVessel.vesselName, this.targetVesselList.Contains(this.targetVessel) ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red))) { this.ChoosingVessel = true; }
             GUILayout.Label("Target:");
-            bool pageChanged; bool noTarget;
-            targetListUI.OnDrawUI(drawTargetBtn, out pageChanged, out noTarget);
-            PreviewPart = (ModuleDockAssistTarget)targetListUI.curSelect;
-            if (PreviewPart != null)
-                _PreviewVessel = null;
-            if (pageChanged)
-                ResetHeight();
-            if (noTarget)
-                GUILayout.Label("Not installed");
+            bool pageChanged;
+            bool noTarget;
+            this.targetListUi.OnDrawUi(DrawTargetBtn, out pageChanged, out noTarget);
+            this.PreviewPart = (ModuleDockAssistTarget)this.targetListUi.CurSelect;
+            if (this.PreviewPart != null) { this.previewVessel = null; }
+            if (pageChanged) { ResetHeight(); }
+            if (noTarget) { GUILayout.Label("Not installed"); }
             GUILayout.BeginHorizontal();
-            if (PreviewPart == null)
-                GUILayout.Button("OK", BtnStyle(Color.red));
-            else
-                if (GUILayout.Button("OK"))
-                {
-                    Target = (ModuleDockAssistTarget)PreviewPart;
-                    ChoosingTarget = false;
-                }
+            if (this.PreviewPart == null) { GUILayout.Button("OK", BtnStyle(Color.red)); }
+            else if (GUILayout.Button("OK"))
+            {
+                Target = (ModuleDockAssistTarget)this.PreviewPart;
+                this.ChoosingTarget = false;
+            }
             if (GUILayout.Button("Cancel"))
             {
-                ChoosingTarget = false;
-                PreviewVessel = null;
+                this.ChoosingTarget = false;
+                this.PreviewVessel = null;
             }
-            if (Target == null)
-                GUILayout.Button("Clear choice", BtnStyle(Color.red));
-            else
-                if (GUILayout.Button("Clear choice"))
-                {
-                    TargetVessel = null;
-                    Target = null;
-                    ChoosingTarget = false;
-                    PreviewVessel = null;
-                }
+            if (Target == null) { GUILayout.Button("Clear choice", BtnStyle(Color.red)); }
+            else if (GUILayout.Button("Clear choice"))
+            {
+                this.targetVessel = null;
+                Target = null;
+                this.ChoosingTarget = false;
+                this.PreviewVessel = null;
+            }
             GUILayout.EndHorizontal();
         }
     }

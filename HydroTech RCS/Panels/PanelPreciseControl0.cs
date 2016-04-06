@@ -1,83 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Autopilots;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using HydroTech_RCS.Constants.Units;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using Autopilots;
-    using Constants.Core;
-    using Constants.Panels;
-    using Constants.Units;
-
     public partial class PanelPreciseControl : PanelwAP
     {
-        public PanelPreciseControl()
+        protected override int PanelID
         {
-            fileName = new FileName("precise", "cfg", HydroJebCore.PanelSaveFolder);
+            get { return PanelIDs.preciseControl; }
         }
-        protected override int PanelID { get { return PanelIDs.PreciseControl; } }
-        public override string PanelTitle { get { return PanelTitles.PreciseControl; } }
 
-        protected override void SetDefaultWindowRect() { windowRect = WindowPositions.PreciseControl; }
+        public override string PanelTitle
+        {
+            get { return PanelTitles.preciseControl; }
+        }
 
-        protected static APPreciseControl PC { get { return APPreciseControl.theAutopilot; } }
-
-        protected override void MakeAPSave() { PC.MakeSaveAtNextUpdate(); }
+        protected static APPreciseControl Pc
+        {
+            get { return APPreciseControl.TheAutopilot; }
+        }
 
         protected override bool Engaged
         {
-            get { return PC.engaged; }
-            set { PC.engaged = value; }
-        }
-        protected static bool byRate
-        {
-            get { return PC.byRate; }
-            set { PC.byRate = value; }
-        }
-        protected static float RRate
-        {
-            get { return PC.RotationRate; }
-            set { PC.RotationRate = value; }
-        }
-        protected static float TRate
-        {
-            get { return PC.TranslationRate; }
-            set { PC.TranslationRate = value; }
-        }
-        protected static float AngA
-        {
-            get { return PC.AngularAcc; }
-            set { PC.AngularAcc = value; }
-        }
-        protected static float Acc
-        {
-            get { return PC.Acc; }
-            set { PC.Acc = value; }
+            get { return Pc.Engaged; }
+            set { Pc.Engaged = value; }
         }
 
-        protected override void WindowGUI(int WindowID)
+        protected static bool ByRate
         {
-            if (Settings)
-                DrawSettingsUI();
+            get { return Pc.byRate; }
+            set { Pc.byRate = value; }
+        }
+
+        protected static float RRate
+        {
+            get { return Pc.rotationRate; }
+            set { Pc.rotationRate = value; }
+        }
+
+        protected static float Rate
+        {
+            get { return Pc.translationRate; }
+            set { Pc.translationRate = value; }
+        }
+
+        protected static float AngA
+        {
+            get { return Pc.angularAcc; }
+            set { Pc.angularAcc = value; }
+        }
+
+        protected static float Acc
+        {
+            get { return Pc.acc; }
+            set { Pc.acc = value; }
+        }
+
+        public PanelPreciseControl()
+        {
+            this.fileName = new FileName("precise", "cfg", HydroJebCore.panelSaveFolder);
+        }
+
+        protected override void SetDefaultWindowRect()
+        {
+            this.windowRect = WindowPositions.preciseControl;
+        }
+
+        protected override void MakeAPSave()
+        {
+            Pc.MakeSaveAtNextUpdate();
+        }
+
+        protected override void WindowGUI(int windowId)
+        {
+            if (this.Settings) { DrawSettingsUI(); }
             else
             {
-                if (byRate)
+                if (ByRate)
                 {
                     GUILayout.Label("Rotation thrust rate: " + RRate.ToString("#0.000"));
-                    GUILayout.Label("Translation thrust rate: " + TRate.ToString("#0.000"));
+                    GUILayout.Label("Translation thrust rate: " + Rate.ToString("#0.000"));
                 }
                 else
                 {
-                    GUILayout.Label("Angular Acc: " + AngA.ToString("#0.000") + UnitStrings.AngularAcc);
-                    GUILayout.Label("Acceleration: " + Acc.ToString("#0.000") + UnitStrings.Acceleration);
+                    GUILayout.Label("Angular Acc: " + AngA.ToString("#0.000") + UnitStrings.angularAcc);
+                    GUILayout.Label("Acceleration: " + Acc.ToString("#0.000") + UnitStrings.acceleration);
                 }
-                if (GUILayout.Button("Change settings"))
-                    Settings = true;
-                if (LayoutEngageBtn(Engaged))
-                    Engaged = !Engaged;
+                if (GUILayout.Button("Change settings")) { this.Settings = true; }
+                if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
             }
 
             GUI.DragWindow();

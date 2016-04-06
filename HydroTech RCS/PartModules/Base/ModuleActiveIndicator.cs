@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace HydroTech_RCS.PartModules.Base
+﻿namespace HydroTech_RCS.PartModules.Base
 {
     public abstract class ModuleActiveIndicator : PartModule
     {
-        protected ModuleActiveIndicator() { }
-
-        public enum STATUS { Active, Idle }
+        public enum Status
+        {
+            ACTIVE,
+            IDLE
+        }
 
         [KSPField(guiActive = true, guiName = "Status")]
-        public STATUS status = STATUS.Idle;
+        public Status status = Status.IDLE;
 
         public override void OnUpdate()
         {
             base.OnUpdate();
-            status = GetStatus();
+            this.status = GetStatus();
         }
 
-        protected abstract STATUS GetStatus();
+        protected abstract Status GetStatus();
     }
 }

@@ -1,103 +1,113 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HydroTech_FC;
 
 namespace HydroTech_RCS.Autopilots.Modules
 {
-    using HydroTech_FC;
-
     public class CalculatorDescent
     {
-        protected const float t1 = 60.0F;
-        protected float h0;
-        protected float v0;
-        protected float g;
-        protected float twr;
-        protected float aMax { get { return twr - g; } }
-        protected float alpha { get { return aMax / t1; } }
+        public enum Behaviour
+        {
+            IDLE,
+            NORMAL,
+            BRAKE
+        }
 
-        protected float status_v, status_h;
+        public enum Indicator
+        {
+            WARP,
+            SAFE,
+            OK,
+            DANGER
+        }
+
+        protected const float t1 = 60.0F;
         protected const float completeLockHeightDiff = 100.0F;
+        protected const float ratioWarp = -0.1F;
+        protected const float ratioSafe = 0.5F;
+        protected const float ratioOk = 0.8F;
+        protected float g;
+        protected float h0;
+
+        protected float statusV, statusH;
 
         protected float thrRate = 1.0F;
+        protected float twr;
+        protected float v0;
+
+        protected float AMax
+        {
+            get { return this.twr - this.g; }
+        }
+
+        protected float Alpha
+        {
+            get { return this.AMax / t1; }
+        }
+
         public float ThrRate
         {
             get
             {
-                if (thrRate < 0.0F)
-                    return 0.0F;
-                else if (thrRate > 1.0F)
-                    return 1.0F;
-                else
-                    return thrRate;
+                if (this.thrRate < 0.0F) { return 0.0F; }
+                if (this.thrRate > 1.0F) { return 1.0F; }
+                return this.thrRate;
             }
         }
 
-        public enum BEHAVIOUR { IDLE, NORMAL, BRAKE }
-        public BEHAVIOUR behaviour { get { return GetBehaviour(thrRate); } }
-        protected BEHAVIOUR GetBehaviour(float a_ratio)
+        public Behaviour behaviour
         {
-            if (a_ratio < 0.0F)
-                return BEHAVIOUR.IDLE;
-            else if (a_ratio > 1.0F)
-                return BEHAVIOUR.BRAKE;
-            else
-                return BEHAVIOUR.NORMAL;
+            get { return GetBehaviour(this.thrRate); }
         }
 
-        public enum INDICATOR { WARP, SAFE, OK, DANGER }
-        public INDICATOR indicator { get { return GetIndicator(thrRate); } }
-        protected const float Ratio_WARP = -0.1F;
-        protected const float Ratio_SAFE = 0.5F;
-        protected const float Ratio_OK = 0.8F;
-        protected INDICATOR GetIndicator(float a_ratio)
+        public Indicator indicator
         {
-            if (a_ratio < Ratio_WARP)
-                return INDICATOR.WARP;
-            else if (a_ratio < Ratio_SAFE)
-                return INDICATOR.SAFE;
-            else if (a_ratio < Ratio_OK)
-                return INDICATOR.OK;
-            else
-                return INDICATOR.DANGER;
+            get { return GetIndicator(this.thrRate); }
+        }
+
+        protected Behaviour GetBehaviour(float aRatio)
+        {
+            if (aRatio < 0.0F) { return Behaviour.IDLE; }
+            if (aRatio > 1.0F) { return Behaviour.BRAKE; }
+            return Behaviour.NORMAL;
+        }
+
+        protected Indicator GetIndicator(float aRatio)
+        {
+            if (aRatio < ratioWarp) { return Indicator.WARP; }
+            if (aRatio < ratioSafe) { return Indicator.SAFE; }
+            if (aRatio < ratioOk) { return Indicator.OK; }
+            return Indicator.DANGER;
         }
 
         protected float a_t(float t)
         {
-            if (t < t1)
-                return alpha * t;
-            else
-                return aMax;
+            if (t < t1) { return this.Alpha * t; }
+            return this.AMax;
         }
+
         protected float v_t(float t)
         {
-            if (t < t1)
-                return v0 + alpha * t * t / 2;
-            else
-                return v0 - aMax * t1 / 2 + aMax * t;
+            if (t < t1) { return this.v0 + ((this.Alpha * t * t) / 2); }
+            return (this.v0 - ((this.AMax * t1) / 2)) + (this.AMax * t);
         }
+
         protected float h_t(float t)
         {
-            if (t < t1)
-                return h0 + v0 * t + alpha * t * t * t / 6;
-            else
-                return h0 + aMax * t1 * t1 / 6 + (v0 - aMax * t1 / 2) * t + aMax * t * t / 2;
+            if (t < t1) { return this.h0 + (this.v0 * t) + ((this.Alpha * t * t * t) / 6); }
+            return this.h0 + ((this.AMax * t1 * t1) / 6) + ((this.v0 - ((this.AMax * t1) / 2)) * t) + ((this.AMax * t * t) / 2);
         }
+
         protected float t_v(float v)
         {
-            if (v < v0 + aMax * t1 / 2)
-                return HMaths.SqRt(2 * (v - v0) / alpha);
-            else
-                return (v - v0) / aMax + t1 / 2;
+            if (v < this.v0 + ((this.AMax * t1) / 2)) { return HMaths.SqRt((2 * (v - this.v0)) / this.Alpha); }
+            return ((v - this.v0) / this.AMax) + (t1 / 2);
         }
 
         protected void Calculate()
         {
-            float t = t_v(status_v);
+            float t = t_v(this.statusV);
             float a = a_t(t);
             float h = h_t(t);
-            thrRate = (a + g) / twr + (h - status_h) / completeLockHeightDiff;
+            this.thrRate = ((a + this.g) / this.twr) + ((h - this.statusH) / completeLockHeightDiff);
         }
 
         public void OnUpdate(float h0, float v0, float g, float twr, float v, float h)
@@ -105,12 +115,11 @@ namespace HydroTech_RCS.Autopilots.Modules
             this.v0 = v0;
             this.g = g;
             this.twr = twr;
-            status_v = v;
-            status_h = h;
-            if (status_v <= v0)
-                thrRate = -1.0F;
+            this.statusV = v;
+            this.statusH = h;
+            if (this.statusV <= v0) { this.thrRate = -1.0F; }
             else
-                Calculate();
+            { Calculate(); }
         }
     }
 }

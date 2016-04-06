@@ -1,102 +1,105 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using UnityEngine;
-using HydroTech_RCS;
-using HydroTech_RCS.PartModules.Base;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Constants.PartModules.PartRename;
+using HydroTech_RCS.PartModules.Base;
+using UnityEngine;
 
 public class ModulePartRename : HydroPartModulewPanel
 {
-    [KSPField(guiActive = false, guiName = "Name")]
-    public String nameString = "";
+    private static bool registered;
 
-    protected bool _Renamed = false;
+    protected bool renamed;
+
+    [KSPField(guiActive = false, guiName = "Name")]
+    public string nameString = "";
+
+    protected string tempName = "";
+
     public bool Renamed
     {
-        get { return _Renamed; }
+        get { return this.renamed; }
         set
         {
-            Fields["nameString"].guiActive = value;
-            _Renamed = value;
+            this.Fields["nameString"].guiActive = value;
+            this.renamed = value;
         }
+    }
+
+    protected override int QueueSpot
+    {
+        get { return ManagerConsts.renderMgrModulePartRename; }
+    }
+
+    protected override string PanelTitle
+    {
+        get { return "Rename part"; }
+    }
+
+    protected override bool Registered
+    {
+        get { return registered; }
+        set { registered = value; }
     }
 
     public override void OnLoad(ConfigNode node)
     {
         base.OnLoad(node);
-        if (node.HasValue(ConfigNodes.Name))
+        if (node.HasValue(ConfigNodes.name))
         {
-            nameString = node.GetValue(ConfigNodes.Name);
-            tempName = nameString;
-            Renamed = true;
+            this.nameString = node.GetValue(ConfigNodes.name);
+            this.tempName = this.nameString;
+            this.Renamed = true;
         }
         else
-            Renamed = false;
+        { this.Renamed = false; }
     }
 
     public override void OnSave(ConfigNode node)
     {
         base.OnSave(node);
-        if (Renamed)
-            node.AddValue(ConfigNodes.Name, nameString);
+        if (this.Renamed) { node.AddValue(ConfigNodes.name, this.nameString); }
     }
 
     [KSPEvent(guiActive = true, guiName = "Rename")]
     protected void RenameEvent()
     {
-        if (!PanelShown)
-            PanelShown = true;
+        if (!this.PanelShown) { this.PanelShown = true; }
     }
 
-    protected override int QueueSpot { get { return ManagerConsts.RenderMgr_ModulePartRename; } }
-    protected override string PanelTitle { get { return "Rename part"; } }
-
-    private static bool _Registered = false;
-    protected override bool Registered
-    {
-        get { return _Registered; }
-        set { _Registered = value; }
-    }
-
-    protected String tempName = "";
-    protected override void windowGUI(int ID)
+    protected override void windowGUI(int id)
     {
         GUILayout.BeginVertical();
-        tempName = GUILayout.TextField(tempName);
+        this.tempName = GUILayout.TextField(this.tempName);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("OK"))
         {
-            if (tempName != "")
+            if (this.tempName != "")
             {
-                nameString = tempName;
-                Renamed = true;
-                PanelShown = false;
+                this.nameString = this.tempName;
+                this.Renamed = true;
+                this.PanelShown = false;
             }
         }
         if (GUILayout.Button("Clear"))
         {
-            tempName = "";
-            nameString = "";
-            Renamed = false;
-            PanelShown = false;
+            this.tempName = "";
+            this.nameString = "";
+            this.Renamed = false;
+            this.PanelShown = false;
         }
         if (GUILayout.Button("Cancel"))
         {
-            tempName = nameString;
-            PanelShown = false;
+            this.tempName = this.nameString;
+            this.PanelShown = false;
         }
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
         GUI.DragWindow();
     }
 
-    public void EditorRename(bool renamed, String name)
+    public void EditorRename(bool renamed, string name)
     {
-        _Renamed = renamed;
-        nameString = name;
+        this.renamed = renamed;
+        this.nameString = name;
     }
 }

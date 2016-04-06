@@ -1,54 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace HydroTech_RCS.Panels.UI
 {
-    using UnityEngine;
-
-    public class SingleSelectionListUI<T> : MultiPageListUI<T>
-        where T : class
+    public class SingleSelectionListUi<T> : MultiPageListUi<T> where T : class
     {
-        public SingleSelectionListUI(List<T> l, int n = 5) : base(l, n) { }
+        protected T _CurSelect;
 
-        protected T _CurSelect = null;
-        public T curSelect
+        public T CurSelect
         {
-            get { return _CurSelect; }
-            protected set { _CurSelect = value; }
+            get { return this._CurSelect; }
+            protected set { this._CurSelect = value; }
         }
+
+        public SingleSelectionListUi(List<T> l, int n = 5) : base(l, n) { }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if (curSelect != null && !list.Contains(curSelect))
+            if ((this.CurSelect != null) && !this.list.Contains(this.CurSelect))
             {
-                curSelect = null;
-                curPage = 0;
+                this.CurSelect = null;
+                this.curPage = 0;
             }
         }
 
         public void SetSelectionToItem(T item)
         {
-            if (list.Contains(item))
-                curSelect = item;
+            if (this.list.Contains(item)) { this.CurSelect = item; }
             else
-                curSelect = null;
+            { this.CurSelect = null; }
         }
 
         public void SetToCurSelPage()
         {
-            if (curSelect == null)
-                curPage = 0;
+            if (this.CurSelect == null) { this.curPage = 0; }
             else
             {
                 int count = 0;
-                foreach (T item in list)
+                foreach (T item in this.list)
                 {
-                    if (Equals(item, curSelect))
+                    if (Equals(item, this.CurSelect))
                     {
-                        curPage = count / perPage;
+                        this.curPage = count / this.perPage;
                         break;
                     }
                     count++;

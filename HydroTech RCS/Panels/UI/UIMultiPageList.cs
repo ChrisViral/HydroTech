@@ -1,71 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels.UI
 {
-    using UnityEngine;
-
-    public class MultiPageListUI<T>
-        where T : class
+    public class MultiPageListUi<T> where T : class
     {
-        public delegate void DrawSingleItemUI(T item);
+        protected int curPage; // Start from 0
 
-        public MultiPageListUI(List<T> l, int n = 5) { list = l; perPage = n; }
-
-        protected List<T> list = null;
+        protected List<T> list;
         protected int perPage = 5;
-        protected int curPage = 0; // Start from 0
 
-        protected bool LastPage() { return curPage == (list.Count - 1) / perPage; }
+        public delegate void DrawSingleItemUi(T item);
+
+        public MultiPageListUi(List<T> l, int n = 5)
+        {
+            this.list = l;
+            this.perPage = n;
+        }
+
+        protected bool LastPage()
+        {
+            return this.curPage == (this.list.Count - 1) / this.perPage;
+        }
 
         public virtual void OnUpdate()
         {
-            if (list.Count - 1 < perPage * (curPage + 1))
-                curPage = (list.Count - 1) / perPage;
+            if (this.list.Count - 1 < this.perPage * (this.curPage + 1)) { this.curPage = (this.list.Count - 1) / this.perPage; }
         }
 
-        public virtual void OnDrawUI(DrawSingleItemUI drawFunction, out bool pageChanged, out bool zero)
+        public virtual void OnDrawUi(DrawSingleItemUi drawFunction, out bool pageChanged, out bool zero)
         {
             int count = 0;
-            foreach (T item in list)
+            foreach (T item in this.list)
             {
-                if (count / perPage == curPage)
-                    drawFunction(item);
+                if (count / this.perPage == this.curPage) { drawFunction(item); }
                 count++;
             }
-            zero = (count == 0);
-            if (LastPage() && count % perPage != 0)
-                for (int i = count % perPage; i < perPage; i++)
-                    drawFunction(null);
+            zero = count == 0;
+            if (LastPage() && (count % this.perPage != 0)) { for (int i = count % this.perPage; i < this.perPage; i++) { drawFunction(null); } }
             pageChanged = false;
-            if (count > perPage)
+            if (count > this.perPage)
             {
                 GUILayout.BeginHorizontal();
-                if (curPage == 0)
-                    GUILayout.Button("Prev", Panel.BtnStyle(Color.red));
+                if (this.curPage == 0) { GUILayout.Button("Prev", Panel.BtnStyle(Color.red)); }
                 else
                 {
                     if (GUILayout.Button("Prev"))
                     {
-                        curPage--;
+                        this.curPage--;
                         pageChanged = true;
                     }
                 }
-                if (LastPage())
-                    GUILayout.Button("Next", Panel.BtnStyle(Color.red));
+                if (LastPage()) { GUILayout.Button("Next", Panel.BtnStyle(Color.red)); }
                 else
                 {
                     if (GUILayout.Button("Next"))
                     {
-                        curPage++;
+                        this.curPage++;
                         pageChanged = true;
                     }
                 }
                 GUILayout.EndHorizontal();
             }
-            return;
         }
     }
 }

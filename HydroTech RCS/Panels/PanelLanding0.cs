@@ -1,164 +1,149 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using HydroTech_FC;
+using HydroTech_RCS.Autopilots;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using HydroTech_RCS.Constants.Units;
+using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using Autopilots;
-    using Constants.Core;
-    using Constants.Panels;
-    using Constants.Units;
-
     public partial class PanelLanding : PanelwAP
     {
-        public static PanelLanding thePanel { get { return (PanelLanding)HydroJebCore.panels[PanelIDs.Landing]; } }
+        protected bool panelAdvInfoShown;
 
-        public PanelLanding()
+        public PanelLandingAdvInfo panelAdvInfo = new PanelLandingAdvInfo();
+
+        public static PanelLanding ThePanel
         {
-            fileName = new FileName("landing", "cfg", HydroJebCore.PanelSaveFolder);
+            get { return (PanelLanding)HydroJebCore.panels[PanelIDs.landing]; }
         }
 
-        protected override int PanelID { get { return PanelIDs.Landing; } }
-        public override string PanelTitle { get { return PanelTitles.Landing; } }
+        protected override int PanelID
+        {
+            get { return PanelIDs.landing; }
+        }
 
-        protected override void SetDefaultWindowRect() { windowRect = WindowPositions.Landing; }
+        public override string PanelTitle
+        {
+            get { return PanelTitles.landing; }
+        }
 
-        protected static APLanding LA { get { return APLanding.theAutopilot; } }
-
-        protected override void MakeAPSave() { LA.MakeSaveAtNextUpdate(); }
+        protected static APLanding La
+        {
+            get { return APLanding.TheAutopilot; }
+        }
 
         protected override bool Engaged
         {
-            get { return LA.engaged; }
-            set { LA.engaged = value; }
+            get { return La.engaged; }
+            set { La.engaged = value; }
         }
-        protected static float safeTouchDownSpeed
+
+        protected static float SafeTouchDownSpeed
         {
-            get { return LA.safeTouchDownSpeed; }
-            set { LA.safeTouchDownSpeed = value; }
+            get { return La.safeTouchDownSpeed; }
+            set { La.safeTouchDownSpeed = value; }
         }
-        protected static bool VABPod
+
+        protected static bool VabPod
         {
-            get { return LA.VABPod; }
-            set { LA.VABPod = value; }
+            get { return La.vabPod; }
+            set { La.vabPod = value; }
         }
+
         protected static bool Engines
         {
-            get { return LA._Engines; }
-            set { LA._Engines = value; }
+            get { return La.engines; }
+            set { La.engines = value; }
         }
-        protected static bool burnRetro
+
+        protected static bool BurnRetro
         {
-            get { return LA.burnRetro; }
-            set { LA.burnRetro = value; }
+            get { return La.burnRetro; }
+            set { La.burnRetro = value; }
         }
+
         protected static float MaxThrottle
         {
-            get { return LA.MaxThrottle; }
-            set { LA.MaxThrottle = value; }
+            get { return La.MaxThrottle; }
+            set { La.MaxThrottle = value; }
         }
-        protected static bool touchdown
+
+        protected static bool Touchdown
         {
-            get { return LA.touchdown; }
-            set { LA.touchdown = value; }
+            get { return La.touchdown; }
+            set { La.touchdown = value; }
         }
-        protected static bool useTrueAlt
+
+        protected static bool UseTrueAlt
         {
-            get { return LA.useTrueAlt; }
-            set { LA.useTrueAlt = value; }
+            get { return La.useTrueAlt; }
+            set { La.useTrueAlt = value; }
         }
-        protected static float altKeep
+
+        protected static float AltKeep
         {
-            get { return LA.altKeep; }
-            set { LA.altKeep = value; }
+            get { return La.altKeep; }
+            set { La.altKeep = value; }
         }
 
-        protected String StatusString { get { return LA.StatusString; } }
-        protected String WarningString { get { return LA.WarningString; } }
-        protected Color WarningColor { get { return LA.WarningColor; } }
-        protected float AllowedHori { get { return LA.AllowedHori; } }
-        protected float TerrainHeight { get { return LA.TerrainHeight; } }
-        protected float AltKeepTrue { get { return LA.AltKeepTrue; } }
-        protected float AltKeepASL { get { return LA.AltKeepASL; } }
-
-        protected String HoverAtString { get { return "Hover at " + altKeep.ToString("#0.0") + UnitStrings.Length + " " + (useTrueAlt ? "True" : "ASL"); } }
-
-        protected override void WindowGUI(int windowID)
+        protected string StatusString
         {
-            if (Settings)
-                DrawSettingsUI();
-            else
-            {
-                GUILayout.Label("Pod orientation: " + (VABPod ? "Up" : "Horizon"));
-                GUILayout.Label("Touchdown speed: " + safeTouchDownSpeed.ToString("#0.0") + UnitStrings.Speed_Simple);
-                GUILayout.Label("Use engines: " + (Engines ? "true" : "false"));
-                if (Engines)
-                {
-                    GUILayout.Label("Max throttle: " + MaxThrottle.ToString("#0.0"));
-                    //GUILayout.Label("Burn retrograde: " + (burnRetro ? "true" : "false"));
-                }
-                if (touchdown)
-                {
-                    GUILayout.Label("Perform touchdown");
-                    if (GUILayout.Button(HoverAtString))
-                        touchdown = false;
-                }
-                else
-                {
-                    GUILayout.Label(HoverAtString);
-                    GUILayout.Label("Max allowed horizontal speed: " + AllowedHori.ToString("#0.0") + UnitStrings.Speed_Simple);
-                    if (GUILayout.Button("Switch True/ASL"))
-                    {
-                        if (useTrueAlt)
-                        {
-                            altKeep = AltKeepASL;
-                            useTrueAlt = false;
-                        }
-                        else
-                        {
-                            altKeep = AltKeepTrue;
-                            useTrueAlt = true;
-                        }
-                    }
-                    if (GUILayout.Button("Land"))
-                    {
-                        touchdown = true;
-                        ResetHeight();
-                    }
-                }
-                if (GUILayout.Button("Change settings"))
-                    Settings = true;
-                panelAdvInfo.PanelShown = GUILayout.Toggle(panelAdvInfo.PanelShown, "Advanced info");
-                if (LayoutEngageBtn(Engaged))
-                    Engaged = !Engaged;
-                GUILayout.Label("Status: " + StatusString);
-                GUILayout.Label(WarningString, LabelStyle(WarningColor));
-            }
-
-            GUI.DragWindow();
+            get { return La.StatusString; }
         }
 
-        public PanelLandingAdvInfo panelAdvInfo = new PanelLandingAdvInfo();
-        protected bool _PanelAdvInfoShown = false;
+        protected string WarningString
+        {
+            get { return La.WarningString; }
+        }
+
+        protected Color WarningColor
+        {
+            get { return La.WarningColor; }
+        }
+
+        protected float AllowedHori
+        {
+            get { return La.AllowedHori; }
+        }
+
+        protected float TerrainHeight
+        {
+            get { return La.TerrainHeight; }
+        }
+
+        protected float AltKeepTrue
+        {
+            get { return La.AltKeepTrue; }
+        }
+
+        protected float AltKeepAsl
+        {
+            get { return La.AltKeepAsl; }
+        }
+
+        protected string HoverAtString
+        {
+            get { return "Hover at " + AltKeep.ToString("#0.0") + UnitStrings.length + " " + (UseTrueAlt ? "True" : "ASL"); }
+        }
+
         protected bool PanelAdvInfoShown
         {
             set
             {
                 if (value)
                 {
-                    if (_PanelAdvInfoShown)
+                    if (this.panelAdvInfoShown)
                     {
-                        _PanelAdvInfoShown = false;
-                        panelAdvInfo.PanelShown = true;
+                        this.panelAdvInfoShown = false;
+                        this.panelAdvInfo.PanelShown = true;
                     }
                 }
                 else
                 {
-                    _PanelAdvInfoShown = panelAdvInfo.PanelShown;
-                    panelAdvInfo.PanelShown = false;
+                    this.panelAdvInfoShown = this.panelAdvInfo.PanelShown;
+                    this.panelAdvInfo.PanelShown = false;
                 }
             }
         }
@@ -168,28 +153,96 @@ namespace HydroTech_RCS.Panels
             set
             {
                 base.Active = value;
-                panelAdvInfo.Active = value;
+                this.panelAdvInfo.Active = value;
             }
         }
+
         public override bool PanelShown
         {
             set
             {
-                if (value != PanelShown)
-                    PanelAdvInfoShown = value;
+                if (value != this.PanelShown) { this.PanelAdvInfoShown = value; }
                 base.PanelShown = value;
             }
         }
+
+        public PanelLanding()
+        {
+            this.fileName = new FileName("landing", "cfg", HydroJebCore.panelSaveFolder);
+        }
+
+        protected override void SetDefaultWindowRect()
+        {
+            this.windowRect = WindowPositions.landing;
+        }
+
+        protected override void MakeAPSave()
+        {
+            La.MakeSaveAtNextUpdate();
+        }
+
+        protected override void WindowGUI(int windowId)
+        {
+            if (this.Settings) { DrawSettingsUI(); }
+            else
+            {
+                GUILayout.Label("Pod orientation: " + (VabPod ? "Up" : "Horizon"));
+                GUILayout.Label("Touchdown speed: " + SafeTouchDownSpeed.ToString("#0.0") + UnitStrings.speedSimple);
+                GUILayout.Label("Use engines: " + (Engines ? "true" : "false"));
+                if (Engines)
+                {
+                    GUILayout.Label("Max throttle: " + MaxThrottle.ToString("#0.0"));
+                    //GUILayout.Label("Burn retrograde: " + (burnRetro ? "true" : "false"));
+                }
+                if (Touchdown)
+                {
+                    GUILayout.Label("Perform touchdown");
+                    if (GUILayout.Button(this.HoverAtString)) { Touchdown = false; }
+                }
+                else
+                {
+                    GUILayout.Label(this.HoverAtString);
+                    GUILayout.Label("Max allowed horizontal speed: " + this.AllowedHori.ToString("#0.0") + UnitStrings.speedSimple);
+                    if (GUILayout.Button("Switch True/ASL"))
+                    {
+                        if (UseTrueAlt)
+                        {
+                            AltKeep = this.AltKeepAsl;
+                            UseTrueAlt = false;
+                        }
+                        else
+                        {
+                            AltKeep = this.AltKeepTrue;
+                            UseTrueAlt = true;
+                        }
+                    }
+                    if (GUILayout.Button("Land"))
+                    {
+                        Touchdown = true;
+                        ResetHeight();
+                    }
+                }
+                if (GUILayout.Button("Change settings")) { this.Settings = true; }
+                this.panelAdvInfo.PanelShown = GUILayout.Toggle(this.panelAdvInfo.PanelShown, "Advanced info");
+                if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
+                GUILayout.Label("Status: " + this.StatusString);
+                GUILayout.Label(this.WarningString, LabelStyle(this.WarningColor));
+            }
+
+            GUI.DragWindow();
+        }
+
         public override void onFlightStart()
         {
             base.onFlightStart();
-            panelAdvInfo.onFlightStart();
-            _PanelAdvInfoShown = false;
+            this.panelAdvInfo.OnFlightStart();
+            this.panelAdvInfoShown = false;
         }
+
         public override void OnUpdate()
         {
             base.OnUpdate();
-            panelAdvInfo.OnUpdate();
+            this.panelAdvInfo.OnUpdate();
         }
     }
 }

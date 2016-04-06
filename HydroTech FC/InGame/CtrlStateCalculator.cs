@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using UnityEngine;
 
 namespace HydroTech_FC
 {
-    using UnityEngine;
-
     public class CtrlStateCalculator
     {
-        public float yaw = 0.0F;
-        public float roll = 0.0F;
-        public float pitch = 0.0F;
-        public float X = 0.0F;
-        public float Y = 0.0F;
-        public float Z = 0.0F;
+        public float yaw;
+        public float roll;
+        public float pitch;
+        public float x;
+        public float y;
+        public float z;
 
-        protected void ChangeTransformRotation(
-            Vector3 right,
-            Vector3 down,
-            Vector3 forward,
-            Transform transform
-            )
+        protected void ChangeTransformRotation(Vector3 right, Vector3 down, Vector3 forward, Transform transform)
         {
             SwitchTransformCalculator sCal = new SwitchTransformCalculator();
             sCal.GetRotation(this);
@@ -29,12 +19,7 @@ namespace HydroTech_FC
             sCal.SetRotation(this);
         }
 
-        protected void ChangeTransformTranslation(
-            Vector3 right,
-            Vector3 down,
-            Vector3 forward,
-            Transform transform
-            )
+        protected void ChangeTransformTranslation(Vector3 right, Vector3 down, Vector3 forward, Transform transform)
         {
             SwitchTransformCalculator sCal = new SwitchTransformCalculator();
             sCal.GetTranslation(this);
@@ -44,30 +29,30 @@ namespace HydroTech_FC
 
         public void RotationMultiplier(float m)
         {
-            yaw *= m;
-            roll *= m;
-            pitch *= m;
+            this.yaw *= m;
+            this.roll *= m;
+            this.pitch *= m;
         }
 
         public void TranslationMultiplier(float m)
         {
-            X *= m;
-            Y *= m;
-            Z *= m;
+            this.x *= m;
+            this.y *= m;
+            this.z *= m;
         }
 
         public void SetCtrlStateRotation(FlightCtrlState ctrlState)
         {
-            ctrlState.yaw = yaw;
-            ctrlState.roll = roll;
-            ctrlState.pitch = pitch;
+            ctrlState.yaw = this.yaw;
+            ctrlState.roll = this.roll;
+            ctrlState.pitch = this.pitch;
         }
 
         public void SetCtrlStateTranslation(FlightCtrlState ctrlState)
         {
-            ctrlState.X = X;
-            ctrlState.Y = Y;
-            ctrlState.Z = Z;
+            ctrlState.X = this.x;
+            ctrlState.Y = this.y;
+            ctrlState.Z = this.z;
         }
 
 #if DEBUG

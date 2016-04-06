@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HydroTech_RCS.Constants.Units
 {
     public static class UnitStrings
     {
-        private const String _Dot = "·";
-        private const String _Index = "^";
-        private const String _Divide = "/";
+        private const string dot = "·";
+        private const string index = "^";
+        private const string divide = "/";
 
-        public const String Length = "m";
-        public const String Time = "s";
-        public const String Angle = "rad";
+        public const string length = "m";
+        public const string time = "s";
+        public const string angle = "rad";
 
-        public const String Force = "N";
+        public const string force = "N";
 
-        public const String Speed = Length + _Dot + Time + _Index + "-1";
-        public const String Speed_Simple = Length + _Divide + Time;
-        public const String Acceleration = Length + _Dot + Time + _Index + "-2";
-        public const String AngularV = Angle + _Dot + Time + _Index + "-1";
-        public const String AngularV_Simple = Angle + _Divide + Time;
-        public const String AngularAcc = Angle + _Dot + Time + _Index + "-2";
-        public const String Torque = Force + _Dot + Length;
+        public const string speed = length + dot + time + index + "-1";
+        public const string speedSimple = length + divide + time;
+        public const string acceleration = length + dot + time + index + "-2";
+        public const string angularV = angle + dot + time + index + "-1";
+        public const string angularVSimple = angle + divide + time;
+        public const string angularAcc = angle + dot + time + index + "-2";
+        public const string torque = force + dot + length;
     }
 }

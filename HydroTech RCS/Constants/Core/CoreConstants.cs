@@ -1,36 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace HydroTech_RCS.Constants.Core
+﻿namespace HydroTech_RCS.Constants.Core
 {
     public static class AutopilotIDs
     {
-        public const int Translation = 0;
-        public const int Landing = 1;
-        public const int Dock = 2;
-        public const int Precise = 3;
+        public const int translation = 0;
+        public const int landing = 1;
+        public const int dock = 2;
+        public const int precise = 3;
     }
+
     public static class PanelIDs
     {
 #if DEBUG
-        public const int Debug = 15;
+        public const int debug = 15;
 #endif
 
-        public const int Main = 1;
-        public const int MainThrottle = 2;
-        public const int RCSInfo = 3;
-        public const int PreciseControl = 4;
-        public const int Translation = 5;
-        public const int Landing = 6;
-        public const int Dock = 7;
-        public const int LandingInfo = 8;
+        public const int main = 1;
+        public const int mainThrottle = 2;
+        public const int rcsInfo = 3;
+        public const int preciseControl = 4;
+        public const int translation = 5;
+        public const int landing = 6;
+        public const int dock = 7;
+        public const int landingInfo = 8;
     }
+
     public static class ManagerConsts
     {
-        public const int RenderMgr_queueSpot = 3;
-        public const int RenderMgr_ModulePartRename = 20;
-        public const int RenderMgr_ModuleHydroASAS = 21;
+        public const int renderMgrQueueSpot = 3;
+        public const int renderMgrModulePartRename = 20;
+        public const int renderMgrModuleHydroAsas = 21;
     }
 }
