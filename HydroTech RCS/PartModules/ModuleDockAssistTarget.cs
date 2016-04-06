@@ -67,11 +67,11 @@ public class ModuleDockAssistTarget : HydroPartModule, IPartPreview, IDAPartEdit
         return _IsNear;
     }
 
-    static protected PanelDockAssist panel { get { return PanelDockAssist.thePanel; } }
-    static protected ModuleDockAssistTarget CurTarget
+    protected static PanelDockAssist panel { get { return PanelDockAssist.thePanel; } }
+    protected static ModuleDockAssistTarget CurTarget
     {
-        get { return APDockAssist.theAutopilot.Target; }
-        set { APDockAssist.theAutopilot.Target = value; }
+        get { return APDockAssist.theAutopilot.target; }
+        set { APDockAssist.theAutopilot.target = value; }
     }
 
     public override void OnUpdate()

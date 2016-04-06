@@ -16,7 +16,7 @@ namespace HydroTech_RCS.Panels
     public class PanelDebug : Panel
     {
 #if DEBUG
-        static public PanelDebug thePanel { get { return (PanelDebug)HydroJebCore.panels[PanelIDs.Debug]; } }
+        public static PanelDebug thePanel { get { return (PanelDebug)HydroJebCore.panels[PanelIDs.Debug]; } }
 #endif
         public PanelDebug()
         {

@@ -12,8 +12,8 @@ namespace HydroTech_RCS.Autopilots
 
     public partial class APLanding : RCSAutopilot
     {
-        static public APLanding theAutopilot { get { return (APLanding)HydroJebCore.autopilots[AutopilotIDs.Landing]; } }
-        static public PanelLanding panel { get { return PanelLanding.thePanel; } }
+        public static APLanding theAutopilot { get { return (APLanding)HydroJebCore.autopilots[AutopilotIDs.Landing]; } }
+        public static PanelLanding panel { get { return PanelLanding.thePanel; } }
 
         public APLanding()
         {
@@ -84,13 +84,13 @@ namespace HydroTech_RCS.Autopilots
 
         #region override
 
-        public override bool Engaged
+        public override bool engaged
         {
             set
             {
                 if (value != _Engaged)
                     panel.ResetHeight();
-                base.Engaged = value;
+                base.engaged = value;
             }
         }
 

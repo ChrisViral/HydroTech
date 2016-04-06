@@ -25,7 +25,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect() { windowRect = WindowPositions.LandingInfo; }
 
-        static protected APLanding LA { get { return APLanding.theAutopilot; } }
+        protected static APLanding LA { get { return APLanding.theAutopilot; } }
         protected float AltTrue { get { return LA.AltTrue; } }
         protected bool Terrain { get { return LA.Terrain; } }
         protected float DetectRadius { get { return LA.DetectRadius; } }

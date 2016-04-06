@@ -9,7 +9,7 @@ using System.Text;
 
 namespace HydroTech_FC
 {
-    static public class HydroFlightInputManager
+    public static class HydroFlightInputManager
     {
         public class HydroFlightInputCallback
         {
@@ -40,9 +40,9 @@ namespace HydroTech_FC
                 = new Dictionary<string, FlightInputCallback>();
         }
 
-        static private List<HydroFlightInputHandler> handlerList = new List<HydroFlightInputHandler>();
+        private static List<HydroFlightInputHandler> handlerList = new List<HydroFlightInputHandler>();
 
-        static private bool ContainsVessel(Vessel vessel)
+        private static bool ContainsVessel(Vessel vessel)
         {
             if (vessel == null)
                 throw (new Exception("HydroFlightInputManager.ContainsVessel: vessel is null"));
@@ -52,7 +52,7 @@ namespace HydroTech_FC
             return false;
         }
 
-        static public bool ContainsNameString(String str)
+        public static bool ContainsNameString(String str)
         {
             foreach (HydroFlightInputHandler handler in handlerList)
                 if (!handler.isDestroyed && handler.flightInputList.Keys.Contains(str))
@@ -60,7 +60,7 @@ namespace HydroTech_FC
             return false;
         }
 
-        static private Dictionary<String, FlightInputCallback> InputList(Vessel vessel)
+        private static Dictionary<String, FlightInputCallback> InputList(Vessel vessel)
         {
             HydroFlightInputHandler h = null;
             try { h = Handler(vessel); }
@@ -71,7 +71,7 @@ namespace HydroTech_FC
             return h.flightInputList;
         }
 
-        static private HydroFlightInputHandler Handler(Vessel vessel)
+        private static HydroFlightInputHandler Handler(Vessel vessel)
         {
             foreach (HydroFlightInputHandler handler in handlerList)
                 if (handler.vessel == vessel)
@@ -79,7 +79,7 @@ namespace HydroTech_FC
             throw (new Exception("HydroFlightInputHandler.Handler fail: vessel not found; please check before calling"));
         }
 
-        static public void AddOnFlyByWire(HydroFlightInputCallback callback)
+        public static void AddOnFlyByWire(HydroFlightInputCallback callback)
         {
             if (callback.vessel == null)
                 throw (new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding "
@@ -101,7 +101,7 @@ namespace HydroTech_FC
 #endif
         }
 
-        static public void RemoveOnFlyByWire(HydroFlightInputCallback callback)
+        public static void RemoveOnFlyByWire(HydroFlightInputCallback callback)
         {
             if (callback.vessel == null)
                 throw (new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing "
@@ -126,21 +126,21 @@ namespace HydroTech_FC
 #endif
         }
 
-        static public void AddOnFlyByWire(Vessel vessel, String nameString, FlightInputCallback callback)
+        public static void AddOnFlyByWire(Vessel vessel, String nameString, FlightInputCallback callback)
         {
             AddOnFlyByWire(new HydroFlightInputCallback(vessel, nameString, callback));
         }
-        static public void RemoveOnFlyByWire(Vessel vessel, String nameString, FlightInputCallback callback)
+        public static void RemoveOnFlyByWire(Vessel vessel, String nameString, FlightInputCallback callback)
         {
             RemoveOnFlyByWire(new HydroFlightInputCallback(vessel, nameString, callback));
         }
 
-        static public void onFlightStart()
+        public static void onFlightStart()
         {
             handlerList.Clear();
         }
 
-        static public void OnUpdate()
+        public static void OnUpdate()
         {
             List<HydroFlightInputHandler> listToRemove = new List<HydroFlightInputHandler>();
             foreach (HydroFlightInputHandler handler in handlerList)
@@ -189,9 +189,9 @@ namespace HydroTech_FC
         }
 
 #if DEBUG
-        static private void print(object message) { GameBehaviours.print(message); }
+        private static void print(object message) { GameBehaviours.print(message); }
 
-        static public void PrintCount()
+        public static void PrintCount()
         {
             int vesselActive = 0, vesselDestroyed = 0;
             int apActive = 0, apInactive = 0;
@@ -213,7 +213,7 @@ namespace HydroTech_FC
                 "\nInactive: " + vesselDestroyed + " vessels, " + apInactive + " autopilots");
         }
 
-        static public String StringList()
+        public static String StringList()
         {
             String msgStr = "Vessel count = " + handlerList.Count;
             int count = 0;
@@ -231,7 +231,7 @@ namespace HydroTech_FC
             }
             return msgStr;
         }
-        static public void PrintList() { print(StringList()); }
+        public static void PrintList() { print(StringList()); }
 #endif
     }
 }

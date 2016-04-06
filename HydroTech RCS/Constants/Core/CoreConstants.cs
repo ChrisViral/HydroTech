@@ -5,14 +5,14 @@ using System.Text;
 
 namespace HydroTech_RCS.Constants.Core
 {
-    static public class AutopilotIDs
+    public static class AutopilotIDs
     {
         public const int Translation = 0;
         public const int Landing = 1;
         public const int Dock = 2;
         public const int Precise = 3;
     }
-    static public class PanelIDs
+    public static class PanelIDs
     {
 #if DEBUG
         public const int Debug = 15;
@@ -27,7 +27,7 @@ namespace HydroTech_RCS.Constants.Core
         public const int Dock = 7;
         public const int LandingInfo = 8;
     }
-    static public class ManagerConsts
+    public static class ManagerConsts
     {
         public const int RenderMgr_queueSpot = 3;
         public const int RenderMgr_ModulePartRename = 20;

@@ -13,7 +13,7 @@ namespace HydroTech_RCS.Panels
         abstract protected void MakeAPSave();
 
         protected bool _Settings = false;
-        virtual protected bool Settings
+        protected virtual bool Settings
         {
             get { return _Settings; }
             set
@@ -28,7 +28,7 @@ namespace HydroTech_RCS.Panels
             }
         }
 
-        virtual protected void DrawSettingsUI()
+        protected virtual void DrawSettingsUI()
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("OK"))

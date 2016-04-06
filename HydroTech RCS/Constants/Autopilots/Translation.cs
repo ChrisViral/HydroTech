@@ -7,7 +7,7 @@ namespace HydroTech_RCS.Constants.Autopilots
 {
     namespace Landing
     {
-        static public class Translation
+        public static class Translation
         {
             public const float IdleThrust = 0.0F;
             public const float VertBrakeThrust = 1.0F; // throttle for vertical braking

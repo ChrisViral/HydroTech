@@ -70,9 +70,9 @@ namespace HydroTech_RCS.Autopilots.Modules
         protected Vector3 CoM = new Vector3();
         public Matrix3x3 MoI = new Matrix3x3();
 
-        static protected float PartMass(Part part) { return part.mass + part.GetResourceMass(); }
+        protected static float PartMass(Part part) { return part.mass + part.GetResourceMass(); }
 
-        virtual protected void Calculate()
+        protected virtual void Calculate()
         {
             Mass = 0;
             MoI.Reset();
@@ -112,13 +112,13 @@ namespace HydroTech_RCS.Autopilots.Modules
             }
         }
 
-        virtual public void OnUpdate(Vessel targetVessel)
+        public virtual void OnUpdate(Vessel targetVessel)
         {
             SetVessel(targetVessel);
             Calculate();
         }
 
-        virtual public void OnEditorUpdate()
+        public virtual void OnEditorUpdate()
         {
             Editor = true;
             Calculate();

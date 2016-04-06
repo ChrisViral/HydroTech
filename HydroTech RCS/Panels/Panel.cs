@@ -36,7 +36,7 @@ namespace HydroTech_RCS.Panels
         protected void RemovePanel() { HydroRenderingManager.RemoveFromPostDrawQueue(QueueSpot, drawGUI); }
 
         protected bool _Active = false;
-        virtual public bool Active
+        public virtual bool Active
         {
             get { return _Active; }
             set
@@ -55,7 +55,7 @@ namespace HydroTech_RCS.Panels
         [HydroSLNodeInfo(name = "PANEL")]
         [HydroSLField(saveName = "PanelShown")]
         public bool _PanelShown = false;
-        virtual public bool PanelShown
+        public virtual bool PanelShown
         {
             get { return _PanelShown; }
             set
@@ -74,15 +74,15 @@ namespace HydroTech_RCS.Panels
             }
         }
 
-        static public GUIStyle BtnStyle() { return GameGUI.Button.Style(); }
-        static public GUIStyle BtnStyle(Color textColor) { return GameGUI.Button.Style(textColor); }
-        static public GUIStyle BtnStyle_Wrap() { return GameGUI.Button.Wrap(); }
-        static public GUIStyle BtnStyle_Wrap(Color textColor) { return GameGUI.Button.Wrap(textColor); }
+        public static GUIStyle BtnStyle() { return GameGUI.Button.Style(); }
+        public static GUIStyle BtnStyle(Color textColor) { return GameGUI.Button.Style(textColor); }
+        public static GUIStyle BtnStyle_Wrap() { return GameGUI.Button.Wrap(); }
+        public static GUIStyle BtnStyle_Wrap(Color textColor) { return GameGUI.Button.Wrap(textColor); }
 
-        static public GUIStyle LabelStyle() { return GameGUI.Label.Style(); }
-        static public GUIStyle LabelStyle(Color textColor) { return GameGUI.Label.Style(textColor); }
+        public static GUIStyle LabelStyle() { return GameGUI.Label.Style(); }
+        public static GUIStyle LabelStyle(Color textColor) { return GameGUI.Label.Style(textColor); }
 
-        virtual protected bool LayoutEngageBtn(bool _En)
+        protected virtual bool LayoutEngageBtn(bool _En)
         {
             GUIStyle Engage_Btn_Style = BtnStyle(_En ? Color.red : Color.blue);
             String Engage_Btn_Text = _En ? "DISENGAGE" : "ENGAGE";
@@ -90,7 +90,7 @@ namespace HydroTech_RCS.Panels
         }
 
         abstract protected void WindowGUI(int WindowID);
-        virtual public void drawGUI()
+        public virtual void drawGUI()
         {
             GUI.skin = HighLogic.Skin;
             Rect newWindowRect = GUILayout.Window(
@@ -101,7 +101,7 @@ namespace HydroTech_RCS.Panels
             windowRect = newWindowRect;
         }
 
-        virtual public void onFlightStart()
+        public virtual void onFlightStart()
         {
             Active = true;
             bool tempPanelShown = PanelShown;
@@ -110,11 +110,11 @@ namespace HydroTech_RCS.Panels
                 AddPanel();
         }
 
-        virtual public void onGamePause() { Active = false; }
-        virtual public void onGameResume() { Active = true; }
-        virtual public void OnDeactivate() { Active = false; }
-        virtual public void OnActivate() { Active = true; }
-        virtual public void OnUpdate()
+        public virtual void onGamePause() { Active = false; }
+        public virtual void onGameResume() { Active = true; }
+        public virtual void OnDeactivate() { Active = false; }
+        public virtual void OnActivate() { Active = true; }
+        public virtual void OnUpdate()
         {
             Active = HydroJebCore.electricity;
             if (needSave)

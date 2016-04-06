@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HydroTech_RCS.Constants.Core
 {
-    static public class Behaviours
+    public static class Behaviours
     {
         public const double Electric_Consumption_Autopilot = 0.01;
         public const double Electric_Consumption_Camera = 0.002;

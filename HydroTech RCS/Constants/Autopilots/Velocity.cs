@@ -7,7 +7,7 @@ namespace HydroTech_RCS.Constants.Autopilots
 {
     namespace Landing
     {
-        static public class Velocity
+        public static class Velocity
         {
             public const float SafeHorizontalSpeed = 0.1F; // maximum horizontal speed for touchdown
             // public const float MaxAscentSpeed = 1.0F; // maximum vertical ascending speed when holding altitude
@@ -15,7 +15,7 @@ namespace HydroTech_RCS.Constants.Autopilots
     }
     namespace Docking
     {
-        static public class Velocity
+        public static class Velocity
         {
             public const float Vel0 = 1.0F;
             public const float MaxSpeed = 0.7F;

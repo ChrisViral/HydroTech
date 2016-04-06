@@ -44,7 +44,7 @@ namespace HydroTech_FC
                 return name + "\\" + (subfolder == null ? "" : subfolder.ToString());
             }
         }
-        static public readonly Folder HydroTechFolder = new Folder("GameData", "HydroTech");
+        public static readonly Folder HydroTechFolder = new Folder("GameData", "HydroTech");
 
         public FileName(string name, string ext)
         {

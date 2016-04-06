@@ -5,13 +5,13 @@ using System.Text;
 
 namespace HydroTech_FC
 {
-    static public class HydroActionGroupManager
+    public static class HydroActionGroupManager
     {
-        static public bool GetState(Vessel vessel, KSPActionGroup action)
+        public static bool GetState(Vessel vessel, KSPActionGroup action)
         {
             return vessel.ActionGroups[action];
         }
-        static public void SetState(Vessel vessel, KSPActionGroup action, bool active)
+        public static void SetState(Vessel vessel, KSPActionGroup action, bool active)
         {
             vessel.ActionGroups.SetGroup(action, active);
         }
@@ -123,7 +123,7 @@ namespace HydroTech_FC
             }
         }
 
-        static public ActionGroupState ActiveVessel { get { return new ActionGroupState(GameStates.ActiveVessel); } }
-        static public ActionGroupState Vessel(Vessel v) { return new ActionGroupState(v); }
+        public static ActionGroupState ActiveVessel { get { return new ActionGroupState(GameStates.ActiveVessel); } }
+        public static ActionGroupState Vessel(Vessel v) { return new ActionGroupState(v); }
     }
 }

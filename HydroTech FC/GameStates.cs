@@ -5,11 +5,11 @@ using System.Text;
 
 namespace HydroTech_FC
 {
-    static public class GameStates
+    public static class GameStates
     {
-        static public bool InEditor { get { return HighLogic.LoadedSceneIsEditor; } }
-        static public bool InFlight { get { return HighLogic.LoadedSceneIsFlight; } }
+        public static bool InEditor { get { return HighLogic.LoadedSceneIsEditor; } }
+        public static bool InFlight { get { return HighLogic.LoadedSceneIsFlight; } }
 
-        static public Vessel ActiveVessel { get { return FlightGlobals.ActiveVessel; } }
+        public static Vessel ActiveVessel { get { return FlightGlobals.ActiveVessel; } }
     }
 }

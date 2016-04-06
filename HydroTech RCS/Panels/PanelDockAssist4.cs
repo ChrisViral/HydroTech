@@ -68,7 +68,7 @@ namespace HydroTech_RCS.Panels
                     ResetHeight();
                     if (value)
                     {
-                        DA.CameraPaused = true;
+                        DA.cameraPaused = true;
                         if (TargetVessel == null)
                             ChoosingVessel = true;
                         else
@@ -81,14 +81,14 @@ namespace HydroTech_RCS.Panels
                     {
                         PreviewPart = null;
                         targetListUI.SetSelectionToItem(null);
-                        DA.CameraPaused = false;
+                        DA.cameraPaused = false;
                     }
                 }
                 _ChoosingTarget = value;
             }
         }
 
-        virtual protected void drawVesselBtn(Vessel v)
+        protected virtual void drawVesselBtn(Vessel v)
         {
             if (v == null)
                 GUILayout.Button("");
@@ -105,7 +105,7 @@ namespace HydroTech_RCS.Panels
             }
         }
 
-        virtual protected void drawTargetBtn(HydroPartModule mtgt)
+        protected virtual void drawTargetBtn(HydroPartModule mtgt)
         {
             if (mtgt == null)
                 GUILayout.Button("");

@@ -9,7 +9,7 @@ using HydroTech_RCS.Constants.Core;
 
 public class HydroJeb : Part
 {
-    virtual protected void SetIcon()
+    protected virtual void SetIcon()
     {
         stackIcon.SetIcon(DefaultIcons.ADV_SAS);
         stackIcon.SetIconColor(XKCDColors.SkyBlue); // Just for fun
@@ -55,12 +55,12 @@ public class HydroJeb : Part
         {
             if (RCSAutopilot.AutopilotEngaged)
                 electricChargeConsumptionRate += Behaviours.Electric_Consumption_Autopilot;
-            if (DA.ShowLine)
+            if (DA.showLine)
                 electricChargeConsumptionRate += Behaviours.Electric_Consumption_Laser;
         }
         else // !isActiveJeb()
         {
-            if (DA.Engaged && DA.DriveTarget && vessel == DA.Target.vessel
+            if (DA.engaged && DA.driveTarget && vessel == DA.target.vessel
                 && this == DA.jebsTargetVessel.FirstOrDefault()) // driving target vessel
                 electricChargeConsumptionRate += Behaviours.Electric_Consumption_Autopilot;
         }
@@ -73,5 +73,5 @@ public class HydroJeb : Part
 
     public bool isActiveJeb() { return HydroJebCore.isActiveJeb(this); }
 
-    static protected APDockAssist DA { get { return APDockAssist.theAutopilot; } }
+    protected static APDockAssist DA { get { return APDockAssist.theAutopilot; } }
 }

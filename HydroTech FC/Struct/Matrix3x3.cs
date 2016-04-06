@@ -27,7 +27,7 @@ namespace HydroTech_FC
         public float m10, m11, m12;
         public float m20, m21, m22;
 
-        static public Matrix3x3 I
+        public static Matrix3x3 I
         {
             get
             {
@@ -202,7 +202,7 @@ namespace HydroTech_FC
             m20 = m21 = m22 = 0.0F;
         }
 
-        static public Vector3 operator *(Matrix3x3 matrix, Vector3 vec)
+        public static Vector3 operator *(Matrix3x3 matrix, Vector3 vec)
         {
             return new Vector3(
                 HMaths.DotProduct(matrix.RowX, vec),
@@ -210,7 +210,7 @@ namespace HydroTech_FC
                 HMaths.DotProduct(matrix.RowZ, vec)
                 );
         }
-        static public Vector3 operator /(Vector3 vec, Matrix3x3 matrix)
+        public static Vector3 operator /(Vector3 vec, Matrix3x3 matrix)
         {
             return matrix.InverseMatrix * vec;
         }
@@ -221,7 +221,7 @@ namespace HydroTech_FC
                 + "(" + m10.ToString() + ", " + m11.ToString() + ", " + m12.ToString() + "), "
                 + "(" + m20.ToString() + ", " + m21.ToString() + ", " + m22.ToString() + ")}";
         }
-        virtual public string ToString(string format)
+        public virtual string ToString(string format)
         {
             return "{(" + m00.ToString(format) + ", " + m01.ToString(format) + ", " + m02.ToString(format) + "), "
                 + "(" + m10.ToString(format) + ", " + m11.ToString(format) + ", " + m12.ToString(format) + "), "

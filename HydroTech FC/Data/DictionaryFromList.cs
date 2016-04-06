@@ -13,7 +13,7 @@ namespace HydroTech_FC
         protected List<T> keyList = null;
         protected U defaultValue = new U();
 
-        virtual public void OnUpdate()
+        public virtual void OnUpdate()
         {
             foreach (T item in keyList)
                 if (!ContainsKey(item))

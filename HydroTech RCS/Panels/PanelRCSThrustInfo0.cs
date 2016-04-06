@@ -13,7 +13,7 @@ namespace HydroTech_RCS.Panels
 
     public partial class PanelRCSThrustInfo : Panel, IPanelEditor
     {
-        static public PanelRCSThrustInfo thePanel { get { return (PanelRCSThrustInfo)HydroJebCore.panels[PanelIDs.RCSInfo]; } }
+        public static PanelRCSThrustInfo thePanel { get { return (PanelRCSThrustInfo)HydroJebCore.panels[PanelIDs.RCSInfo]; } }
 
         public PanelRCSThrustInfo()
         {
@@ -100,7 +100,7 @@ namespace HydroTech_RCS.Panels
                 Save();
         }
 
-        static protected CalculatorRCSThrust theCalculator { get { return HydroJebCore.activeVesselRCS; } }
+        protected static CalculatorRCSThrust theCalculator { get { return HydroJebCore.activeVesselRCS; } }
 
         public override void OnUpdate()
         {

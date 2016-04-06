@@ -11,7 +11,7 @@ namespace HydroTech_RCS.Autopilots
 
     public class APPreciseControl : RCSAutopilot
     {
-        static public APPreciseControl theAutopilot { get { return (APPreciseControl)HydroJebCore.autopilots[AutopilotIDs.Precise]; } }
+        public static APPreciseControl theAutopilot { get { return (APPreciseControl)HydroJebCore.autopilots[AutopilotIDs.Precise]; } }
 
         public APPreciseControl()
         {

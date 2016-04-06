@@ -13,7 +13,7 @@ namespace HydroTech_RCS.Panels
 
     public partial class PanelDockAssist : PanelwAP
     {
-        static public PanelDockAssist thePanel { get { return (PanelDockAssist)HydroJebCore.panels[PanelIDs.Dock]; } }
+        public static PanelDockAssist thePanel { get { return (PanelDockAssist)HydroJebCore.panels[PanelIDs.Dock]; } }
 
         public PanelDockAssist()
         {
@@ -33,53 +33,53 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect() { windowRect = WindowPositions.Docking; }
 
-        static protected APDockAssist DA { get { return APDockAssist.theAutopilot; } }
+        protected static APDockAssist DA { get { return APDockAssist.theAutopilot; } }
 
         protected override void MakeAPSave() { DA.MakeSaveAtNextUpdate(); }
 
         protected override bool Engaged
         {
-            get { return DA.Engaged; }
-            set { DA.Engaged = value; }
+            get { return DA.engaged; }
+            set { DA.engaged = value; }
         }
-        static protected ModuleDockAssistCam Cam
+        protected static ModuleDockAssistCam Cam
         {
-            get { return DA.Cam; }
-            set { DA.Cam = value; }
+            get { return DA.cam; }
+            set { DA.cam = value; }
         }
-        static protected ModuleDockAssistTarget Target
+        protected static ModuleDockAssistTarget Target
         {
-            get { return DA.Target; }
-            set { DA.Target = value; }
+            get { return DA.target; }
+            set { DA.target = value; }
         }
-        static protected bool NullCamera() { return DA.NullCamera(); }
-        static protected bool NullTarget() { return DA.NullTarget(); }
-        static protected bool Manual
+        protected static bool NullCamera() { return DA.NullCamera(); }
+        protected static bool NullTarget() { return DA.NullTarget(); }
+        protected static bool Manual
         {
-            get { return DA.Manual; }
-            set { DA.Manual = value; }
+            get { return DA.manual; }
+            set { DA.manual = value; }
         }
-        static protected bool ShowLine
+        protected static bool ShowLine
         {
-            get { return DA.ShowLine; }
-            set { DA.ShowLine = value; }
+            get { return DA.showLine; }
+            set { DA.showLine = value; }
         }
-        static protected bool AutoOrient
+        protected static bool AutoOrient
         {
-            get { return DA.AutoOrient; }
-            set { DA.AutoOrient = value; }
+            get { return DA.autoOrient; }
+            set { DA.autoOrient = value; }
         }
-        static protected bool KillRelV
+        protected static bool KillRelV
         {
-            get { return DA.KillRelV; }
-            set { DA.KillRelV = value; }
+            get { return DA.killRelV; }
+            set { DA.killRelV = value; }
         }
-        static protected bool CamView
+        protected static bool CamView
         {
-            get { return DA.CamView; }
-            set { DA.CamView = value; }
+            get { return DA.camView; }
+            set { DA.camView = value; }
         }
-        static protected int CamMag
+        protected static int CamMag
         {
             get 
             {
@@ -94,26 +94,26 @@ namespace HydroTech_RCS.Panels
                 Cam.mag = value;
             }
         }
-        static protected float AngularAcc
+        protected static float AngularAcc
         {
-            get { return DA.AngularAcc; }
-            set { DA.AngularAcc = value; }
+            get { return DA.angularAcc; }
+            set { DA.angularAcc = value; }
         }
-        static protected float Acc
+        protected static float Acc
         {
-            get { return DA.Acc; }
-            set { DA.Acc = value; }
+            get { return DA.acc; }
+            set { DA.acc = value; }
         }
-        static protected float FSSpeed
+        protected static float FSSpeed
         {
-            get { return DA.FinalStageSpeed; }
-            set { DA.FinalStageSpeed = value; }
+            get { return DA.finalStageSpeed; }
+            set { DA.finalStageSpeed = value; }
         }
-        static protected bool TargetHasJeb() { return DA.TargetHasJeb(); }
-        static protected bool DriveTarget
+        protected static bool TargetHasJeb() { return DA.TargetHasJeb(); }
+        protected static bool DriveTarget
         {
-            get { return DA.DriveTarget; }
-            set { DA.DriveTarget = value; }
+            get { return DA.driveTarget; }
+            set { DA.driveTarget = value; }
         }
 
         protected SingleSelectionListUI<HydroPartModule> camListUI = null;

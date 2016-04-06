@@ -26,8 +26,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Output\GameData\HydroTech\Plugins\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
@@ -61,8 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Autopilots\APDockAssist0.cs" />
-    <Compile Include="Autopilots\APDockAssist1.cs" />
+    <Compile Include="Autopilots\APDockAssist.cs" />
     <Compile Include="Autopilots\APLanding0.cs" />
     <Compile Include="Autopilots\APLanding1.cs" />
     <Compile Include="Autopilots\APLanding2.cs" />

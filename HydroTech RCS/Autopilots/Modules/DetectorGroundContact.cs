@@ -59,7 +59,7 @@ namespace HydroTech_RCS.Autopilots.Modules
             distance.Add(DIRECTION.EAST, 0.0F);
         }
 
-        virtual public void OnUpdate(Vessel v, float heightOffset, bool slope)
+        public virtual void OnUpdate(Vessel v, float heightOffset, bool slope)
         {
             vessel = v;
             altASL = (float)MainBody.GetAltitude(CoM) - heightOffset;

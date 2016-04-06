@@ -11,11 +11,11 @@ namespace HydroTech_FC
 {
     using UnityEngine;
 
-    static public class HydroRenderingManager
+    public static class HydroRenderingManager
     {
-        static private Dictionary<int, Callback> CallbackList = new Dictionary<int, Callback>();
+        private static Dictionary<int, Callback> CallbackList = new Dictionary<int, Callback>();
 
-        static public void AddToPostDrawQueue(int queueSpot, Callback drawFunction)
+        public static void AddToPostDrawQueue(int queueSpot, Callback drawFunction)
         {
             if (CallbackList.ContainsKey(queueSpot) || CallbackList.ContainsValue(drawFunction))
                 throw (new Exception("AddToPostDrawQueue fail: draw function (" + queueSpot + ") already added."));
@@ -26,7 +26,7 @@ namespace HydroTech_FC
 #endif
         }
 
-        static public void RemoveFromPostDrawQueue(int queueSpot, Callback drawFunction)
+        public static void RemoveFromPostDrawQueue(int queueSpot, Callback drawFunction)
         {
             if (!CallbackList.ContainsKey(queueSpot))
                 throw (new Exception("RemoveFromPostDrawQueue fail: queue spot (" + queueSpot + ") not found"));
@@ -39,13 +39,13 @@ namespace HydroTech_FC
 #endif
         }
 
-        static public bool Contains(int queueSpot)
+        public static bool Contains(int queueSpot)
         {
             return CallbackList.ContainsKey(queueSpot);
         }
 
 #if DEBUG
-        static private void print(object message) { GameBehaviours.print(message); }
+        private static void print(object message) { GameBehaviours.print(message); }
 #endif
     }
 }

@@ -9,8 +9,8 @@ namespace HydroTech_FC
 
     public class HydroPartModule : PartModule
     {
-        virtual public void OnFlightStart() { }
-        virtual public void OnDestroy() { }
+        public virtual void OnFlightStart() { }
+        public virtual void OnDestroy() { }
 
         protected Vector3 ReverseTransform_PartConfig(Vector3 vec)
         {
@@ -23,12 +23,12 @@ namespace HydroTech_FC
         }
 
 #if DEBUG
-        new static protected void print(object message) { GameBehaviours.print(message); }
-        static protected void warning(object message) { GameBehaviours.warning(message); }
-        static protected void error(object message) { GameBehaviours.error(message); }
+        new protected static void print(object message) { GameBehaviours.print(message); }
+        protected static void warning(object message) { GameBehaviours.warning(message); }
+        protected static void error(object message) { GameBehaviours.error(message); }
 #else
         [Obsolete("Do not print anything on Release", true)]
-        new static protected void print(object message) { }
+        new protected static void print(object message) { }
 #endif
     }
 }

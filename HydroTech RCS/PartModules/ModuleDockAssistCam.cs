@@ -25,7 +25,7 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorA
     {
         return SwitchTransformCalculator.VectorTransform(vec, Right, Down, Dir);
     }
-    static public Vector3 VectorTransform(Vector3 vec, ModuleDockAssistCam mcam)
+    public static Vector3 VectorTransform(Vector3 vec, ModuleDockAssistCam mcam)
     {
         return mcam.VectorTransform(vec);
     }
@@ -75,7 +75,7 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorA
         HydroFlightCameraManager.SetRotation(previewForward, previewUp);
     }
 
-    static public ModuleDockAssistCam ActiveCam = null;
+    public static ModuleDockAssistCam ActiveCam = null;
 
     protected bool _CamActivate = false;
     public bool CamActivate
@@ -100,12 +100,12 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorA
         }
     }
 
-    static protected APDockAssist DA { get { return APDockAssist.theAutopilot; } }
-    static protected PanelDockAssist panel { get { return PanelDockAssist.thePanel; } }
-    static protected ModuleDockAssistCam CurCam
+    protected static APDockAssist DA { get { return APDockAssist.theAutopilot; } }
+    protected static PanelDockAssist panel { get { return PanelDockAssist.thePanel; } }
+    protected static ModuleDockAssistCam CurCam
     {
-        get { return DA.Cam; }
-        set { DA.Cam = value; }
+        get { return DA.cam; }
+        set { DA.cam = value; }
     }
 
     protected bool _IsOnActiveVessel = false;

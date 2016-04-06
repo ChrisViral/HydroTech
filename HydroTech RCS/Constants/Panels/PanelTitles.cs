@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HydroTech_RCS.Constants.Panels
 {
-    static public class PanelTitles
+    public static class PanelTitles
     {
         public const String Main = "HydroTech RCS Autopilot";
         public const String MainThrottle = "Main Throttle Control";

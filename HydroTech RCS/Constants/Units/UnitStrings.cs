@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HydroTech_RCS.Constants.Units
 {
-    static public class UnitStrings
+    public static class UnitStrings
     {
         private const String _Dot = "·";
         private const String _Index = "^";

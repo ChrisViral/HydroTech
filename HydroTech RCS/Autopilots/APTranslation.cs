@@ -13,7 +13,7 @@ namespace HydroTech_RCS.Autopilots
 
     public class APTranslation : RCSAutopilot
     {
-        static public APTranslation theAutopilot { get { return (APTranslation)HydroJebCore.autopilots[AutopilotIDs.Translation]; } }
+        public static APTranslation theAutopilot { get { return (APTranslation)HydroJebCore.autopilots[AutopilotIDs.Translation]; } }
 
         public APTranslation()
         {
@@ -82,18 +82,18 @@ namespace HydroTech_RCS.Autopilots
 
         #region override
 
-        public override bool Engaged
+        public override bool engaged
         {
             set
             {
-                if (!Active)
+                if (!active)
                     return;
                 if (HoldOrient)
                 {
                     HoldOrient = false;
                     HoldOrient = true;
                 }
-                base.Engaged = value;
+                base.engaged = value;
             }
         }
 
@@ -131,7 +131,7 @@ namespace HydroTech_RCS.Autopilots
             ctrlState.Z = -thrustVector.z * RealThrustRate;
         }
 
-        static public Vector3 GetUnitVector(TransDir Dir)
+        public static Vector3 GetUnitVector(TransDir Dir)
         {
             Vector3 Vec = new Vector3(0.0F, 0.0F, 0.0F);
             switch (Dir)

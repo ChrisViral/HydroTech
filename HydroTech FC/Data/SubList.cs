@@ -14,7 +14,7 @@ namespace HydroTech_FC
         protected List<T> parentList = null;
         protected Requirement requirement = null;
 
-        virtual public void OnUpdate()
+        public virtual void OnUpdate()
         {
             Clear();
             foreach (T item in parentList)

@@ -44,7 +44,7 @@ namespace HydroTech_RCS.Panels
                     ResetHeight();
                     if (value)
                     {
-                        DA.CameraPaused = true;
+                        DA.cameraPaused = true;
                         camListUI.SetSelectionToItem(Cam);
                         camListUI.SetToCurSelPage();
                         camListUI.SetSelectionToItem(null);
@@ -53,14 +53,14 @@ namespace HydroTech_RCS.Panels
                     {
                         PreviewPart = null;
                         camListUI.SetSelectionToItem(null);
-                        DA.CameraPaused = false;
+                        DA.cameraPaused = false;
                     }
                 }
                 _ChoosingCamera = value;
             }
         }
 
-        virtual protected void drawCamBtn(HydroPartModule mcam)
+        protected virtual void drawCamBtn(HydroPartModule mcam)
         {
             if (mcam == null)
                 GUILayout.Button("");

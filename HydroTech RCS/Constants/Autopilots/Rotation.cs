@@ -7,7 +7,7 @@ namespace HydroTech_RCS.Constants.Autopilots
 {
     namespace General
     {
-        static public class Rotation
+        public static class Rotation
         {
             public const float RotationHoldRate = 10.0F;
 
@@ -17,7 +17,7 @@ namespace HydroTech_RCS.Constants.Autopilots
     }
     namespace Landing
     {
-        static public class Rotation
+        public static class Rotation
         {
             public const float KillRotThrustRate = 1.0F;
         }

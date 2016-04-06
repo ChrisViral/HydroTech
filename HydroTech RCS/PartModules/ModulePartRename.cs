@@ -55,7 +55,7 @@ public class ModulePartRename : HydroPartModulewPanel
     protected override int QueueSpot { get { return ManagerConsts.RenderMgr_ModulePartRename; } }
     protected override string PanelTitle { get { return "Rename part"; } }
 
-    static private bool _Registered = false;
+    private static bool _Registered = false;
     protected override bool Registered
     {
         get { return _Registered; }

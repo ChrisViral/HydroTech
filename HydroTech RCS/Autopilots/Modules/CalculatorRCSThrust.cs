@@ -98,7 +98,7 @@ namespace HydroTech_RCS.Autopilots.Modules
                 + "\nTorque = " + MaxTorque.ToString()
                 + "\nAAcc = " + MaxAngularAcc.ToString();
         }
-        virtual public string ToString(string format)
+        public virtual string ToString(string format)
         {
             return "Mass = " + Mass.ToString(format)
                 + "\nForces = " + MaxForce.ToString(format)

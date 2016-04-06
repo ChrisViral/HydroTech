@@ -11,16 +11,16 @@ namespace HydroTech_FC
 {
     using UnityEngine;
 
-    static public class HydroFlightCameraManager
+    public static class HydroFlightCameraManager
     {
         private class Settings
         {
-            static private Stack<Settings> settingsStack = new Stack<Settings>();
-            static public void SaveCurrent() { settingsStack.Push(new Settings()); }
-            static public void RetrieveLast() { settingsStack.Pop().Set(); }
-            static public void AbandonLast() { settingsStack.Pop(); }
-            static public void UseLast() { settingsStack.Peek().Set(); }
-            static public void ResetAll() { settingsStack.Clear(); }
+            private static Stack<Settings> settingsStack = new Stack<Settings>();
+            public static void SaveCurrent() { settingsStack.Push(new Settings()); }
+            public static void RetrieveLast() { settingsStack.Pop().Set(); }
+            public static void AbandonLast() { settingsStack.Pop(); }
+            public static void UseLast() { settingsStack.Peek().Set(); }
+            public static void ResetAll() { settingsStack.Clear(); }
 
             public Settings() { Get(); }
 
@@ -85,19 +85,19 @@ namespace HydroTech_FC
             }
 
 #if DEBUG
-            static public int StackCount() { return settingsStack.Count; }
-            static public Settings Top() { return settingsStack.Peek(); }
+            public static int StackCount() { return settingsStack.Count; }
+            public static Settings Top() { return settingsStack.Peek(); }
 #endif
         }
 
-        static private FlightCamera cam = null;
+        private static FlightCamera cam = null;
 
-        static private Vessel ActiveVessel { get { return GameStates.ActiveVessel; } }
-        static private Vessel origVessel = null;
-        static private Transform origParent = null;
+        private static Vessel ActiveVessel { get { return GameStates.ActiveVessel; } }
+        private static Vessel origVessel = null;
+        private static Transform origParent = null;
         const float DefaultFoV = 60.0F;
         const float DefaultNearClip = 0.01F;
-        static public void ResetToActiveVessel()
+        public static void ResetToActiveVessel()
         {
 #if SHOW_MANAGER_OPERATIONS
             print("HydroFlightCameraManager: Setting to active vessel");
@@ -109,14 +109,14 @@ namespace HydroTech_FC
             SetCallback(null);
         }
 
-        static public void SaveCurrent()
+        public static void SaveCurrent()
         {
             Settings.SaveCurrent();
 #if SHOW_MANAGER_OPERATIONS
             print("HydroFlightCameraManager: Settings pushed into stack. Current count = " + Settings.StackCount());
 #endif
         }
-        static public void RetrieveLast()
+        public static void RetrieveLast()
         {
             Settings.RetrieveLast();
 #if SHOW_MANAGER_OPERATIONS
@@ -124,7 +124,7 @@ namespace HydroTech_FC
 #endif
         }
 
-        static public void onFlightStart()
+        public static void onFlightStart()
         {
             cam = (FlightCamera)GameObject.FindObjectOfType(typeof(FlightCamera));
             origVessel = ActiveVessel;
@@ -133,7 +133,7 @@ namespace HydroTech_FC
             camCallback = null;
         }
 
-        static public void OnUpdate()
+        public static void OnUpdate()
         {
             if (origVessel != ActiveVessel && camCallback == null)
             {
@@ -145,8 +145,8 @@ namespace HydroTech_FC
                 camCallback();
         }
 
-        static private Transform _Target = null;
-        static private Transform Target
+        private static Transform _Target = null;
+        private static Transform Target
         {
             get { return _Target; }
             set
@@ -155,56 +155,56 @@ namespace HydroTech_FC
                 _Target = value;
             }
         }
-        static public Transform GetTarget() { return Target; }
-        static public void SetNullTarget() { Target = null; }
-        static public void SetTarget(Transform tgt) { Target = tgt; }
-        static public void SetTarget(Vessel v) { Target = v.transform; }
-        static public void SetTarget(Part p) { Target = p.transform; }
+        public static Transform GetTarget() { return Target; }
+        public static void SetNullTarget() { Target = null; }
+        public static void SetTarget(Transform tgt) { Target = tgt; }
+        public static void SetTarget(Vessel v) { Target = v.transform; }
+        public static void SetTarget(Part p) { Target = p.transform; }
 
-        static public Transform GetTransformParent() { return cam.transform.parent; }
-        static public void SetTransformParent(Transform parentTrans) { cam.transform.parent = parentTrans; }
+        public static Transform GetTransformParent() { return cam.transform.parent; }
+        public static void SetTransformParent(Transform parentTrans) { cam.transform.parent = parentTrans; }
 
-        static public Vector3 GetPostition() { return cam.transform.localPosition; }
-        static public void SetPosition(Vector3 r) { cam.transform.localPosition = r; }
-        static public void SetPosition(float x, float y, float z) { cam.transform.localPosition.Set(x, y, z); }
+        public static Vector3 GetPostition() { return cam.transform.localPosition; }
+        public static void SetPosition(Vector3 r) { cam.transform.localPosition = r; }
+        public static void SetPosition(float x, float y, float z) { cam.transform.localPosition.Set(x, y, z); }
 
-        static public Quaternion GetRotation() { return cam.transform.localRotation; }
-        static public void SetRotation(Quaternion quat) { cam.transform.localRotation = quat; }
-        static public void SetRotation(Vector3 forward, Vector3 up)
+        public static Quaternion GetRotation() { return cam.transform.localRotation; }
+        public static void SetRotation(Quaternion quat) { cam.transform.localRotation = quat; }
+        public static void SetRotation(Vector3 forward, Vector3 up)
         {
             SetRotation(Quaternion.LookRotation(forward, up));
         }
 
-        static public float GetFoV() { return Camera.mainCamera.fov; }
-        static public void SetFoV(float fov) { Camera.mainCamera.fov = fov; }
+        public static float GetFoV() { return Camera.mainCamera.fov; }
+        public static void SetFoV(float fov) { Camera.mainCamera.fov = fov; }
 
-        static public float GetNearClipPlane() { return Camera.mainCamera.nearClipPlane; }
-        static public void SetNearClipPlane(float clip) { Camera.mainCamera.nearClipPlane = clip; }
+        public static float GetNearClipPlane() { return Camera.mainCamera.nearClipPlane; }
+        public static void SetNearClipPlane(float clip) { Camera.mainCamera.nearClipPlane = clip; }
 
-        static private Callback camCallback = null;
-        static public Callback GetCallback() { return camCallback; }
-        static public void SetCallback(Callback callback) { camCallback = callback; }
+        private static Callback camCallback = null;
+        public static Callback GetCallback() { return camCallback; }
+        public static void SetCallback(Callback callback) { camCallback = callback; }
 
 #if DEBUG
-        static private void print(object message) { GameBehaviours.print(message); }
+        private static void print(object message) { GameBehaviours.print(message); }
 
-        static public String StringCameraState() { return new Settings().ToString("#0.00"); }
-        static public void PrintCameraState() { print(StringCameraState()); }
+        public static String StringCameraState() { return new Settings().ToString("#0.00"); }
+        public static void PrintCameraState() { print(StringCameraState()); }
 
-        static public String StringCameraStack()
+        public static String StringCameraStack()
         {
             return "Stack count = " + Settings.StackCount().ToString();
         }
-        static public void PrintCameraStack() { print(StringCameraStack()); }
+        public static void PrintCameraStack() { print(StringCameraStack()); }
 
-        static public String StringTopState()
+        public static String StringTopState()
         {
             if (Settings.StackCount() == 0)
                 return "";
             else
                 return Settings.Top().ToString("#0.00");
         }
-        static public void PrintTopState() { print(StringTopState()); }
+        public static void PrintTopState() { print(StringTopState()); }
 #endif
     }
 }

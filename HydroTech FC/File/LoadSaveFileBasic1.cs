@@ -11,12 +11,12 @@ namespace HydroTech_FC
     public partial class LoadSaveFileBasic
     {
         public enum CMD { NONE, Rect_TopLeft }
-        static protected Rect ToRect(Vector2 vec2, Rect r) { return new Rect(vec2.x, vec2.y, r.width, r.height); }
-        static protected Rect ToRect(Vector4 vec4) { return new Rect(vec4.x, vec4.y, vec4.z, vec4.w); }
-        static protected Vector2 RectToVector2(Rect r) { return new Vector2(r.xMin, r.yMin); }
-        static protected Vector4 RectToVector4(Rect r) { return new Vector4(r.xMin, r.yMin, r.width, r.height); }
+        protected static Rect ToRect(Vector2 vec2, Rect r) { return new Rect(vec2.x, vec2.y, r.width, r.height); }
+        protected static Rect ToRect(Vector4 vec4) { return new Rect(vec4.x, vec4.y, vec4.z, vec4.w); }
+        protected static Vector2 RectToVector2(Rect r) { return new Vector2(r.xMin, r.yMin); }
+        protected static Vector4 RectToVector4(Rect r) { return new Vector4(r.xMin, r.yMin, r.width, r.height); }
 
-        static public bool Read(ConfigNode node, string name, ref object result, CMD cmd = CMD.NONE)
+        public static bool Read(ConfigNode node, string name, ref object result, CMD cmd = CMD.NONE)
         {
             if (node.HasValue(name))
             {
@@ -112,7 +112,7 @@ namespace HydroTech_FC
                 return false;
         }
 
-        static public void Write(ConfigNode node, string name, object value, CMD cmd = CMD.NONE)
+        public static void Write(ConfigNode node, string name, object value, CMD cmd = CMD.NONE)
         {
             if (value is Vector2)
                 node.AddValue(name, ConfigNode.WriteVector((Vector2)value));

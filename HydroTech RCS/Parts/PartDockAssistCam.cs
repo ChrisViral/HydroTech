@@ -37,7 +37,7 @@ public class HydroDockAssistCam : Strut
     {
         return HydroSwitchTransformCalculator.VectorTransform(vec, Right, Down, Dir);
     }
-    static public Vector3 VectorTransform(Vector3 vec, HydroDockAssistCam Cam)
+    public static Vector3 VectorTransform(Vector3 vec, HydroDockAssistCam Cam)
     {
         return Cam.VectorTransform(vec);
     }
@@ -92,9 +92,9 @@ public class HydroDockAssistCam : Strut
         }
     }
 
-    static protected APDockingAssist DA { get { return APDockingAssist.theAutopilot; } }
-    static protected PanelDockAssist panel { get { return PanelDockAssist.thePanel; } }
-    static protected HydroDockAssistCam CurCam
+    protected static APDockingAssist DA { get { return APDockingAssist.theAutopilot; } }
+    protected static PanelDockAssist panel { get { return PanelDockAssist.thePanel; } }
+    protected static HydroDockAssistCam CurCam
     {
         get { return DA.Cam; }
         set { DA.Cam = value; }
@@ -124,7 +124,7 @@ public class HydroDockAssistCam : Strut
         return HydroSwitchTransformCalculator.VectorTransform(r, vessel.ReferenceTransform);
     }
 
-    virtual protected void SetIcon()
+    protected virtual void SetIcon()
     {
         stackIcon.SetIconColor(XKCDColors.SkyBlue);
     }

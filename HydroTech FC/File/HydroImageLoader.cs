@@ -41,6 +41,6 @@ namespace HydroTech_FC
             new WWW(filename.WWWForm).LoadImageIntoTexture(image);
         }
 
-        static public implicit operator Texture2D(HydroImageLoader loader) { return loader.image; }
+        public static implicit operator Texture2D(HydroImageLoader loader) { return loader.image; }
     }
 }

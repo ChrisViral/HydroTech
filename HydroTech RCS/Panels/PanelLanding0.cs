@@ -14,7 +14,7 @@ namespace HydroTech_RCS.Panels
 
     public partial class PanelLanding : PanelwAP
     {
-        static public PanelLanding thePanel { get { return (PanelLanding)HydroJebCore.panels[PanelIDs.Landing]; } }
+        public static PanelLanding thePanel { get { return (PanelLanding)HydroJebCore.panels[PanelIDs.Landing]; } }
 
         public PanelLanding()
         {
@@ -26,51 +26,51 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect() { windowRect = WindowPositions.Landing; }
 
-        static protected APLanding LA { get { return APLanding.theAutopilot; } }
+        protected static APLanding LA { get { return APLanding.theAutopilot; } }
 
         protected override void MakeAPSave() { LA.MakeSaveAtNextUpdate(); }
 
         protected override bool Engaged
         {
-            get { return LA.Engaged; }
-            set { LA.Engaged = value; }
+            get { return LA.engaged; }
+            set { LA.engaged = value; }
         }
-        static protected float safeTouchDownSpeed
+        protected static float safeTouchDownSpeed
         {
             get { return LA.safeTouchDownSpeed; }
             set { LA.safeTouchDownSpeed = value; }
         }
-        static protected bool VABPod
+        protected static bool VABPod
         {
             get { return LA.VABPod; }
             set { LA.VABPod = value; }
         }
-        static protected bool Engines
+        protected static bool Engines
         {
             get { return LA._Engines; }
             set { LA._Engines = value; }
         }
-        static protected bool burnRetro
+        protected static bool burnRetro
         {
             get { return LA.burnRetro; }
             set { LA.burnRetro = value; }
         }
-        static protected float MaxThrottle
+        protected static float MaxThrottle
         {
             get { return LA.MaxThrottle; }
             set { LA.MaxThrottle = value; }
         }
-        static protected bool touchdown
+        protected static bool touchdown
         {
             get { return LA.touchdown; }
             set { LA.touchdown = value; }
         }
-        static protected bool useTrueAlt
+        protected static bool useTrueAlt
         {
             get { return LA.useTrueAlt; }
             set { LA.useTrueAlt = value; }
         }
-        static protected float altKeep
+        protected static float altKeep
         {
             get { return LA.altKeep; }
             set { LA.altKeep = value; }

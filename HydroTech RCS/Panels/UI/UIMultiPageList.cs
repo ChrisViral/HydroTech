@@ -20,13 +20,13 @@ namespace HydroTech_RCS.Panels.UI
 
         protected bool LastPage() { return curPage == (list.Count - 1) / perPage; }
 
-        virtual public void OnUpdate()
+        public virtual void OnUpdate()
         {
             if (list.Count - 1 < perPage * (curPage + 1))
                 curPage = (list.Count - 1) / perPage;
         }
 
-        virtual public void OnDrawUI(DrawSingleItemUI drawFunction, out bool pageChanged, out bool zero)
+        public virtual void OnDrawUI(DrawSingleItemUI drawFunction, out bool pageChanged, out bool zero)
         {
             int count = 0;
             foreach (T item in list)

@@ -1,32 +1,29 @@
-﻿#if DEBUG
-#endif
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
+using HydroTech_FC;
+using HydroTech_RCS.Autopilots;
+using HydroTech_RCS.Panels;
+using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants.Panels;
+using HydroTech_RCS.Autopilots.Modules;
 
 namespace HydroTech_RCS
 {
-    using UnityEngine;
-    using HydroTech_FC;
-    using Autopilots;
-    using Panels;
-    using Constants.Core;
-    using Constants.Panels;
-    using Autopilots.Modules;
-
-    static public class HydroJebCore
+    public static class HydroJebCore
     {
+        #region Constructor
         static HydroJebCore()
         {
             try
             {
+                //Autopilots
                 autopilots.Add(AutopilotIDs.Translation, new APTranslation());
                 autopilots.Add(AutopilotIDs.Landing, new APLanding());
                 autopilots.Add(AutopilotIDs.Dock, new APDockAssist());
                 autopilots.Add(AutopilotIDs.Precise, new APPreciseControl());
 
+                //Panels
                 panels.Add(PanelIDs.Main, new PanelMain());
                 panels.Add(PanelIDs.MainThrottle, new PanelMainThrottle());
                 panels.Add(PanelIDs.RCSInfo, new PanelRCSThrustInfo());
@@ -37,7 +34,7 @@ namespace HydroTech_RCS
 #if DEBUG
                 panels.Add(PanelIDs.Debug, new PanelDebug());
 #endif
-
+                //Editor
                 panelsEditor.Add(PanelIDs.RCSInfo, new PanelRCSThrustInfo());
                 panelsEditor.Add(PanelIDs.Dock, new PanelDockAssistEditorAid());
             }
@@ -46,39 +43,41 @@ namespace HydroTech_RCS
                 ExceptionHandler(e, "HydroJebCore.HydroJebCore()");
             }
         }
+        #endregion
 
-        static public readonly FileName.Folder AutopilotSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "autopilots");
-        static public readonly FileName.Folder PanelSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "panels");
+        #region Folders
+        public static readonly FileName.Folder AutopilotSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "autopilots");
+        public static readonly FileName.Folder PanelSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "panels");
+        #endregion
 
-/*  First part of core: Autopilot System
- *  Corresponding part: HydroJeb
- */
-        static public bool isReady = true;
-        static public bool electricity;
-        static private Color mainBtnColor = Color.green;
+        // Core #1: Autopilot (HydroJeb)
+        #region Fields
+        public static bool isReady = true;
+        public static bool electricity;
+        private static Color mainBtnColor = Color.green;
+        public static HydroPartList jebs = new HydroPartList();
+        public static Dictionary<int,RCSAutopilot> autopilots = new Dictionary<int,RCSAutopilot>();
+        public static Dictionary<int, Panel> panels = new Dictionary<int, Panel>();
+        public static HydroJeb ActiveJeb { get { return (HydroJeb)jebs.FirstActive; } }
+        public static bool isActiveJeb(HydroJeb jeb) { return ActiveJeb == jeb; }
+        public static CalculatorRCSThrust activeVesselRCS = new CalculatorRCSThrust();
+        public static HydroPartListEditor jebsEditor = new HydroPartListEditor();
+        public static Dictionary<int, IPanelEditor> panelsEditor = new Dictionary<int, IPanelEditor>();
+        #endregion
 
-        static public HydroPartList jebs = new HydroPartList();
-        static public Dictionary<int,RCSAutopilot> autopilots = new Dictionary<int,RCSAutopilot>();
-        static public Dictionary<int, Panel> panels = new Dictionary<int, Panel>();
-
-        static public HydroJeb ActiveJeb { get { return (HydroJeb)jebs.FirstActive; } }
-        static public bool isActiveJeb(HydroJeb jeb) { return ActiveJeb == jeb; }
-
-        static public CalculatorRCSThrust activeVesselRCS = new CalculatorRCSThrust();
-
-        static public HydroPartListEditor jebsEditor = new HydroPartListEditor();
-        static public Dictionary<int, IPanelEditor> panelsEditor = new Dictionary<int, IPanelEditor>();
-
-        static private void AddMainButton()
+        #region Methods
+        //TODO: change from deprecated RenderingManager to the AppLauncher
+        private static void AddMainButton()
         {
-            HydroRenderingManager.AddToPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
+            
+            //HydroRenderingManager.AddToPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
         }
-        static private void RemoveMainButton()
+        private static void RemoveMainButton()
         {
-            HydroRenderingManager.RemoveFromPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
+            //HydroRenderingManager.RemoveFromPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
         }
 
-        static public void onEditorUpdate(HydroJeb jeb)
+        public static void onEditorUpdate(HydroJeb jeb)
         {
             try
             {
@@ -93,7 +92,7 @@ namespace HydroTech_RCS
             }
         }
 
-        static public void onFlightStart(HydroJeb jeb)
+        public static void onFlightStart(HydroJeb jeb)
         {
             try
             {
@@ -110,7 +109,7 @@ namespace HydroTech_RCS
                     return;
                 HydroFlightCameraManager.onFlightStart();
                 foreach (RCSAutopilot ap in autopilots.Values)
-                    ap.onFlightStart();
+                    ap.OnFlightStart();
                 foreach (Panel panel in panels.Values)
                     panel.onFlightStart();
                 HydroFlightInputManager.onFlightStart();
@@ -125,7 +124,7 @@ namespace HydroTech_RCS
             }
         }
 
-        static public void onGamePause(HydroJeb jeb)
+        public static void onGamePause(HydroJeb jeb)
         {
             try
             {
@@ -149,7 +148,7 @@ namespace HydroTech_RCS
             }
         }
 
-        static public void onGameResume(HydroJeb jeb)
+        public static void onGameResume(HydroJeb jeb)
         {
             try
             {
@@ -169,7 +168,7 @@ namespace HydroTech_RCS
             }
         }
 
-        static public void onPartDestroy(HydroJeb jeb)
+        public static void onPartDestroy(HydroJeb jeb)
         {
             try
             {
@@ -205,7 +204,7 @@ namespace HydroTech_RCS
             }
         }
 
-        static public void onPartStart(HydroJeb jeb)
+        public static void onPartStart(HydroJeb jeb)
         {
             try
             {
@@ -229,7 +228,7 @@ namespace HydroTech_RCS
             }
         }
 
-        static public void onPartUpdate(HydroJeb jeb)
+        public static void onPartUpdate(HydroJeb jeb)
         {
             try
             {
@@ -270,13 +269,13 @@ namespace HydroTech_RCS
             }
         }
 
-        static private bool MainPanel
+        private static bool MainPanel
         {
             get { return panels[PanelIDs.Main].PanelShown; }
             set { panels[PanelIDs.Main].PanelShown = value; }
         }
 
-        static private void drawGUI()
+        private static void drawGUI()
         {
             GUI.skin = HighLogic.Skin;
             bool mainBtnRespond = electricity && isReady;
@@ -287,14 +286,16 @@ namespace HydroTech_RCS
                 ) && mainBtnRespond)
                 MainPanel = !MainPanel;
         }
+        #endregion
 
-/*  Second part of core: DockingAssistant
- *  Corresponding parts: HydroDockAssistCam, HydroDockAssistTarget
- */
-        static public HydroPartModuleList dockCams = new HydroPartModuleList();
-        static public HydroPartModuleList dockTargets = new HydroPartModuleList();
+        //Core #2: Docking Assistant (HydroDockAssistCam, HydroDockAssistTarget)
+        #region Fields
+        public static HydroPartModuleList dockCams = new HydroPartModuleList();
+        public static HydroPartModuleList dockTargets = new HydroPartModuleList();
+        #endregion
 
-        static public void OnUpdate(ModuleDockAssistCam mcam)
+        #region Methods
+        public static void OnUpdate(ModuleDockAssistCam mcam)
         {
             try
             {
@@ -307,7 +308,8 @@ namespace HydroTech_RCS
                 ExceptionHandler(e, "HydroJebCore.OnUpdate(ModuleDockAssistCam");
             }
         }
-        static public void OnUpdate(ModuleDockAssistTarget mtgt)
+
+        public static void OnUpdate(ModuleDockAssistTarget mtgt)
         {
             try
             {
@@ -321,6 +323,7 @@ namespace HydroTech_RCS
             }
         }
 
-        static private void ExceptionHandler(Exception e, String funcName) { GameBehaviours.ExceptionHandler(e, funcName); }
+        private static void ExceptionHandler(Exception e, String funcName) { GameBehaviours.ExceptionHandler(e, funcName); }
+        #endregion      
     }
 }

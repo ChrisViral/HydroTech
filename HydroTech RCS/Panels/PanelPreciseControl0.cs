@@ -23,36 +23,36 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect() { windowRect = WindowPositions.PreciseControl; }
 
-        static protected APPreciseControl PC { get { return APPreciseControl.theAutopilot; } }
+        protected static APPreciseControl PC { get { return APPreciseControl.theAutopilot; } }
 
         protected override void MakeAPSave() { PC.MakeSaveAtNextUpdate(); }
 
         protected override bool Engaged
         {
-            get { return PC.Engaged; }
-            set { PC.Engaged = value; }
+            get { return PC.engaged; }
+            set { PC.engaged = value; }
         }
-        static protected bool byRate
+        protected static bool byRate
         {
             get { return PC.byRate; }
             set { PC.byRate = value; }
         }
-        static protected float RRate
+        protected static float RRate
         {
             get { return PC.RotationRate; }
             set { PC.RotationRate = value; }
         }
-        static protected float TRate
+        protected static float TRate
         {
             get { return PC.TranslationRate; }
             set { PC.TranslationRate = value; }
         }
-        static protected float AngA
+        protected static float AngA
         {
             get { return PC.AngularAcc; }
             set { PC.AngularAcc = value; }
         }
-        static protected float Acc
+        protected static float Acc
         {
             get { return PC.Acc; }
             set { PC.Acc = value; }

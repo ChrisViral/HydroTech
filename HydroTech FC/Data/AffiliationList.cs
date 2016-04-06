@@ -46,7 +46,7 @@ namespace HydroTech_FC
             getItem_m = get;
         }
 
-        virtual public void OnUpdate()
+        public virtual void OnUpdate()
         {
             Clear();
             if (parentList == null)

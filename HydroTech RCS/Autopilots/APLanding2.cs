@@ -218,12 +218,12 @@ namespace HydroTech_RCS.Autopilots
             else if (HoverThrustRate > 1.0F || gASL > TWR)
             {
                 indicator = Indicator.LOWTWR;
-                Engaged = false;
+                engaged = false;
             }
             else if (AltASL > MainBodySyncAlt)
             {
                 indicator = Indicator.OUTSYNC;
-                Engaged = false;
+                engaged = false;
             }
             else if (AltDiff < Position.FinalDescentHeight)
                 indicator = touchdown ? Indicator.FINAL : Indicator.HOVER;
@@ -233,7 +233,7 @@ namespace HydroTech_RCS.Autopilots
                 indicator = GetIndicator(cd.indicator);
             }
 
-            if (!Engaged)
+            if (!engaged)
                 status = Status.DISENGAGED;
             else if (TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRateIndex != 0)
                 status = Status.WARP;

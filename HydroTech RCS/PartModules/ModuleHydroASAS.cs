@@ -52,7 +52,7 @@ public class ModuleHydroASAS : HydroPartModulewPanel
     protected override int QueueSpot { get { return ManagerConsts.RenderMgr_ModuleHydroASAS; } }
     protected override string PanelTitle { get { return "ASAS Behaviour"; } }
 
-    static protected bool _Registered = false;
+    protected static bool _Registered = false;
     protected override bool Registered
     {
         get { return _Registered; }

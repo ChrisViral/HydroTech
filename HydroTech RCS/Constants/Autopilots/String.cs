@@ -7,18 +7,18 @@ namespace HydroTech_RCS.Constants.Autopilots
 {
     namespace Translation
     {
-        static public class Str
+        public static class Str
         {
             public const String nameString = "TranslationAP";
         }
     }
     namespace Landing
     {
-        static public class Str
+        public static class Str
         {
             public const String nameString = "LandingAP";
 
-            static public class Status
+            public static class Status
             {
                 public const String DISENGAGED = "Disengaged";
                 public const String IDLE = "Idle";
@@ -32,7 +32,7 @@ namespace HydroTech_RCS.Constants.Autopilots
                 public const String FLOAT = "Holding altitude";
             }
 
-            static public class Warning
+            public static class Warning
             {
                 public const String LANDED = "Landed";
                 public const String WARP = "Safe to warp";
@@ -48,7 +48,7 @@ namespace HydroTech_RCS.Constants.Autopilots
     }
     namespace Docking
     {
-        static public class Str
+        public static class Str
         {
             public const String nameString = "DockAP.Active";
             public const String nameString_Target = "DockAP.Target";
@@ -56,7 +56,7 @@ namespace HydroTech_RCS.Constants.Autopilots
     }
     namespace PreciseControl
     {
-        static public class Str
+        public static class Str
         {
             public const String nameString = "PreciseAP";
         }

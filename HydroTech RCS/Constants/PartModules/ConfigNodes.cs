@@ -7,7 +7,7 @@ namespace HydroTech_RCS.Constants.PartModules
 {
     namespace PartRename
     {
-        static public class ConfigNodes
+        public static class ConfigNodes
         {
             public const String Name = "PartNewName";
         }

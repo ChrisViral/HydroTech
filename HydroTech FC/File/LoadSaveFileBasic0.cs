@@ -9,8 +9,8 @@ namespace HydroTech_FC
 
     public abstract partial class LoadSaveFileBasic
     {
-        virtual protected void LoadDefault() { needSave = true; }
-        virtual protected void OnLoad(ConfigNode node)
+        protected virtual void LoadDefault() { needSave = true; }
+        protected virtual void OnLoad(ConfigNode node)
         {
             if (ResetRequest(node))
                 return;
@@ -41,7 +41,7 @@ namespace HydroTech_FC
         }
 
         protected bool needSave = false;
-        virtual protected void OnSave(ConfigNode node)
+        protected virtual void OnSave(ConfigNode node)
         {
             node.AddValue("Reset", false);
             foreach (FieldInfo field in GetType().GetFields())
@@ -86,13 +86,13 @@ namespace HydroTech_FC
             needSave = false;
         }
 
-        static protected bool ResetRequest(ConfigNode node)
+        protected static bool ResetRequest(ConfigNode node)
         {
             return node.HasValue("Reset")
                 && bool.Parse(node.GetValue("Reset"));
         }
 
-        static protected bool ReadField(object obj, FieldInfo field, ConfigNode node, string name, CMD cmd)
+        protected static bool ReadField(object obj, FieldInfo field, ConfigNode node, string name, CMD cmd)
         {
             object val = field.GetValue(obj);
             if (Read(node, name, ref val, cmd))
@@ -108,9 +108,9 @@ namespace HydroTech_FC
         }
 
 #if DEBUG
-        static protected void print(object message) { GameBehaviours.print(message); }
-        static protected void warning(object message) { GameBehaviours.warning(message); }
-        static protected void error(object message) { GameBehaviours.error(message); }
+        protected static void print(object message) { GameBehaviours.print(message); }
+        protected static void warning(object message) { GameBehaviours.warning(message); }
+        protected static void error(object message) { GameBehaviours.error(message); }
 #endif
     }
 }

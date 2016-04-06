@@ -10,14 +10,14 @@ namespace HydroTech_FC
         public List<T> listActiveVessel = new List<T>();
         public List<T> listInactiveVessel = new List<T>();
 
-        virtual protected bool IsNull(T item) { return item == null; }
+        protected virtual bool IsNull(T item) { return item == null; }
 
-        static protected Vessel ActiveVessel { get { return GameStates.ActiveVessel; } }
-        virtual protected Vessel GetVessel(T item) { return null; }
+        protected static Vessel ActiveVessel { get { return GameStates.ActiveVessel; } }
+        protected virtual Vessel GetVessel(T item) { return null; }
 
-        virtual protected void AddItem(List<T> list, T item) { list.Add(item); }
-        virtual protected void AddItemActive(T item) { AddItem(listActiveVessel, item); }
-        virtual protected void AddItemInactive(T item) { AddItem(listInactiveVessel, item); }
+        protected virtual void AddItem(List<T> list, T item) { list.Add(item); }
+        protected virtual void AddItemActive(T item) { AddItem(listActiveVessel, item); }
+        protected virtual void AddItemInactive(T item) { AddItem(listInactiveVessel, item); }
         public void Add(T item)
         {
             if (GetVessel(item) == ActiveVessel)
@@ -26,9 +26,9 @@ namespace HydroTech_FC
                 AddItemInactive(item);
         }
 
-        virtual protected void RemoveItem(List<T> list, T item) { list.Remove(item); }
-        virtual protected void RemoveItemActive(T item) { RemoveItem(listActiveVessel, item); }
-        virtual protected void RemoveItemInactive(T item) { RemoveItem(listInactiveVessel, item); }
+        protected virtual void RemoveItem(List<T> list, T item) { list.Remove(item); }
+        protected virtual void RemoveItemActive(T item) { RemoveItem(listActiveVessel, item); }
+        protected virtual void RemoveItemInactive(T item) { RemoveItem(listInactiveVessel, item); }
         public void Remove(T item)
         {
             if (ContainsItem(listActiveVessel, item))
@@ -37,19 +37,19 @@ namespace HydroTech_FC
                 RemoveItemInactive(item);
         }
 
-        virtual protected bool ContainsItem(List<T> list, T item) { return list.Contains(item); }
-        virtual protected bool ContainsItemActive(T item) { return ContainsItem(listActiveVessel, item); }
-        virtual protected bool ContainsItemInactive(T item) { return ContainsItem(listInactiveVessel, item); }
+        protected virtual bool ContainsItem(List<T> list, T item) { return list.Contains(item); }
+        protected virtual bool ContainsItemActive(T item) { return ContainsItem(listActiveVessel, item); }
+        protected virtual bool ContainsItemInactive(T item) { return ContainsItem(listInactiveVessel, item); }
         public bool Contains(T item) { return ContainsItemActive(item) || ContainsItemInactive(item); }
 
-        virtual protected int CountList(List<T> list) { return list.Count; }
-        virtual public int CountActive { get { return CountList(listActiveVessel); } }
-        virtual public int CountInactive { get { return CountList(listInactiveVessel); } }
+        protected virtual int CountList(List<T> list) { return list.Count; }
+        public virtual int CountActive { get { return CountList(listActiveVessel); } }
+        public virtual int CountInactive { get { return CountList(listInactiveVessel); } }
         public int Count { get { return CountActive + CountInactive; } }
 
-        virtual protected T FirstOrDefault(List<T> list) { return list.FirstOrDefault(); }
-        virtual public T FirstActive { get { return FirstOrDefault(listActiveVessel); } }
-        virtual public T FirstInactive { get { return FirstOrDefault(listInactiveVessel); } }
+        protected virtual T FirstOrDefault(List<T> list) { return list.FirstOrDefault(); }
+        public virtual T FirstActive { get { return FirstOrDefault(listActiveVessel); } }
+        public virtual T FirstInactive { get { return FirstOrDefault(listInactiveVessel); } }
 
         public bool HasItemOnVessel(Vessel vessel)
         {
@@ -88,17 +88,17 @@ namespace HydroTech_FC
             listInactiveVessel.Clear();
         }
 
-        virtual protected bool NeedsToRemove(T item) { return item == null; }
-        virtual protected bool NeedsToRemoveActive(T item) { return NeedsToRemove(item); }
-        virtual protected bool NeedsToRemoveInactive(T item) { return NeedsToRemove(item); }
-        virtual protected bool NeedsToMoveActive(T item) { return GetVessel(item) == ActiveVessel; }
-        virtual protected bool NeedsToMoveInactive(T item) { return GetVessel(item) != ActiveVessel; }
-        virtual protected void MoveItemToActive(T item)
+        protected virtual bool NeedsToRemove(T item) { return item == null; }
+        protected virtual bool NeedsToRemoveActive(T item) { return NeedsToRemove(item); }
+        protected virtual bool NeedsToRemoveInactive(T item) { return NeedsToRemove(item); }
+        protected virtual bool NeedsToMoveActive(T item) { return GetVessel(item) == ActiveVessel; }
+        protected virtual bool NeedsToMoveInactive(T item) { return GetVessel(item) != ActiveVessel; }
+        protected virtual void MoveItemToActive(T item)
         {
             listInactiveVessel.Remove(item);
             listActiveVessel.Add(item);
         }
-        virtual protected void MoveItemToInactive(T item)
+        protected virtual void MoveItemToInactive(T item)
         {
             listActiveVessel.Remove(item);
             listInactiveVessel.Add(item);

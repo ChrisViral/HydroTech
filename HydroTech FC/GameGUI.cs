@@ -7,36 +7,36 @@ namespace HydroTech_FC
 {
     using UnityEngine;
 
-    static public class GameGUI
+    public static class GameGUI
     {
-        static public class Button
+        public static class Button
         {
             public enum Options
             {
                 NONE = 0,
                 Wrap = 1
             }
-            static public GUIStyle Style(Options options = Options.NONE)
+            public static GUIStyle Style(Options options = Options.NONE)
             {
                 GUIStyle style = new GUIStyle(GUI.skin.button);
                 if ((options & Options.Wrap) != 0)
                     style.wordWrap = true;
                 return style;
             }
-            static public GUIStyle Style(Color textColor, Options options = Options.NONE)
+            public static GUIStyle Style(Color textColor, Options options = Options.NONE)
             {
                 GUIStyle style = Style(options);
                 style.normal.textColor = style.focused.textColor = textColor;
                 return style;
             }
-            static public GUIStyle Style(int options) { return Style((Options)options); }
-            static public GUIStyle Style(Color textColor, int options) { return Style(textColor, (Options)options); }
+            public static GUIStyle Style(int options) { return Style((Options)options); }
+            public static GUIStyle Style(Color textColor, int options) { return Style(textColor, (Options)options); }
 
-            static public GUIStyle Wrap() { return Style(1); }
-            static public GUIStyle Wrap(Color textColor) { return Style(textColor, 1); }
+            public static GUIStyle Wrap() { return Style(1); }
+            public static GUIStyle Wrap(Color textColor) { return Style(textColor, 1); }
         }
 
-        static public class Label
+        public static class Label
         {
             public enum Options
             {
@@ -44,7 +44,7 @@ namespace HydroTech_FC
                 Left = 1, Right = 2, Center = 3,
                 Upper = 4, Lower = 8, Middle = 12
             }
-            static public GUIStyle Style(Options options = Options.NONE)
+            public static GUIStyle Style(Options options = Options.NONE)
             {
                 GUIStyle style = new GUIStyle(GUI.skin.label);
                 if (((int)options & 15) != 0)
@@ -69,17 +69,17 @@ namespace HydroTech_FC
                 }
                 return style;
             }
-            static public GUIStyle Style(Color textColor, Options options = Options.NONE)
+            public static GUIStyle Style(Color textColor, Options options = Options.NONE)
             {
                 GUIStyle style = Style(options);
                 style.normal.textColor = textColor;
                 return style;
             }
-            static public GUIStyle Style(int options) { return Style((Options)options); }
-            static public GUIStyle Style(Color textColor, int options) { return Style(textColor, (Options)options); }
+            public static GUIStyle Style(int options) { return Style((Options)options); }
+            public static GUIStyle Style(Color textColor, int options) { return Style(textColor, (Options)options); }
 
-            static public GUIStyle Centered() { return Style(15); }
-            static public GUIStyle Centered(Color textColor) { return Style(textColor, 15); }
+            public static GUIStyle Centered() { return Style(15); }
+            public static GUIStyle Centered(Color textColor) { return Style(textColor, 15); }
         }
     }
 }

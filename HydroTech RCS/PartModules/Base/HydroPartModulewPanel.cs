@@ -34,11 +34,11 @@ namespace HydroTech_RCS.PartModules.Base
 
         abstract protected void windowGUI(int ID);
 
-        static public GUIStyle BtnStyle() { return GameGUI.Button.Style(); }
-        static public GUIStyle BtnStyle(Color textColor) { return GameGUI.Button.Style(textColor); }
+        public static GUIStyle BtnStyle() { return GameGUI.Button.Style(); }
+        public static GUIStyle BtnStyle(Color textColor) { return GameGUI.Button.Style(textColor); }
 
-        static public GUIStyle LabelStyle() { return GameGUI.Label.Style(); }
-        static public GUIStyle LabelStyle(Color textColor) { return GameGUI.Label.Style(textColor); }
+        public static GUIStyle LabelStyle() { return GameGUI.Label.Style(); }
+        public static GUIStyle LabelStyle(Color textColor) { return GameGUI.Label.Style(textColor); }
 
         protected Rect windowRect = new Rect(Screen.width * 0.5F, Screen.height * 0.45F, 0, Screen.height * 0.1F);
         protected void drawGUI()

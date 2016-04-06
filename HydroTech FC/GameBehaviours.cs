@@ -7,15 +7,15 @@ namespace HydroTech_FC
 {
     using UnityEngine;
 
-    static public class GameBehaviours
+    public static class GameBehaviours
     {
 #if DEBUG
-        static public void print(object message) { MonoBehaviour.print(message); }
-        static public void warning(object message) { PDebug.Warning(message); }
-        static public void error(object message) { PDebug.Error(message); }
+        public static void print(object message) { MonoBehaviour.print(message); }
+        public static void warning(object message) { PDebug.Warning(message); }
+        public static void error(object message) { PDebug.Error(message); }
 #endif
 
-        static public void ExceptionHandler(Exception e, String funcName)
+        public static void ExceptionHandler(Exception e, String funcName)
         {
             throw new Exception("An exception has been thrown in " + funcName
                 + "\nException type:\n" + e.GetType().ToString()

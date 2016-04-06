@@ -23,36 +23,36 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect() { windowRect = WindowPositions.Translation; }
 
-        static protected APTranslation TA { get { return APTranslation.theAutopilot; } }
+        protected static APTranslation TA { get { return APTranslation.theAutopilot; } }
 
         protected override void MakeAPSave() { TA.MakeSaveAtNextUpdate(); }
 
         protected override bool Engaged
         {
-            get { return TA.Engaged; }
-            set { TA.Engaged = value; }
+            get { return TA.engaged; }
+            set { TA.engaged = value; }
         }
-        static protected APTranslation.TransDir Trans_Mode
+        protected static APTranslation.TransDir Trans_Mode
         {
             get { return TA.Trans_Mode; }
             set { TA.Trans_Mode = value; }
         }
-        static protected Vector3 thrustVector
+        protected static Vector3 thrustVector
         {
             get { return TA.thrustVector; }
             set { TA.thrustVector = value; }
         }
-        static protected float thrustRate
+        protected static float thrustRate
         {
             get { return TA.thrustRate; }
             set { TA.thrustRate = value; }
         }
-        static protected bool respond
+        protected static bool respond
         {
             get { return TA.mainThrottleRespond; }
             set { TA.mainThrottleRespond = value; }
         }
-        static protected bool HoldOrient
+        protected static bool HoldOrient
         {
             get { return TA.HoldOrient; }
             set { TA.HoldOrient = value; }

@@ -7,7 +7,7 @@ namespace HydroTech_RCS.Constants.Autopilots
 {
     namespace Landing
     {
-        static public class Acceleration
+        public static class Acceleration
         {
             public const float MaxDeceleration = 5.0F;
         }

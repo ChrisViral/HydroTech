@@ -11,7 +11,7 @@ namespace HydroTech_FC
     {
         protected Vector3 state = new Vector3();
 
-        static public Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
+        public static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
         {
             return new Vector3(
                 HMaths.DotProduct(vec, x),
@@ -19,7 +19,7 @@ namespace HydroTech_FC
                 HMaths.DotProduct(vec, z)
                 );
         }
-        static public Vector3 VectorTransform(Vector3 vec, Transform trans)
+        public static Vector3 VectorTransform(Vector3 vec, Transform trans)
         {
             /*  For rotation, input: rotation vector (that you rotate along)
              *  output: (pitch, yaw, roll).
@@ -29,11 +29,11 @@ namespace HydroTech_FC
             return VectorTransform(vec, trans.right, trans.forward, trans.up);
         }
 
-        static public Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
+        public static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
         {
             return vec.x * x + vec.y * y + vec.z * z;
         }
-        static public Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
+        public static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
         {
             return ReverseVectorTransform(vec, trans.right, trans.forward, trans.up);
         }

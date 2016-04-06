@@ -54,7 +54,7 @@ namespace HydroTech_RCS.Panels
             return list;
         }
 
-        virtual protected void CamUI(ModuleDockAssistCam mcam)
+        protected virtual void CamUI(ModuleDockAssistCam mcam)
         {
             if (mcam == null)
                 return;
@@ -81,7 +81,7 @@ namespace HydroTech_RCS.Panels
             camset[mcam] = set;
         }
 
-        virtual protected void TgtUI(ModuleDockAssistTarget mtgt)
+        protected virtual void TgtUI(ModuleDockAssistTarget mtgt)
         {
             if (mtgt == null)
                 return;

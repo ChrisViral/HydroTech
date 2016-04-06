@@ -67,18 +67,18 @@ namespace HydroTech_FC
             if (z >= 0.0F) zp += z;
             else zn -= z;
         }
-        static public Vector6 operator *(Vector6 vec, float num)
+        public static Vector6 operator *(Vector6 vec, float num)
         {
             return new Vector6(
                 vec.VectorPositive * num,
                 vec.VectorNegative * num
                 );
         }
-        static public Vector6 operator /(Vector6 vec, float num)
+        public static Vector6 operator /(Vector6 vec, float num)
         {
             return vec * (1 / num);
         }
-        static public Vector6 operator *(Vector6 vec, Vector3 vec2)
+        public static Vector6 operator *(Vector6 vec, Vector3 vec2)
         {
             Vector6 res = new Vector6(vec);
             res.xp *= vec2.x;
@@ -89,7 +89,7 @@ namespace HydroTech_FC
             res.zn *= vec2.z;
             return res;
         }
-        static public Vector6 operator /(Vector6 vec, Vector3 vec2)
+        public static Vector6 operator /(Vector6 vec, Vector3 vec2)
         {
             return vec * new Vector3(1 / vec2.x, 1 / vec2.y, 1 / vec2.y);
         }
@@ -100,7 +100,7 @@ namespace HydroTech_FC
                 + yp.ToString() + ", -" + yn.ToString() + "; "
                 + zp.ToString() + ", -" + zn.ToString() + ")";
         }
-        virtual public string ToString(string format)
+        public virtual string ToString(string format)
         {
             return "(" + xp.ToString(format) + ", -" + xn.ToString(format) + "; "
                 + yp.ToString(format) + ", -" + yn.ToString(format) + "; "
