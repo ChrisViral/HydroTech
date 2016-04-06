@@ -1,6 +1,6 @@
 ## LICENSE
 
-Copyright (c) 2016 Christophe Savard
+Copyright © 2016 Christophe Savard
 
 License under CC-BY-NC-SA 4.0 INTL
 [![](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
