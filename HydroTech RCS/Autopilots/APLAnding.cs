@@ -1,9 +1,10 @@
-﻿using HydroTech_FC;
+﻿using System;
+using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
+using HydroTech_RCS.Utils;
 using UnityEngine;
-using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Autopilots
 {
@@ -79,7 +80,7 @@ namespace HydroTech_RCS.Autopilots
 
         public float AltKeepTrue
         {
-            get { return this.useTrueAlt ? this.altKeep : HMaths.Max(this.altKeep - this.TerrainHeight, AutopilotConsts.finalDescentHeight); }
+            get { return this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, AutopilotConsts.finalDescentHeight); }
         }
 
         public float AltKeepAsl
@@ -421,20 +422,20 @@ namespace HydroTech_RCS.Autopilots
 
         protected void DriveHorizontalDec(FlightCtrlState ctrlState)
         {
-            ctrlState.X = HMaths.Cut(HydroJebCore.activeVesselRcs.GetThrustRateFromAcc3(0, this.SurfXSpeed * AutopilotConsts.maxDeceleration), -1, 1);
-            SetTranslationY(ctrlState, HMaths.Cut(HydroJebCore.activeVesselRcs.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * AutopilotConsts.maxDeceleration), -1, 1));
+            ctrlState.X = HTUtils.Clamp(HydroJebCore.activeVesselRcs.GetThrustRateFromAcc3(0, this.SurfXSpeed * AutopilotConsts.maxDeceleration), -1, 1);
+            SetTranslationY(ctrlState, HTUtils.Clamp(HydroJebCore.activeVesselRcs.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * AutopilotConsts.maxDeceleration), -1, 1));
         }
 
         protected void DriveHorizontalBrake(FlightCtrlState ctrlState)
         {
-            ctrlState.X = HMaths.Sign(this.SurfXSpeed);
-            SetTranslationY(ctrlState, HMaths.Sign(this.SurfYSpeed));
+            ctrlState.X = Mathf.Sign(this.SurfXSpeed);
+            SetTranslationY(ctrlState, Mathf.Sign(this.SurfYSpeed));
         }
 
         protected void DriveFinalDescent(FlightCtrlState ctrlState)
         {
             DriveHorizontalDec(ctrlState);
-            SetTranslationZ(ctrlState, HMaths.Cut(-this.hoverThrustRate + ((this.safeTouchDownSpeed + this.VertSpeed) / this.Twr), -1, 0));
+            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + ((this.safeTouchDownSpeed + this.VertSpeed) / this.Twr), -1, 0));
         }
 
         protected void DriveAvoidContact(FlightCtrlState ctrlState)
@@ -449,8 +450,8 @@ namespace HydroTech_RCS.Autopilots
 
         protected void DriveHoverManeuver(FlightCtrlState ctrlState)
         {
-            float modifier = HMaths.Max(this.AltDiff, -10) + this.VertSpeed;
-            SetTranslationZ(ctrlState, HMaths.Cut(-this.hoverThrustRate + (modifier / this.Twr), -1, 0));
+            float modifier = Mathf.Max(this.AltDiff, -10) + this.VertSpeed;
+            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + (modifier / this.Twr), -1, 0));
             if (this.HoriSpeed > this.SafeHorizontalSpeed) { DriveHorizontalDec(ctrlState); }
         }
 
@@ -588,7 +589,7 @@ namespace HydroTech_RCS.Autopilots
 
         protected float GetBodySyncAltitude(CelestialBody body)
         {
-            return (float)HMaths.CubeRoot((body.gravParameter * body.rotationPeriod * body.rotationPeriod) / (4 * HMaths.PI * HMaths.PI));
+            return (float)Math.Pow((body.gravParameter * body.rotationPeriod * body.rotationPeriod) / (4 * Math.PI * Math.PI), 1d / 3);
         }
 
         protected float HoriBrakeSpeed(float alt)
@@ -607,8 +608,8 @@ namespace HydroTech_RCS.Autopilots
             foreach (Part p in ActiveVessel.parts)
             {
                 Vector3 r = p.Rigidbody.worldCenterOfMass - ActiveVessel.CoM;
-                float h = -HMaths.DotProduct(r, this.Up);
-                height = HMaths.Max(height, h);
+                float h = -Vector3.Dot(r, this.Up);
+                height = Mathf.Max(height, h);
             }
             return height;
         }

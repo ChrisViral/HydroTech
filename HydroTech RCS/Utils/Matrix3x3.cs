@@ -202,7 +202,7 @@ namespace HydroTech_RCS.Utils
 
         public static Vector3 operator *(Matrix3X3 matrix, Vector3 vec)
         {
-            return new Vector3(HMaths.DotProduct(matrix.RowX, vec), HMaths.DotProduct(matrix.RowY, vec), HMaths.DotProduct(matrix.RowZ, vec));
+            return new Vector3(Vector3.Dot(matrix.RowX, vec), Vector3.Dot(matrix.RowY, vec), Vector3.Dot(matrix.RowZ, vec));
         }
 
         public static Vector3 operator /(Vector3 vec, Matrix3X3 matrix)

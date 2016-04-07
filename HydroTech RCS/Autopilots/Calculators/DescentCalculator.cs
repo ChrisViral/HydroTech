@@ -1,5 +1,6 @@
 ﻿using HydroTech_FC;
-using HMaths = HydroTech_RCS.Utils.HMaths;
+using HydroTech_RCS.Utils;
+using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots.Calculators
 {
@@ -97,7 +98,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
 
         protected float t_v(float v)
         {
-            if (v < this.v0 + ((this.AMax * t1) / 2)) { return HMaths.SqRt((2 * (v - this.v0)) / this.Alpha); }
+            if (v < this.v0 + ((this.AMax * t1) / 2)) { return Mathf.Sqrt((2 * (v - this.v0)) / this.Alpha); }
             return ((v - this.v0) / this.AMax) + (t1 / 2);
         }
 

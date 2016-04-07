@@ -1,6 +1,6 @@
 ﻿using HydroTech_FC;
+using HydroTech_RCS.Utils;
 using UnityEngine;
-using HMaths = HydroTech_RCS.Utils.HMaths;
 using Vector6 = HydroTech_RCS.Utils.Vector6;
 
 namespace HydroTech_RCS.Autopilots.Calculators
@@ -146,7 +146,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
                             foreach (Transform trans in rcs.thrusterTransforms)
                             {
                                 Vector3 thrust = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward) * rcs.thrusterPower;
-                                Vector3 thrustTorque = -HMaths.CrossProduct(r, thrust);
+                                Vector3 thrustTorque = Vector3.Cross(r, thrust);
                                 this.maxForce.AddX(thrust.x);
                                 this.maxForce.AddY(thrust.y);
                                 this.maxForce.AddZ(thrust.z);

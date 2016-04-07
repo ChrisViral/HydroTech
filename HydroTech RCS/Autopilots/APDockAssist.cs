@@ -3,8 +3,8 @@ using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules;
+using HydroTech_RCS.Utils;
 using UnityEngine;
-using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Autopilots
 {
@@ -258,9 +258,9 @@ namespace HydroTech_RCS.Autopilots
             ctrlState.X /= translationRate.x;
             ctrlState.Y /= translationRate.y;
             ctrlState.Z /= translationRate.z;
-            if (HMaths.Abs(ctrlState.X) > 1) { ctrlState.X = ctrlState.X > 0 ? 1 : -1; }
-            if (HMaths.Abs(ctrlState.Y) > 1) { ctrlState.Y = ctrlState.Y > 0 ? 1 : -1; }
-            if (HMaths.Abs(ctrlState.Z) > 1) { ctrlState.Z = ctrlState.Z > 0 ? 1 : -1; }
+            if (Mathf.Abs(ctrlState.X) > 1) { ctrlState.X = ctrlState.X > 0 ? 1 : -1; }
+            if (Mathf.Abs(ctrlState.Y) > 1) { ctrlState.Y = ctrlState.Y > 0 ? 1 : -1; }
+            if (Mathf.Abs(ctrlState.Z) > 1) { ctrlState.Z = ctrlState.Z > 0 ? 1 : -1; }
         }
 
         protected virtual void DriveFinalStage(FlightCtrlState ctrlState, Vector3 relPTarget, Vector3 relVCam)
@@ -300,13 +300,13 @@ namespace HydroTech_RCS.Autopilots
                     {
                         if (relPTargetXy.magnitude < AutopilotConsts.minXy)
                         {
-                            if (HMaths.Abs(relVCam.z) > AutopilotConsts.stopSpeed) //Still moving in Z
+                            if (Mathf.Abs(relVCam.z) > AutopilotConsts.stopSpeed) //Still moving in Z
                             {
                                 DriveKillRelV(ctrlState);
                             }
                             else
                             {
-                                if (HMaths.DotProduct(relPTargetXy.normalized, relVCamXy.normalized) < AutopilotConsts.maxTranslationErrAngleCos && relVCamXy.magnitude > AutopilotConsts.stopSpeed) //Moving inwards
+                                if (Vector3.Dot(relPTargetXy.normalized, relVCamXy.normalized) < AutopilotConsts.maxTranslationErrAngleCos && relVCamXy.magnitude > AutopilotConsts.stopSpeed) //Moving inwards
                                 {
                                     DriveKillRelV(ctrlState);
                                 }
@@ -341,7 +341,7 @@ namespace HydroTech_RCS.Autopilots
                     else // >= MinZ
                     {
                         Vector3 diff = (AutopilotConsts.finalStagePos - relPTarget).normalized;
-                        if (HMaths.DotProduct(relVCam.normalized, diff) < AutopilotConsts.maxTranslationErrAngleCos && relVCam.magnitude > AutopilotConsts.stopSpeed) { DriveKillRelV(ctrlState); }
+                        if (Vector3.Dot(relVCam.normalized, diff) < AutopilotConsts.maxTranslationErrAngleCos && relVCam.magnitude > AutopilotConsts.stopSpeed) { DriveKillRelV(ctrlState); }
                         else if (relVCam.magnitude > AutopilotConsts.safeSpeed)
                         {
                             ctrlState.X = 0;

@@ -77,7 +77,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
                             /* foreach (Transform trans in eng.thrustTransforms)
                              * {
                              *     Vector3 thrustVector = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward);
-                             *     float thrustUnit = 1; // HMaths.DotProduct(thrustVector, chosenDir);
+                             *     float thrustUnit = 1; // Vector3.Dot(thrustVector, chosenDir);
                              *     if (thrustUnit > 0)
                              *     {
                              *         this.MinThrust += thrustUnit * eng.minThrust;

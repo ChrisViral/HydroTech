@@ -3,7 +3,6 @@ using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Utils;
 using UnityEngine;
-using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Panels
 {
@@ -388,7 +387,7 @@ namespace HydroTech_RCS.Panels
                     if (float.TryParse(this.altKeepText, out temp))
                     {
                         this.tempAltKeep = temp;
-                        float tempAltKeepTrue = HMaths.Max(this.tempAltKeep - this.TerrainHeight, AutopilotConsts.finalDescentHeight);
+                        float tempAltKeepTrue = Mathf.Max(this.tempAltKeep - this.TerrainHeight, AutopilotConsts.finalDescentHeight);
                         GUILayout.Label(string.Format("True alt: {0:#0.0}{1}", tempAltKeepTrue, GeneralConsts.length));
                         GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}{1}", LA.AllowedHoriSpeed(tempAltKeepTrue), GeneralConsts.speedSimple));
                     }

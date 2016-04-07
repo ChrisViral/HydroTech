@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using HydroTech_FC;
 using HydroTech_RCS.Constants;
+using HydroTech_RCS.Utils;
 using UnityEngine;
-using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Autopilots.Calculators
 {
@@ -18,13 +18,13 @@ namespace HydroTech_RCS.Autopilots.Calculators
         }
 
         #region Constants
-        private const float radiusAltAsl = AutopilotConsts.radiusAltAsl;
+        private const float radiusAltASL = AutopilotConsts.radiusAltAsl;
         private const float radiusMin = AutopilotConsts.radiusMin;
         private const float physicsContactDistanceAdd = AutopilotConsts.physicsContactDistanceAdd;
         #endregion
 
         #region Fields
-        private float altAsl;
+        private float altASL;
         private readonly Dictionary<Direction, float> distance;
         public bool terrain;
         private Vessel vessel;
@@ -63,22 +63,22 @@ namespace HydroTech_RCS.Autopilots.Calculators
 
         public float SlopeNorth
         {
-            get { return HMaths.Atan((this.DistCenter - this.DistNorth) / this.Radius); }
+            get { return Mathf.Atan((this.DistCenter - this.DistNorth) / this.Radius); }
         }
 
         public float SlopeSouth
         {
-            get { return HMaths.Atan((this.DistCenter - this.DistSouth) / this.Radius); }
+            get { return Mathf.Atan((this.DistCenter - this.DistSouth) / this.Radius); }
         }
 
         public float SlopeWest
         {
-            get { return HMaths.Atan((this.DistCenter - this.DistWest) / this.Radius); }
+            get { return Mathf.Atan((this.DistCenter - this.DistWest) / this.Radius); }
         }
 
         public float SlopeEast
         {
-            get { return HMaths.Atan((this.DistCenter - this.DistEast) / this.Radius); }
+            get { return Mathf.Atan((this.DistCenter - this.DistEast) / this.Radius); }
         }
 
         private CelestialBody MainBody
@@ -93,7 +93,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
 
         public float Radius
         {
-            get { return HMaths.Max(this.altAsl * radiusAltAsl, radiusMin); }
+            get { return Mathf.Max(this.altASL * radiusAltASL, radiusMin); }
         }
 
         private Vector3 Up
@@ -113,12 +113,12 @@ namespace HydroTech_RCS.Autopilots.Calculators
 
         private Vector3 West
         {
-            get { return HMaths.CrossProduct(this.Up, this.North); }
+            get { return -this.East; }
         }
 
         private Vector3 East
         {
-            get { return -this.West; }
+            get { return Vector3.Cross(this.Up, this.North); }
         }
         #endregion
 
@@ -146,15 +146,15 @@ namespace HydroTech_RCS.Autopilots.Calculators
 
         public float Slope(Direction dir)
         {
-            return HMaths.Atan((this.DistCenter - this.distance[dir]) / this.Radius);
+            return Mathf.Atan((this.DistCenter - this.distance[dir]) / this.Radius);
         }
 
         public void OnUpdate(Vessel v, float heightOffset, bool slope)
         {
             this.vessel = v;
-            this.altAsl = (float)this.MainBody.GetAltitude(this.CoM) - heightOffset;
+            this.altASL = (float)this.MainBody.GetAltitude(this.CoM) - heightOffset;
             float res;
-            if (GroundContactDetect(this.CoM, this.altAsl, out res))
+            if (GroundContactDetect(this.CoM, this.altASL, out res))
             {
                 this.DistCenter = res;
                 this.DistNorth = GroundContactDetect(this.CoM + (this.North * this.Radius));
@@ -172,7 +172,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
             for (int i = 0; i <= 5; i++)
             {
                 Direction dir = (Direction)i;
-                if (this.distance[dir] > this.altAsl && this.MainBody.ocean) { this.distance[dir] = this.altAsl; }
+                if (this.distance[dir] > this.altASL && this.MainBody.ocean) { this.distance[dir] = this.altASL; }
             }
         }
 
@@ -194,7 +194,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
         {
             if (this.MainBody.pqsController != null)
             {
-                result = (float)(this.altAsl - (this.MainBody.pqsController.GetSurfaceHeight(QuaternionD.AngleAxis(this.MainBody.GetLongitude(origin), Vector3d.down) * QuaternionD.AngleAxis(this.MainBody.GetLatitude(origin), Vector3d.forward) * Vector3d.right) - this.MainBody.pqsController.radius));
+                result = (float)(this.altASL - (this.MainBody.pqsController.GetSurfaceHeight(QuaternionD.AngleAxis(this.MainBody.GetLongitude(origin), Vector3d.down) * QuaternionD.AngleAxis(this.MainBody.GetLatitude(origin), Vector3d.forward) * Vector3d.right) - this.MainBody.pqsController.radius));
                 return true;
             }
             result = 0;
@@ -203,7 +203,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
 
         private bool GroundContactDetect(Vector3 origin, float defaultResult, out float result)
         {
-            if (DistanceToGround(origin, (this.MainBody.position - origin).normalized, this.altAsl + physicsContactDistanceAdd, out result)) { return true; }
+            if (DistanceToGround(origin, (this.MainBody.position - origin).normalized, this.altASL + physicsContactDistanceAdd, out result)) { return true; }
             if (PQSAltitude(origin, out result)) { return true; }
             result = defaultResult;
             return false;

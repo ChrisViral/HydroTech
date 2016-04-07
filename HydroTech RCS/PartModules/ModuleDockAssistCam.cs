@@ -3,8 +3,8 @@ using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules.Base;
+using HydroTech_RCS.Utils;
 using UnityEngine;
-using HMaths = HydroTech_RCS.Utils.HMaths;
 using HydroPartModule = HydroTech_RCS.PartModules.Base.HydroPartModule;
 
 namespace HydroTech_RCS.PartModules
@@ -138,7 +138,7 @@ namespace HydroTech_RCS.PartModules
 
         public Vector3 Right
         {
-            get { return HMaths.CrossProduct(this.Down, this.Dir); }
+            get { return -Vector3.Cross(this.Down, this.Dir); }
         }
 
         public Vector3 Pos
@@ -168,7 +168,7 @@ namespace HydroTech_RCS.PartModules
             this.lineUp.SetPosition(1, this.camUp);
             this.lineRight.SetWidth(0.01f, 0.01f);
             this.lineRight.SetPosition(0, Vector3.zero);
-            this.lineRight.SetPosition(1, HMaths.CrossProduct(this.camForward, this.camUp));
+            this.lineRight.SetPosition(1, -Vector3.Cross(this.camForward, this.camUp));
         }
 
         public void HideEditorAid()

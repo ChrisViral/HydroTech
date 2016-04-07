@@ -8,7 +8,7 @@ namespace HydroTech_FC
 
         public static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
         {
-            return new Vector3(HMaths.DotProduct(vec, x), HMaths.DotProduct(vec, y), HMaths.DotProduct(vec, z));
+            return new Vector3(Vector3.Dot(vec, x), Vector3.Dot(vec, y), Vector3.Dot(vec, z));
         }
 
         public static Vector3 VectorTransform(Vector3 vec, Transform trans)
