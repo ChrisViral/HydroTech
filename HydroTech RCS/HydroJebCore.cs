@@ -7,6 +7,7 @@ using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules;
 using HydroTech_RCS.Parts;
+using HydroTech_RCS.Utils;
 using UnityEngine;
 
 namespace HydroTech_RCS

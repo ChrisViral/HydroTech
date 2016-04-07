@@ -5,6 +5,7 @@ using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels.UI;
 using HydroTech_RCS.PartModules;
 using HydroTech_RCS.PartModules.Base;
+using HydroTech_RCS.Utils;
 using UnityEngine;
 using HydroPartModule = HydroTech_RCS.PartModules.Base.HydroPartModule;
 

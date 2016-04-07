@@ -3,6 +3,7 @@ using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using UnityEngine;
+using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Autopilots
 {

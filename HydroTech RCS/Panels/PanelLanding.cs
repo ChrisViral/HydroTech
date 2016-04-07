@@ -1,7 +1,9 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
+using HydroTech_RCS.Utils;
 using UnityEngine;
+using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Panels
 {

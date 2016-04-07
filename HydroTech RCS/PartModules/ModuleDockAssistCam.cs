@@ -4,6 +4,7 @@ using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
+using HMaths = HydroTech_RCS.Utils.HMaths;
 using HydroPartModule = HydroTech_RCS.PartModules.Base.HydroPartModule;
 
 namespace HydroTech_RCS.PartModules

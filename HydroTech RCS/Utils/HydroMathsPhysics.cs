@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace HydroTech_FC
+namespace HydroTech_RCS.Utils
 {
     public static class HMaths
     {

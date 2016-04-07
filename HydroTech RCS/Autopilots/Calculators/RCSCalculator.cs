@@ -1,5 +1,7 @@
 ﻿using HydroTech_FC;
 using UnityEngine;
+using HMaths = HydroTech_RCS.Utils.HMaths;
+using Vector6 = HydroTech_RCS.Utils.Vector6;
 
 namespace HydroTech_RCS.Autopilots.Calculators
 {

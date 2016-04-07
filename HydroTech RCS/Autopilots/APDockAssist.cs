@@ -4,6 +4,7 @@ using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules;
 using UnityEngine;
+using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Autopilots
 {

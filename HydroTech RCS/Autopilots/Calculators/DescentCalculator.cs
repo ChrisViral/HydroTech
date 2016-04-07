@@ -1,4 +1,5 @@
 ﻿using HydroTech_FC;
+using HMaths = HydroTech_RCS.Utils.HMaths;
 
 namespace HydroTech_RCS.Autopilots.Calculators
 {
