@@ -1,4 +1,5 @@
 ﻿using HydroTech_RCS.PartModules.Base;
+using HydroTech_RCS.Parts;
 
 namespace HydroTech_RCS.PartModules
 {
