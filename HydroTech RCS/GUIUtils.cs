@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-namespace HydroTech_FC
+namespace HydroTech_RCS
 {
     public static class GUIUtils
     {
