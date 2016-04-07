@@ -10,14 +10,6 @@ namespace HydroTech_RCS.Autopilots
 {
     public class APDockAssist : RCSAutopilot
     {
-        #region Constructor
-        public APDockAssist()
-        {
-            this.fileName = new FileName("dock", "cfg", HydroJebCore.autopilotSaveFolder);
-            this.jebsTargetVessel = new SubList<Part>(HydroJebCore.jebs.listInactiveVessel, IsJebTargetVessel);
-        }
-        #endregion
-
         #region Static properties
         public static APDockAssist TheAutopilot
         {
@@ -217,6 +209,14 @@ namespace HydroTech_RCS.Autopilots
         protected bool targetOrientReady = true;
         protected LineRenderer line;
         public SubList<Part> jebsTargetVessel;
+        #endregion
+
+        #region Constructor
+        public APDockAssist()
+        {
+            this.fileName = new FileName("dock", "cfg", HydroJebCore.autopilotSaveFolder);
+            this.jebsTargetVessel = new SubList<Part>(HydroJebCore.jebs.listInactiveVessel, IsJebTargetVessel);
+        }
         #endregion
 
         #region Autopilot

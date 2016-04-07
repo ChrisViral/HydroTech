@@ -16,16 +16,20 @@ namespace HydroTech_RCS.Autopilots.Modules
             EAST
         }
 
-        protected const float radiusAltAsl = Position.Gcd.radiusAltAsl;
-        protected const float radiusMin = Position.Gcd.radiusMin;
+        #region Constants
+        private const float radiusAltAsl = Position.Gcd.radiusAltAsl;
+        private const float radiusMin = Position.Gcd.radiusMin;
+        private const float physicsContactDistanceAdd = Position.Gcd.physicsContactDistanceAdd;
+        #endregion
 
-        protected const float physicsContactDistanceAdd = Position.Gcd.physicsContactDistanceAdd;
-        protected float altAsl;
-        protected Dictionary<Direction, float> distance = new Dictionary<Direction, float>();
+        #region Fields
+        private float altAsl;
+        private Dictionary<Direction, float> distance;
         public bool terrain;
+        private Vessel vessel;
+        #endregion
 
-        protected Vessel vessel;
-
+        #region Properties
         public float DistCenter
         {
             get { return this.distance[Direction.CENTER]; }
@@ -76,12 +80,12 @@ namespace HydroTech_RCS.Autopilots.Modules
             get { return HMaths.Atan((this.DistCenter - this.DistEast) / this.Radius); }
         }
 
-        protected CelestialBody MainBody
+        private CelestialBody MainBody
         {
             get { return this.vessel.mainBody; }
         }
 
-        protected Vector3 CoM
+        private Vector3 CoM
         {
             get { return this.vessel.CoM; }
         }
@@ -91,40 +95,49 @@ namespace HydroTech_RCS.Autopilots.Modules
             get { return HMaths.Max(this.altAsl * radiusAltAsl, radiusMin); }
         }
 
-        protected Vector3 Up
+        private Vector3 Up
         {
             get { return (this.CoM - this.MainBody.position).normalized; }
         }
 
-        protected Vector3 North
+        private Vector3 North
         {
             get { return this.MainBody.transform.up; }
         }
 
-        protected Vector3 South
+        private Vector3 South
         {
             get { return -this.North; }
         }
 
-        protected Vector3 West
+        private Vector3 West
         {
             get { return HMaths.CrossProduct(this.Up, this.North); }
         }
 
-        protected Vector3 East
+        private Vector3 East
         {
             get { return -this.West; }
         }
+        #endregion
 
+        #region Constructors
         public DetectorGroundContact()
         {
-            this.distance.Add(Direction.CENTER, 0.0F);
-            this.distance.Add(Direction.NORTH, 0.0F);
-            this.distance.Add(Direction.SOUTH, 0.0F);
-            this.distance.Add(Direction.WEST, 0.0F);
-            this.distance.Add(Direction.EAST, 0.0F);
+            this.distance = new Dictionary<Direction, float>(5)
+            #region Values
+            {
+                { Direction.CENTER, 0 },
+                { Direction.NORTH,  0 },
+                { Direction.SOUTH,  0 },
+                { Direction.WEST,   0 },
+                { Direction.EAST,   0 }
+            };
+            #endregion
         }
+        #endregion
 
+        #region Methods
         public float Distance(Direction dir)
         {
             return this.distance[dir];
@@ -135,7 +148,7 @@ namespace HydroTech_RCS.Autopilots.Modules
             return HMaths.Atan((this.DistCenter - this.distance[dir]) / this.Radius);
         }
 
-        public virtual void OnUpdate(Vessel v, float heightOffset, bool slope)
+        public void OnUpdate(Vessel v, float heightOffset, bool slope)
         {
             this.vessel = v;
             this.altAsl = (float)this.MainBody.GetAltitude(this.CoM) - heightOffset;
@@ -154,55 +167,53 @@ namespace HydroTech_RCS.Autopilots.Modules
                 this.DistCenter = res;
                 this.terrain = false;
             }
+
+            for (int i = 0; i <= 5; i++)
+            {
+                Direction dir = (Direction)i;
+                if (this.distance[dir] > this.altAsl && this.MainBody.ocean) { this.distance[dir] = this.altAsl; }
+            }
         }
 
-        // Following methods learned from MechJeb
-        protected bool PhysicsContactMethod(Vector3 origin, Vector3 direction, float maxDistance, // the max distance of detection, to pass into Physics.Raycast
-                                            out float result)
+        //From MechJeb
+        private bool DistanceToGround(Vector3 origin, Vector3 direction, float maxDistance, out float result)
         {
-            RaycastHit sfc;
-            if (Physics.Raycast(origin, direction, out sfc, maxDistance, 1 << 15))
+            RaycastHit hit;
+            if (Physics.Raycast(origin, direction, out hit, maxDistance, 1 << 15))
             {
-                result = sfc.distance;
+                result = hit.distance;
                 return true;
             }
-            result = 0.0F;
+            result = 0;
             return false;
         }
 
-        protected bool MainBodyTerrainMethod(Vector3 origin, out float result)
+        //wtf is this shit. Need to work with vessel.pqsAltitude
+        private bool PQSAltitude(Vector3 origin, out float result)
         {
             if (this.MainBody.pqsController != null)
             {
                 result = (float)(this.altAsl - (this.MainBody.pqsController.GetSurfaceHeight(QuaternionD.AngleAxis(this.MainBody.GetLongitude(origin), Vector3d.down) * QuaternionD.AngleAxis(this.MainBody.GetLatitude(origin), Vector3d.forward) * Vector3d.right) - this.MainBody.pqsController.radius));
                 return true;
             }
-            result = 0.0F;
+            result = 0;
             return false;
         }
 
-        protected bool GroundContactDetect(Vector3 origin, float defaultResult, out float result)
+        private bool GroundContactDetect(Vector3 origin, float defaultResult, out float result)
         {
-            if (PhysicsContactMethod(origin, (this.MainBody.position - origin).normalized, this.altAsl + physicsContactDistanceAdd, out result)) { return true; }
-            if (MainBodyTerrainMethod(origin, out result)) { return true; }
+            if (DistanceToGround(origin, (this.MainBody.position - origin).normalized, this.altAsl + physicsContactDistanceAdd, out result)) { return true; }
+            if (PQSAltitude(origin, out result)) { return true; }
             result = defaultResult;
             return false;
         }
 
-        protected float GroundContactDetect(Vector3 origin)
+        private float GroundContactDetect(Vector3 origin)
         {
             float res;
-            GroundContactDetect(origin, 0.0F, out res);
+            GroundContactDetect(origin, 0, out res);
             return res;
         }
-    }
-
-    public class TrueAltitudeDetector : DetectorGroundContact
-    {
-        public override void OnUpdate(Vessel v, float heightOffset, bool slope)
-        {
-            base.OnUpdate(v, heightOffset, slope);
-            for (Direction dir = Direction.CENTER; dir <= Direction.EAST; dir++) { if (this.distance[dir] > this.altAsl && this.MainBody.ocean) { this.distance[dir] = this.altAsl; } }
-        }
+        #endregion
     }
 }

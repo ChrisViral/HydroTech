@@ -11,7 +11,6 @@ namespace HydroTech_RCS.Autopilots
 {
     public class APLanding : RCSAutopilot
     {
-        #region Enums
         public enum Indicator
         {
             LANDED,
@@ -38,7 +37,6 @@ namespace HydroTech_RCS.Autopilots
             LANDED,
             HOVER
         }
-        #endregion
 
         #region Properties
         public static APLanding TheAutopilot
@@ -244,7 +242,7 @@ namespace HydroTech_RCS.Autopilots
         protected Vector3 surfUpNormal;
         protected Status status = Status.DISENGAGED;
         protected Indicator indicator = Indicator.SAFE;
-        protected TrueAltitudeDetector tad = new TrueAltitudeDetector();
+        protected DetectorGroundContact tad = new DetectorGroundContact();
         protected CalculatorDescent cd = new CalculatorDescent();
 
         protected float twrRcs;
@@ -572,17 +570,17 @@ namespace HydroTech_RCS.Autopilots
             }
         }
 
-        protected Indicator GetIndicator(CalculatorDescent.Indicator i)
+        protected Indicator GetIndicator(CalculatorDescent.DescentIndicator i)
         {
             switch (i)
             {
-                case CalculatorDescent.Indicator.WARP:
+                case CalculatorDescent.DescentIndicator.WARP:
                     return Indicator.WARP;
-                case CalculatorDescent.Indicator.SAFE:
+                case CalculatorDescent.DescentIndicator.SAFE:
                     return Indicator.SAFE;
-                case CalculatorDescent.Indicator.OK:
+                case CalculatorDescent.DescentIndicator.OK:
                     return Indicator.OK;
-                case CalculatorDescent.Indicator.DANGER:
+                case CalculatorDescent.DescentIndicator.DANGER:
                     return Indicator.DANGER;
                 default:
                     return Indicator.LANDED;
@@ -636,7 +634,7 @@ namespace HydroTech_RCS.Autopilots
             this.TwrEng = cet.MaxAcc * this.maxThrottle;
             this.hoverThrustRate = this.g / this.Twr;
 
-            //Get vessel CurrentBehaviour
+            //Get vessel CurrentDescentBehaviour
             if (this.Landed && this.touchdown) { this.indicator = Indicator.LANDED; }
             else if (this.hoverThrustRate > 1.0F || this.GAsl > this.Twr)
             {
@@ -652,7 +650,7 @@ namespace HydroTech_RCS.Autopilots
             else //Ready for landing
             {
                 this.cd.OnUpdate(Position.finalDescentHeight, this.safeTouchDownSpeed, this.GAsl, this.Twr, -this.VertSpeed, this.AltDiff);
-                this.indicator = GetIndicator(this.cd.CurrentIndicator);
+                this.indicator = GetIndicator(this.cd.Indicator);
             }
 
             if (!this.engaged) { this.status = Status.DISENGAGED; }
@@ -665,14 +663,14 @@ namespace HydroTech_RCS.Autopilots
                 {
                     this.status = this.HoriSpeed < this.SafeHorizontalSpeed ? Status.DESCEND : Status.AVOID;
                 }
-                else if (this.cd.CurrentBehaviour == CalculatorDescent.Behaviour.IDLE)
+                else if (this.cd.Behaviour == CalculatorDescent.DescentBehaviour.IDLE)
                 {
                     if (this.HoriSpeed > HoriBrakeSpeed(this.AltTrue)) { this.status = Status.HORIZONTAL; }
                     else if (this.HoriSpeed < this.SafeHorizontalSpeed) { this.status = Status.IDLE; }
                     else { this.status = Status.DECELERATE; }
                 }
-                else if (this.cd.CurrentBehaviour == CalculatorDescent.Behaviour.BRAKE) { this.status = Status.VERTICAL; }
-                else // CalculatorDescent.Behaviour.NORMAL
+                else if (this.cd.Behaviour == CalculatorDescent.DescentBehaviour.BRAKE) { this.status = Status.VERTICAL; }
+                else // CalculatorDescent.DescentBehaviour.NORMAL
                 {
                     this.status = this.HoriSpeed > HoriBrakeSpeed(this.AltTrue) ? Status.HORIZONTAL : Status.DECELERATE;
                 }

@@ -4,14 +4,14 @@ namespace HydroTech_RCS.Autopilots.Modules
 {
     public class CalculatorDescent
     {
-        public enum Behaviour
+        public enum DescentBehaviour
         {
             IDLE,
             NORMAL,
             BRAKE
         }
 
-        public enum Indicator
+        public enum DescentIndicator
         {
             WARP,
             SAFE,
@@ -19,20 +19,18 @@ namespace HydroTech_RCS.Autopilots.Modules
             DANGER
         }
 
-        protected const float t1 = 60.0F;
-        protected const float completeLockHeightDiff = 100.0F;
-        protected const float ratioWarp = -0.1F;
-        protected const float ratioSafe = 0.5F;
-        protected const float ratioOk = 0.8F;
-        protected float g;
-        protected float h0;
+        #region Constants
+        protected const float t1 = 60;
+        protected const float completeLockHeightDiff = 100;
+        protected const float ratioWarp = -0.1f, ratioSafe = 0.5f, ratioOk = 0.8f;
+        #endregion
 
+        #region Fields
+        protected float g, twr, h0, v0;
         protected float statusV, statusH;
+        #endregion
 
-        protected float thrRate = 1.0F;
-        protected float twr;
-        protected float v0;
-
+        #region Properties
         protected float AMax
         {
             get { return this.twr - this.g; }
@@ -43,36 +41,39 @@ namespace HydroTech_RCS.Autopilots.Modules
             get { return this.AMax / t1; }
         }
 
+        protected float thrRate = 1;
         public float ThrRate
         {
             get
             {
-                if (this.thrRate < 0.0F) { return 0.0F; }
-                return this.thrRate > 1.0F ? 1.0F : this.thrRate;
+                if (this.thrRate < 0) { return 0; }
+                return this.thrRate > 1 ? 1 : this.thrRate;
             }
         }
 
-        public Behaviour CurrentBehaviour
+        public DescentBehaviour Behaviour
         {
             get { return GetBehaviour(this.thrRate); }
         }
 
-        public Indicator CurrentIndicator
+        public DescentIndicator Indicator
         {
             get { return GetIndicator(this.thrRate); }
         }
+        #endregion
 
-        protected Behaviour GetBehaviour(float aRatio)
+        #region Methods
+        protected DescentBehaviour GetBehaviour(float aRatio)
         {
-            if (aRatio < 0.0F) { return Behaviour.IDLE; }
-            return aRatio > 1.0F ? Behaviour.BRAKE : Behaviour.NORMAL;
+            if (aRatio < 0) { return DescentBehaviour.IDLE; }
+            return aRatio > 1 ? DescentBehaviour.BRAKE : DescentBehaviour.NORMAL;
         }
 
-        protected Indicator GetIndicator(float aRatio)
+        protected DescentIndicator GetIndicator(float aRatio)
         {
-            if (aRatio < ratioWarp) { return Indicator.WARP; }
-            if (aRatio < ratioSafe) { return Indicator.SAFE; }
-            return aRatio < ratioOk ? Indicator.OK : Indicator.DANGER;
+            if (aRatio < ratioWarp) { return DescentIndicator.WARP; }
+            if (aRatio < ratioSafe) { return DescentIndicator.SAFE; }
+            return aRatio < ratioOk ? DescentIndicator.OK : DescentIndicator.DANGER;
         }
 
         protected float a_t(float t)
@@ -115,10 +116,8 @@ namespace HydroTech_RCS.Autopilots.Modules
             this.statusV = v;
             this.statusH = h;
             if (this.statusV <= v0) { this.thrRate = -1.0F; }
-            else
-            {
-                Calculate();
-            }
+            else { Calculate(); }
         }
+        #endregion
     }
 }

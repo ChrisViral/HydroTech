@@ -5,30 +5,34 @@ namespace HydroTech_RCS.Autopilots.Modules
 {
     public class CalculatorRcsThrust : CalculatorVesselInfoBasic
     {
-        protected bool allRcsEnabled = true;
-        protected bool allRcsEnabledChanged;
+        #region Fields
         public Vector6 maxAcc = new Vector6();
         public Vector6 maxAngularAcc = new Vector6();
         public Vector6 maxForce = new Vector6();
-
         public Vector6 maxTorque = new Vector6();
+        #endregion
 
+        #region Properties
+        protected bool allRcsEnabled = true;
         public bool AllRcsEnabled
         {
             get { return this.allRcsEnabled; }
             protected set
             {
-                this.AllRcsEnabledChanged = !(value == this.allRcsEnabled);
+                this.AllRcsEnabledChanged = value != this.allRcsEnabled;
                 this.allRcsEnabled = value;
             }
         }
 
+        protected bool allRcsEnabledChanged;
         public bool AllRcsEnabledChanged
         {
             get { return this.allRcsEnabledChanged; }
             protected set { this.allRcsEnabledChanged = value; }
         }
+        #endregion
 
+        #region Methods
         protected override void Calculate()
         {
             base.Calculate();
@@ -37,17 +41,17 @@ namespace HydroTech_RCS.Autopilots.Modules
             this.maxForce.Reset();
             foreach (Part p in this.partList)
             {
-                Vector3 r = SwitchTransformCalculator.VectorTransform(p.Rigidbody.worldCenterOfMass - this.coM, this.transformRight, this.transformDown, this.transformForward);
+                Vector3 r = SwitchTransformCalculator.VectorTransform(p.GetComponent<Rigidbody>().worldCenterOfMass - this.CoM, this.transformRight, this.transformDown, this.transformForward);
                 foreach (PartModule pm in p.Modules)
                 {
                     if (pm is ModuleRCS)
                     {
-                        ModuleRCS mrcs = (ModuleRCS)pm;
-                        if (mrcs.isEnabled)
+                        ModuleRCS rcs = (ModuleRCS)pm;
+                        if (rcs.isEnabled)
                         {
-                            foreach (Transform trans in mrcs.thrusterTransforms)
+                            foreach (Transform trans in rcs.thrusterTransforms)
                             {
-                                Vector3 thrust = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward) * mrcs.thrusterPower;
+                                Vector3 thrust = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward) * rcs.thrusterPower;
                                 Vector3 thrustTorque = -HMaths.CrossProduct(r, thrust);
                                 this.maxForce.AddX(thrust.x);
                                 this.maxForce.AddY(thrust.y);
@@ -57,10 +61,7 @@ namespace HydroTech_RCS.Autopilots.Modules
                                 this.maxTorque.AddZ(thrustTorque.z);
                             }
                         }
-                        else
-                        {
-                            tempAllRcsEnabled = false;
-                        }
+                        else { tempAllRcsEnabled = false; }
                     }
                 }
             }
@@ -71,86 +72,85 @@ namespace HydroTech_RCS.Autopilots.Modules
 
         public void EnableAllRcs()
         {
-            foreach (Part p in this.partList) { foreach (PartModule pm in p.Modules) { if (pm is ModuleRCS && !((ModuleRCS)pm).isEnabled) { ((ModuleRCS)pm).Enable(); } } }
+            foreach (Part p in this.partList)
+            {
+                foreach (PartModule pm in p.Modules)
+                {
+                    ModuleRCS rcs = pm as ModuleRCS;
+                    if (rcs != null && !rcs.isEnabled) { rcs.Enable(); }
+                }
+            }
         }
 
         public override string ToString()
         {
-            return "Mass = " + this.Mass + "\nForces = " + this.maxForce.ToString() + "\nAcc = " + this.maxAcc.ToString() + "\nMoI = " + this.moI.ToString() + "\nTorque = " + this.maxTorque.ToString() + "\nAAcc = " + this.maxAngularAcc.ToString();
+            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass, this.maxForce, this.maxAcc, this.moI, this.maxTorque, this.maxAngularAcc);
         }
 
         public virtual string ToString(string format)
         {
-            return "Mass = " + this.Mass.ToString(format) + "\nForces = " + this.maxForce.ToString(format) + "\nAcc = " + this.maxAcc.ToString(format) + "\nMoI = " + this.moI.ToString(format) + "\nTorque = " + this.maxTorque.ToString(format) + "\nAAcc = " + this.maxAngularAcc.ToString(format);
+            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass.ToString(format), this.maxForce.ToString(format), this.maxAcc.ToString(format), this.moI.ToString(format), this.maxTorque.ToString(format), this.maxAngularAcc.ToString(format));
         }
 
         public float GetThrustRateFromAngularAcc6(int dir, float aA)
         {
-            float maxAa = 0.0F;
+            float maxAa = 0;
             switch (dir)
             {
-                case 0 /* xp = pitch- */:
+                case 0: //xp = pitch-
                     maxAa = this.maxAngularAcc.xp;
                     break;
-                case 1 /* xn = pitch+ */:
+                case 1: //xn = pitch+
                     maxAa = this.maxAngularAcc.xn;
                     break;
-                case 2 /* yp = yaw- */:
+                case 2: //yp = yaw-
                     maxAa = this.maxAngularAcc.yp;
                     break;
-                case 3 /* yn = yaw+ */:
+                case 3: //yn = yaw+
                     maxAa = this.maxAngularAcc.yn;
                     break;
-                case 4 /* zp = roll- */:
+                case 4: //zp = roll-
                     maxAa = this.maxAngularAcc.zp;
                     break;
-                case 5 /* zn = roll+ */:
+                case 5: //zn = roll+
                     maxAa = this.maxAngularAcc.zn;
                     break;
-                default:
-                    maxAa = 0.0F;
-                    break;
             }
-            if (maxAa == 0.0F) { return 1.0F; }
-            return aA / maxAa;
+            return maxAa == 0 ? 1:  aA / maxAa;
         }
 
         public float GetThrustRateFromAcc6(int dir, float a)
         {
-            float maxA = 0.0F;
+            float maxA = 0;
             switch (dir)
             {
-                case 0 /* xp = right- */:
+                case 0: //xp = right
                     maxA = this.maxAcc.xp;
                     break;
-                case 1 /* xn = right+ */:
+                case 1: //xn = right
                     maxA = this.maxAcc.xn;
                     break;
-                case 2 /* yp = down- */:
+                case 2: //yp = down-
                     maxA = this.maxAcc.yp;
                     break;
-                case 3 /* yn = down+ */:
+                case 3: //yn = down+
                     maxA = this.maxAcc.yn;
                     break;
-                case 4 /* zp = forward- */:
+                case 4: //zp = forward-
                     maxA = this.maxAcc.zp;
                     break;
-                case 5 /* zn = forward+ */:
+                case 5: //zn = forward+
                     maxA = this.maxAcc.zn;
                     break;
-                default:
-                    maxA = 0.0F;
-                    break;
             }
-            if (maxA == 0.0F) { return 1.0F; }
-            return a / maxA;
+            return maxA == 0 ? 1 : a / maxA;
         }
 
         public void MakeRotation(FlightCtrlState ctrlState, float angularAcc)
         {
             ctrlState.pitch *= GetThrustRateFromAngularAcc6(ctrlState.pitch >= 0 ? 1 : 0, angularAcc);
-            ctrlState.yaw *= GetThrustRateFromAngularAcc6(ctrlState.yaw >= 0 ? 3 : 2, angularAcc);
-            ctrlState.roll *= GetThrustRateFromAngularAcc6(ctrlState.roll >= 0 ? 5 : 4, angularAcc);
+            ctrlState.yaw   *= GetThrustRateFromAngularAcc6(ctrlState.yaw   >= 0 ? 3 : 2, angularAcc);
+            ctrlState.roll  *= GetThrustRateFromAngularAcc6(ctrlState.roll  >= 0 ? 5 : 4, angularAcc);
         }
 
         public void MakeTranslation(FlightCtrlState ctrlState, float acc)
@@ -162,14 +162,13 @@ namespace HydroTech_RCS.Autopilots.Modules
 
         public float GetThrustRateFromAngularAcc3(int dir, float aA)
         {
-            bool pos = aA >= 0.0F;
-            return GetThrustRateFromAngularAcc6((dir * 2) + (pos ? 1 : 0), aA);
+            return GetThrustRateFromAngularAcc6((dir * 2) + (aA >= 0 ? 1 : 0), aA);
         }
 
         public float GetThrustRateFromAcc3(int dir, float a)
         {
-            bool pos = a >= 0.0F;
-            return GetThrustRateFromAcc6((dir * 2) + (pos ? 0 : 1), a);
+            return GetThrustRateFromAcc6((dir * 2) + (a >= 0 ? 0 : 1), a);
         }
+        #endregion
     }
 }

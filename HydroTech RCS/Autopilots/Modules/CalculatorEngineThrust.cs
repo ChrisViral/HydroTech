@@ -5,15 +5,23 @@ namespace HydroTech_RCS.Autopilots.Modules
 {
     public class CalculatorEngineThrust : CalculatorVesselInfoBasic
     {
+        #region Fields
         protected Vector3 chosenDir = Vector3.down;
-        protected float maxThrust;
+        #endregion
 
+        #region Properties
         protected float minThrust;
-
         public float MinThrust
         {
             get { return this.minThrust; }
             protected set { this.minThrust = value; }
+        }
+
+        protected float maxThrust;
+        public float MaxThrust
+        {
+            get { return this.maxThrust; }
+            protected set { this.maxThrust = value; }
         }
 
         public float MinAcc
@@ -21,17 +29,13 @@ namespace HydroTech_RCS.Autopilots.Modules
             get { return this.MinThrust / this.Mass; }
         }
 
-        public float MaxThrust
-        {
-            get { return this.maxThrust; }
-            protected set { this.maxThrust = value; }
-        }
-
         public float MaxAcc
         {
             get { return this.MaxThrust / this.Mass; }
         }
+        #endregion
 
+        #region Methods
         public void SetVector(Vector3 vec)
         {
             this.chosenDir = vec;
@@ -71,12 +75,15 @@ namespace HydroTech_RCS.Autopilots.Modules
                 }
             }
         }
+        #endregion
 
+        #region Functions
         public void OnUpdate(Vessel targetVessel, Vector3 dir)
         {
             SetVessel(targetVessel);
             SetVector(dir);
             Calculate();
         }
+        #endregion
     }
 }
