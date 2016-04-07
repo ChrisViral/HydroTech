@@ -81,10 +81,8 @@
     <Compile Include="Panels\Panel.cs" />
     <Compile Include="Panels\PanelDebug.cs" />
     <Compile Include="Panels\PanelDockAssist.cs" />
-    <Compile Include="Panels\PanelDockAssistEditorAid0.cs" />
-    <Compile Include="Panels\PanelDockAssistEditorAid1.cs" />
-    <Compile Include="Panels\PanelLanding0.cs" />
-    <Compile Include="Panels\PanelLanding1.cs" />
+    <Compile Include="Panels\PanelDockAssistEditorAid.cs" />
+    <Compile Include="Panels\PanelLanding.cs" />
     <Compile Include="Panels\PanelLandingAdvInfo.cs" />
     <Compile Include="Panels\PanelMain.cs" />
     <Compile Include="Panels\PanelMainThrottle.cs" />
