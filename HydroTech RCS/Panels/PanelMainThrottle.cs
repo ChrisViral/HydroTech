@@ -6,8 +6,17 @@ namespace HydroTech_RCS.Panels
 {
     public class PanelMainThrottle : Panel
     {
+        #region Fields
         protected bool editing;
         protected string editText;
+        #endregion
+
+        #region Properties
+        protected float Throttle
+        {
+            get { return FlightInputHandler.state.mainThrottle * 100; }
+            set { FlightInputHandler.state.mainThrottle = value / 100f; }
+        }
 
         protected override int PanelID
         {
@@ -18,16 +27,32 @@ namespace HydroTech_RCS.Panels
         {
             get { return PanelConsts.mainThrottleTitle; }
         }
+        #endregion
 
-        protected float Throttle
-        {
-            get { return FlightInputHandler.state.mainThrottle * 100.0F; }
-            set { FlightInputHandler.state.mainThrottle = value / 100.0F; }
-        }
-
+        #region Constructor
         public PanelMainThrottle()
         {
             this.fileName = new FileName("throttle", "cfg", HydroJebCore.panelSaveFolder);
+        }
+        #endregion
+
+        #region Static methods
+        private static float Clamp0(float f)
+        {
+            return f > 0 ? f : 0;
+        }
+
+        private static float Clamp100(float f)
+        {
+            return f < 100 ? f : 100;
+        }
+        #endregion
+
+        #region Overrides
+        public override void OnFlightStart()
+        {
+            base.OnFlightStart();
+            this.editing = false;
         }
 
         protected override void SetDefaultWindowRect()
@@ -37,7 +62,6 @@ namespace HydroTech_RCS.Panels
 
         protected override void WindowGUI(int windowId)
         {
-            //GUIStyle CurThrStyle = BtnStyle(Color.green);
             GUIStyle curThrStyle = BtnStyle();
             GUIStyle editBtnStyle = BtnStyle(Color.yellow);
             GUILayout.BeginVertical();
@@ -52,14 +76,15 @@ namespace HydroTech_RCS.Panels
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
+            //The conditionals only change the label colour... not obvious <.<
             if (GUILayout.Button("OFF", this.Throttle == 0 ? curThrStyle : BtnStyle())) { this.Throttle = 0; }
             if (GUILayout.Button("100", this.Throttle == 100 ? curThrStyle : BtnStyle())) { this.Throttle = 100; }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("-1")) { this.Throttle -= 1; }
-            if (GUILayout.Button("+1")) { this.Throttle += 1; }
-            if (GUILayout.Button("-5")) { this.Throttle -= 5; }
-            if (GUILayout.Button("+5")) { this.Throttle += 5; }
+            if (GUILayout.Button("-1")) { this.Throttle = Clamp0(this.Throttle - 1); }
+            if (GUILayout.Button("+1")) { this.Throttle = Clamp100(this.Throttle + 1); }
+            if (GUILayout.Button("-5")) { this.Throttle = Clamp0(this.Throttle - 5); }
+            if (GUILayout.Button("+5")) { this.Throttle = Clamp100(this.Throttle +5); }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -69,10 +94,10 @@ namespace HydroTech_RCS.Panels
                 this.editText = GUILayout.TextField(this.editText);
                 if (GUILayout.Button("OK", editBtnStyle))
                 {
-                    float thr;
-                    if (float.TryParse(this.editText, out thr) && thr >= 0 && thr <= 100)
+                    float temp;
+                    if (float.TryParse(this.editText, out temp) && temp >= 0 && temp <= 100)
                     {
-                        this.Throttle = thr;
+                        this.Throttle = temp;
                         this.editing = false;
                     }
                 }
@@ -91,11 +116,6 @@ namespace HydroTech_RCS.Panels
 
             GUI.DragWindow();
         }
-
-        public override void OnFlightStart()
-        {
-            OnFlightStart();
-            this.editing = false;
-        }
+        #endregion
     }
 }

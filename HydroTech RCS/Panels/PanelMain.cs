@@ -6,6 +6,7 @@ namespace HydroTech_RCS.Panels
 {
     public class PanelMain : Panel
     {
+        #region Properties
         protected override int PanelID
         {
             get { return CoreConsts.main; }
@@ -15,10 +16,20 @@ namespace HydroTech_RCS.Panels
         {
             get { return PanelConsts.mainTitle; }
         }
+        #endregion
 
+        #region Constructor
         public PanelMain()
         {
             this.fileName = new FileName("main", "cfg", HydroJebCore.panelSaveFolder);
+        }
+        #endregion
+
+        #region Overrides
+        protected override void LoadDefault()
+        {
+            base.LoadDefault();
+            this.panelShown = true;
         }
 
         protected override void SetDefaultWindowRect()
@@ -36,11 +47,6 @@ namespace HydroTech_RCS.Panels
             }
             GUILayout.EndVertical();
         }
-
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            this.panelShown = true;
-        }
+        #endregion
     }
 }
