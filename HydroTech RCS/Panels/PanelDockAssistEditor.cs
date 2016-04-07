@@ -8,7 +8,7 @@ using GetItemFunctionTarget= HydroTech_FC.AffiliationList<Part, ModuleDockAssist
 
 namespace HydroTech_RCS.Panels
 {
-    public class PanelDockAssistEditorAid : Panel, IPanelEditor
+    public class PanelDockAssistEditor : Panel, IPanelEditor
     {
         protected struct DAEditorSet
         {
@@ -52,7 +52,7 @@ namespace HydroTech_RCS.Panels
         #endregion
 
         #region Constructor
-        public PanelDockAssistEditorAid()
+        public PanelDockAssistEditor()
         {
             this.fileName = new FileName("dockeditor", "cfg", HydroJebCore.panelSaveFolder);
             this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, (GetItemFunctionCam)GetCam);

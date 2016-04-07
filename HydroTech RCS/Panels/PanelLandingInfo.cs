@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    public class PanelLandingAdvInfo : Panel
+    public class PanelLandingInfo : Panel
     {
         #region Static properties
         protected static APLanding LA
@@ -121,7 +121,7 @@ namespace HydroTech_RCS.Panels
         #endregion
 
         #region Constructor
-        public PanelLandingAdvInfo()
+        public PanelLandingInfo()
         {
             this.fileName = new FileName("landinfo", "cfg", HydroJebCore.panelSaveFolder);
         }

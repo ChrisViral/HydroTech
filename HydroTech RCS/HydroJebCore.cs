@@ -40,7 +40,7 @@ namespace HydroTech_RCS
 #endif
                 //Editor
                 panelsEditor.Add(CoreConsts.rcsInfo, new PanelRcsThrustInfo());
-                panelsEditor.Add(CoreConsts.pDock, new PanelDockAssistEditorAid());
+                panelsEditor.Add(CoreConsts.pDock, new PanelDockAssistEditor());
             }
             catch (Exception e)
             {

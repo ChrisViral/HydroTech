@@ -68,7 +68,7 @@ namespace HydroTech_RCS.Panels
         #endregion
 
         #region Fields
-        public PanelLandingAdvInfo panelAdvInfo = new PanelLandingAdvInfo();
+        public PanelLandingInfo panelInfo = new PanelLandingInfo();
         protected string altKeepText;
         protected string maxThrText;
         protected string stdsText;
@@ -91,13 +91,13 @@ namespace HydroTech_RCS.Panels
                     if (this.panelAdvInfoShown)
                     {
                         this.panelAdvInfoShown = false;
-                        this.panelAdvInfo.PanelShown = true;
+                        this.panelInfo.PanelShown = true;
                     }
                 }
                 else
                 {
-                    this.panelAdvInfoShown = this.panelAdvInfo.PanelShown;
-                    this.panelAdvInfo.PanelShown = false;
+                    this.panelAdvInfoShown = this.panelInfo.PanelShown;
+                    this.panelInfo.PanelShown = false;
                 }
             }
         }
@@ -211,7 +211,7 @@ namespace HydroTech_RCS.Panels
             set
             {
                 base.Active = value;
-                this.panelAdvInfo.Active = value;
+                this.panelInfo.Active = value;
             }
         }
 
@@ -248,14 +248,14 @@ namespace HydroTech_RCS.Panels
         public override void OnFlightStart()
         {
             base.OnFlightStart();
-            this.panelAdvInfo.OnFlightStart();
+            this.panelInfo.OnFlightStart();
             this.panelAdvInfoShown = false;
         }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
-            this.panelAdvInfo.OnUpdate();
+            this.panelInfo.OnUpdate();
         }
 
         protected override void SetDefaultWindowRect()
@@ -310,7 +310,7 @@ namespace HydroTech_RCS.Panels
                 {
                     this.Settings = true;
                 }
-                this.panelAdvInfo.PanelShown = GUILayout.Toggle(this.panelAdvInfo.PanelShown, "Advanced info");
+                this.panelInfo.PanelShown = GUILayout.Toggle(this.panelInfo.PanelShown, "Advanced info");
                 if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
                 GUILayout.Label("Status: " + this.StatusString);
                 GUILayout.Label(this.WarningString, LabelStyle(this.WarningColor));
