@@ -1,6 +1,7 @@
-﻿using HydroTech_RCS;
+﻿using System.Linq;
+using HydroTech_RCS;
 using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 
 public class HydroJeb : Part
 {
@@ -60,14 +61,14 @@ public class HydroJeb : Part
         double electricChargeConsumptionRate = 0.0;
         if (IsActiveJeb())
         {
-            if (RCSAutopilot.AutopilotEngaged) { electricChargeConsumptionRate += Behaviours.electricConsumptionAutopilot; }
-            if (Da.ShowLine) { electricChargeConsumptionRate += Behaviours.electricConsumptionLaser; }
+            if (RCSAutopilot.AutopilotEngaged) { electricChargeConsumptionRate += CoreConsts.electricConsumptionAutopilot; }
+            if (Da.ShowLine) { electricChargeConsumptionRate += CoreConsts.electricConsumptionLaser; }
         }
         else // !isActiveJeb()
         {
-            if (Da.engaged && Da.DriveTarget && this.vessel == Da.target.vessel && this == Da.jebsTargetVessel.FirstOrDefault()) // driving target vessel
+            if (Da.Engaged && Da.DriveTarget && this.vessel == Da.target.vessel && this == Da.jebsTargetVessel.FirstOrDefault()) // driving target vessel
             {
-                electricChargeConsumptionRate += Behaviours.electricConsumptionAutopilot;
+                electricChargeConsumptionRate += CoreConsts.electricConsumptionAutopilot;
             }
         }
         if (electricChargeConsumptionRate > 0.0 && TimeWarp.deltaTime != 0) { HydroJebCore.electricity = RequestResource("ElectricCharge", electricChargeConsumptionRate * TimeWarp.deltaTime) > 0.0; }
