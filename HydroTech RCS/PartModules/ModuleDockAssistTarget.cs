@@ -6,8 +6,9 @@ using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
+using HydroPartModule = HydroTech_FC.HydroPartModule;
 
-public class ModuleDockAssistTarget : HydroPartModule, IPartPreview, IDaPartEditorAid
+public class ModuleDockAssistTarget : HydroPartModule, IPartPreview, IDAPartEditorAid
 {
     protected bool isNear;
 

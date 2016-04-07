@@ -2,7 +2,7 @@
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
 
-public class ModulePartRename : HydroPartModulewPanel
+public class ModulePartRename : HydroPartModulePanel
 {
     private static bool registered;
 

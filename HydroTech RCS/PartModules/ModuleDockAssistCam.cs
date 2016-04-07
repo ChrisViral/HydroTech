@@ -8,8 +8,9 @@ using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
+using HydroPartModule = HydroTech_FC.HydroPartModule;
 
-public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorAid
+public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorAid
 {
     public static ModuleDockAssistCam activeCam;
 

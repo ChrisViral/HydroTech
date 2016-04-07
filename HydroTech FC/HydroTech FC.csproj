@@ -78,7 +78,6 @@
     <Compile Include="Managers\ManagerFlightCamera.cs" />
     <Compile Include="Managers\ManagerFlightInput.cs" />
     <Compile Include="Managers\ManagerRendering.cs" />
-    <Compile Include="PartModules\HydroPartModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Struct\Matrix3x3.cs" />
     <Compile Include="Struct\Vector6.cs" />

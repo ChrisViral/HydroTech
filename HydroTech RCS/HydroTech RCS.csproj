@@ -92,7 +92,8 @@
     <Compile Include="Panels\PanelAP.cs" />
     <Compile Include="Panels\UI\UIMultiPageList.cs" />
     <Compile Include="Panels\UI\UISingleSelectionList.cs" />
-    <Compile Include="PartModules\Base\HydroPartModulewPanel.cs" />
+    <Compile Include="PartModules\Base\HydroPartModule.cs" />
+    <Compile Include="PartModules\Base\HydroPartModulePanel.cs" />
     <Compile Include="PartModules\Base\ModuleActiveIndicator.cs" />
     <Compile Include="PartModules\Base\PartModuleInterfaces.cs" />
     <Compile Include="PartModules\ModuleActiveHydroJebIndicator.cs" />

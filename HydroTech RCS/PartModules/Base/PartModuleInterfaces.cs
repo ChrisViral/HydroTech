@@ -5,7 +5,7 @@
         void DoPreview();
     }
 
-    public interface IDaPartEditorAid
+    public interface IDAPartEditorAid
     {
         void ShowEditorAid();
 
