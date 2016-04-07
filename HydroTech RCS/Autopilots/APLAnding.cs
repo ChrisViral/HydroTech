@@ -1,6 +1,5 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Autopilots.Modules;
 using HydroTech_RCS.Constants.Autopilots.Landing;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Panels;
@@ -104,7 +103,7 @@ namespace HydroTech_RCS.Autopilots
             get { return this.tad.Radius; }
         }
 
-        public float Slope(DetectorGroundContact.Direction dir)
+        public float Slope(GroundContactCalculator.Direction dir)
         {
             return this.tad.Slope(dir);
         }
@@ -242,8 +241,8 @@ namespace HydroTech_RCS.Autopilots
         protected Vector3 surfUpNormal;
         protected Status status = Status.DISENGAGED;
         protected Indicator indicator = Indicator.SAFE;
-        protected DetectorGroundContact tad = new DetectorGroundContact();
-        protected CalculatorDescent cd = new CalculatorDescent();
+        protected GroundContactCalculator tad = new GroundContactCalculator();
+        protected DescentCalculator cd = new DescentCalculator();
 
         protected float twrRcs;
         public float TwrRcs
@@ -570,17 +569,17 @@ namespace HydroTech_RCS.Autopilots
             }
         }
 
-        protected Indicator GetIndicator(CalculatorDescent.DescentIndicator i)
+        protected Indicator GetIndicator(DescentCalculator.DescentIndicator i)
         {
             switch (i)
             {
-                case CalculatorDescent.DescentIndicator.WARP:
+                case DescentCalculator.DescentIndicator.WARP:
                     return Indicator.WARP;
-                case CalculatorDescent.DescentIndicator.SAFE:
+                case DescentCalculator.DescentIndicator.SAFE:
                     return Indicator.SAFE;
-                case CalculatorDescent.DescentIndicator.OK:
+                case DescentCalculator.DescentIndicator.OK:
                     return Indicator.OK;
-                case CalculatorDescent.DescentIndicator.DANGER:
+                case DescentCalculator.DescentIndicator.DANGER:
                     return Indicator.DANGER;
                 default:
                     return Indicator.LANDED;
@@ -629,7 +628,7 @@ namespace HydroTech_RCS.Autopilots
 
             //Get vessel TWR
             this.TwrRcs = this.vabPod ? HydroJebCore.activeVesselRcs.maxAcc.zn : HydroJebCore.activeVesselRcs.maxAcc.yp;
-            CalculatorEngineThrust cet = new CalculatorEngineThrust();
+            EngineCalculator cet = new EngineCalculator();
             cet.OnUpdate(ActiveVessel, this.vabPod ? Vector3.down : Vector3.forward);
             this.TwrEng = cet.MaxAcc * this.maxThrottle;
             this.hoverThrustRate = this.g / this.Twr;
@@ -663,13 +662,13 @@ namespace HydroTech_RCS.Autopilots
                 {
                     this.status = this.HoriSpeed < this.SafeHorizontalSpeed ? Status.DESCEND : Status.AVOID;
                 }
-                else if (this.cd.Behaviour == CalculatorDescent.DescentBehaviour.IDLE)
+                else if (this.cd.Behaviour == DescentCalculator.DescentBehaviour.IDLE)
                 {
                     if (this.HoriSpeed > HoriBrakeSpeed(this.AltTrue)) { this.status = Status.HORIZONTAL; }
                     else if (this.HoriSpeed < this.SafeHorizontalSpeed) { this.status = Status.IDLE; }
                     else { this.status = Status.DECELERATE; }
                 }
-                else if (this.cd.Behaviour == CalculatorDescent.DescentBehaviour.BRAKE) { this.status = Status.VERTICAL; }
+                else if (this.cd.Behaviour == DescentCalculator.DescentBehaviour.BRAKE) { this.status = Status.VERTICAL; }
                 else // CalculatorDescent.DescentBehaviour.NORMAL
                 {
                     this.status = this.HoriSpeed > HoriBrakeSpeed(this.AltTrue) ? Status.HORIZONTAL : Status.DECELERATE;

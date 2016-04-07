@@ -1,6 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Autopilots.Modules;
+using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Constants.Units;
@@ -44,22 +44,22 @@ namespace HydroTech_RCS.Panels
 
         protected float SlopeN
         {
-            get { return HMaths.RadToDeg(La.Slope(DetectorGroundContact.Direction.NORTH)); }
+            get { return HMaths.RadToDeg(La.Slope(GroundContactCalculator.Direction.NORTH)); }
         }
 
         protected float SlopeS
         {
-            get { return HMaths.RadToDeg(La.Slope(DetectorGroundContact.Direction.SOUTH)); }
+            get { return HMaths.RadToDeg(La.Slope(GroundContactCalculator.Direction.SOUTH)); }
         }
 
         protected float SlopeW
         {
-            get { return HMaths.RadToDeg(La.Slope(DetectorGroundContact.Direction.WEST)); }
+            get { return HMaths.RadToDeg(La.Slope(GroundContactCalculator.Direction.WEST)); }
         }
 
         protected float SlopeE
         {
-            get { return HMaths.RadToDeg(La.Slope(DetectorGroundContact.Direction.EAST)); }
+            get { return HMaths.RadToDeg(La.Slope(GroundContactCalculator.Direction.EAST)); }
         }
 
         protected float VertSpeed

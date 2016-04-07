@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Autopilots.Modules;
+using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Panels;
@@ -69,7 +69,7 @@ namespace HydroTech_RCS
             return ActiveJeb == jeb;
         }
 
-        public static CalculatorRcsThrust activeVesselRcs = new CalculatorRcsThrust();
+        public static RCSCalculator activeVesselRcs = new RCSCalculator();
         public static HydroPartListEditor jebsEditor = new HydroPartListEditor();
         public static Dictionary<int, IPanelEditor> panelsEditor = new Dictionary<int, IPanelEditor>();
         #endregion

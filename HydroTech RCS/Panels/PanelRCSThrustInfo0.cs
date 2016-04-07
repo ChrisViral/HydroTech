@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots.Modules;
+using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
@@ -61,7 +61,7 @@ namespace HydroTech_RCS.Panels
             }
         }
 
-        protected static CalculatorRcsThrust TheCalculator
+        protected static RCSCalculator TheCalculator
         {
             get { return HydroJebCore.activeVesselRcs; }
         }

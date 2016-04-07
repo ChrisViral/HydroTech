@@ -1,9 +1,9 @@
 ﻿using HydroTech_FC;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Modules
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class CalculatorRcsThrust : CalculatorVesselInfoBasic
+    public class RCSCalculator : VesselInfoCalculatorBase
     {
         #region Fields
         public Vector6 maxAcc = new Vector6();

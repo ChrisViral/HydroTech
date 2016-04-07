@@ -2,9 +2,9 @@
 using HydroTech_FC;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Modules
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class CalculatorVesselInfoBasic
+    public class VesselInfoCalculatorBase
     {
         #region Fields
         public Matrix3x3 moI = new Matrix3x3();

@@ -1,6 +1,5 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Autopilots.Modules;
 using HydroTech_RCS.Constants.Autopilots.Docking;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Panels;
@@ -35,7 +34,7 @@ namespace HydroTech_RCS.Autopilots
         #endregion
 
         #region Fields
-        protected CalculatorRcsThrust rcsTarget = new CalculatorRcsThrust();
+        protected RCSCalculator rcsTarget = new RCSCalculator();
         protected Vessel drivingTargetVessel;
         #endregion
 

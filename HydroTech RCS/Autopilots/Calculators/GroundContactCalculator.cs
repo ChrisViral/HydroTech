@@ -3,9 +3,9 @@ using HydroTech_FC;
 using HydroTech_RCS.Constants.Autopilots.Landing;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Modules
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class DetectorGroundContact
+    public class GroundContactCalculator
     {
         public enum Direction
         {
@@ -122,7 +122,7 @@ namespace HydroTech_RCS.Autopilots.Modules
         #endregion
 
         #region Constructors
-        public DetectorGroundContact()
+        public GroundContactCalculator()
         {
             this.distance = new Dictionary<Direction, float>(5)
             #region Values

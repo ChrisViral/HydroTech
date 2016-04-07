@@ -1,9 +1,9 @@
 ﻿using HydroTech_FC;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Modules
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class CalculatorEngineThrust : CalculatorVesselInfoBasic
+    public class EngineCalculator : VesselInfoCalculatorBase
     {
         #region Fields
         protected Vector3 chosenDir = Vector3.down;
@@ -57,19 +57,24 @@ namespace HydroTech_RCS.Autopilots.Modules
                 {
                     if (pm is ModuleEngines)
                     {
-                        ModuleEngines meng = (ModuleEngines)pm;
-                        if (meng.isEnabled)
+                        ModuleEngines eng = (ModuleEngines)pm;
+                        if (eng.isEnabled)
                         {
-                            foreach (Transform trans in meng.thrustTransforms)
-                            {
-                                Vector3 thrustVector = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward);
-                                float thrustUnit = 1; // HMaths.DotProduct(thrustVector, chosenDir);
-                                if (thrustUnit > 0.0F)
-                                {
-                                    this.MinThrust += thrustUnit * meng.minThrust;
-                                    this.MaxThrust += thrustUnit * meng.maxThrust;
-                                }
-                            }
+                            int transforms = eng.thrustTransforms.Count;
+                            this.MinThrust += transforms * eng.minThrust;
+                            this.MaxThrust += transforms * eng.maxThrust;
+
+                            //This is weird.
+                            /* foreach (Transform trans in eng.thrustTransforms)
+                             * {
+                             *     Vector3 thrustVector = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward);
+                             *     float thrustUnit = 1; // HMaths.DotProduct(thrustVector, chosenDir);
+                             *     if (thrustUnit > 0)
+                             *     {
+                             *         this.MinThrust += thrustUnit * eng.minThrust;
+                             *         this.MaxThrust += thrustUnit * eng.maxThrust;
+                             *     }
+                             * }*/
                         }
                     }
                 }

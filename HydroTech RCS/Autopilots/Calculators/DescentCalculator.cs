@@ -1,8 +1,8 @@
 ﻿using HydroTech_FC;
 
-namespace HydroTech_RCS.Autopilots.Modules
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class CalculatorDescent
+    public class DescentCalculator
     {
         public enum DescentBehaviour
         {
@@ -115,7 +115,7 @@ namespace HydroTech_RCS.Autopilots.Modules
             this.twr = twr;
             this.statusV = v;
             this.statusH = h;
-            if (this.statusV <= v0) { this.thrRate = -1.0F; }
+            if (this.statusV <= v0) { this.thrRate = -1; }
             else { Calculate(); }
         }
         #endregion

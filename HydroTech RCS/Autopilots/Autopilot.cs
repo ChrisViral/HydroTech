@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using HydroTech_FC;
-using HydroTech_RCS.Autopilots.Modules;
+using HydroTech_RCS.Autopilots.Calculators;
 using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots
@@ -52,7 +52,7 @@ namespace HydroTech_RCS.Autopilots
             get { return GameStates.ActiveVessel; }
         }
 
-        protected static CalculatorRcsThrust RcsActive
+        protected static RCSCalculator RcsActive
         {
             get { return HydroJebCore.activeVesselRcs; }
         }
