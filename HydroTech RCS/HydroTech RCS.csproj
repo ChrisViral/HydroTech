@@ -34,7 +34,6 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
@@ -81,11 +80,7 @@
     <Compile Include="Panels\IPanelEditor.cs" />
     <Compile Include="Panels\Panel.cs" />
     <Compile Include="Panels\PanelDebug.cs" />
-    <Compile Include="Panels\PanelDockAssist0.cs" />
-    <Compile Include="Panels\PanelDockAssist1.cs" />
-    <Compile Include="Panels\PanelDockAssist2.cs" />
-    <Compile Include="Panels\PanelDockAssist3.cs" />
-    <Compile Include="Panels\PanelDockAssist4.cs" />
+    <Compile Include="Panels\PanelDockAssist.cs" />
     <Compile Include="Panels\PanelDockAssistEditorAid0.cs" />
     <Compile Include="Panels\PanelDockAssistEditorAid1.cs" />
     <Compile Include="Panels\PanelLanding0.cs" />
