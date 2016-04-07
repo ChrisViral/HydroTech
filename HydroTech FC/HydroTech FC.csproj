@@ -71,7 +71,6 @@
     <Compile Include="File\LoadSaveFileBasic1.cs" />
     <Compile Include="GameBehaviours.cs" />
     <Compile Include="GameGUI.cs" />
-    <Compile Include="GameStates.cs" />
     <Compile Include="InGame\CtrlStateCalculator.cs" />
     <Compile Include="InGame\SwitchTransformCalculator.cs" />
     <Compile Include="Managers\ManagerActionGroup.cs" />

@@ -86,7 +86,7 @@ namespace HydroTech_RCS.PartModules
         {
             get
             {
-                if (this.vessel == GameStates.ActiveVessel) // || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist
+                if (this.vessel == FlightGlobals.ActiveVessel) // || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist
                 {
                     if (this.isNear && CurTarget == this) { Panel.ResetHeight(); }
                     this.isNear = false;
@@ -151,7 +151,7 @@ namespace HydroTech_RCS.PartModules
         public override void OnDestroy()
         {
             base.OnDestroy();
-            if (!GameStates.InFlight) { return; }
+            if (!HighLogic.LoadedSceneIsFlight) { return; }
             if (this == CurTarget)
             {
                 CurTarget = null;

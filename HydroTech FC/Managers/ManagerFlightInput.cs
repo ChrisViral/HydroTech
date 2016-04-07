@@ -81,7 +81,7 @@ namespace HydroTech_FC
             InputList(callback.vessel).Add(callback.nameString, callback.callback);
             callback.vessel.OnFlyByWire += callback.callback;
 #if HANDLER_SHOW_ADD_REMOVE
-            print("Added an OnFlyByWire, vessel " + (callback.vessel == GameStates.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
+            print("Added an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
             PrintCount();
 #endif
         }
@@ -96,7 +96,7 @@ namespace HydroTech_FC
             callback.vessel.OnFlyByWire -= callback.callback;
             if (InputList(callback.vessel).Count == 0) { handlerList.Remove(Handler(callback.vessel)); }
 #if HANDLER_SHOW_ADD_REMOVE
-            print("Removed an OnFlyByWire, vessel " + (callback.vessel == GameStates.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
+            print("Removed an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
             PrintCount();
 #endif
         }
@@ -204,7 +204,7 @@ namespace HydroTech_FC
                 }
                 else
                 {
-                    msgStr += "\nVessel " + count++ + " isActiveVessel = " + (handler.vessel == GameStates.ActiveVessel) + ", count = " + handler.flightInputList.Count;
+                    msgStr += "\nVessel " + count++ + " isActiveVessel = " + (handler.vessel == FlightGlobals.ActiveVessel) + ", count = " + handler.flightInputList.Count;
                 }
                 foreach (string str in handler.flightInputList.Keys)
                 {

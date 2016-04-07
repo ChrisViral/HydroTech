@@ -120,7 +120,7 @@ namespace HydroTech_RCS
                 }
                 jebs.OnStart();
                 if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
-                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 1) { return; }
+                if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 1) { return; }
                 HydroFlightCameraManager.onFlightStart();
                 foreach (RCSAutopilot ap in autopilots.Values) { ap.OnFlightStart(); }
                 foreach (Panel panel in panels.Values) { panel.OnFlightStart(); }
@@ -144,7 +144,7 @@ namespace HydroTech_RCS
                 {
                     return;
                 }
-                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 0) { return; }
+                if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 0) { return; }
                 foreach (Panel panel in panels.Values) { panel.OnGamePause(); }
                 foreach (RCSAutopilot ap in autopilots.Values) { ap.OnGamePause(); }
                 RemoveMainButton();
@@ -160,7 +160,7 @@ namespace HydroTech_RCS
             try
             {
                 if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
-                if (jeb.vessel != GameStates.ActiveVessel || jebs.CountActive != 1) { return; }
+                if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 1) { return; }
                 foreach (RCSAutopilot ap in autopilots.Values) { ap.OnGameResume(); }
                 foreach (Panel panel in panels.Values) { panel.OnGameResume(); }
                 AddMainButton();
@@ -175,7 +175,7 @@ namespace HydroTech_RCS
         {
             try
             {
-                if (GameStates.InEditor)
+                if (HighLogic.LoadedSceneIsEditor)
                 {
                     if (jebsEditor.Contains(jeb)) { jebsEditor.Remove(jeb); }
                     else
@@ -185,7 +185,7 @@ namespace HydroTech_RCS
                     if (jebsEditor.Count != 0) { return; }
                     foreach (IPanelEditor p in panelsEditor.Values) { p.HideInEditor(); }
                 }
-                else if (GameStates.InFlight)
+                else if (HighLogic.LoadedSceneIsFlight)
                 {
                     if (jebs.Contains(jeb)) { jebs.Remove(jeb); }
                     else
@@ -208,7 +208,7 @@ namespace HydroTech_RCS
         {
             try
             {
-                if (!GameStates.InEditor) { return; }
+                if (!HighLogic.LoadedSceneIsEditor) { return; }
                 bool clear;
                 jebsEditor.OnStart(out clear);
                 if (clear) { foreach (IPanelEditor p in panelsEditor.Values) { p.HideInEditor(); } }
@@ -235,7 +235,7 @@ namespace HydroTech_RCS
                 else
                 {
                     if (!IsActiveJeb(jeb)) { return; }
-                    activeVesselRcs.OnUpdate(GameStates.ActiveVessel);
+                    activeVesselRcs.OnUpdate(FlightGlobals.ActiveVessel);
                     HydroFlightCameraManager.OnUpdate();
                     HydroFlightInputManager.OnUpdate();
                     foreach (RCSAutopilot ap in autopilots.Values) { ap.OnUpdate(); }

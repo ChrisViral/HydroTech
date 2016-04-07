@@ -102,7 +102,7 @@ namespace HydroTech_FC
 
         private static Vessel ActiveVessel
         {
-            get { return GameStates.ActiveVessel; }
+            get { return FlightGlobals.ActiveVessel; }
         }
 
         private static Vessel origVessel;

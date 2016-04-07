@@ -49,7 +49,7 @@ namespace HydroTech_RCS.Autopilots
 
         protected static Vessel ActiveVessel
         {
-            get { return GameStates.ActiveVessel; }
+            get { return FlightGlobals.ActiveVessel; }
         }
 
         protected static RCSCalculator RcsActive

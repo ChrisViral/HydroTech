@@ -10,7 +10,7 @@ namespace HydroTech_FC
 
         protected static Vessel ActiveVessel
         {
-            get { return GameStates.ActiveVessel; }
+            get { return FlightGlobals.ActiveVessel; }
         }
 
         public virtual int CountActive

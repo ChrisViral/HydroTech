@@ -236,7 +236,7 @@ namespace HydroTech_RCS.PartModules
 
         public override void OnDestroy()
         {
-            if (!GameStates.InFlight) { return; }
+            if (!HighLogic.LoadedSceneIsFlight) { return; }
             if (this == CurCam)
             {
                 CurCam = null;

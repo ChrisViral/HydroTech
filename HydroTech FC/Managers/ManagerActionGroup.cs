@@ -132,7 +132,7 @@
 
         public static ActionGroupState ActiveVessel
         {
-            get { return new ActionGroupState(GameStates.ActiveVessel); }
+            get { return new ActionGroupState(FlightGlobals.ActiveVessel); }
         }
 
         public static bool GetState(Vessel vessel, KSPActionGroup action)

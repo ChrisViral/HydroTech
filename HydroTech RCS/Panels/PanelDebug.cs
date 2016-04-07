@@ -72,7 +72,7 @@ namespace HydroTech_RCS.Panels
                 this.ctrlState = !this.ctrlState;
                 ResetHeight();
             }
-            if (this.ctrlState) { GUILayout.Label(RCSAutopilot.StringCtrlState(GameStates.ActiveVessel.ctrlState)); }
+            if (this.ctrlState) { GUILayout.Label(RCSAutopilot.StringCtrlState(FlightGlobals.ActiveVessel.ctrlState)); }
             if (GUILayout.Button("AP Status"))
             {
                 this.apStatus = !this.apStatus;
