@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace HydroTech_RCS
 {
+    //TODO: add some caching on coloured GUI styles to prevent creating the same styles over again
     public static class GUIUtils
     {
         #region Buttons

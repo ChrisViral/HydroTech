@@ -47,22 +47,22 @@ namespace HydroTech_RCS.PartModules.Base
         #region Static Methods
         public static GUIStyle BtnStyle()
         {
-            return GameGUI.Button.Style();
+            return GUIUtils.Button.Style();
         }
 
         public static GUIStyle BtnStyle(Color textColor)
         {
-            return GameGUI.Button.Style(textColor);
+            return GUIUtils.Button.Style(textColor);
         }
 
         public static GUIStyle LabelStyle()
         {
-            return GameGUI.Label.Style();
+            return GUIUtils.Label.Style();
         }
 
         public static GUIStyle LabelStyle(Color textColor)
         {
-            return GameGUI.Label.Style(textColor);
+            return GUIUtils.Label.Style(textColor);
         }
         #endregion
 

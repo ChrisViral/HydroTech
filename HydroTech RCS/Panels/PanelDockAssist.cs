@@ -365,14 +365,14 @@ namespace HydroTech_RCS.Panels
             if (pageChanged) { ResetHeight(); }
             if (noCam) { GUILayout.Label("Not installed"); }
             GUILayout.BeginHorizontal();
-            if (this.PreviewPart == null) { GUILayout.Button("OK", BtnStyle(Color.red)); }
+            if (this.PreviewPart == null) { GUILayout.Button("OK", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("OK"))
             {
                 Cam = (ModuleDockAssistCam)this.PreviewPart;
                 this.ChoosingCamera = false;
             }
             if (GUILayout.Button("Cancel")) { this.ChoosingCamera = false; }
-            if (Cam == null) { GUILayout.Button("Clear choice", BtnStyle(Color.red)); }
+            if (Cam == null) { GUILayout.Button("Clear choice", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("Clear choice"))
             {
                 Cam = null;
@@ -391,7 +391,7 @@ namespace HydroTech_RCS.Panels
             if (pageChanged) { ResetHeight(); }
             if (noTargetVessel) { GUILayout.Label("Nothing in sight"); }
             GUILayout.BeginHorizontal();
-            if (this.PreviewVessel == null) { GUILayout.Button("OK", BtnStyle(Color.red)); }
+            if (this.PreviewVessel == null) { GUILayout.Button("OK", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("OK"))
             {
                 this.targetVessel = this.PreviewVessel;
@@ -412,7 +412,7 @@ namespace HydroTech_RCS.Panels
         protected void DrawChoosingTargetUI()
         {
             GUILayout.Label("Vessel");
-            if (GUILayout.Button(this.targetVessel.vesselName, this.targetVesselList.Contains(this.targetVessel) ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)))
+            if (GUILayout.Button(this.targetVessel.vesselName, this.targetVesselList.Contains(this.targetVessel) ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
             {
                 this.ChoosingVessel = true;
             }
@@ -425,7 +425,7 @@ namespace HydroTech_RCS.Panels
             if (pageChanged) { ResetHeight(); }
             if (noTarget) { GUILayout.Label("Not installed"); }
             GUILayout.BeginHorizontal();
-            if (this.PreviewPart == null) { GUILayout.Button("OK", BtnStyle(Color.red)); }
+            if (this.PreviewPart == null) { GUILayout.Button("OK", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("OK"))
             {
                 Target = (ModuleDockAssistTarget)this.PreviewPart;
@@ -436,7 +436,7 @@ namespace HydroTech_RCS.Panels
                 this.ChoosingTarget = false;
                 this.PreviewVessel = null;
             }
-            if (Target == null) { GUILayout.Button("Clear choice", BtnStyle(Color.red)); }
+            if (Target == null) { GUILayout.Button("Clear choice", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("Clear choice"))
             {
                 this.targetVessel = null;
@@ -486,12 +486,12 @@ namespace HydroTech_RCS.Panels
             else
             {
                 GUILayout.Label("Camera:");
-                if (Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(Cam.ToString(), Cam.IsOnActiveVessel ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)))
+                if (Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(Cam.ToString(), Cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
                 {
                     this.ChoosingCamera = true;
                 }
                 GUILayout.Label("Target:");
-                if (Target == null ? GUILayout.Button("Choose target") : GUILayout.Button(Target.vessel.vesselName + "\n" + Target, Target.IsNear ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)))
+                if (Target == null ? GUILayout.Button("Choose target") : GUILayout.Button(Target.vessel.vesselName + "\n" + Target, Target.IsNear ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
                 {
                     this.ChoosingTarget = true;
                 }
@@ -556,7 +556,7 @@ namespace HydroTech_RCS.Panels
             if (mcam == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(((ModuleDockAssistCam)mcam).ToString(), mcam == Cam ? (IPartPreview)mcam == this.PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : (IPartPreview)mcam == this.PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap()))
+                if (GUILayout.Button(((ModuleDockAssistCam)mcam).ToString(), mcam == Cam ? (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.ButtonStyle(true)))
                 {
                     this.camListUI.SetSelectionToItem(mcam);
                 }
@@ -568,7 +568,7 @@ namespace HydroTech_RCS.Panels
             if (v == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(v.vesselName, v == this.targetVessel ? v == this.PreviewVessel ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : v == this.PreviewVessel ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap()))
+                if (GUILayout.Button(v.vesselName, v == this.targetVessel ? v == this.PreviewVessel ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : v == this.PreviewVessel ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.ButtonStyle(true)))
                 {
                     this.targetVesselListUI.SetSelectionToItem(v);
                 }
@@ -580,7 +580,7 @@ namespace HydroTech_RCS.Panels
             if (mtgt == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap()))
+                if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.ButtonStyle(true)))
                 {
                     this.targetListUI.SetSelectionToItem(mtgt);
                 }

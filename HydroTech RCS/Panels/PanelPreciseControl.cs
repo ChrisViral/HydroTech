@@ -144,11 +144,11 @@ namespace HydroTech_RCS.Panels
         protected override void DrawSettingsUI()
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("by Rate", this.tempByRate ? BtnStyle(Color.green) : BtnStyle()))
+            if (GUILayout.Button("by Rate", this.tempByRate ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.ButtonStyle()))
             {
                 this.tempByRate = true;
             }
-            if (GUILayout.Button("by Acceleration", this.tempByRate ? BtnStyle() : BtnStyle(Color.green)))
+            if (GUILayout.Button("by Acceleration", this.tempByRate ? GUIUtils.ButtonStyle() : GUIUtils.ButtonStyle(Color.green)))
             {
                 this.tempByRate = false;
             }

@@ -153,13 +153,13 @@ namespace HydroTech_RCS.Panels
                 GUI.DragWindow();
                 return;
             }
-            if (GUILayout.Button("Cameras", this.showCams ? BtnStyle(Color.green) : BtnStyle()))
+            if (GUILayout.Button("Cameras", this.showCams ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.ButtonStyle()))
             {
                 this.showCams = true;
                 this.needSave = true;
                 ResetHeight();
             }
-            if (GUILayout.Button("Targets", this.showCams ? BtnStyle() : BtnStyle(Color.green)))
+            if (GUILayout.Button("Targets", this.showCams ? GUIUtils.ButtonStyle() : GUIUtils.ButtonStyle(Color.green)))
             {
                 this.showCams = false;
                 this.needSave = true;

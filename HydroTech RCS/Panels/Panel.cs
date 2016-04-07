@@ -85,42 +85,10 @@ namespace HydroTech_RCS.Panels
         }
         #endregion
 
-        #region Static methods
-        public static GUIStyle BtnStyle()
-        {
-            return GameGUI.Button.Style();
-        }
-
-        public static GUIStyle BtnStyle(Color textColor)
-        {
-            return GameGUI.Button.Style(textColor);
-        }
-
-        public static GUIStyle BtnStyle_Wrap()
-        {
-            return GameGUI.Button.Wrap();
-        }
-
-        public static GUIStyle BtnStyle_Wrap(Color textColor)
-        {
-            return GameGUI.Button.Wrap(textColor);
-        }
-
-        public static GUIStyle LabelStyle()
-        {
-            return GameGUI.Label.Style();
-        }
-
-        public static GUIStyle LabelStyle(Color textColor)
-        {
-            return GameGUI.Label.Style(textColor);
-        }
-        #endregion
-
         #region Virtual methods
         protected virtual bool LayoutEngageBtn(bool en)
         {
-            GUIStyle engageBtnStyle = BtnStyle(en ? Color.red : Color.blue);
+            GUIStyle engageBtnStyle = GUIUtils.ButtonStyle(en ? Color.red : Color.blue);
             string engageBtnText = en ? "DISENGAGE" : "ENGAGE";
             return GUILayout.Button(engageBtnText, engageBtnStyle);
         }

@@ -46,7 +46,7 @@ namespace HydroTech_RCS.Panels
             }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button(this.Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE", BtnStyle_Wrap(this.Engaged ? Color.red : Color.green)))
+            if (GUILayout.Button(this.Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE", GUIUtils.ButtonStyle(this.Engaged ? Color.red : Color.green)))
             {
                 if (!this.Engaged)
                 {

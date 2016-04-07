@@ -62,8 +62,8 @@ namespace HydroTech_RCS.Panels
 
         protected override void WindowGUI(int windowId)
         {
-            GUIStyle curThrStyle = BtnStyle();
-            GUIStyle editBtnStyle = BtnStyle(Color.yellow);
+            GUIStyle curThrStyle = GUIUtils.ButtonStyle();
+            GUIStyle editBtnStyle = GUIUtils.ButtonStyle(Color.yellow);
             GUILayout.BeginVertical();
             for (int i = 7; i > 0; i -= 3)
             {
@@ -71,7 +71,7 @@ namespace HydroTech_RCS.Panels
                 for (int j = 0; j < 3; j++)
                 {
                     float thr = (i + j) * 10;
-                    if (GUILayout.Button(thr.ToString("#0"), this.Throttle == thr ? curThrStyle : BtnStyle()))
+                    if (GUILayout.Button(thr.ToString("#0"), this.Throttle == thr ? curThrStyle : GUIUtils.ButtonStyle()))
                     {
                         this.Throttle = thr;
                     }
@@ -80,11 +80,11 @@ namespace HydroTech_RCS.Panels
             }
             GUILayout.BeginHorizontal();
             //The conditionals only change the label colour... not obvious <.<
-            if (GUILayout.Button("OFF", this.Throttle == 0 ? curThrStyle : BtnStyle()))
+            if (GUILayout.Button("OFF", this.Throttle == 0 ? curThrStyle : GUIUtils.ButtonStyle()))
             {
                 this.Throttle = 0;
             }
-            if (GUILayout.Button("100", this.Throttle == 100 ? curThrStyle : BtnStyle()))
+            if (GUILayout.Button("100", this.Throttle == 100 ? curThrStyle : GUIUtils.ButtonStyle()))
             {
                 this.Throttle = 100;
             }

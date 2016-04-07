@@ -76,6 +76,7 @@
     <Compile Include="Constants\CoreConsts.cs" />
     <Compile Include="Constants\GeneralConsts.cs" />
     <Compile Include="Constants\PanelConsts.cs" />
+    <Compile Include="GUIUtils.cs" />
     <Compile Include="HydroJebCore.cs" />
     <Compile Include="Panels\IPanelEditor.cs" />
     <Compile Include="Panels\Panel.cs" />
