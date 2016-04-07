@@ -1,6 +1,5 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -81,7 +80,7 @@ namespace HydroTech_RCS.Panels
             GUILayout.BeginHorizontal();
             GUILayout.Label("Touchdown speed");
             this.stdsText = GUILayout.TextField(this.stdsText);
-            GUILayout.Label(UnitStrings.speedSimple);
+            GUILayout.Label(GeneralConsts.speedSimple);
             GUILayout.EndHorizontal();
             this.TempEngines = GUILayout.Toggle(this.TempEngines, "Use engines");
             if (this.TempEngines)
@@ -118,7 +117,7 @@ namespace HydroTech_RCS.Panels
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 this.altKeepText = GUILayout.TextField(this.altKeepText);
-                GUILayout.Label(UnitStrings.length);
+                GUILayout.Label(GeneralConsts.length);
                 GUILayout.EndHorizontal();
                 if (this.tempUseTrueAlt)
                 {
@@ -127,8 +126,8 @@ namespace HydroTech_RCS.Panels
                     {
                         this.tempAltKeep = tryParse;
                         float tempAltKeepAsl = this.tempAltKeep + this.TerrainHeight;
-                        GUILayout.Label("ASL alt: " + tempAltKeepAsl.ToString("#0.0") + " " + UnitStrings.length);
-                        GUILayout.Label("Max allowed horizontal speed: " + La.AllowedHoriSpeed(this.tempAltKeep).ToString("#0.0") + UnitStrings.speedSimple);
+                        GUILayout.Label("ASL alt: " + tempAltKeepAsl.ToString("#0.0") + " " + GeneralConsts.length);
+                        GUILayout.Label("Max allowed horizontal speed: " + La.AllowedHoriSpeed(this.tempAltKeep).ToString("#0.0") + GeneralConsts.speedSimple);
                     }
                     else
                     {
@@ -142,8 +141,8 @@ namespace HydroTech_RCS.Panels
                     {
                         this.tempAltKeep = tryParse;
                         float tempAltKeepTrue = HMaths.Max(this.tempAltKeep - this.TerrainHeight, AutopilotConsts.finalDescentHeight);
-                        GUILayout.Label("True alt: " + tempAltKeepTrue.ToString("#0.0") + " " + UnitStrings.length);
-                        GUILayout.Label("Max allowed horizontal speed: " + La.AllowedHoriSpeed(tempAltKeepTrue).ToString("#0.0") + UnitStrings.speedSimple);
+                        GUILayout.Label("True alt: " + tempAltKeepTrue.ToString("#0.0") + " " + GeneralConsts.length);
+                        GUILayout.Label("Max allowed horizontal speed: " + La.AllowedHoriSpeed(tempAltKeepTrue).ToString("#0.0") + GeneralConsts.speedSimple);
                     }
                     else
                     {

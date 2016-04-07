@@ -1,4 +1,4 @@
-﻿using HydroTech_RCS.Constants.Units;
+﻿using HydroTech_RCS.Constants;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -52,7 +52,7 @@ namespace HydroTech_RCS.Panels
             GUILayout.EndHorizontal();
             if (this.showRotation)
             {
-                GUILayout.Label("Max torque (" + UnitStrings.torque + ") and" + "\nangular acceleration (" + UnitStrings.angularAcc + ")");
+                GUILayout.Label("Max torque (" + GeneralConsts.torque + ") and" + "\nangular acceleration (" + GeneralConsts.angularAcc + ")");
                 GUILayout.Label("Pitch down : " + TheCalculator.maxTorque.xp.ToString("#0.00") + " , " + TheCalculator.maxAngularAcc.xp.ToString("#0.00"));
                 GUILayout.Label("Pitch up : " + TheCalculator.maxTorque.xn.ToString("#0.00") + " , " + TheCalculator.maxAngularAcc.xn.ToString("#0.00"));
                 GUILayout.Label("yaw left : " + TheCalculator.maxTorque.yp.ToString("#0.00") + " , " + TheCalculator.maxAngularAcc.yp.ToString("#0.00"));
@@ -62,7 +62,7 @@ namespace HydroTech_RCS.Panels
             }
             else
             {
-                GUILayout.Label("Max thrust (" + UnitStrings.force + ") and" + "\nacceleration (" + UnitStrings.acceleration + ")");
+                GUILayout.Label("Max thrust (" + GeneralConsts.force + ") and" + "\nacceleration (" + GeneralConsts.acceleration + ")");
                 GUILayout.Label("Translate left : " + TheCalculator.maxForce.xp.ToString("#0.00") + " , " + TheCalculator.maxAcc.xp.ToString("#0.00"));
                 GUILayout.Label("Translate right : " + TheCalculator.maxForce.xn.ToString("#0.00") + " , " + TheCalculator.maxAcc.xn.ToString("#0.00"));
                 GUILayout.Label("Translate up : " + TheCalculator.maxForce.yp.ToString("#0.00") + " , " + TheCalculator.maxAcc.yp.ToString("#0.00"));

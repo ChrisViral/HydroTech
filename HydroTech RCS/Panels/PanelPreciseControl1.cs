@@ -1,4 +1,4 @@
-﻿using HydroTech_RCS.Constants.Units;
+﻿using HydroTech_RCS.Constants;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -62,12 +62,12 @@ namespace HydroTech_RCS.Panels
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Angular Acc");
                 this.angAText = GUILayout.TextField(this.angAText);
-                GUILayout.Label(UnitStrings.angularAcc);
+                GUILayout.Label(GeneralConsts.angularAcc);
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Acceleration");
                 this.accText = GUILayout.TextField(this.accText);
-                GUILayout.Label(UnitStrings.acceleration);
+                GUILayout.Label(GeneralConsts.acceleration);
                 GUILayout.EndHorizontal();
             }
 

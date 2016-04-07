@@ -1,5 +1,4 @@
 ﻿using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.PartModules.PartRename;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
 
@@ -43,9 +42,9 @@ public class ModulePartRename : HydroPartModulewPanel
     public override void OnLoad(ConfigNode node)
     {
         base.OnLoad(node);
-        if (node.HasValue(ConfigNodes.name))
+        if (node.HasValue(GeneralConsts.name))
         {
-            this.nameString = node.GetValue(ConfigNodes.name);
+            this.nameString = node.GetValue(GeneralConsts.name);
             this.tempName = this.nameString;
             this.Renamed = true;
         }
@@ -58,7 +57,7 @@ public class ModulePartRename : HydroPartModulewPanel
     public override void OnSave(ConfigNode node)
     {
         base.OnSave(node);
-        if (this.Renamed) { node.AddValue(ConfigNodes.name, this.nameString); }
+        if (this.Renamed) { node.AddValue(GeneralConsts.name, this.nameString); }
     }
 
     [KSPEvent(guiActive = true, guiName = "Rename")]

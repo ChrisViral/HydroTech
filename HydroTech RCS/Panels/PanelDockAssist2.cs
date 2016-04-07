@@ -1,4 +1,4 @@
-﻿using HydroTech_RCS.Constants.Units;
+﻿using HydroTech_RCS.Constants;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -76,9 +76,9 @@ namespace HydroTech_RCS.Panels
 
         protected override void DrawSettingsUI()
         {
-            GUILayout.Label("Angular acceleration (" + UnitStrings.angularAcc + ")");
+            GUILayout.Label("Angular acceleration (" + GeneralConsts.angularAcc + ")");
             this.angularAccText = GUILayout.TextField(this.angularAccText);
-            GUILayout.Label("Acceleration (" + UnitStrings.acceleration + ")");
+            GUILayout.Label("Acceleration (" + GeneralConsts.acceleration + ")");
             this.accText = GUILayout.TextField(this.accText);
 
             if (!NullCamera() && !NullTarget())
@@ -95,7 +95,7 @@ namespace HydroTech_RCS.Panels
                     GUILayout.Label("Final approach speed");
                     GUILayout.BeginHorizontal();
                     this.fssText = GUILayout.TextField(this.fssText);
-                    GUILayout.Label(UnitStrings.speedSimple);
+                    GUILayout.Label(GeneralConsts.speedSimple);
                     GUILayout.EndHorizontal();
                     if (TargetHasJeb()) { this.tempDriveTarget = GUILayout.Toggle(this.tempDriveTarget, "Rotate target"); }
                 }

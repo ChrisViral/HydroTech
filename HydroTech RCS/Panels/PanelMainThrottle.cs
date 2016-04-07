@@ -1,6 +1,5 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -17,7 +16,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.mainThrottle; }
+            get { return PanelConsts.mainThrottleTitle; }
         }
 
         protected float Throttle
@@ -33,7 +32,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.mainThrottle;
+            this.windowRect = PanelConsts.mainThrottle;
         }
 
         protected override void WindowGUI(int windowId)

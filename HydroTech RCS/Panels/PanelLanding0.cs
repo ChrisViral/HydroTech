@@ -1,7 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -122,7 +121,7 @@ namespace HydroTech_RCS.Panels
 
         protected string HoverAtString
         {
-            get { return "Hover at " + AltKeep.ToString("#0.0") + UnitStrings.length + " " + (UseTrueAlt ? "True" : "ASL"); }
+            get { return "Hover at " + AltKeep.ToString("#0.0") + GeneralConsts.length + " " + (UseTrueAlt ? "True" : "ASL"); }
         }
 
         protected bool PanelAdvInfoShown
@@ -184,7 +183,7 @@ namespace HydroTech_RCS.Panels
             else
             {
                 GUILayout.Label("Pod orientation: " + (VabPod ? "Up" : "Horizon"));
-                GUILayout.Label("Touchdown speed: " + SafeTouchDownSpeed.ToString("#0.0") + UnitStrings.speedSimple);
+                GUILayout.Label("Touchdown speed: " + SafeTouchDownSpeed.ToString("#0.0") + GeneralConsts.speedSimple);
                 GUILayout.Label("Use engines: " + (Engines ? "true" : "false"));
                 if (Engines)
                 {

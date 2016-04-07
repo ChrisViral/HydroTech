@@ -2,8 +2,6 @@
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
-using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -19,7 +17,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.landingInfo; }
+            get { return PanelConsts.landingInfoTitle; }
         }
 
         protected static APLanding La
@@ -117,7 +115,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.landingInfo;
+            this.windowRect = PanelConsts.landingInfo;
         }
 
         protected void TripleLabel(string text = "")
@@ -136,12 +134,12 @@ namespace HydroTech_RCS.Panels
         protected override void WindowGUI(int windowId)
         {
             GUILayout.Label("Orbiting body: " + this.MainBodyName);
-            GUILayout.Label("Surface g: " + this.GAsl.ToString("#0.00") + UnitStrings.acceleration);
-            GUILayout.Label("RCS Twr: " + this.TwrRcs.ToString("#0.00") + UnitStrings.acceleration, TwrLabelStyle());
-            GUILayout.Label("Engine Twr: " + this.TwrEng.ToString("#0.00") + UnitStrings.acceleration, TwrLabelStyle());
-            GUILayout.Label("Altitude (true): " + this.AltTrue.ToString("#0.0") + UnitStrings.length);
-            GUILayout.Label("Vertical speed: " + this.VertSpeed.ToString("#0.00") + UnitStrings.speedSimple);
-            GUILayout.Label("Horizontal speed: " + this.HoriSpeed.ToString("#0.00") + UnitStrings.speedSimple);
+            GUILayout.Label("Surface g: " + this.GAsl.ToString("#0.00") + GeneralConsts.acceleration);
+            GUILayout.Label("RCS Twr: " + this.TwrRcs.ToString("#0.00") + GeneralConsts.acceleration, TwrLabelStyle());
+            GUILayout.Label("Engine Twr: " + this.TwrEng.ToString("#0.00") + GeneralConsts.acceleration, TwrLabelStyle());
+            GUILayout.Label("Altitude (true): " + this.AltTrue.ToString("#0.0") + GeneralConsts.length);
+            GUILayout.Label("Vertical speed: " + this.VertSpeed.ToString("#0.00") + GeneralConsts.speedSimple);
+            GUILayout.Label("Horizontal speed: " + this.HoriSpeed.ToString("#0.00") + GeneralConsts.speedSimple);
             if (!this.SlopeDetection)
             {
                 GUILayout.BeginHorizontal();
@@ -166,7 +164,7 @@ namespace HydroTech_RCS.Panels
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 TripleLabel("w " + this.SlopeW.ToString("#0.0") + "°");
-                TripleLabel("(" + this.DetectRadius.ToString("#0") + UnitStrings.length + ")");
+                TripleLabel("(" + this.DetectRadius.ToString("#0") + GeneralConsts.length + ")");
                 TripleLabel("E " + this.SlopeE.ToString("#0.0") + "°");
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();

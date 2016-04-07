@@ -1,6 +1,5 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -14,7 +13,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.main; }
+            get { return PanelConsts.mainTitle; }
         }
 
         public PanelMain()
@@ -24,7 +23,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.main;
+            this.windowRect = PanelConsts.main;
         }
 
         protected override void WindowGUI(int windowId)

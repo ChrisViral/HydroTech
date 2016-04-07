@@ -1,7 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -33,7 +32,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return this.editor && this.editorHide ? PanelTitles.rcsInfoEditorHide : PanelTitles.rcsInfo; }
+            get { return this.editor && this.editorHide ? PanelConsts.rcsInfoEditorHideTitle : PanelConsts.rcsInfoTitle; }
         }
 
         public override bool PanelShown
@@ -92,8 +91,8 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.rcsInfo;
-            this.windowRectEditor = WindowPositions.rcsInfoEditor;
+            this.windowRect = PanelConsts.rcsInfo;
+            this.windowRectEditor = PanelConsts.rcsInfoEditor;
         }
 
         public override void OnUpdate()

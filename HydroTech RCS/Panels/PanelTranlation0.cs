@@ -1,7 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -15,7 +14,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.translation; }
+            get { return PanelConsts.translationTitle; }
         }
 
         protected static APTranslation Ta
@@ -66,7 +65,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.translation;
+            this.windowRect = PanelConsts.translation;
         }
 
         protected override void MakeAPSave()

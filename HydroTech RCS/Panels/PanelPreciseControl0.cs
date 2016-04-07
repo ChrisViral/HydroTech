@@ -1,8 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
-using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -16,7 +14,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.preciseControl; }
+            get { return PanelConsts.preciseControlTitle; }
         }
 
         protected static APPreciseControl Pc
@@ -67,7 +65,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.preciseControl;
+            this.windowRect = PanelConsts.preciseControl;
         }
 
         protected override void MakeAPSave()
@@ -87,8 +85,8 @@ namespace HydroTech_RCS.Panels
                 }
                 else
                 {
-                    GUILayout.Label("Angular Acc: " + AngA.ToString("#0.000") + UnitStrings.angularAcc);
-                    GUILayout.Label("Acceleration: " + Acc.ToString("#0.000") + UnitStrings.acceleration);
+                    GUILayout.Label("Angular Acc: " + AngA.ToString("#0.000") + GeneralConsts.angularAcc);
+                    GUILayout.Label("Acceleration: " + Acc.ToString("#0.000") + GeneralConsts.acceleration);
                 }
                 if (GUILayout.Button("Change settings")) { this.Settings = true; }
                 if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
