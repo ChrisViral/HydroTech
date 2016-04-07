@@ -69,7 +69,6 @@
     <Compile Include="File\HydroSLAttributes.cs" />
     <Compile Include="File\LoadSaveFileBasic0.cs" />
     <Compile Include="File\LoadSaveFileBasic1.cs" />
-    <Compile Include="GameBehaviours.cs" />
     <Compile Include="InGame\CtrlStateCalculator.cs" />
     <Compile Include="InGame\SwitchTransformCalculator.cs" />
     <Compile Include="Managers\ManagerActionGroup.cs" />

@@ -1,5 +1,4 @@
-﻿using HydroTech_FC;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HydroTech_RCS.PartModules.Base
 {
@@ -42,28 +41,6 @@ namespace HydroTech_RCS.PartModules.Base
 
         #region Abstract methods
         protected abstract void WindowGUI(int id);
-        #endregion
-
-        #region Static Methods
-        public static GUIStyle BtnStyle()
-        {
-            return GUIUtils.Button.Style();
-        }
-
-        public static GUIStyle BtnStyle(Color textColor)
-        {
-            return GUIUtils.Button.Style(textColor);
-        }
-
-        public static GUIStyle LabelStyle()
-        {
-            return GUIUtils.Label.Style();
-        }
-
-        public static GUIStyle LabelStyle(Color textColor)
-        {
-            return GUIUtils.Label.Style(textColor);
-        }
         #endregion
 
         #region Overrides

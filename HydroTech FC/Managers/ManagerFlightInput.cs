@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace HydroTech_FC
 {
@@ -81,7 +82,7 @@ namespace HydroTech_FC
             InputList(callback.vessel).Add(callback.nameString, callback.callback);
             callback.vessel.OnFlyByWire += callback.callback;
 #if HANDLER_SHOW_ADD_REMOVE
-            print("Added an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
+            Debug.Log("Added an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
             PrintCount();
 #endif
         }
@@ -96,7 +97,7 @@ namespace HydroTech_FC
             callback.vessel.OnFlyByWire -= callback.callback;
             if (InputList(callback.vessel).Count == 0) { handlerList.Remove(Handler(callback.vessel)); }
 #if HANDLER_SHOW_ADD_REMOVE
-            print("Removed an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
+            Debug.Log("Removed an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
             PrintCount();
 #endif
         }
@@ -129,7 +130,7 @@ namespace HydroTech_FC
                         if (v.rootPart == handler.vesselRootPart)
                         {
 #if HANDLER_SHOW_ADD_REMOVE
-                            print("A previously destroyed vessel has been detected.");
+                            Debug.Log("A previously destroyed vessel has been detected.");
 #endif
                             listToRemove.Add(handler);
                         }
@@ -140,7 +141,7 @@ namespace HydroTech_FC
                     if (handler.vessel == null)
                     {
 #if HANDLER_SHOW_ADD_REMOVE
-                        print("A vessel has been detected destroyed.");
+                        Debug.Log("A vessel has been detected destroyed.");
 #endif
                         handler.isDestroyed = true;
                     }
@@ -160,18 +161,13 @@ namespace HydroTech_FC
 #if HANDLER_SHOW_ADD_REMOVE
             if (listToRemove.Count != 0)
             {
-                print("OnFlyByWire's on destroyed vessels has been removed.");
+                Debug.Log("OnFlyByWire's on destroyed vessels has been removed.");
                 PrintCount();
             }
 #endif
         }
 
 #if DEBUG
-        private static void print(object message)
-        {
-            GameBehaviours.print(message);
-        }
-
         public static void PrintCount()
         {
             int vesselActive = 0, vesselDestroyed = 0;
@@ -189,7 +185,7 @@ namespace HydroTech_FC
                     apActive += handler.flightInputList.Count;
                 }
             }
-            print("Total " + (vesselActive + vesselDestroyed) + " vessels, " + (apActive + apInactive) + " autopilots" + "\nActive: " + vesselActive + " vessels, " + apActive + " autopilots" + "\nInactive: " + vesselDestroyed + " vessels, " + apInactive + " autopilots");
+            Debug.Log("Total " + (vesselActive + vesselDestroyed) + " vessels, " + (apActive + apInactive) + " autopilots" + "\nActive: " + vesselActive + " vessels, " + apActive + " autopilots" + "\nInactive: " + vesselDestroyed + " vessels, " + apInactive + " autopilots");
         }
 
         public static string StringList()
@@ -216,7 +212,7 @@ namespace HydroTech_FC
 
         public static void PrintList()
         {
-            print(StringList());
+            Debug.Log(StringList());
         }
 #endif
     }

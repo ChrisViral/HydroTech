@@ -108,11 +108,5 @@ namespace HydroTech_FC
         {
             return ReadField(this, field, node, name, cmd);
         }
-
-#if DEBUG
-        protected static void print(object message) { GameBehaviours.print(message); }
-        protected static void warning(object message) { GameBehaviours.warning(message); }
-        protected static void error(object message) { GameBehaviours.error(message); }
-#endif
     }
 }

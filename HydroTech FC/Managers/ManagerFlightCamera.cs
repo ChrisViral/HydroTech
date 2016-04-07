@@ -113,7 +113,7 @@ namespace HydroTech_FC
         public static void ResetToActiveVessel()
         {
 #if SHOW_MANAGER_OPERATIONS
-            print("HydroFlightCameraManager: Setting to active vessel");
+            Debug.Log("HydroFlightCameraManager: Setting to active vessel");
 #endif
             SetTransformParent(origParent);
             SetFoV(defaultFoV);
@@ -126,7 +126,7 @@ namespace HydroTech_FC
         {
             Settings.SaveCurrent();
 #if SHOW_MANAGER_OPERATIONS
-            print("HydroFlightCameraManager: Settings pushed into stack. Current count = " + Settings.StackCount());
+            Debug.Log("HydroFlightCameraManager: Settings pushed into stack. Current count = " + Settings.StackCount());
 #endif
         }
 
@@ -134,7 +134,7 @@ namespace HydroTech_FC
         {
             Settings.RetrieveLast();
 #if SHOW_MANAGER_OPERATIONS
-            print("HydroFlightCameraManager: Settings retrieved from stack. Current count = " + Settings.StackCount());
+            Debug.Log("HydroFlightCameraManager: Settings retrieved from stack. Current count = " + Settings.StackCount());
 #endif
         }
 
@@ -268,23 +268,21 @@ namespace HydroTech_FC
         }
 
 #if DEBUG
-        private static void print(object message) { GameBehaviours.print(message); }
-
         public static string StringCameraState() { return new Settings().ToString("#0.00"); }
-        public static void PrintCameraState() { print(StringCameraState()); }
+        public static void PrintCameraState() { Debug.Log(StringCameraState()); }
 
         public static string StringCameraStack()
         {
             return "Stack count = " + Settings.StackCount();
         }
-        public static void PrintCameraStack() { print(StringCameraStack()); }
+        public static void PrintCameraStack() { Debug.Log(StringCameraStack()); }
 
         public static string StringTopState()
         {
             return Settings.StackCount() == 0 ? "" : Settings.Top().ToString("#0.00");
         }
 
-        public static void PrintTopState() { print(StringTopState()); }
+        public static void PrintTopState() { Debug.Log(StringTopState()); }
 #endif
     }
 }

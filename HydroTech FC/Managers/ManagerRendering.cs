@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace HydroTech_FC
 {
@@ -17,7 +18,7 @@ namespace HydroTech_FC
             callbackList.Add(queueSpot, drawFunction);
             RenderingManager.AddToPostDrawQueue(queueSpot, drawFunction);
 #if SHOW_ADD_REMOVE
-            print("Added a draw function (" + queueSpot + ")");
+            Debug.Log("Added a draw function (" + queueSpot + ")");
 #endif
         }
 
@@ -28,7 +29,7 @@ namespace HydroTech_FC
             callbackList.Remove(queueSpot);
             RenderingManager.RemoveFromPostDrawQueue(queueSpot, drawFunction);
 #if SHOW_ADD_REMOVE
-            print("Removed a draw function (" + queueSpot + ")");
+            Debug.Log("Removed a draw function (" + queueSpot + ")");
 #endif
         }
 
@@ -36,9 +37,5 @@ namespace HydroTech_FC
         {
             return callbackList.ContainsKey(queueSpot);
         }
-
-#if DEBUG
-        private static void print(object message) { GameBehaviours.print(message); }
-#endif
     }
 }

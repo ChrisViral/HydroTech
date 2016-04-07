@@ -8,7 +8,6 @@ using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules;
 using HydroTech_RCS.Parts;
 using UnityEngine;
-using HydroPartModule = HydroTech_RCS.PartModules.Base.HydroPartModulePanel; 
 
 namespace HydroTech_RCS
 {
@@ -47,7 +46,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.HydroJebCore()");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
         #endregion
@@ -88,11 +87,11 @@ namespace HydroTech_RCS
         //TODO: change from deprecated RenderingManager to the AppLauncher
         private static void AddMainButton()
         {
-            //HydroRenderingManager.AddToPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
+            HydroRenderingManager.AddToPostDrawQueue(CoreConsts.renderMgrQueueSpot, DrawGUI);
         }
         private static void RemoveMainButton()
         {
-            //HydroRenderingManager.RemoveFromPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
+            HydroRenderingManager.RemoveFromPostDrawQueue(CoreConsts.renderMgrQueueSpot, DrawGUI);
         }
 
         public static void OnEditorUpdate(HydroJeb jeb)
@@ -105,7 +104,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.onEditorUpdate(HydroJeb)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -131,7 +130,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.onFlightStart(HydroJeb)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -151,7 +150,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.onGamePause(HydroJeb)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -167,7 +166,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.onGameResume(HydroJeb)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -200,7 +199,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.onPartDestroy(HydroJeb)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -217,7 +216,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.onPartStart(HydroJeb)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -250,7 +249,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.onPartUpdate(HydroJeb)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -258,7 +257,7 @@ namespace HydroTech_RCS
         {
             GUI.skin = HighLogic.Skin;
             bool mainBtnRespond = electricity && isReady;
-            if (GUI.Button(PanelConsts.mainButton, mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb", Panel.BtnStyle(mainBtnColor)) && mainBtnRespond) { MainPanel = !MainPanel; }
+            if (GUI.Button(PanelConsts.mainButton, mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb", GUIUtils.ButtonStyle(mainBtnColor)) && mainBtnRespond) { MainPanel = !MainPanel; }
         }
         #endregion
         #endregion
@@ -279,7 +278,7 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.OnUpdate(ModuleDockAssistCam");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
         }
 
@@ -292,13 +291,8 @@ namespace HydroTech_RCS
             }
             catch (Exception e)
             {
-                ExceptionHandler(e, "HydroJebCore.OnUpdate(ModuleDockAssistTarget)");
+                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
             }
-        }
-
-        private static void ExceptionHandler(Exception e, string funcName)
-        {
-            GameBehaviours.ExceptionHandler(e, funcName);
         }
         #endregion
         #endregion
