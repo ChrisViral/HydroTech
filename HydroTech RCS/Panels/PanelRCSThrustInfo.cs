@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    public partial class PanelRCSThrustInfo : Panel, IPanelEditor
+    public class PanelRCSThrustInfo : Panel, IPanelEditor
     {
         #region Sttic Properties
         public static PanelRCSThrustInfo ThePanel
