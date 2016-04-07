@@ -39,12 +39,12 @@ namespace HydroTech_RCS.Autopilots
 
         public bool NullCamera
         {
-            get { return this.Cam == null || !this.Cam.IsOnActiveVessel();}
+            get { return this.Cam == null || !this.Cam.IsOnActiveVessel;}
         }
 
         public bool NullTarget
         {
-            get { return this.target == null || !this.target.IsNear();}
+            get { return this.target == null || !this.target.IsNear;}
         }
     
         public bool TargetHasJeb

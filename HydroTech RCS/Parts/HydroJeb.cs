@@ -4,13 +4,24 @@ using HydroTech_RCS.Constants;
 
 namespace HydroTech_RCS.Parts
 {
+    //TODO: transform this into a PartModule
     public class HydroJeb : Part
     {
-        protected static APDockAssist Da
+        #region Static properties
+        protected static APDockAssist DA
         {
             get { return APDockAssist.TheAutopilot; }
         }
+        #endregion
 
+        #region Properties
+        public bool IsActiveJeb
+        {
+            get { return HydroJebCore.IsActiveJeb(this); }
+        }
+        #endregion
+
+        #region Overrides
         protected virtual void SetIcon()
         {
             this.stackIcon.SetIcon(DefaultIcons.ADV_SAS);
@@ -19,65 +30,54 @@ namespace HydroTech_RCS.Parts
 
         protected override void onEditorUpdate()
         {
-            base.onEditorUpdate();
             HydroJebCore.OnEditorUpdate(this);
         }
 
         protected override void onFlightStart()
         {
-            base.onFlightStart();
             SetIcon();
             HydroJebCore.OnFlightStart(this);
         }
 
         protected override void onGamePause()
         {
-            base.onGamePause();
             HydroJebCore.OnGamePause(this);
         }
 
         protected override void onGameResume()
         {
-            base.onGameResume();
             HydroJebCore.OnGameResume(this);
         }
 
         protected override void onPartDestroy()
         {
-            base.onPartDestroy();
             HydroJebCore.OnPartDestroy(this);
         }
 
         protected override void onPartStart()
         {
-            base.onPartStart();
             SetIcon();
             HydroJebCore.OnPartStart(this);
         }
 
         protected override void onPartUpdate()
         {
-            base.onPartUpdate();
             HydroJebCore.OnPartUpdate(this);
-            double electricChargeConsumptionRate = 0.0;
-            if (IsActiveJeb())
+            double electricChargeConsumptionRate = 0;
+            if (this.IsActiveJeb)
             {
                 if (RCSAutopilot.AutopilotEngaged) { electricChargeConsumptionRate += CoreConsts.electricConsumptionAutopilot; }
-                if (Da.ShowLine) { electricChargeConsumptionRate += CoreConsts.electricConsumptionLaser; }
+                if (DA.ShowLine) { electricChargeConsumptionRate += CoreConsts.electricConsumptionLaser; }
             }
-            else // !isActiveJeb()
+            else
             {
-                if (Da.Engaged && Da.DriveTarget && this.vessel == Da.target.vessel && this == Da.jebsTargetVessel.FirstOrDefault()) // driving target vessel
+                if (DA.Engaged && DA.DriveTarget && this.vessel == DA.target.vessel && this == DA.jebsTargetVessel.FirstOrDefault()) // driving target vessel
                 {
                     electricChargeConsumptionRate += CoreConsts.electricConsumptionAutopilot;
                 }
             }
-            if (electricChargeConsumptionRate > 0.0 && TimeWarp.deltaTime != 0) { HydroJebCore.electricity = RequestResource("ElectricCharge", electricChargeConsumptionRate * TimeWarp.deltaTime) > 0.0; }
+            if (electricChargeConsumptionRate > 0 && TimeWarp.deltaTime != 0) { HydroJebCore.electricity = RequestResource("ElectricCharge", electricChargeConsumptionRate * TimeWarp.deltaTime) > 0; }
         }
-
-        public bool IsActiveJeb()
-        {
-            return HydroJebCore.IsActiveJeb(this);
-        }
+        #endregion
     }
 }
