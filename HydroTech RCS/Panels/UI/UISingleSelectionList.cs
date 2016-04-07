@@ -4,33 +4,23 @@ namespace HydroTech_RCS.Panels.UI
 {
     public class UISingleSelectionList<T> : UIMultiPageList<T> where T : class
     {
+        #region Properties
         protected T curSelect;
-
         public T CurSelect
         {
             get { return this.curSelect; }
             protected set { this.curSelect = value; }
         }
+        #endregion
 
+        #region Constructor
         public UISingleSelectionList(List<T> l, int n = 5) : base(l, n) { }
+        #endregion
 
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-            if (this.CurSelect != null && !this.list.Contains(this.CurSelect))
-            {
-                this.CurSelect = null;
-                this.curPage = 0;
-            }
-        }
-
+        #region Methods
         public void SetSelectionToItem(T item)
         {
-            if (this.list.Contains(item)) { this.CurSelect = item; }
-            else
-            {
-                this.CurSelect = null;
-            }
+            this.CurSelect = this.list.Contains(item) ? item : null;
         }
 
         public void SetToCurSelPage()
@@ -41,7 +31,7 @@ namespace HydroTech_RCS.Panels.UI
                 int count = 0;
                 foreach (T item in this.list)
                 {
-                    if (Equals(item, this.CurSelect))
+                    if (EqualityComparer<T>.Default.Equals(item, this.CurSelect))
                     {
                         this.curPage = count / this.perPage;
                         break;
@@ -50,5 +40,18 @@ namespace HydroTech_RCS.Panels.UI
                 }
             }
         }
+        #endregion
+
+        #region Overrides
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+            if (this.CurSelect != null && !this.list.Contains(this.CurSelect))
+            {
+                this.CurSelect = null;
+                this.curPage = 0;
+            }
+        }
+        #endregion
     }
 }

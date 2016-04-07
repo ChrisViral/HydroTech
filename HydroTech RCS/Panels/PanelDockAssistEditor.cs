@@ -166,8 +166,8 @@ namespace HydroTech_RCS.Panels
             }
             GUILayout.EndHorizontal();
             bool pageChanged, noItem;
-            if (this.showCams) { this.camUI.OnDrawUi(CamUI, out pageChanged, out noItem); }
-            else { this.tgtUI.OnDrawUi(TgtUI, out pageChanged, out noItem); }
+            if (this.showCams) { this.camUI.OnDrawUI(CamUI, out pageChanged, out noItem); }
+            else { this.tgtUI.OnDrawUI(TgtUI, out pageChanged, out noItem); }
             if (pageChanged) { ResetHeight(); }
             if (noItem) { GUILayout.Label("Not installed"); }
 

@@ -358,7 +358,7 @@ namespace HydroTech_RCS.Panels
         {
             bool pageChanged, noCam;
             GUILayout.Label("Camera:");
-            this.camListUI.OnDrawUi(DrawCamBtn, out pageChanged, out noCam);
+            this.camListUI.OnDrawUI(DrawCamBtn, out pageChanged, out noCam);
             this.PreviewPart = (ModuleDockAssistCam)this.camListUI.CurSelect;
             if (pageChanged) { ResetHeight(); }
             if (noCam) { GUILayout.Label("Not installed"); }
@@ -384,7 +384,7 @@ namespace HydroTech_RCS.Panels
             GUILayout.Label("Vessel:");
             bool pageChanged;
             bool noTargetVessel;
-            this.targetVesselListUI.OnDrawUi(DrawVesselBtn, out pageChanged, out noTargetVessel);
+            this.targetVesselListUI.OnDrawUI(DrawVesselBtn, out pageChanged, out noTargetVessel);
             this.PreviewVessel = this.targetVesselListUI.CurSelect;
             if (pageChanged) { ResetHeight(); }
             if (noTargetVessel) { GUILayout.Label("Nothing in sight"); }
@@ -417,7 +417,7 @@ namespace HydroTech_RCS.Panels
             GUILayout.Label("Target:");
             bool pageChanged;
             bool noTarget;
-            this.targetListUI.OnDrawUi(DrawTargetBtn, out pageChanged, out noTarget);
+            this.targetListUI.OnDrawUI(DrawTargetBtn, out pageChanged, out noTarget);
             this.PreviewPart = (ModuleDockAssistTarget)this.targetListUI.CurSelect;
             if (this.PreviewPart != null) { this.previewVessel = null; }
             if (pageChanged) { ResetHeight(); }
