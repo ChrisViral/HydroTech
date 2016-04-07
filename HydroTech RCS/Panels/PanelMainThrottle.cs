@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ namespace HydroTech_RCS.Panels
 
         protected override int PanelID
         {
-            get { return PanelIDs.mainThrottle; }
+            get { return CoreConsts.mainThrottle; }
         }
 
         public override string PanelTitle
@@ -93,7 +93,7 @@ namespace HydroTech_RCS.Panels
             GUI.DragWindow();
         }
 
-        public override void onFlightStart()
+        public override void OnFlightStart()
         {
             OnFlightStart();
             this.editing = false;

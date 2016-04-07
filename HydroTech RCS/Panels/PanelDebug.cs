@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
@@ -20,16 +20,15 @@ namespace HydroTech_RCS.Panels
         protected bool peektop;
 
         protected Dictionary<string, object> watchList = new Dictionary<string, object>();
-#if DEBUG
+
         public static PanelDebug ThePanel
         {
-            get { return (PanelDebug)HydroJebCore.panels[PanelIDs.debug]; }
+            get { return (PanelDebug)HydroJebCore.panels[CoreConsts.debug]; }
         }
-#endif
 
         protected override int PanelID
         {
-            get { return PanelIDs.debug; }
+            get { return CoreConsts.debug; }
         }
 
         public override string PanelTitle

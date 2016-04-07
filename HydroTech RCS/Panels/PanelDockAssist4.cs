@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
 
@@ -81,7 +81,7 @@ namespace HydroTech_RCS.Panels
 
         protected void DoPreviewVessel()
         {
-            HydroFlightCameraManager.SetFoV(Behaviours.defaultFoVPreviewVessel);
+            HydroFlightCameraManager.SetFoV(CoreConsts.defaultFoVPreviewVessel);
             HydroFlightCameraManager.SetTarget(this.PreviewVessel);
         }
 

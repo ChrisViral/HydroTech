@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Panels;
 using UnityEngine;
@@ -23,25 +23,25 @@ namespace HydroTech_RCS
             try
             {
                 //Autopilots
-                autopilots.Add(AutopilotIDs.translation, new APTranslation());
-                autopilots.Add(AutopilotIDs.landing, new APLanding());
-                autopilots.Add(AutopilotIDs.dock, new APDockAssist());
-                autopilots.Add(AutopilotIDs.precise, new APPreciseControl());
+                autopilots.Add(CoreConsts.apTranslation, new APTranslation());
+                autopilots.Add(CoreConsts.apLanding, new APLanding());
+                autopilots.Add(CoreConsts.apDock, new APDockAssist());
+                autopilots.Add(CoreConsts.precise, new APPreciseControl());
 
                 //Panels
-                panels.Add(PanelIDs.main, new PanelMain());
-                panels.Add(PanelIDs.mainThrottle, new PanelMainThrottle());
-                panels.Add(PanelIDs.rcsInfo, new PanelRcsThrustInfo());
-                panels.Add(PanelIDs.preciseControl, new PanelPreciseControl());
-                panels.Add(PanelIDs.translation, new PanelTranslation());
-                panels.Add(PanelIDs.landing, new PanelLanding());
-                panels.Add(PanelIDs.dock, new PanelDockAssist());
+                panels.Add(CoreConsts.main, new PanelMain());
+                panels.Add(CoreConsts.mainThrottle, new PanelMainThrottle());
+                panels.Add(CoreConsts.rcsInfo, new PanelRcsThrustInfo());
+                panels.Add(CoreConsts.preciseControl, new PanelPreciseControl());
+                panels.Add(CoreConsts.pTranslation, new PanelTranslation());
+                panels.Add(CoreConsts.pLanding, new PanelLanding());
+                panels.Add(CoreConsts.pDock, new PanelDockAssist());
 #if DEBUG
-                panels.Add(PanelIDs.debug, new PanelDebug());
+                panels.Add(CoreConsts.debug, new PanelDebug());
 #endif
                 //Editor
-                panelsEditor.Add(PanelIDs.rcsInfo, new PanelRcsThrustInfo());
-                panelsEditor.Add(PanelIDs.dock, new PanelDockAssistEditorAid());
+                panelsEditor.Add(CoreConsts.rcsInfo, new PanelRcsThrustInfo());
+                panelsEditor.Add(CoreConsts.pDock, new PanelDockAssistEditorAid());
             }
             catch (Exception e)
             {
@@ -77,8 +77,8 @@ namespace HydroTech_RCS
         #region Properties
         private static bool MainPanel
         {
-            get { return panels[PanelIDs.main].PanelShown; }
-            set { panels[PanelIDs.main].PanelShown = value; }
+            get { return panels[CoreConsts.main].PanelShown; }
+            set { panels[CoreConsts.main].PanelShown = value; }
         }
         #endregion
 
@@ -124,7 +124,7 @@ namespace HydroTech_RCS
                 foreach (RCSAutopilot ap in autopilots.Values) { ap.OnFlightStart(); }
                 foreach (Panel panel in panels.Values) { panel.OnFlightStart(); }
                 HydroFlightInputManager.onFlightStart();
-                if (HydroRenderingManager.Contains(ManagerConsts.renderMgrQueueSpot)) { RemoveMainButton(); }
+                if (HydroRenderingManager.Contains(CoreConsts.renderMgrQueueSpot)) { RemoveMainButton(); }
                 AddMainButton();
                 electricity = true;
             }
@@ -229,7 +229,7 @@ namespace HydroTech_RCS
                 {
                     foreach (Panel panel in panels.Values) { panel.OnDeactivate(); }
                     foreach (RCSAutopilot ap in autopilots.Values) { ap.OnDeactivate(); }
-                    if (HydroRenderingManager.Contains(ManagerConsts.renderMgrQueueSpot)) { RemoveMainButton(); }
+                    if (HydroRenderingManager.Contains(CoreConsts.renderMgrQueueSpot)) { RemoveMainButton(); }
                 }
                 else
                 {
@@ -239,7 +239,7 @@ namespace HydroTech_RCS
                     HydroFlightInputManager.OnUpdate();
                     foreach (RCSAutopilot ap in autopilots.Values) { ap.OnUpdate(); }
                     foreach (Panel panel in panels.Values) { panel.OnUpdate(); }
-                    if (!HydroRenderingManager.Contains(ManagerConsts.renderMgrQueueSpot)) { AddMainButton(); }
+                    if (!HydroRenderingManager.Contains(CoreConsts.renderMgrQueueSpot)) { AddMainButton(); }
                     if (!isReady) { mainBtnColor = Color.yellow; }
                     else
                     {

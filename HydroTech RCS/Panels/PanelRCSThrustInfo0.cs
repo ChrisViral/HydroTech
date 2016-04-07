@@ -1,6 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
@@ -23,12 +23,12 @@ namespace HydroTech_RCS.Panels
 
         public static PanelRcsThrustInfo ThePanel
         {
-            get { return (PanelRcsThrustInfo)HydroJebCore.panels[PanelIDs.rcsInfo]; }
+            get { return (PanelRcsThrustInfo)HydroJebCore.panels[CoreConsts.rcsInfo]; }
         }
 
         protected override int PanelID
         {
-            get { return PanelIDs.rcsInfo; }
+            get { return CoreConsts.rcsInfo; }
         }
 
         public override string PanelTitle

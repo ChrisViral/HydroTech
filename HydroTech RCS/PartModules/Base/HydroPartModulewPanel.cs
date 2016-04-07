@@ -18,8 +18,8 @@ namespace HydroTech_RCS.PartModules.Base
                 {
                     return;
                 }
-                if (value && !this.panelShown) { RenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGui); }
-                else if (!value && this.panelShown) { RenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGui); }
+                if (value && !this.panelShown) { RenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGUI); }
+                else if (!value && this.panelShown) { RenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGUI); }
                 this.panelShown = value;
                 this.Registered = value;
             }
@@ -30,7 +30,7 @@ namespace HydroTech_RCS.PartModules.Base
 
         protected abstract bool Registered { get; set; }
 
-        protected abstract void WindowGui(int id);
+        protected abstract void WindowGUI(int id);
 
         public static GUIStyle BtnStyle()
         {
@@ -52,10 +52,10 @@ namespace HydroTech_RCS.PartModules.Base
             return GameGUI.Label.Style(textColor);
         }
 
-        protected void DrawGui()
+        protected void DrawGUI()
         {
             GUI.skin = HighLogic.Skin;
-            this.windowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGui, this.PanelTitle);
+            this.windowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGUI, this.PanelTitle);
         }
 
         public override void OnStart(StartState state)

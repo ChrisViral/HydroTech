@@ -1,5 +1,5 @@
 ﻿using HydroTech_RCS;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using UnityEngine;
 
@@ -190,7 +190,7 @@ public class HydroDockAssistCam : Strut
             HydroFlightCameraManager.SetRotation(this.camForward, this.camUp);
             HydroFlightCameraManager.SetFoV(this.camDefFoV / this.mag);
             HydroFlightCameraManager.SetNearClipPlane(this.camClip);
-            RequestResource("ElectricCharge", Behaviours.electricConsumptionCamera * TimeWarp.deltaTime);
+            RequestResource("ElectricCharge", CoreConsts.electricConsumptionCamera * TimeWarp.deltaTime);
         }
     }
 

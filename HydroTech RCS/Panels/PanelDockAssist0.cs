@@ -1,7 +1,7 @@
 ﻿using System;
 using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Panels.UI;
 
@@ -20,12 +20,12 @@ namespace HydroTech_RCS.Panels
 
         public static PanelDockAssist ThePanel
         {
-            get { return (PanelDockAssist)HydroJebCore.panels[PanelIDs.dock]; }
+            get { return (PanelDockAssist)HydroJebCore.panels[CoreConsts.pDock]; }
         }
 
         protected override int PanelID
         {
-            get { return PanelIDs.dock; }
+            get { return CoreConsts.pDock; }
         }
 
         public override string PanelTitle

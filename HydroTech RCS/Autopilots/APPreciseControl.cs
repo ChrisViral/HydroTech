@@ -1,6 +1,5 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Core;
 
 namespace HydroTech_RCS.Autopilots
 {
@@ -9,7 +8,7 @@ namespace HydroTech_RCS.Autopilots
         #region Properties
         public static APPreciseControl TheAutopilot
         {
-            get { return (APPreciseControl)HydroJebCore.autopilots[AutopilotIDs.precise]; }
+            get { return (APPreciseControl)HydroJebCore.autopilots[CoreConsts.precise]; }
         }
 
         protected override string NameString

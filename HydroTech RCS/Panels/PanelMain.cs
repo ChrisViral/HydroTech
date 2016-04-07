@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
@@ -9,7 +9,7 @@ namespace HydroTech_RCS.Panels
     {
         protected override int PanelID
         {
-            get { return PanelIDs.main; }
+            get { return CoreConsts.main; }
         }
 
         public override string PanelTitle

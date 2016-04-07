@@ -1,4 +1,4 @@
-﻿using HydroTech_RCS.Constants.Core;
+﻿using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.PartModules.PartRename;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
@@ -26,7 +26,7 @@ public class ModulePartRename : HydroPartModulewPanel
 
     protected override int QueueSpot
     {
-        get { return ManagerConsts.renderMgrModulePartRename; }
+        get { return CoreConsts.renderMgrModulePartRename; }
     }
 
     protected override string PanelTitle
@@ -67,7 +67,7 @@ public class ModulePartRename : HydroPartModulewPanel
         if (!this.PanelShown) { this.PanelShown = true; }
     }
 
-    protected override void windowGUI(int id)
+    protected override void WindowGUI(int id)
     {
         GUILayout.BeginVertical();
         this.tempName = GUILayout.TextField(this.tempName);

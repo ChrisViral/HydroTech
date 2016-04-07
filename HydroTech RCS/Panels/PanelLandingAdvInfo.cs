@@ -1,7 +1,7 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Constants.Units;
 using UnityEngine;
@@ -14,7 +14,7 @@ namespace HydroTech_RCS.Panels
 
         protected override int PanelID
         {
-            get { return PanelIDs.landingInfo; }
+            get { return CoreConsts.landingInfo; }
         }
 
         public override string PanelTitle

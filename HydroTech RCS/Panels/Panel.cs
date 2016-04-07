@@ -1,9 +1,5 @@
-﻿#if DEBUG
-//#define SHOW_WINDOW_POS
-#endif
-
-using HydroTech_FC;
-using HydroTech_RCS.Constants.Core;
+﻿using HydroTech_FC;
+using HydroTech_RCS.Constants;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -23,7 +19,7 @@ namespace HydroTech_RCS.Panels
 
         protected int QueueSpot
         {
-            get { return this.PanelID + ManagerConsts.renderMgrQueueSpot; }
+            get { return this.PanelID + CoreConsts.renderMgrQueueSpot; }
         }
 
         public virtual bool Active

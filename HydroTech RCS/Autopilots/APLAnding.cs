@@ -1,7 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Panels;
 using UnityEngine;
 
@@ -39,7 +38,7 @@ namespace HydroTech_RCS.Autopilots
         #region Properties
         public static APLanding TheAutopilot
         {
-            get { return (APLanding)HydroJebCore.autopilots[AutopilotIDs.landing]; }
+            get { return (APLanding)HydroJebCore.autopilots[CoreConsts.apLanding]; }
         }
 
         public static PanelLanding Panel

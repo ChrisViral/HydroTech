@@ -74,9 +74,7 @@
     <Compile Include="Autopilots\Calculators\EngineCalculator.cs" />
     <Compile Include="Autopilots\Calculators\VesselInfoCalculatorBase.cs" />
     <Compile Include="Constants\AutopilotConsts.cs" />
-    <Compile Include="Constants\Core\Behaviours.cs" />
-    <Compile Include="Constants\Core\CoreConstants.cs" />
-    <Compile Include="Constants\Core\EventStrings.cs" />
+    <Compile Include="Constants\CoreConsts.cs" />
     <Compile Include="Constants\Panels\PanelTitles.cs" />
     <Compile Include="Constants\Panels\WindowPositions.cs" />
     <Compile Include="Constants\PartModules\ConfigNodes.cs" />

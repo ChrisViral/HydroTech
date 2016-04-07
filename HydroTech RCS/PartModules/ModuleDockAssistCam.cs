@@ -4,7 +4,7 @@
 using HydroTech_FC;
 using HydroTech_RCS;
 using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants.Core;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
@@ -208,7 +208,7 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorA
     {
         base.OnUpdate();
         HydroJebCore.OnUpdate(this);
-        if (this.CamActivate) { this.part.RequestResource("ElectricCharge", Behaviours.electricConsumptionCamera * TimeWarp.deltaTime); }
+        if (this.CamActivate) { this.part.RequestResource("ElectricCharge", CoreConsts.electricConsumptionCamera * TimeWarp.deltaTime); }
     }
 
     public override void OnFlightStart()
