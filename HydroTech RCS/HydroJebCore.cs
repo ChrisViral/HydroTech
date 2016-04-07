@@ -30,7 +30,7 @@ namespace HydroTech_RCS
                 //Panels
                 panels.Add(CoreConsts.main, new PanelMain());
                 panels.Add(CoreConsts.mainThrottle, new PanelMainThrottle());
-                panels.Add(CoreConsts.rcsInfo, new PanelRcsThrustInfo());
+                panels.Add(CoreConsts.rcsInfo, new PanelRCSThrustInfo());
                 panels.Add(CoreConsts.preciseControl, new PanelPreciseControl());
                 panels.Add(CoreConsts.pTranslation, new PanelTranslation());
                 panels.Add(CoreConsts.pLanding, new PanelLanding());
@@ -39,7 +39,7 @@ namespace HydroTech_RCS
                 panels.Add(CoreConsts.debug, new PanelDebug());
 #endif
                 //Editor
-                panelsEditor.Add(CoreConsts.rcsInfo, new PanelRcsThrustInfo());
+                panelsEditor.Add(CoreConsts.rcsInfo, new PanelRCSThrustInfo());
                 panelsEditor.Add(CoreConsts.pDock, new PanelDockAssistEditor());
             }
             catch (Exception e)
