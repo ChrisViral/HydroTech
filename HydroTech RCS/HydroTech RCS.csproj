@@ -88,8 +88,7 @@
     <Compile Include="Panels\PanelMainThrottle.cs" />
     <Compile Include="Panels\PanelPreciseControl.cs" />
     <Compile Include="Panels\PanelRCSThrustInfo.cs" />
-    <Compile Include="Panels\PanelTranlation0.cs" />
-    <Compile Include="Panels\PanelTranslation1.cs" />
+    <Compile Include="Panels\PanelTranlation.cs" />
     <Compile Include="Panels\PanelAP.cs" />
     <Compile Include="Panels\UI\UIMultiPageList.cs" />
     <Compile Include="Panels\UI\UISingleSelectionList.cs" />
