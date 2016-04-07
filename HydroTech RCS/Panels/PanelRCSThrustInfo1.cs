@@ -11,11 +11,13 @@ namespace HydroTech_RCS.Panels
             {
                 GUI.skin = HighLogic.Skin;
                 Rect newWindowRect = GUILayout.Window(this.QueueSpot, this.windowRectEditor, WindowGUI, this.PanelTitle);
-                if ((newWindowRect.yMin != this.windowRectEditor.yMin) || (newWindowRect.yMin != this.windowRectEditor.yMin)) { this.needSave = true; }
+                if (newWindowRect.yMin != this.windowRectEditor.yMin || newWindowRect.yMin != this.windowRectEditor.yMin) { this.needSave = true; }
                 this.windowRectEditor = newWindowRect;
             }
             else
-            { DrawGui(); }
+            {
+                DrawGui();
+            }
         }
 
         protected override void WindowGUI(int windowId)

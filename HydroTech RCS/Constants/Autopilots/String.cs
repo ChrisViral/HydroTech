@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HydroTech_RCS.Constants.Autopilots
+﻿namespace HydroTech_RCS.Constants.Autopilots
 {
     namespace Translation
     {

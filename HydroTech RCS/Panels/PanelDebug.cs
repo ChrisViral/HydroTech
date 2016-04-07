@@ -11,13 +11,13 @@ namespace HydroTech_RCS.Panels
 {
     public class PanelDebug : Panel
     {
-        protected bool _peektop;
         protected bool apStatus;
         protected bool cameraMgr;
         protected bool cameraState;
 
         protected bool ctrlState;
         protected bool flightInput;
+        protected bool peektop;
 
         protected Dictionary<string, object> watchList = new Dictionary<string, object>();
 #if DEBUG
@@ -39,8 +39,8 @@ namespace HydroTech_RCS.Panels
 
         protected bool Peektop
         {
-            get { return this.cameraMgr && this._peektop; }
-            set { if (this.cameraMgr) { this._peektop = value; } }
+            get { return this.cameraMgr && this.peektop; }
+            set { if (this.cameraMgr) { this.peektop = value; } }
         }
 
         public PanelDebug()
@@ -66,13 +66,13 @@ namespace HydroTech_RCS.Panels
                 this.ctrlState = !this.ctrlState;
                 ResetHeight();
             }
-            if (this.ctrlState) { GUILayout.Label(RcsAutopilot.StringCtrlState(GameStates.ActiveVessel.ctrlState)); }
+            if (this.ctrlState) { GUILayout.Label(RCSAutopilot.StringCtrlState(GameStates.ActiveVessel.ctrlState)); }
             if (GUILayout.Button("AP Status"))
             {
                 this.apStatus = !this.apStatus;
                 ResetHeight();
             }
-            if (this.apStatus) { GUILayout.Label(RcsAutopilot.StringAllAPStatus()); }
+            if (this.apStatus) { GUILayout.Label(RCSAutopilot.StringAllAPStatus()); }
             if (GUILayout.Button("FlightInput"))
             {
                 this.flightInput = !this.flightInput;

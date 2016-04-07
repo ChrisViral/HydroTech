@@ -11,8 +11,6 @@ public class HydroDockAssistCam : Strut
     protected static float origClip;
 
     protected bool camActivate;
-
-    protected bool isOnActiveVessel;
     public float camClip = 0.01F;
     public float camDefFoV = 60.0F;
     public Vector3 camForward = Vector3.forward;
@@ -20,6 +18,8 @@ public class HydroDockAssistCam : Strut
     // Camera settings learned from Fixed Camera
     public Vector3 camPos = Vector3.zero;
     public Vector3 camUp = Vector3.up;
+
+    protected bool isOnActiveVessel;
     public int mag = 1;
     public Vector3 previewForward = -Vector3.forward;
     public float previewFoV = 90.0F;
@@ -115,7 +115,7 @@ public class HydroDockAssistCam : Strut
     {
         if (this.vessel != FlightGlobals.ActiveVessel)
         {
-            if (this.isOnActiveVessel && (CurCam == this))
+            if (this.isOnActiveVessel && CurCam == this)
             {
                 Panel.ResetHeight();
                 if (this.CamActivate) { this.CamActivate = false; }
@@ -123,7 +123,9 @@ public class HydroDockAssistCam : Strut
             this.isOnActiveVessel = false;
         }
         else
-        { this.isOnActiveVessel = true; }
+        {
+            this.isOnActiveVessel = true;
+        }
         return this.isOnActiveVessel;
     }
 

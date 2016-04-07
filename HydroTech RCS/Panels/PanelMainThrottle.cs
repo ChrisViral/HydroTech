@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_FC;
+﻿using HydroTech_FC;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
@@ -72,7 +71,7 @@ namespace HydroTech_RCS.Panels
                 if (GUILayout.Button("OK", editBtnStyle))
                 {
                     float thr;
-                    if (float.TryParse(this.editText, out thr) && (thr >= 0) && (thr <= 100))
+                    if (float.TryParse(this.editText, out thr) && thr >= 0 && thr <= 100)
                     {
                         this.Throttle = thr;
                         this.editing = false;

@@ -4,12 +4,12 @@ namespace HydroTech_RCS.Panels.UI
 {
     public class SingleSelectionListUi<T> : MultiPageListUi<T> where T : class
     {
-        protected T _CurSelect;
+        protected T curSelect;
 
         public T CurSelect
         {
-            get { return this._CurSelect; }
-            protected set { this._CurSelect = value; }
+            get { return this.curSelect; }
+            protected set { this.curSelect = value; }
         }
 
         public SingleSelectionListUi(List<T> l, int n = 5) : base(l, n) { }
@@ -17,7 +17,7 @@ namespace HydroTech_RCS.Panels.UI
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if ((this.CurSelect != null) && !this.list.Contains(this.CurSelect))
+            if (this.CurSelect != null && !this.list.Contains(this.CurSelect))
             {
                 this.CurSelect = null;
                 this.curPage = 0;
@@ -28,7 +28,9 @@ namespace HydroTech_RCS.Panels.UI
         {
             if (this.list.Contains(item)) { this.CurSelect = item; }
             else
-            { this.CurSelect = null; }
+            {
+                this.CurSelect = null;
+            }
         }
 
         public void SetToCurSelPage()

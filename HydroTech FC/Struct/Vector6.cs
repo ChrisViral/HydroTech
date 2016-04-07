@@ -60,21 +60,27 @@ namespace HydroTech_FC
         {
             if (x >= 0.0F) { this.xp += x; }
             else
-            { this.xn -= x; }
+            {
+                this.xn -= x;
+            }
         }
 
         public void AddY(float y)
         {
             if (y >= 0.0F) { this.yp += y; }
             else
-            { this.yn -= y; }
+            {
+                this.yn -= y;
+            }
         }
 
         public void AddZ(float z)
         {
             if (z >= 0.0F) { this.zp += z; }
             else
-            { this.zn -= z; }
+            {
+                this.zn -= z;
+            }
         }
 
         public static Vector6 operator *(Vector6 vec, float num)

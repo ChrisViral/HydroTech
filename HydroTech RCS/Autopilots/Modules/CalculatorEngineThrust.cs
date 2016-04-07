@@ -5,10 +5,10 @@ namespace HydroTech_RCS.Autopilots.Modules
 {
     public class CalculatorEngineThrust : CalculatorVesselInfoBasic
     {
+        protected Vector3 chosenDir = Vector3.down;
         protected float maxThrust;
 
         protected float minThrust;
-        protected Vector3 chosenDir = Vector3.down;
 
         public float MinThrust
         {

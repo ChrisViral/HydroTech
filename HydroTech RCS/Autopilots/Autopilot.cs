@@ -1,46 +1,47 @@
-﻿using System;
-using HydroTech_FC;
+﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Modules;
 using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots
 {
-    public abstract class RcsAutopilot : LoadSaveFileBasic
+    public abstract class RCSAutopilot : LoadSaveFileBasic
     {
-        protected bool _Active;
-
-        protected bool _Engaged;
+        protected bool active;
 
         protected Vessel drivingVessel;
 
+        protected bool engaged;
+
         public virtual bool Active
         {
-            get { return this._Active; }
+            get { return this.active; }
             set
             {
-                if (this.Engaged && (value != this._Active))
+                if (this.Engaged && value != this.active)
                 {
                     if (value) { AddDrive(); }
                     else
-                    { RemoveDrive(); }
+                    {
+                        RemoveDrive();
+                    }
                 }
-                this._Active = value;
+                this.active = value;
             }
         }
 
         public virtual bool Engaged
         {
-            get { return this.Active && this._Engaged; }
+            get { return this.Active && this.engaged; }
             set
             {
                 if (!this.Active) { return; }
-                if (!this._Engaged && value)
+                if (!this.engaged && value)
                 {
                     AddDrive();
                     RemoveOtherAutopilots();
                 }
-                else if (this._Engaged && !value) { RemoveDrive(); }
-                this._Engaged = value;
+                else if (this.engaged && !value) { RemoveDrive(); }
+                this.engaged = value;
             }
         }
 
@@ -59,14 +60,11 @@ namespace HydroTech_RCS.Autopilots
             get { return "Autopilot"; }
         }
 
-        public static RcsAutopilot EngagedAutopilot
+        public static RCSAutopilot EngagedAutopilot
         {
             get
             {
-                foreach (RcsAutopilot ap in HydroJebCore.autopilots.Values)
-                {
-                    if (ap.Engaged) { return ap; }
-                }
+                foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values) { if (ap.Engaged) { return ap; } }
                 return null;
             }
         }
@@ -76,7 +74,7 @@ namespace HydroTech_RCS.Autopilots
             get { return EngagedAutopilot != null; }
         }
 
-        ~RcsAutopilot()
+        ~RCSAutopilot()
         {
             this.Engaged = false;
             this.Active = false;
@@ -122,17 +120,17 @@ namespace HydroTech_RCS.Autopilots
 
         protected void RemoveOtherAutopilots()
         {
-            foreach (RcsAutopilot ap in HydroJebCore.autopilots.Values) { if (ap != this) { ap.Engaged = false; } }
+            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values) { if (ap != this) { ap.Engaged = false; } }
         }
 
         public virtual void OnFlightStart()
         {
             Load();
             this.Active = true;
-            if (this.Engaged && (this.drivingVessel != ActiveVessel))
+            if (this.Engaged && this.drivingVessel != ActiveVessel)
             {
                 this.drivingVessel = null;
-                this._Engaged = false;
+                this.engaged = false;
             }
             this.Engaged = false;
         }
@@ -205,7 +203,7 @@ namespace HydroTech_RCS.Autopilots
         public static string StringAllAPStatus()
         {
             string msg = AutopilotEngaged ? "Autopilot engaged" : "No autopilot engaged";
-            foreach (RcsAutopilot ap in HydroJebCore.autopilots.Values) { msg += "\n" + ap.NameString + " " + ap.Engaged; }
+            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values) { msg += "\n" + ap.NameString + " " + ap.Engaged; }
             return msg;
         }
 

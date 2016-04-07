@@ -6,15 +6,15 @@ namespace HydroTech_RCS.Autopilots.Modules
 {
     public class CalculatorVesselInfoBasic
     {
+        protected Vector3 coM;
         protected bool editor;
 
         protected float mass;
-
-        protected Vessel targetVessel;
-        protected Vector3 coM;
         public Matrix3x3 moI = new Matrix3x3();
 
         protected List<Part> partList;
+
+        protected Vessel targetVessel;
         protected Vector3 transformDown;
         protected Vector3 transformForward;
         protected Vector3 transformRight;
@@ -33,7 +33,9 @@ namespace HydroTech_RCS.Autopilots.Modules
                     this.transformForward = EditorLogic.startPod.transform.up;
                 }
                 else
-                { this.partList = null; }
+                {
+                    this.partList = null;
+                }
                 this.editor = value;
             }
         }
@@ -46,7 +48,9 @@ namespace HydroTech_RCS.Autopilots.Modules
                 if (this.Editor) { return; }
                 if (value != null) { this.partList = value.parts; }
                 else
-                { this.partList = null; }
+                {
+                    this.partList = null;
+                }
                 this.targetVessel = value;
             }
         }

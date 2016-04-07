@@ -16,7 +16,9 @@ namespace HydroTech_FC
                 {
                     if (this.subfolder == null) { this.subfolder = value; }
                     else
-                    { this.subfolder.Last = value; }
+                    {
+                        this.subfolder.Last = value;
+                    }
                 }
             }
 

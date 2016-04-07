@@ -15,8 +15,6 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorA
 
     protected bool camActivate;
 
-    protected bool isOnActiveVessel;
-
     [KSPField(isPersistant = true)]
     public float camClip = 0.01F;
 
@@ -35,6 +33,8 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorA
 
     [KSPField(isPersistant = true)]
     public Vector3 camUp = Vector3.up;
+
+    protected bool isOnActiveVessel;
 
     LineRenderer lineDir;
     LineRenderer lineRight;
@@ -184,7 +184,7 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorA
     {
         if (this.vessel != FlightGlobals.ActiveVessel)
         {
-            if (this.isOnActiveVessel && (CurCam == this))
+            if (this.isOnActiveVessel && CurCam == this)
             {
                 Panel.ResetHeight();
                 if (this.CamActivate) { this.CamActivate = false; }
@@ -192,7 +192,9 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorA
             this.isOnActiveVessel = false;
         }
         else
-        { this.isOnActiveVessel = true; }
+        {
+            this.isOnActiveVessel = true;
+        }
         return this.isOnActiveVessel;
     }
 
@@ -238,8 +240,7 @@ public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDaPartEditorA
 
     public override string ToString()
     {
-        if (this.ModuleRename.Renamed) { return this.ModuleRename.nameString; }
-        return RelPos().ToString("#0.00");
+        return this.ModuleRename.Renamed ? this.ModuleRename.nameString : RelPos().ToString("#0.00");
     }
 
     public override void OnStart(StartState state)

@@ -15,7 +15,9 @@ namespace HydroTech_RCS.PartModules.Base
             set
             {
                 if (this.Registered && !this.panelShown) // Panel used by another part
-                { return; }
+                {
+                    return;
+                }
                 if (value && !this.panelShown) { RenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGui); }
                 else if (!value && this.panelShown) { RenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGui); }
                 this.panelShown = value;

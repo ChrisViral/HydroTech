@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_FC;
+﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Autopilots.Modules;
 using HydroTech_RCS.Constants.Core;
@@ -13,7 +12,7 @@ namespace HydroTech_RCS.Panels
     {
         protected bool slopeDetection;
 
-        protected override int PanelID
+        protected override int PanelId
         {
             get { return PanelIDs.landingInfo; }
         }
@@ -131,11 +130,10 @@ namespace HydroTech_RCS.Panels
         protected GUIStyle TwrLabelStyle()
         {
             if (this.TwrTotal < this.GAsl) { return LabelStyle(Color.red); }
-            if (this.TwrTotal < this.GAsl * 1.5F) { return LabelStyle(Color.yellow); }
-            return LabelStyle();
+            return this.TwrTotal < this.GAsl * 1.5F ? LabelStyle(Color.yellow) : LabelStyle();
         }
 
-        protected override void WindowGUI(int windowId)
+        protected override void WindowGui(int windowId)
         {
             GUILayout.Label("Orbiting body: " + this.MainBodyName);
             GUILayout.Label("Surface g: " + this.GAsl.ToString("#0.00") + UnitStrings.acceleration);

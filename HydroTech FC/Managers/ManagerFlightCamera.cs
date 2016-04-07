@@ -77,7 +77,9 @@ namespace HydroTech_FC
                     SetCallback(this.callback);
                 }
                 else
-                { ResetToActiveVessel(); }
+                {
+                    ResetToActiveVessel();
+                }
             }
 
             public override string ToString()
@@ -147,7 +149,7 @@ namespace HydroTech_FC
 
         public static void OnUpdate()
         {
-            if ((origVessel != ActiveVessel) && (camCallback == null))
+            if (origVessel != ActiveVessel && camCallback == null)
             {
                 origVessel = ActiveVessel;
                 origParent = GetTransformParent();

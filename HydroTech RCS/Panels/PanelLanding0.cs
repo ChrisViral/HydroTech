@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_FC;
+﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Constants.Panels;
@@ -10,9 +9,8 @@ namespace HydroTech_RCS.Panels
 {
     public partial class PanelLanding : PanelwAP
     {
-        protected bool panelAdvInfoShown;
-
         public PanelLandingAdvInfo panelAdvInfo = new PanelLandingAdvInfo();
+        protected bool panelAdvInfoShown;
 
         public static PanelLanding ThePanel
         {

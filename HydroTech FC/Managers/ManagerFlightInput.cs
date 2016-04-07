@@ -60,7 +60,8 @@ namespace HydroTech_FC
         {
             HydroFlightInputHandler h = null;
             try { h = Handler(vessel); }
-            catch (Exception) {
+            catch (Exception)
+            {
                 throw new Exception("HydroFlightInputHandler.InputList fail: vessel not found; please check before calling");
             }
             return h.flightInputList;
@@ -147,7 +148,9 @@ namespace HydroTech_FC
                         handler.isDestroyed = true;
                     }
                     else
-                    { handler.vesselRootPart = handler.vessel.rootPart; }
+                    {
+                        handler.vesselRootPart = handler.vessel.rootPart;
+                    }
                 }
             }
             foreach (HydroFlightInputHandler h in listToRemove)

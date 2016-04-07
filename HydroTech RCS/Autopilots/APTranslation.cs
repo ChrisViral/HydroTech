@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots
 {
-    public class APTranslation : RcsAutopilot
+    public class APTranslation : RCSAutopilot
     {
         public enum TransDir
         {
@@ -27,7 +27,7 @@ namespace HydroTech_RCS.Autopilots
             get { return (APTranslation)HydroJebCore.autopilots[AutopilotIDs.translation]; }
         }
 
-        protected override string nameString
+        protected override string NameString
         {
             get { return Str.nameString; }
         }
@@ -93,8 +93,7 @@ namespace HydroTech_RCS.Autopilots
 
         protected Vector3 GetVector(TransDir dir)
         {
-            if (dir != TransDir.ADVANCED) { return GetUnitVector(dir); }
-            return this.thrustVector;
+            return dir != TransDir.ADVANCED ? GetUnitVector(dir) : this.thrustVector;
         }
 
         #region public variables for user input
@@ -145,7 +144,7 @@ namespace HydroTech_RCS.Autopilots
         #endregion
 
         #region override
-        public override bool engaged
+        public override bool Engaged
         {
             set
             {

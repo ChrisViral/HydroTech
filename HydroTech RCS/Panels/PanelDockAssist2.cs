@@ -1,39 +1,38 @@
-﻿using System;
-using HydroTech_RCS.Constants.Units;
+﻿using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
     public partial class PanelDockAssist // User settings
     {
-        protected bool _tempCamView;
-        protected bool _tempManual;
         protected string accText;
         protected string angularAccText;
         protected string fssText;
         protected bool tempAutoOrient;
         protected int tempCamMag;
+        protected bool tempCamView;
         protected bool tempDriveTarget;
         protected bool tempKillRelV;
+        protected bool tempManual;
         protected bool tempShowLine;
 
         protected bool TempManual
         {
-            get { return this._tempManual; }
+            get { return this.tempManual; }
             set
             {
-                if (value != this._tempManual) { ResetHeight(); }
-                this._tempManual = value;
+                if (value != this.tempManual) { ResetHeight(); }
+                this.tempManual = value;
             }
         }
 
         protected bool TempCamView
         {
-            get { return this._tempCamView; }
+            get { return this.tempCamView; }
             set
             {
-                if (!value && this._tempCamView) { ResetHeight(); }
-                this._tempCamView = value;
+                if (!value && this.tempCamView) { ResetHeight(); }
+                this.tempCamView = value;
             }
         }
 
@@ -66,9 +65,9 @@ namespace HydroTech_RCS.Panels
                         Manual = this.TempManual;
                         ShowLine = this.tempShowLine;
                         float tryParse;
-                        if (float.TryParse(this.angularAccText, out tryParse) && (tryParse >= 0.0F)) { AngularAcc = tryParse; }
-                        if (float.TryParse(this.accText, out tryParse) && (tryParse >= 0.0F)) { Acc = tryParse; }
-                        if (float.TryParse(this.fssText, out tryParse) && (tryParse > 0)) { FsSpeed = tryParse; }
+                        if (float.TryParse(this.angularAccText, out tryParse) && tryParse >= 0.0F) { AngularAcc = tryParse; }
+                        if (float.TryParse(this.accText, out tryParse) && tryParse >= 0.0F) { Acc = tryParse; }
+                        if (float.TryParse(this.fssText, out tryParse) && tryParse > 0) { FsSpeed = tryParse; }
                     }
                 }
                 base.Settings = value;

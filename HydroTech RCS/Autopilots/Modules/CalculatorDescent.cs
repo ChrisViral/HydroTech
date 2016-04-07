@@ -48,17 +48,16 @@ namespace HydroTech_RCS.Autopilots.Modules
             get
             {
                 if (this.thrRate < 0.0F) { return 0.0F; }
-                if (this.thrRate > 1.0F) { return 1.0F; }
-                return this.thrRate;
+                return this.thrRate > 1.0F ? 1.0F : this.thrRate;
             }
         }
 
-        public Behaviour behaviour
+        public Behaviour CurrentBehaviour
         {
             get { return GetBehaviour(this.thrRate); }
         }
 
-        public Indicator indicator
+        public Indicator CurrentIndicator
         {
             get { return GetIndicator(this.thrRate); }
         }
@@ -66,16 +65,14 @@ namespace HydroTech_RCS.Autopilots.Modules
         protected Behaviour GetBehaviour(float aRatio)
         {
             if (aRatio < 0.0F) { return Behaviour.IDLE; }
-            if (aRatio > 1.0F) { return Behaviour.BRAKE; }
-            return Behaviour.NORMAL;
+            return aRatio > 1.0F ? Behaviour.BRAKE : Behaviour.NORMAL;
         }
 
         protected Indicator GetIndicator(float aRatio)
         {
             if (aRatio < ratioWarp) { return Indicator.WARP; }
             if (aRatio < ratioSafe) { return Indicator.SAFE; }
-            if (aRatio < ratioOk) { return Indicator.OK; }
-            return Indicator.DANGER;
+            return aRatio < ratioOk ? Indicator.OK : Indicator.DANGER;
         }
 
         protected float a_t(float t)
@@ -119,7 +116,9 @@ namespace HydroTech_RCS.Autopilots.Modules
             this.statusH = h;
             if (this.statusV <= v0) { this.thrRate = -1.0F; }
             else
-            { Calculate(); }
+            {
+                Calculate();
+            }
         }
     }
 }

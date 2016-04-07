@@ -46,7 +46,9 @@ namespace HydroTech_RCS.Autopilots.ASAS
                 else if (upDown && forBack) { this.yaw = HMaths.Sign(_dir.x); }
                 else if (upDown && !forBack) { this.pitch = -HMaths.Sign(_dir.y); }
                 else
-                { this.reverse = false; }
+                {
+                    this.reverse = false;
+                }
             }
 
             if (!this.reverse)
@@ -99,7 +101,7 @@ namespace HydroTech_RCS.Autopilots.ASAS
 
         public bool Steer(float maxSteerErrSin)
         {
-            return !this.reverse && (HMaths.Abs(this.yaw) <= maxSteerErrSin) && (HMaths.Abs(this.roll) <= maxSteerErrSin) && (HMaths.Abs(this.pitch) <= maxSteerErrSin);
+            return !this.reverse && HMaths.Abs(this.yaw) <= maxSteerErrSin && HMaths.Abs(this.roll) <= maxSteerErrSin && HMaths.Abs(this.pitch) <= maxSteerErrSin;
         }
 
 #if DEBUG

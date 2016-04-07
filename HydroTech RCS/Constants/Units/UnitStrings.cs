@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HydroTech_RCS.Constants.Units
+﻿namespace HydroTech_RCS.Constants.Units
 {
     public static class UnitStrings
     {

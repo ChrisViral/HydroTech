@@ -5,7 +5,6 @@ public class ModuleActiveHydroJebIndicator : ModuleActiveIndicator
 {
     protected override Status GetStatus()
     {
-        if (HydroJebCore.IsActiveJeb((HydroJeb)this.part)) { return Status.ACTIVE; }
-        return Status.IDLE;
+        return HydroJebCore.IsActiveJeb((HydroJeb)this.part) ? Status.ACTIVE : Status.IDLE;
     }
 }

@@ -2,7 +2,6 @@
 //#define SHOW_WINDOW_POS
 #endif
 
-using System;
 using HydroTech_FC;
 using HydroTech_RCS.Constants.Core;
 using UnityEngine;
@@ -32,11 +31,13 @@ namespace HydroTech_RCS.Panels
             get { return this.active; }
             set
             {
-                if (this.PanelShown && (value != this.active))
+                if (this.PanelShown && value != this.active)
                 {
                     if (value) { AddPanel(); }
                     else
-                    { RemovePanel(); }
+                    {
+                        RemovePanel();
+                    }
                 }
                 this.active = value;
             }
@@ -52,7 +53,9 @@ namespace HydroTech_RCS.Panels
                 {
                     if (value) { AddPanel(); }
                     else
-                    { RemovePanel(); }
+                    {
+                        RemovePanel();
+                    }
                     this.needSave = true;
                 }
                 this.panelShown = value;
@@ -124,7 +127,7 @@ namespace HydroTech_RCS.Panels
         {
             GUI.skin = HighLogic.Skin;
             Rect newWindowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGui, this.PanelTitle);
-            if ((newWindowRect.xMin != this.windowRect.xMin) || (newWindowRect.yMin != this.windowRect.yMin)) { this.needSave = true; }
+            if (newWindowRect.xMin != this.windowRect.xMin || newWindowRect.yMin != this.windowRect.yMin) { this.needSave = true; }
             this.windowRect = newWindowRect;
         }
 

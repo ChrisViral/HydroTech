@@ -58,7 +58,9 @@ namespace HydroTech_RCS.Autopilots.Modules
                             }
                         }
                         else
-                        { tempAllRcsEnabled = false; }
+                        {
+                            tempAllRcsEnabled = false;
+                        }
                     }
                 }
             }

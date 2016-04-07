@@ -19,7 +19,7 @@ namespace HydroTech_RCS.Panels
                     if (value == null) { HydroFlightCameraManager.RetrieveLast(); }
                     else
                     {
-                        if ((this.previewPart == null) && (this.PreviewVessel == null)) { HydroFlightCameraManager.SaveCurrent(); }
+                        if (this.previewPart == null && this.PreviewVessel == null) { HydroFlightCameraManager.SaveCurrent(); }
                         HydroFlightCameraManager.SetCallback(value.DoPreview);
                     }
                     this.previewPart = value;
@@ -57,7 +57,9 @@ namespace HydroTech_RCS.Panels
         {
             if (mcam == null) { GUILayout.Button(""); }
             else
-            { if (GUILayout.Button(((ModuleDockAssistCam)mcam).ToString(), mcam == Cam ? (IPartPreview)mcam == this.PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : (IPartPreview)mcam == this.PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.camListUi.SetSelectionToItem(mcam); } }
+            {
+                if (GUILayout.Button(((ModuleDockAssistCam)mcam).ToString(), mcam == Cam ? (IPartPreview)mcam == this.PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : (IPartPreview)mcam == this.PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.camListUi.SetSelectionToItem(mcam); }
+            }
         }
 
         protected void DrawChoosingCameraUi()

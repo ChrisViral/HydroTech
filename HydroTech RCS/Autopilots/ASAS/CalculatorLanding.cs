@@ -8,7 +8,9 @@ namespace HydroTech_RCS.Autopilots.ASAS
         {
             if (vabPod) { Calculate(dir, right, vessel.ReferenceTransform, vessel); }
             else
-            { Calculate(dir, right, -vessel.ReferenceTransform.forward, vessel.ReferenceTransform.right, vessel); }
+            {
+                Calculate(dir, right, -vessel.ReferenceTransform.forward, vessel.ReferenceTransform.right, vessel);
+            }
         }
     }
 }

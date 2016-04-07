@@ -202,7 +202,7 @@ namespace HydroTech_RCS.Autopilots.Modules
         public override void OnUpdate(Vessel v, float heightOffset, bool slope)
         {
             base.OnUpdate(v, heightOffset, slope);
-            for (Direction dir = Direction.CENTER; dir <= Direction.EAST; dir++) { if ((this.distance[dir] > this.altAsl) && this.MainBody.ocean) { this.distance[dir] = this.altAsl; } }
+            for (Direction dir = Direction.CENTER; dir <= Direction.EAST; dir++) { if (this.distance[dir] > this.altAsl && this.MainBody.ocean) { this.distance[dir] = this.altAsl; } }
         }
     }
 }

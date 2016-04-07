@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HydroTech_RCS.Constants.PartModules
+﻿namespace HydroTech_RCS.Constants.PartModules
 {
     namespace PartRename
     {

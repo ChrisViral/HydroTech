@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HydroTech_RCS.Constants.Core
+﻿namespace HydroTech_RCS.Constants.Core
 {
     public static class EventStrings
     {

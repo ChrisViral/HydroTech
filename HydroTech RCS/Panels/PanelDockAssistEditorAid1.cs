@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HydroTech_FC;
 using HydroTech_RCS.Panels.UI;
 using UnityEngine;
@@ -57,7 +56,9 @@ namespace HydroTech_RCS.Panels
             {
                 if (set.drawn) { mcam.ShowEditorAid(); }
                 else
-                { mcam.HideEditorAid(); }
+                {
+                    mcam.HideEditorAid();
+                }
             }
             GUILayout.BeginHorizontal();
             set.renamed = GUILayout.Toggle(set.renamed, set.renamed ? "" : "Rename");
@@ -81,7 +82,9 @@ namespace HydroTech_RCS.Panels
             {
                 if (set.drawn) { mtgt.ShowEditorAid(); }
                 else
-                { mtgt.HideEditorAid(); }
+                {
+                    mtgt.HideEditorAid();
+                }
             }
             GUILayout.BeginHorizontal();
             set.renamed = GUILayout.Toggle(set.renamed, set.renamed ? "" : "Rename");
@@ -146,7 +149,9 @@ namespace HydroTech_RCS.Panels
             bool noItem;
             if (this.showCams) { this.camUi.OnDrawUi(CamUi, out pageChanged, out noItem); }
             else
-            { this.tgtUi.OnDrawUi(TgtUi, out pageChanged, out noItem); }
+            {
+                this.tgtUi.OnDrawUi(TgtUi, out pageChanged, out noItem);
+            }
             if (pageChanged) { ResetHeight(); }
             if (noItem) { GUILayout.Label("Not installed"); }
 

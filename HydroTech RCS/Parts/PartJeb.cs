@@ -60,15 +60,17 @@ public class HydroJeb : Part
         double electricChargeConsumptionRate = 0.0;
         if (IsActiveJeb())
         {
-            if (RcsAutopilot.AutopilotEngaged) { electricChargeConsumptionRate += Behaviours.electricConsumptionAutopilot; }
+            if (RCSAutopilot.AutopilotEngaged) { electricChargeConsumptionRate += Behaviours.electricConsumptionAutopilot; }
             if (Da.ShowLine) { electricChargeConsumptionRate += Behaviours.electricConsumptionLaser; }
         }
         else // !isActiveJeb()
         {
-            if (Da.engaged && Da.DriveTarget && (this.vessel == Da.target.vessel) && (this == Da.jebsTargetVessel.FirstOrDefault())) // driving target vessel
-            { electricChargeConsumptionRate += Behaviours.electricConsumptionAutopilot; }
+            if (Da.engaged && Da.DriveTarget && this.vessel == Da.target.vessel && this == Da.jebsTargetVessel.FirstOrDefault()) // driving target vessel
+            {
+                electricChargeConsumptionRate += Behaviours.electricConsumptionAutopilot;
+            }
         }
-        if ((electricChargeConsumptionRate > 0.0) && (TimeWarp.deltaTime != 0)) { HydroJebCore.electricity = RequestResource("ElectricCharge", electricChargeConsumptionRate * TimeWarp.deltaTime) > 0.0; }
+        if (electricChargeConsumptionRate > 0.0 && TimeWarp.deltaTime != 0) { HydroJebCore.electricity = RequestResource("ElectricCharge", electricChargeConsumptionRate * TimeWarp.deltaTime) > 0.0; }
     }
 
     public bool IsActiveJeb()

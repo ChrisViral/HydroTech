@@ -4,7 +4,7 @@ using HydroTech_RCS.Constants.Core;
 
 namespace HydroTech_RCS.Autopilots
 {
-    public class APPreciseControl : RcsAutopilot
+    public class APPreciseControl : RCSAutopilot
     {
         public static APPreciseControl TheAutopilot
         {

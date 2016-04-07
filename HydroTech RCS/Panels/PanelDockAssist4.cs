@@ -22,7 +22,7 @@ namespace HydroTech_RCS.Panels
                     if (value == null) { HydroFlightCameraManager.RetrieveLast(); }
                     else
                     {
-                        if ((this.previewVessel == null) && (this.PreviewPart == null)) { HydroFlightCameraManager.SaveCurrent(); }
+                        if (this.previewVessel == null && this.PreviewPart == null) { HydroFlightCameraManager.SaveCurrent(); }
                         HydroFlightCameraManager.SetCallback(DoPreviewVessel);
                     }
                     this.previewVessel = value;
@@ -61,7 +61,9 @@ namespace HydroTech_RCS.Panels
                         Da.CameraPaused = true;
                         if (this.targetVessel == null) { this.ChoosingVessel = true; }
                         else
-                        { this.PreviewVessel = this.targetVessel; }
+                        {
+                            this.PreviewVessel = this.targetVessel;
+                        }
                         this.targetListUi.SetSelectionToItem(Target);
                         this.targetListUi.SetToCurSelPage();
                         this.targetListUi.SetSelectionToItem(null);
@@ -87,14 +89,18 @@ namespace HydroTech_RCS.Panels
         {
             if (v == null) { GUILayout.Button(""); }
             else
-            { if (GUILayout.Button(v.vesselName, v == this.targetVessel ? v == this.PreviewVessel ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : v == this.PreviewVessel ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.targetVesselListUi.SetSelectionToItem(v); } }
+            {
+                if (GUILayout.Button(v.vesselName, v == this.targetVessel ? v == this.PreviewVessel ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : v == this.PreviewVessel ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.targetVesselListUi.SetSelectionToItem(v); }
+            }
         }
 
         protected virtual void DrawTargetBtn(HydroPartModule mtgt)
         {
             if (mtgt == null) { GUILayout.Button(""); }
             else
-            { if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.targetListUi.SetSelectionToItem(mtgt); } }
+            {
+                if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.blue) : BtnStyle_Wrap(Color.green) : (IPartPreview)mtgt == this.PreviewPart ? BtnStyle_Wrap(Color.yellow) : BtnStyle_Wrap())) { this.targetListUi.SetSelectionToItem(mtgt); }
+            }
         }
 
         protected void DrawChoosingVesselUi()

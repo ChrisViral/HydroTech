@@ -37,7 +37,7 @@ namespace HydroTech_RCS.Panels.UI
                 count++;
             }
             zero = count == 0;
-            if (LastPage() && (count % this.perPage != 0)) { for (int i = count % this.perPage; i < this.perPage; i++) { drawFunction(null); } }
+            if (LastPage() && count % this.perPage != 0) { for (int i = count % this.perPage; i < this.perPage; i++) { drawFunction(null); } }
             pageChanged = false;
             if (count > this.perPage)
             {

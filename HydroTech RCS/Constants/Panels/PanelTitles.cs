@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HydroTech_RCS.Constants.Panels
+﻿namespace HydroTech_RCS.Constants.Panels
 {
     public static class PanelTitles
     {

@@ -18,7 +18,7 @@ namespace HydroTech_FC
             foreach (FieldInfo field in GetType().GetFields())
             {
                 HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
-                if ((att == null) || att.isTesting) { continue; }
+                if (att == null || att.isTesting) { continue; }
                 HydroSlNodeInfoAttribute[] nodes = (HydroSlNodeInfoAttribute[])Attribute.GetCustomAttributes(field, typeof(HydroSlNodeInfoAttribute));
                 if (nodes.Count() == 0) { ReadField(field, node, att.saveName, att.cmd); }
                 else
@@ -30,7 +30,9 @@ namespace HydroTech_FC
                     {
                         if (tempNode.HasNode(nodesDict[i])) { tempNode = tempNode.GetNode(nodesDict[i]); }
                         else
-                        { tempNode = tempNode.AddNode(nodesDict[i]); }
+                        {
+                            tempNode = tempNode.AddNode(nodesDict[i]);
+                        }
                     }
                     ReadField(field, tempNode, att.saveName, att.cmd);
                 }
@@ -45,7 +47,7 @@ namespace HydroTech_FC
             foreach (FieldInfo field in GetType().GetFields())
             {
                 HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
-                if ((att == null) || att.isTesting) { continue; }
+                if (att == null || att.isTesting) { continue; }
                 HydroSlNodeInfoAttribute[] nodes = (HydroSlNodeInfoAttribute[])Attribute.GetCustomAttributes(field, typeof(HydroSlNodeInfoAttribute));
                 if (nodes.Count() == 0) { Write(node, att.saveName, field.GetValue(this), att.cmd); }
                 else
@@ -57,7 +59,9 @@ namespace HydroTech_FC
                     {
                         if (tempNode.HasNode(nodesDict[i])) { tempNode = tempNode.GetNode(nodesDict[i]); }
                         else
-                        { tempNode = tempNode.AddNode(nodesDict[i]); }
+                        {
+                            tempNode = tempNode.AddNode(nodesDict[i]);
+                        }
                     }
                     Write(tempNode, att.saveName, field.GetValue(this), att.cmd);
                 }
@@ -71,7 +75,9 @@ namespace HydroTech_FC
             LoadDefault();
             ConfigNode node = ConfigNode.Load(this.fileName.ToString());
             if (node != null) // file exists
-            { OnLoad(node); }
+            {
+                OnLoad(node);
+            }
         }
 
         public void Save()

@@ -67,7 +67,9 @@ namespace HydroTech_FC
         {
             if (GetVessel(item) == ActiveVessel) { AddItemActive(item); }
             else
-            { AddItemInactive(item); }
+            {
+                AddItemInactive(item);
+            }
         }
 
         protected virtual void RemoveItem(List<T> list, T item)

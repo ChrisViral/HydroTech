@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_FC;
+﻿using HydroTech_FC;
 using HydroTech_RCS.Constants.Autopilots.Landing;
 using HydroTech_RCS.Constants.Units;
 using UnityEngine;
@@ -8,33 +7,33 @@ namespace HydroTech_RCS.Panels
 {
     public partial class PanelLanding // User settings
     {
-        protected bool _tempEngines;
-        protected bool _tempTouchdown;
         protected string altKeepText;
         protected string maxThrText;
         protected string stdsText;
         protected float tempAltKeep;
         protected bool tempBurnRetro;
+        protected bool tempEngines;
+        protected bool tempTouchdown;
         protected bool tempUseTrueAlt;
         protected bool tempVabPod;
 
         protected bool TempEngines
         {
-            get { return this._tempEngines; }
+            get { return this.tempEngines; }
             set
             {
-                if (value != this._tempEngines) { ResetHeight(); }
-                this._tempEngines = value;
+                if (value != this.tempEngines) { ResetHeight(); }
+                this.tempEngines = value;
             }
         }
 
         protected bool TempTouchdown
         {
-            get { return this._tempTouchdown; }
+            get { return this.tempTouchdown; }
             set
             {
-                if (value != this._tempTouchdown) { ResetHeight(); }
-                this._tempTouchdown = value;
+                if (value != this.tempTouchdown) { ResetHeight(); }
+                this.tempTouchdown = value;
             }
         }
 
@@ -66,7 +65,7 @@ namespace HydroTech_RCS.Panels
                         AltKeep = this.tempAltKeep;
                         float tryParse;
                         if (float.TryParse(this.stdsText, out tryParse)) { SafeTouchDownSpeed = tryParse; }
-                        if (float.TryParse(this.maxThrText, out tryParse) && (tryParse > 0.0F) && (tryParse <= 100.0F)) { MaxThrottle = tryParse; }
+                        if (float.TryParse(this.maxThrText, out tryParse) && tryParse > 0.0F && tryParse <= 100.0F) { MaxThrottle = tryParse; }
                     }
                 }
                 base.Settings = value;
@@ -124,7 +123,7 @@ namespace HydroTech_RCS.Panels
                 if (this.tempUseTrueAlt)
                 {
                     float tryParse;
-                    if (float.TryParse(this.altKeepText, out tryParse) && (tryParse >= Position.finalDescentHeight))
+                    if (float.TryParse(this.altKeepText, out tryParse) && tryParse >= Position.finalDescentHeight)
                     {
                         this.tempAltKeep = tryParse;
                         float tempAltKeepAsl = this.tempAltKeep + this.TerrainHeight;
@@ -132,7 +131,9 @@ namespace HydroTech_RCS.Panels
                         GUILayout.Label("Max allowed horizontal speed: " + La.AllowedHoriSpeed(this.tempAltKeep).ToString("#0.0") + UnitStrings.speedSimple);
                     }
                     else
-                    { GUILayout.Label("Invalid altitude", LabelStyle(Color.red)); }
+                    {
+                        GUILayout.Label("Invalid altitude", LabelStyle(Color.red));
+                    }
                 }
                 else
                 {
@@ -145,7 +146,9 @@ namespace HydroTech_RCS.Panels
                         GUILayout.Label("Max allowed horizontal speed: " + La.AllowedHoriSpeed(tempAltKeepTrue).ToString("#0.0") + UnitStrings.speedSimple);
                     }
                     else
-                    { GUILayout.Label("Invalid altitude", LabelStyle(Color.red)); }
+                    {
+                        GUILayout.Label("Invalid altitude", LabelStyle(Color.red));
+                    }
                 }
             }
 

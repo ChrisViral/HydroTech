@@ -20,7 +20,7 @@ namespace HydroTech_FC
         protected static void error(object message) { GameBehaviours.error(message); }
 #else
         [Obsolete("Do not print anything on Release", true)]
-        protected static new void Print(object message) { }
+        protected static void Print(object message) { }
 #endif
     }
 }

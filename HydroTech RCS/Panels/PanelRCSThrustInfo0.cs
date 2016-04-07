@@ -8,12 +8,12 @@ namespace HydroTech_RCS.Panels
 {
     public partial class PanelRcsThrustInfo : Panel, IPanelEditor
     {
-        protected bool panelShownEditor;
-
         protected bool editor;
 
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
         public bool editorHide;
+
+        protected bool panelShownEditor;
 
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLNodeInfo(i = 1, name = "SETTINGS"), HydroSLField(saveName = "ShowRotation")]
         public bool showRotation = true;
@@ -38,11 +38,7 @@ namespace HydroTech_RCS.Panels
 
         public override bool PanelShown
         {
-            get
-            {
-                if (this.editor) { return this.panelShownEditor; }
-                return base.PanelShown;
-            }
+            get { return this.editor ? this.panelShownEditor : base.PanelShown; }
             set
             {
                 if (this.editor)
@@ -52,12 +48,16 @@ namespace HydroTech_RCS.Panels
                     {
                         if (value) { AddPanel(); }
                         else
-                        { RemovePanel(); }
+                        {
+                            RemovePanel();
+                        }
                     }
                     this.panelShownEditor = value;
                 }
                 else
-                { base.PanelShown = value; }
+                {
+                    base.PanelShown = value;
+                }
             }
         }
 

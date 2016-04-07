@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_FC;
+﻿using HydroTech_FC;
 using HydroTech_RCS;
 using HydroTech_RCS.Autopilots.ASAS;
 using HydroTech_RCS.Constants.Core;
@@ -142,7 +141,7 @@ public class ModuleHydroAsas : HydroPartModulewPanel
         PanelDebug.ThePanel.RemoveWatch("HoldDirCal");
         PanelDebug.ThePanel.RemoveWatch("_aV");
         if (!HydroJebCore.IsActiveJeb((HydroJeb)this.part) || !this.AsasState) { return; }
-        bool userInput = (ctrlState.yaw != 0) || (ctrlState.roll != 0) || (ctrlState.pitch != 0);
+        bool userInput = ctrlState.yaw != 0 || ctrlState.roll != 0 || ctrlState.pitch != 0;
         if (userInput)
         {
             SetDir();

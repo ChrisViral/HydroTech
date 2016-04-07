@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_RCS.Constants.Units;
+﻿using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -8,9 +7,9 @@ namespace HydroTech_RCS.Panels
     {
         protected string accText;
         protected string angAText;
+        protected string rateText;
         protected string rRateText;
         protected bool tempByRate;
-        protected string rateText;
 
         protected override bool Settings
         {
@@ -31,10 +30,10 @@ namespace HydroTech_RCS.Panels
                         ByRate = this.tempByRate;
 
                         float tryParse;
-                        if (float.TryParse(this.rRateText, out tryParse) && (tryParse >= 0.0F) && (tryParse <= 1.0F)) { RRate = tryParse; }
-                        if (float.TryParse(this.rateText, out tryParse) && (tryParse >= 0.0F) && (tryParse <= 1.0F)) { Rate = tryParse; }
-                        if (float.TryParse(this.angAText, out tryParse) && (tryParse >= 0.0F)) { AngA = tryParse; }
-                        if (float.TryParse(this.accText, out tryParse) && (tryParse >= 0.0F)) { Acc = tryParse; }
+                        if (float.TryParse(this.rRateText, out tryParse) && tryParse >= 0.0F && tryParse <= 1.0F) { RRate = tryParse; }
+                        if (float.TryParse(this.rateText, out tryParse) && tryParse >= 0.0F && tryParse <= 1.0F) { Rate = tryParse; }
+                        if (float.TryParse(this.angAText, out tryParse) && tryParse >= 0.0F) { AngA = tryParse; }
+                        if (float.TryParse(this.accText, out tryParse) && tryParse >= 0.0F) { Acc = tryParse; }
                     }
                 }
                 base.Settings = value;

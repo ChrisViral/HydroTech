@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_RCS.Constants.Core;
+﻿using HydroTech_RCS.Constants.Core;
 using HydroTech_RCS.Constants.PartModules.PartRename;
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
@@ -8,10 +7,10 @@ public class ModulePartRename : HydroPartModulewPanel
 {
     private static bool registered;
 
-    protected bool renamed;
-
     [KSPField(guiActive = false, guiName = "Name")]
     public string nameString = "";
+
+    protected bool renamed;
 
     protected string tempName = "";
 
@@ -51,7 +50,9 @@ public class ModulePartRename : HydroPartModulewPanel
             this.Renamed = true;
         }
         else
-        { this.Renamed = false; }
+        {
+            this.Renamed = false;
+        }
     }
 
     public override void OnSave(ConfigNode node)

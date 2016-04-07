@@ -57,17 +57,19 @@ namespace HydroTech_FC
         {
             Clear();
             if (this.parentList == null) { throw new Exception("AffiliationList cannot update: parent list is null."); }
-            if ((this.single && (this.getItemS == null)) || (!this.single && (this.getItemM == null))) { throw new Exception("AffiliationList cannot update: get function is null."); }
+            if (this.single && this.getItemS == null || !this.single && this.getItemM == null) { throw new Exception("AffiliationList cannot update: get function is null."); }
             foreach (T t in this.parentList)
             {
-                if ((this.requirement != null) && !this.requirement(t)) { continue; }
+                if (this.requirement != null && !this.requirement(t)) { continue; }
                 if (this.single)
                 {
                     TU u = this.getItemS(t);
                     if (!Contains(u)) { Add(u); }
                 }
                 else
-                { foreach (TU u in this.getItemM(t)) { if (!Contains(u)) { Add(u); } } }
+                {
+                    foreach (TU u in this.getItemM(t)) { if (!Contains(u)) { Add(u); } }
+                }
             }
         }
     }

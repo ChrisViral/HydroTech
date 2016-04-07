@@ -1,5 +1,4 @@
-﻿using System;
-using HydroTech_RCS.Autopilots;
+﻿using HydroTech_RCS.Autopilots;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -40,11 +39,11 @@ namespace HydroTech_RCS.Panels
                         if (this.tempTransMode == APTranslation.TransDir.ADVANCED)
                         {
                             float x, y, z;
-                            if (float.TryParse(this.xText, out x) && float.TryParse(this.yText, out y) && float.TryParse(this.zText, out z) && ((x != 0.0F) || (y != 0.0F) || (z != 0.0F))) { ThrustVector = new Vector3(x, y, z).normalized; }
+                            if (float.TryParse(this.xText, out x) && float.TryParse(this.yText, out y) && float.TryParse(this.zText, out z) && (x != 0.0F || y != 0.0F || z != 0.0F)) { ThrustVector = new Vector3(x, y, z).normalized; }
                         }
 
                         float tryParse;
-                        if (float.TryParse(this.rateText, out tryParse) && (tryParse >= 0.0F) && (tryParse <= 1.0F)) { ThrustRate = tryParse; }
+                        if (float.TryParse(this.rateText, out tryParse) && tryParse >= 0.0F && tryParse <= 1.0F) { ThrustRate = tryParse; }
                     }
                 }
                 base.Settings = value;
@@ -68,7 +67,9 @@ namespace HydroTech_RCS.Panels
                     GUILayout.EndVertical();
                     if (i != 5) { GUILayout.BeginVertical(); }
                     else
-                    { GUILayout.EndHorizontal(); }
+                    {
+                        GUILayout.EndHorizontal();
+                    }
                 }
             }
             if (this.tempTransMode == APTranslation.TransDir.ADVANCED)
@@ -89,14 +90,16 @@ namespace HydroTech_RCS.Panels
                 GUILayout.EndHorizontal();
 
                 float x, y, z;
-                if (float.TryParse(this.xText, out x) && float.TryParse(this.yText, out y) && float.TryParse(this.zText, out z) && ((x != 0.0F) || (y != 0.0F) || (z != 0.0F)))
+                if (float.TryParse(this.xText, out x) && float.TryParse(this.yText, out y) && float.TryParse(this.zText, out z) && (x != 0.0F || y != 0.0F || z != 0.0F))
                 {
                     Vector3 tempThrustVector = new Vector3(x, y, z).normalized;
                     GUILayout.Label("Normalized vector:");
                     GUILayout.Label(tempThrustVector.ToString("#0.00"));
                 }
                 else
-                { GUILayout.Label("Invalid input", LabelStyle(Color.red)); }
+                {
+                    GUILayout.Label("Invalid input", LabelStyle(Color.red));
+                }
             }
             GUILayout.BeginHorizontal();
             GUILayout.Label("Thrust rate (0~1)");

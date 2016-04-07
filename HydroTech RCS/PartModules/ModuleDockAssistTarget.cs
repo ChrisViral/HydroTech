@@ -118,11 +118,13 @@ public class ModuleDockAssistTarget : HydroPartModule, IPartPreview, IDaPartEdit
         if (this.vessel == GameStates.ActiveVessel
             /* || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist */)
         {
-            if (this.isNear && (CurTarget == this)) { Panel.ResetHeight(); }
+            if (this.isNear && CurTarget == this) { Panel.ResetHeight(); }
             this.isNear = false;
         }
         else
-        { this.isNear = true; }
+        {
+            this.isNear = true;
+        }
         return this.isNear;
     }
 
