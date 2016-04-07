@@ -2,7 +2,6 @@
 using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Panels.UI;
 
 namespace HydroTech_RCS.Panels
@@ -30,7 +29,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.docking; }
+            get { return PanelConsts.dockingTitle; }
         }
 
         protected static APDockAssist Da
@@ -136,7 +135,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.docking;
+            this.windowRect = PanelConsts.docking;
         }
 
         protected override void MakeAPSave()

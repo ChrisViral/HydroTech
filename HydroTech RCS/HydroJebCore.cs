@@ -4,7 +4,6 @@ using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Panels;
 using UnityEngine;
 
@@ -257,7 +256,7 @@ namespace HydroTech_RCS
         {
             GUI.skin = HighLogic.Skin;
             bool mainBtnRespond = electricity && isReady;
-            if (GUI.Button(WindowPositions.mainButton, mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb", Panel.BtnStyle(mainBtnColor)) && mainBtnRespond) { MainPanel = !MainPanel; }
+            if (GUI.Button(PanelConsts.mainButton, mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb", Panel.BtnStyle(mainBtnColor)) && mainBtnRespond) { MainPanel = !MainPanel; }
         }
         #endregion
         #endregion

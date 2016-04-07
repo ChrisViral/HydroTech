@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using UnityEngine;
 
 namespace HydroTech_RCS.Panels
@@ -33,7 +32,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.debug; }
+            get { return PanelConsts.debugTitle; }
         }
 
         protected bool Peektop

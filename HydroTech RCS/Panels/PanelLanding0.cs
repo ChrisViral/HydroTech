@@ -1,7 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
@@ -24,7 +23,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return PanelTitles.landing; }
+            get { return PanelConsts.landingTitle; }
         }
 
         protected static APLanding La
@@ -171,7 +170,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.landing;
+            this.windowRect = PanelConsts.landing;
         }
 
         protected override void MakeAPSave()

@@ -1,6 +1,5 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Constants;
-using HydroTech_RCS.Constants.Panels;
 using HydroTech_RCS.Panels.UI;
 
 namespace HydroTech_RCS.Panels
@@ -17,7 +16,7 @@ namespace HydroTech_RCS.Panels
 
         public override string PanelTitle
         {
-            get { return this.editorHide ? PanelTitles.dockAssistEditorAidHide : PanelTitles.dockAssistEditorAid; }
+            get { return this.editorHide ? PanelConsts.dockAssistEditorAidHideTitle : PanelConsts.dockAssistEditorAidTitle; }
         }
 
         public PanelDockAssistEditorAid()
@@ -62,7 +61,7 @@ namespace HydroTech_RCS.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = WindowPositions.dockAssistEditor;
+            this.windowRect = PanelConsts.dockAssistEditor;
         }
 
         protected override void LoadDefault()

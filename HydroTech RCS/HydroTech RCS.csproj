@@ -75,8 +75,7 @@
     <Compile Include="Autopilots\Calculators\VesselInfoCalculatorBase.cs" />
     <Compile Include="Constants\AutopilotConsts.cs" />
     <Compile Include="Constants\CoreConsts.cs" />
-    <Compile Include="Constants\Panels\PanelTitles.cs" />
-    <Compile Include="Constants\Panels\WindowPositions.cs" />
+    <Compile Include="Constants\PanelConsts.cs" />
     <Compile Include="Constants\PartModules\ConfigNodes.cs" />
     <Compile Include="Constants\Units\UnitStrings.cs" />
     <Compile Include="HydroJebCore.cs" />
