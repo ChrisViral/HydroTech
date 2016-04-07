@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots.ASAS;
+using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Autopilots.Modules;
 using HydroTech_RCS.Constants.Autopilots.Landing;
 using HydroTech_RCS.Constants.Core;
@@ -285,7 +285,7 @@ namespace HydroTech_RCS.Autopilots
         protected bool DriveHoldDir(FlightCtrlState ctrlState, Vector3 dir)
         {
             // Point up
-            LandingStateCalculator stateCal = new LandingStateCalculator();
+            LandingCalculator stateCal = new LandingCalculator();
             stateCal.Calculate(this.vabPod, dir, Vector3d.zero, ActiveVessel);
             stateCal.SetCtrlStateRotation(ctrlState);
             RcsActive.MakeRotation(ctrlState, stateCal.Steer(Angle.translationReadyAngleSin) ? AngularAcc.maxAngularAccHold : AngularAcc.maxAngularAccSteer);

@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots.ASAS;
+using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Autopilots.Modules;
 using HydroTech_RCS.Constants.Autopilots.Docking;
 using HydroTech_RCS.Constants.Core;
@@ -222,7 +222,7 @@ namespace HydroTech_RCS.Autopilots
         #region Autopilot
         protected virtual void DriveAutoOrient(FlightCtrlState ctrlState)
         {
-            DockAssistStateCalculator stateCal = new DockAssistStateCalculator();
+            DockingAssistCalculator stateCal = new DockingAssistCalculator();
             stateCal.Calculate(this.Cam, this.target);
             stateCal.SetCtrlStateRotation(ctrlState);
         }
@@ -232,7 +232,7 @@ namespace HydroTech_RCS.Autopilots
             TurnOnRcs(this.target.vessel);
             TurnOffSas(this.target.vessel);
             Vector3 dir = (this.target.Pos - this.Cam.Pos).normalized;
-            HoldDirStateCalculator stateCal = new HoldDirStateCalculator();
+            HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
             stateCal.Calculate(dir, Vector3.zero, this.target.Dir, this.target.Right, this.target.vessel);
             stateCal.SetCtrlStateRotation(ctrlState);
             this.targetOrientReady = stateCal.Steer(Angle.translationReadyAngleSin);
@@ -274,7 +274,7 @@ namespace HydroTech_RCS.Autopilots
 
         protected virtual void DriveAutoDocking(FlightCtrlState ctrlState)
         {
-            DockAssistStateCalculator stateCal = new DockAssistStateCalculator();
+            DockingAssistCalculator stateCal = new DockingAssistCalculator();
             stateCal.Calculate(this.Cam, this.target);
             DriveAutoOrient(ctrlState);
             if (!stateCal.Steer(Angle.translationReadyAngleSin)) { DriveKillRelV(ctrlState); }
@@ -383,7 +383,7 @@ namespace HydroTech_RCS.Autopilots
                     if (this.targetOrientReady)
                     {
                         Vector3 r = this.target.Pos - this.Cam.Pos;
-                        HoldDirStateCalculator stateCal = new HoldDirStateCalculator();
+                        HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
                         stateCal.Calculate(r.normalized, this.target.Right, this.Cam.Dir, this.Cam.Right, ActiveVessel);
                         stateCal.SetCtrlStateRotation(ctrlState);
                         bool orientReady = stateCal.Steer(Angle.translationReadyAngleSin);

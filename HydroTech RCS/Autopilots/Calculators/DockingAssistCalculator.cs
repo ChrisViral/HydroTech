@@ -1,9 +1,9 @@
 ﻿using HydroTech_FC;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.ASAS
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class DockAssistStateCalculator : HoldDirStateCalculator
+    public class DockingAssistCalculator : HoldDirectionCalculator
     {
         #region Methods
         public void Calculate(ModuleDockAssistCam mcam, ModuleDockAssistTarget mtgt)

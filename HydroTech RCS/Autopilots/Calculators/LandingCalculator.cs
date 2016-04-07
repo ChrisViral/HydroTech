@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.ASAS
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class LandingStateCalculator : HoldDirStateCalculator
+    public class LandingCalculator : HoldDirectionCalculator
     {
         #region Methods
         public void Calculate(bool vabPod, Vector3 dir, Vector3 right, Vessel vessel)

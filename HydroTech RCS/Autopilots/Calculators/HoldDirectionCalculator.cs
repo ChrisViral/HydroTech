@@ -2,9 +2,9 @@
 using HydroTech_RCS.Constants.Autopilots.General;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.ASAS
+namespace HydroTech_RCS.Autopilots.Calculators
 {
-    public class HoldDirStateCalculator : CtrlStateCalculator
+    public class HoldDirectionCalculator : CtrlStateCalculator
     {
         #region Fields
         public bool reverse;

@@ -61,15 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Autopilots\APDockAssist.cs" />
-    <Compile Include="Autopilots\APLanding0.cs" />
-    <Compile Include="Autopilots\APLanding1.cs" />
-    <Compile Include="Autopilots\APLanding2.cs" />
+    <Compile Include="Autopilots\APLanding.cs" />
     <Compile Include="Autopilots\APPreciseControl.cs" />
     <Compile Include="Autopilots\APTranslation.cs" />
-    <Compile Include="Autopilots\ASAS\CalculatorDocking.cs" />
-    <Compile Include="Autopilots\ASAS\CalculatorHoldDir.cs" />
-    <Compile Include="Autopilots\ASAS\CalculatorKillRotation.cs" />
-    <Compile Include="Autopilots\ASAS\CalculatorLanding.cs" />
+    <Compile Include="Autopilots\Calculators\DockingAssistCalculator.cs" />
+    <Compile Include="Autopilots\Calculators\HoldDirectionCalculator.cs" />
+    <Compile Include="Autopilots\Calculators\LandingCalculator.cs" />
     <Compile Include="Autopilots\Autopilot.cs" />
     <Compile Include="Autopilots\Modules\CalculatorDescent.cs" />
     <Compile Include="Autopilots\Modules\CalculatorEngineThrust.cs" />
@@ -124,7 +121,6 @@
     <Compile Include="PartModules\ModuleActiveHydroJebIndicator.cs" />
     <Compile Include="PartModules\ModuleDockAssistCam.cs" />
     <Compile Include="PartModules\ModuleDockAssistTarget.cs" />
-    <Compile Include="PartModules\ModuleHydroASAS.cs" />
     <Compile Include="PartModules\ModulePartRename.cs" />
     <Compile Include="Parts\PartDockAssistCam.cs" />
     <Compile Include="Parts\PartJeb.cs" />

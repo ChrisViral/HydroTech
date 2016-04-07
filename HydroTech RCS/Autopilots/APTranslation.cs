@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots.ASAS;
+using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants.Autopilots.Translation;
 using HydroTech_RCS.Constants.Core;
 using UnityEngine;
@@ -51,7 +51,7 @@ namespace HydroTech_RCS.Autopilots
             if (this.HoldOrient)
             {
                 HydroActionGroupManager.ActiveVessel.SAS = false;
-                HoldDirStateCalculator stateCal = new HoldDirStateCalculator();
+                HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
                 stateCal.Calculate(this.curOrient, this.curRoll, ActiveVessel);
                 stateCal.SetCtrlStateRotation(ctrlState);
             }
