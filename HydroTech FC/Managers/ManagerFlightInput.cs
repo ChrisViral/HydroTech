@@ -46,8 +46,7 @@ namespace HydroTech_FC
         private static bool ContainsVessel(Vessel vessel)
         {
             if (vessel == null) { throw new Exception("HydroFlightInputManager.ContainsVessel: vessel is null"); }
-            foreach (HydroFlightInputHandler handler in handlerList) { if (handler.vessel == vessel) { return true; } }
-            return false;
+            return handlerList.Any(handler => handler.vessel == vessel);
         }
 
         public static bool ContainsNameString(string str)
@@ -82,8 +81,7 @@ namespace HydroTech_FC
             InputList(callback.vessel).Add(callback.nameString, callback.callback);
             callback.vessel.OnFlyByWire += callback.callback;
 #if HANDLER_SHOW_ADD_REMOVE
-            print("Added an OnFlyByWire, vessel " + (callback.vessel == GameStates.ActiveVessel ? "==" : "!=")
-                + " ActiveVessel, name = " + callback.nameString);
+            print("Added an OnFlyByWire, vessel " + (callback.vessel == GameStates.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
             PrintCount();
 #endif
         }
@@ -98,8 +96,7 @@ namespace HydroTech_FC
             callback.vessel.OnFlyByWire -= callback.callback;
             if (InputList(callback.vessel).Count == 0) { handlerList.Remove(Handler(callback.vessel)); }
 #if HANDLER_SHOW_ADD_REMOVE
-            print("Removed an OnFlyByWire, vessel " + (callback.vessel == GameStates.ActiveVessel ? "==" : "!=")
-                + " ActiveVessel, name = " + callback.nameString);
+            print("Removed an OnFlyByWire, vessel " + (callback.vessel == GameStates.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
             PrintCount();
 #endif
         }
@@ -170,7 +167,10 @@ namespace HydroTech_FC
         }
 
 #if DEBUG
-        private static void print(object message) { GameBehaviours.print(message); }
+        private static void print(object message)
+        {
+            GameBehaviours.print(message);
+        }
 
         public static void PrintCount()
         {
@@ -189,30 +189,35 @@ namespace HydroTech_FC
                     apActive += handler.flightInputList.Count;
                 }
             }
-            print("Total " + (vesselActive + vesselDestroyed) + " vessels, " + (apActive + apInactive) + " autopilots" +
-                "\nActive: " + vesselActive + " vessels, " + apActive + " autopilots" +
-                "\nInactive: " + vesselDestroyed + " vessels, " + apInactive + " autopilots");
+            print("Total " + (vesselActive + vesselDestroyed) + " vessels, " + (apActive + apInactive) + " autopilots" + "\nActive: " + vesselActive + " vessels, " + apActive + " autopilots" + "\nInactive: " + vesselDestroyed + " vessels, " + apInactive + " autopilots");
         }
 
-        public static String StringList()
+        public static string StringList()
         {
-            String msgStr = "Vessel count = " + handlerList.Count;
+            string msgStr = "Vessel count = " + handlerList.Count;
             int count = 0;
             foreach (HydroFlightInputHandler handler in handlerList)
             {
                 if (handler.isDestroyed)
-                    msgStr += "\nVessel " + (count++) + " destroyed"
-                        + ", count = " + handler.flightInputList.Count;
+                {
+                    msgStr += "\nVessel " + count++ + " destroyed" + ", count = " + handler.flightInputList.Count;
+                }
                 else
-                    msgStr += "\nVessel " + (count++)
-                        + " isActiveVessel = " + (handler.vessel == GameStates.ActiveVessel)
-                        + ", count = " + handler.flightInputList.Count;
-                foreach (String str in handler.flightInputList.Keys)
+                {
+                    msgStr += "\nVessel " + count++ + " isActiveVessel = " + (handler.vessel == GameStates.ActiveVessel) + ", count = " + handler.flightInputList.Count;
+                }
+                foreach (string str in handler.flightInputList.Keys)
+                {
                     msgStr += "\n\t" + str;
+                }
             }
             return msgStr;
         }
-        public static void PrintList() { print(StringList()); }
+
+        public static void PrintList()
+        {
+            print(StringList());
+        }
 #endif
     }
 }

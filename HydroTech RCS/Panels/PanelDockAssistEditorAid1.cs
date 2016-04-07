@@ -23,14 +23,14 @@ namespace HydroTech_RCS.Panels
 
         protected AffiliationList<Part, ModuleDockAssistCam> cams = null;
         protected DictionaryFromList<ModuleDockAssistCam, DaEditorSet> camset = null;
-        protected MultiPageListUi<ModuleDockAssistCam> camUi = null;
+        protected UIMultiPageList<ModuleDockAssistCam> camUi = null;
 
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLNodeInfo(i = 1, name = "SETTINGS"), HydroSLField(saveName = "ShowCams")]
         public bool showCams = true;
 
         protected AffiliationList<Part, ModuleDockAssistTarget> targets = null;
         protected DictionaryFromList<ModuleDockAssistTarget, DaEditorSet> tgtset = null;
-        protected MultiPageListUi<ModuleDockAssistTarget> tgtUi = null;
+        protected UIMultiPageList<ModuleDockAssistTarget> tgtUi = null;
 
         protected List<ModuleDockAssistCam> GetCam(Part p)
         {

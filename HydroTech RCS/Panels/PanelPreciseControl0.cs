@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    public partial class PanelPreciseControl : PanelwAP
+    public partial class PanelPreciseControl : PanelAP
     {
         protected override int PanelID
         {

@@ -99,7 +99,7 @@
     <Compile Include="Panels\PanelRCSThrustInfo1.cs" />
     <Compile Include="Panels\PanelTranlation0.cs" />
     <Compile Include="Panels\PanelTranslation1.cs" />
-    <Compile Include="Panels\PanelwAP.cs" />
+    <Compile Include="Panels\PanelAP.cs" />
     <Compile Include="Panels\UI\UIMultiPageList.cs" />
     <Compile Include="Panels\UI\UISingleSelectionList.cs" />
     <Compile Include="PartModules\Base\HydroPartModulewPanel.cs" />

@@ -87,7 +87,6 @@ namespace HydroTech_RCS
         {
             //HydroRenderingManager.AddToPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));
         }
-
         private static void RemoveMainButton()
         {
             //HydroRenderingManager.RemoveFromPostDrawQueue(ManagerConsts.RenderMgr_queueSpot, new Callback(drawGUI));

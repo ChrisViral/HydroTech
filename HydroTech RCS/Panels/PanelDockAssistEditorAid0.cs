@@ -27,8 +27,8 @@ namespace HydroTech_RCS.Panels
             this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunction_Multi)GetTgt);
             this.camset = new DictionaryFromList<ModuleDockAssistCam, DaEditorSet>(this.cams, new DaEditorSet(false));
             this.tgtset = new DictionaryFromList<ModuleDockAssistTarget, DaEditorSet>(this.targets, new DaEditorSet(false));
-            this.camUi = new MultiPageListUi<ModuleDockAssistCam>(this.cams, 2);
-            this.tgtUi = new MultiPageListUi<ModuleDockAssistTarget>(this.targets, 2);
+            this.camUi = new UIMultiPageList<ModuleDockAssistCam>(this.cams, 2);
+            this.tgtUi = new UIMultiPageList<ModuleDockAssistTarget>(this.targets, 2);
         }
 
         public void ShowInEditor()

@@ -17,6 +17,23 @@ namespace HydroTech_RCS.Autopilots
         }
         #endregion
 
+        #region User input vars     
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "byRate")]
+        public bool byRate = AutopilotConsts.byRate;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "RotationRate")]
+        public float rotationRate = AutopilotConsts.rotationRate;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TranslationRate")]
+        public float translationRate = AutopilotConsts.translationRate;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AngularAcc")]
+        public float angularAcc = AutopilotConsts.pcAngularAcc;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Acc")]
+        public float acc = AutopilotConsts.pcAcc;
+        #endregion
+
         #region Constructor
         public APPreciseControl()
         {
@@ -45,24 +62,7 @@ namespace HydroTech_RCS.Autopilots
         }
         #endregion
 
-        #region User input vars     
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "byRate")]
-        public bool byRate = AutopilotConsts.byRate;
-        
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "RotationRate")]
-        public float rotationRate = AutopilotConsts.rotationRate;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TranslationRate")]
-        public float translationRate = AutopilotConsts.translationRate;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AngularAcc")]
-        public float angularAcc = AutopilotConsts.pcAngularAcc;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Acc")]
-        public float acc = AutopilotConsts.pcAcc;
-        #endregion
-
-        #region Functions
+        #region Overrides
         protected override void LoadDefault()
         {
             base.LoadDefault();

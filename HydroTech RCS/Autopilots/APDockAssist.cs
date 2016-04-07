@@ -20,6 +20,11 @@ namespace HydroTech_RCS.Autopilots
         }
         #endregion
 
+        #region Fields
+        protected RCSCalculator rcsTarget = new RCSCalculator();
+        protected Vessel drivingTargetVessel;
+        #endregion
+
         #region Properties
         protected override string NameString
         {
@@ -30,11 +35,21 @@ namespace HydroTech_RCS.Autopilots
         {
             get { return AutopilotConsts.dockingTargetName; }
         }
-        #endregion
 
-        #region Fields
-        protected RCSCalculator rcsTarget = new RCSCalculator();
-        protected Vessel drivingTargetVessel;
+        public bool NullCamera
+        {
+            get { return this.Cam == null || !this.Cam.IsOnActiveVessel();}
+        }
+
+        public bool NullTarget
+        {
+            get { return this.target == null || !this.target.IsNear();}
+        }
+    
+        public bool TargetHasJeb
+        {
+            get { return this.jebsTargetVessel.Count != 0;}
+        }
         #endregion
 
         #region User input vars
@@ -409,24 +424,9 @@ namespace HydroTech_RCS.Autopilots
         #endregion
 
         #region Methods
-        public bool NullCamera()
-        {
-            return this.Cam == null || !this.Cam.IsOnActiveVessel();
-        }
-
-        public bool NullTarget()
-        {
-            return this.target == null || !this.target.IsNear();
-        }
-
         protected bool IsJebTargetVessel(Part jeb)
         {
             return !NullTarget() && jeb.vessel == this.target.vessel;
-        }
-
-        public bool TargetHasJeb()
-        {
-            return this.jebsTargetVessel.Count != 0;
         }
 
         protected void AddDriveTarget()
@@ -472,7 +472,7 @@ namespace HydroTech_RCS.Autopilots
         }
         #endregion
 
-        #region Functions
+        #region Overrides
         public override void OnFlightStart()
         {
             base.OnFlightStart();

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HydroTech_RCS.Panels.UI
 {
-    public class MultiPageListUi<T> where T : class
+    public class UIMultiPageList<T> where T : class
     {
         protected int curPage; // Start from 0
 
@@ -12,7 +12,7 @@ namespace HydroTech_RCS.Panels.UI
 
         public delegate void DrawSingleItemUi(T item);
 
-        public MultiPageListUi(List<T> l, int n = 5)
+        public UIMultiPageList(List<T> l, int n = 5)
         {
             this.list = l;
             this.perPage = n;

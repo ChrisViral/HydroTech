@@ -33,43 +33,6 @@ namespace HydroTech_RCS.Autopilots.Calculators
         #endregion
 
         #region Methods
-        protected override void Calculate()
-        {
-            base.Calculate();
-            bool tempAllRcsEnabled = true;
-            this.maxTorque.Reset();
-            this.maxForce.Reset();
-            foreach (Part p in this.partList)
-            {
-                Vector3 r = SwitchTransformCalculator.VectorTransform(p.GetComponent<Rigidbody>().worldCenterOfMass - this.CoM, this.transformRight, this.transformDown, this.transformForward);
-                foreach (PartModule pm in p.Modules)
-                {
-                    if (pm is ModuleRCS)
-                    {
-                        ModuleRCS rcs = (ModuleRCS)pm;
-                        if (rcs.isEnabled)
-                        {
-                            foreach (Transform trans in rcs.thrusterTransforms)
-                            {
-                                Vector3 thrust = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward) * rcs.thrusterPower;
-                                Vector3 thrustTorque = -HMaths.CrossProduct(r, thrust);
-                                this.maxForce.AddX(thrust.x);
-                                this.maxForce.AddY(thrust.y);
-                                this.maxForce.AddZ(thrust.z);
-                                this.maxTorque.AddX(thrustTorque.x);
-                                this.maxTorque.AddY(thrustTorque.y);
-                                this.maxTorque.AddZ(thrustTorque.z);
-                            }
-                        }
-                        else { tempAllRcsEnabled = false; }
-                    }
-                }
-            }
-            this.AllRcsEnabled = tempAllRcsEnabled;
-            this.maxAcc = this.maxForce / this.Mass;
-            this.maxAngularAcc = this.maxTorque / this.moI.Diagonal;
-        }
-
         public void EnableAllRcs()
         {
             foreach (Part p in this.partList)
@@ -80,16 +43,6 @@ namespace HydroTech_RCS.Autopilots.Calculators
                     if (rcs != null && !rcs.isEnabled) { rcs.Enable(); }
                 }
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass, this.maxForce, this.maxAcc, this.moI, this.maxTorque, this.maxAngularAcc);
-        }
-
-        public virtual string ToString(string format)
-        {
-            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass.ToString(format), this.maxForce.ToString(format), this.maxAcc.ToString(format), this.moI.ToString(format), this.maxTorque.ToString(format), this.maxAngularAcc.ToString(format));
         }
 
         public float GetThrustRateFromAngularAcc6(int dir, float aA)
@@ -168,6 +121,55 @@ namespace HydroTech_RCS.Autopilots.Calculators
         public float GetThrustRateFromAcc3(int dir, float a)
         {
             return GetThrustRateFromAcc6((dir * 2) + (a >= 0 ? 0 : 1), a);
+        }
+        #endregion
+
+        #region Overrides
+        protected override void Calculate()
+        {
+            base.Calculate();
+            bool tempAllRcsEnabled = true;
+            this.maxTorque.Reset();
+            this.maxForce.Reset();
+            foreach (Part p in this.partList)
+            {
+                Vector3 r = SwitchTransformCalculator.VectorTransform(p.GetComponent<Rigidbody>().worldCenterOfMass - this.CoM, this.transformRight, this.transformDown, this.transformForward);
+                foreach (PartModule pm in p.Modules)
+                {
+                    if (pm is ModuleRCS)
+                    {
+                        ModuleRCS rcs = (ModuleRCS)pm;
+                        if (rcs.isEnabled)
+                        {
+                            foreach (Transform trans in rcs.thrusterTransforms)
+                            {
+                                Vector3 thrust = SwitchTransformCalculator.VectorTransform(trans.up, this.transformRight, this.transformDown, this.transformForward) * rcs.thrusterPower;
+                                Vector3 thrustTorque = -HMaths.CrossProduct(r, thrust);
+                                this.maxForce.AddX(thrust.x);
+                                this.maxForce.AddY(thrust.y);
+                                this.maxForce.AddZ(thrust.z);
+                                this.maxTorque.AddX(thrustTorque.x);
+                                this.maxTorque.AddY(thrustTorque.y);
+                                this.maxTorque.AddZ(thrustTorque.z);
+                            }
+                        }
+                        else { tempAllRcsEnabled = false; }
+                    }
+                }
+            }
+            this.AllRcsEnabled = tempAllRcsEnabled;
+            this.maxAcc = this.maxForce / this.Mass;
+            this.maxAngularAcc = this.maxTorque / this.moI.Diagonal;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass, this.maxForce, this.maxAcc, this.moI, this.maxTorque, this.maxAngularAcc);
+        }
+
+        public virtual string ToString(string format)
+        {
+            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass.ToString(format), this.maxForce.ToString(format), this.maxAcc.ToString(format), this.moI.ToString(format), this.maxTorque.ToString(format), this.maxAngularAcc.ToString(format));
         }
         #endregion
     }

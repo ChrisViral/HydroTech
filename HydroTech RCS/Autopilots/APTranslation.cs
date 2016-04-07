@@ -18,20 +18,75 @@ namespace HydroTech_RCS.Autopilots
             ADVANCED
         }
 
+        #region Static properties
+        public static APTranslation TheAutopilot
+        {
+            get { return (APTranslation)HydroJebCore.autopilots[CoreConsts.apTranslation]; }
+        }
+        #endregion
+
         #region Fields
         protected Vector3 curOrient;
         protected Vector3 curRoll;
         #endregion
 
         #region Properties
-        public static APTranslation TheAutopilot
-        {
-            get { return (APTranslation)HydroJebCore.autopilots[CoreConsts.apTranslation]; }
-        }
-
         protected override string NameString
         {
             get { return AutopilotConsts.translationName; }
+        }
+        #endregion
+
+        #region User input vars
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
+        public bool mainThrottleRespond = AutopilotConsts.mainThrottleRespond;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
+        public float thrustRate = AutopilotConsts.thrustRate;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
+        public Vector3 thrustVector = AutopilotConsts.thrustVector;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
+        public bool holdOrient = AutopilotConsts.holdOrient;
+        public bool HoldOrient
+        {
+            get { return this.holdOrient; }
+            set
+            {
+                if (value && !this.holdOrient)
+                {
+                    this.curOrient = ActiveVessel.ReferenceTransform.up;
+                    this.curRoll = ActiveVessel.ReferenceTransform.right;
+                }
+                this.holdOrient = value;
+            }
+        }
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TransMode")]
+        public TransDir transMode = AutopilotConsts.transMode;
+        public TransDir TransMode
+        {
+            get { return this.transMode; }
+            set
+            {
+                this.thrustVector = GetVector(value);
+                this.transMode = value;
+            }
+        }
+
+        public override bool Engaged
+        {
+            set
+            {
+                if (!this.Active) { return; }
+                if (this.HoldOrient)
+                {
+                    this.HoldOrient = false;
+                    this.HoldOrient = true;
+                }
+                base.Engaged = value;
+            }
         }
         #endregion
 
@@ -98,60 +153,7 @@ namespace HydroTech_RCS.Autopilots
         }
         #endregion
 
-        #region User input vars
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
-        public bool mainThrottleRespond = AutopilotConsts.mainThrottleRespond;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
-        public float thrustRate = AutopilotConsts.thrustRate;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
-        public Vector3 thrustVector = AutopilotConsts.thrustVector;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
-        public bool holdOrient = AutopilotConsts.holdOrient;
-        public bool HoldOrient
-        {
-            get { return this.holdOrient; }
-            set
-            {
-                if (value && !this.holdOrient)
-                {
-                    this.curOrient = ActiveVessel.ReferenceTransform.up;
-                    this.curRoll = ActiveVessel.ReferenceTransform.right;
-                }
-                this.holdOrient = value;
-            }
-        }
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TransMode")]
-        public TransDir transMode = AutopilotConsts.transMode;
-        public TransDir TransMode
-        {
-            get { return this.transMode; }
-            set
-            {
-                this.thrustVector = GetVector(value);
-                this.transMode = value;
-            }
-        }
-        
-        public override bool Engaged
-        {
-            set
-            {
-                if (!this.Active) { return; }
-                if (this.HoldOrient)
-                {
-                    this.HoldOrient = false;
-                    this.HoldOrient = true;
-                }
-                base.Engaged = value;
-            }
-        }
-        #endregion
-
-        #region Functions
+        #region Overrides
         protected override void LoadDefault()
         {
             base.LoadDefault();

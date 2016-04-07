@@ -150,7 +150,7 @@ namespace HydroTech_RCS.Autopilots
         }
         #endregion
 
-        #region Functions
+        #region Virtual methods
         protected virtual void DriveAutopilot(FlightCtrlState ctrlState)
         {
             HydroActionGroupManager.ActiveVessel.RCS = true;

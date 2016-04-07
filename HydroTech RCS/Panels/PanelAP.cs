@@ -2,11 +2,14 @@
 
 namespace HydroTech_RCS.Panels
 {
-    public abstract class PanelwAP : Panel
+    public abstract class PanelAP : Panel
     {
-        protected bool settings;
+        #region Abstract properties
         protected abstract bool Engaged { get; set; }
+        #endregion
 
+        #region Properties
+        protected bool settings;
         protected virtual bool Settings
         {
             get { return this.settings; }
@@ -20,9 +23,13 @@ namespace HydroTech_RCS.Panels
                 this.settings = value;
             }
         }
+        #endregion
 
+        #region Abstract Methods
         protected abstract void MakeAPSave();
+        #endregion
 
+        #region Virtual methods
         protected virtual void DrawSettingsUI()
         {
             GUILayout.BeginHorizontal();
@@ -50,10 +57,11 @@ namespace HydroTech_RCS.Panels
             }
         }
 
-        public override void onFlightStart()
+        public override void OnFlightStart()
         {
-            OnFlightStart();
+            base.OnFlightStart();
             this.settings = false;
         }
+        #endregion
     }
 }

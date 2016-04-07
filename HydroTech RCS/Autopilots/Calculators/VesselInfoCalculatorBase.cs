@@ -72,7 +72,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
         }
         #endregion
 
-        #region Functions
+        #region Virtual methods
         protected virtual void Calculate()
         {
             this.Mass = 0;

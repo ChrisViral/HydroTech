@@ -46,6 +46,15 @@ namespace HydroTech_RCS.Autopilots.Calculators
             this.chosenDir = SwitchTransformCalculator.VectorTransform(wrldVec, this.transformRight, this.transformDown, this.transformForward);
         }
 
+        public void OnUpdate(Vessel targetVessel, Vector3 dir)
+        {
+            SetVessel(targetVessel);
+            SetVector(dir);
+            Calculate();
+        }
+        #endregion
+
+        #region Overrides
         protected override void Calculate()
         {
             base.Calculate();
@@ -79,15 +88,6 @@ namespace HydroTech_RCS.Autopilots.Calculators
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Functions
-        public void OnUpdate(Vessel targetVessel, Vector3 dir)
-        {
-            SetVessel(targetVessel);
-            SetVector(dir);
-            Calculate();
         }
         #endregion
     }

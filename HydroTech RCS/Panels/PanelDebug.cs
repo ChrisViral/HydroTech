@@ -1,5 +1,4 @@
 ﻿#if DEBUG
-
 using System.Collections.Generic;
 using HydroTech_FC;
 using HydroTech_RCS.Autopilots;
@@ -10,21 +9,24 @@ namespace HydroTech_RCS.Panels
 {
     public class PanelDebug : Panel
     {
-        protected bool apStatus;
-        protected bool cameraMgr;
-        protected bool cameraState;
-
-        protected bool ctrlState;
-        protected bool flightInput;
-        protected bool peektop;
-
-        protected Dictionary<string, object> watchList = new Dictionary<string, object>();
-
+        #region Static properies
         public static PanelDebug ThePanel
         {
             get { return (PanelDebug)HydroJebCore.panels[CoreConsts.debug]; }
         }
+        #endregion
 
+        #region Fields
+        private bool apStatus;
+        private bool cameraMgr;
+        private bool cameraState;
+        private bool ctrlState;
+        private bool flightInput;
+        private bool peektop;
+        private readonly Dictionary<string, object> watchList = new Dictionary<string, object>();
+        #endregion
+
+        #region Properties
         protected override int PanelID
         {
             get { return CoreConsts.debug; }
@@ -40,12 +42,16 @@ namespace HydroTech_RCS.Panels
             get { return this.cameraMgr && this.peektop; }
             set { if (this.cameraMgr) { this.peektop = value; } }
         }
+        #endregion
 
+        #region Constructor
         public PanelDebug()
         {
             this.fileName = new FileName("debug", "cfg", HydroJebCore.panelSaveFolder);
         }
+        #endregion
 
+        #region Methods
         public void AddWatch(string name, object obj)
         {
             if (this.watchList.ContainsKey(name)) { this.watchList.Remove(name); }
@@ -56,7 +62,9 @@ namespace HydroTech_RCS.Panels
         {
             if (this.watchList.ContainsKey(name)) { this.watchList.Remove(name); }
         }
+        #endregion
 
+        #region Overrides
         protected override void WindowGUI(int windowId)
         {
             if (GUILayout.Button("Control State"))
@@ -99,7 +107,10 @@ namespace HydroTech_RCS.Panels
                 if (this.Peektop) { GUILayout.Label(HydroFlightCameraManager.StringTopState()); }
             }
 
-            foreach (string name in this.watchList.Keys) { GUILayout.Label(name + " = " + this.watchList[name]); }
+            foreach (string name in this.watchList.Keys)
+            {
+                GUILayout.Label(name + " = " + this.watchList[name]);
+            }
 
             GUI.DragWindow();
         }
@@ -108,7 +119,7 @@ namespace HydroTech_RCS.Panels
         {
             this.windowRect.Set(Screen.width - 200, 0, 200, 0);
         }
+        #endregion
     }
 }
-
 #endif

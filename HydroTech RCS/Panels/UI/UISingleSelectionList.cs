@@ -2,7 +2,7 @@
 
 namespace HydroTech_RCS.Panels.UI
 {
-    public class SingleSelectionListUi<T> : MultiPageListUi<T> where T : class
+    public class UISingleSelectionList<T> : UIMultiPageList<T> where T : class
     {
         protected T curSelect;
 
@@ -12,7 +12,7 @@ namespace HydroTech_RCS.Panels.UI
             protected set { this.curSelect = value; }
         }
 
-        public SingleSelectionListUi(List<T> l, int n = 5) : base(l, n) { }
+        public UISingleSelectionList(List<T> l, int n = 5) : base(l, n) { }
 
         public override void OnUpdate()
         {

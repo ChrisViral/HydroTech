@@ -6,39 +6,14 @@ namespace HydroTech_RCS.Panels
 {
     public abstract class Panel : LoadSaveFileBasic
     {
-        protected bool active;
-
-        [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "PanelShown")]
-        public bool panelShown;
-
+        #region Fields
         [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "WindowPos", cmd = CMD.Rect_TopLeft)]
         public Rect windowRect;
+        #endregion
 
-        protected abstract int PanelID { get; }
-        public abstract string PanelTitle { get; }
-
-        protected int QueueSpot
-        {
-            get { return this.PanelID + CoreConsts.renderMgrQueueSpot; }
-        }
-
-        public virtual bool Active
-        {
-            get { return this.active; }
-            set
-            {
-                if (this.PanelShown && value != this.active)
-                {
-                    if (value) { AddPanel(); }
-                    else
-                    {
-                        RemovePanel();
-                    }
-                }
-                this.active = value;
-            }
-        }
-
+        #region Properties
+        [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "PanelShown")]
+        public bool panelShown;
         public virtual bool PanelShown
         {
             get { return this.panelShown; }
@@ -48,38 +23,69 @@ namespace HydroTech_RCS.Panels
                 if (value != this.panelShown)
                 {
                     if (value) { AddPanel(); }
-                    else
-                    {
-                        RemovePanel();
-                    }
+                    else { RemovePanel(); }
                     this.needSave = true;
                 }
                 this.panelShown = value;
             }
         }
 
+        protected bool active;
+        public virtual bool Active
+        {
+            get { return this.active; }
+            set
+            {
+                if (this.PanelShown && value != this.active)
+                {
+                    if (value) { AddPanel(); }
+                    else { RemovePanel(); }
+                }
+                this.active = value;
+            }
+        }
+
+        protected abstract int PanelID { get; }
+
+        public abstract string PanelTitle { get; }
+
+        protected int QueueSpot
+        {
+            get { return this.PanelID + CoreConsts.renderMgrQueueSpot; }
+        }
+        #endregion
+
+        #region Destructor
         ~Panel()
         {
             this.PanelShown = false;
         }
+        #endregion
 
+        #region Abstract Methods
         protected abstract void SetDefaultWindowRect();
+
+        protected abstract void WindowGUI(int windowId);
+        #endregion
+
+        #region Methods
+        //TODO: Make this work with the AppLauncher, as well
+        protected void AddPanel()
+        {
+            //HydroRenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGUI);
+        }
+        protected void RemovePanel()
+        {
+            //HydroRenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGUI);
+        }
 
         public void ResetHeight()
         {
             this.windowRect.height = 0;
         }
+        #endregion
 
-        protected void AddPanel()
-        {
-            HydroRenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGUI);
-        }
-
-        protected void RemovePanel()
-        {
-            HydroRenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGUI);
-        }
-
+        #region Static methods
         public static GUIStyle BtnStyle()
         {
             return GameGUI.Button.Style();
@@ -109,15 +115,15 @@ namespace HydroTech_RCS.Panels
         {
             return GameGUI.Label.Style(textColor);
         }
+        #endregion
 
+        #region Virtual methods
         protected virtual bool LayoutEngageBtn(bool en)
         {
             GUIStyle engageBtnStyle = BtnStyle(en ? Color.red : Color.blue);
             string engageBtnText = en ? "DISENGAGE" : "ENGAGE";
             return GUILayout.Button(engageBtnText, engageBtnStyle);
         }
-
-        protected abstract void WindowGUI(int windowId);
 
         public virtual void DrawGUI()
         {
@@ -167,5 +173,6 @@ namespace HydroTech_RCS.Panels
             this.panelShown = false;
             SetDefaultWindowRect();
         }
+        #endregion
     }
 }

@@ -613,7 +613,7 @@ namespace HydroTech_RCS.Autopilots
         }
         #endregion
 
-        #region Functions
+        #region Overrides
         public override void OnUpdate()
         {
             base.OnUpdate();

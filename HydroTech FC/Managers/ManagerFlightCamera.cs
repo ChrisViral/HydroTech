@@ -270,22 +270,20 @@ namespace HydroTech_FC
 #if DEBUG
         private static void print(object message) { GameBehaviours.print(message); }
 
-        public static String StringCameraState() { return new Settings().ToString("#0.00"); }
+        public static string StringCameraState() { return new Settings().ToString("#0.00"); }
         public static void PrintCameraState() { print(StringCameraState()); }
 
-        public static String StringCameraStack()
+        public static string StringCameraStack()
         {
-            return "Stack count = " + Settings.StackCount().ToString();
+            return "Stack count = " + Settings.StackCount();
         }
         public static void PrintCameraStack() { print(StringCameraStack()); }
 
-        public static String StringTopState()
+        public static string StringTopState()
         {
-            if (Settings.StackCount() == 0)
-                return "";
-            else
-                return Settings.Top().ToString("#0.00");
+            return Settings.StackCount() == 0 ? "" : Settings.Top().ToString("#0.00");
         }
+
         public static void PrintTopState() { print(StringTopState()); }
 #endif
     }

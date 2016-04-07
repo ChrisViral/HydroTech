@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HydroTech_RCS.Panels
 {
-    public partial class PanelLanding : PanelwAP
+    public partial class PanelLanding : PanelAP
     {
         public PanelLandingAdvInfo panelAdvInfo = new PanelLandingAdvInfo();
         protected bool panelAdvInfoShown;
