@@ -6,21 +6,26 @@ namespace HydroTech_RCS.Autopilots
 {
     public class APPreciseControl : RCSAutopilot
     {
+        #region Properties
         public static APPreciseControl TheAutopilot
         {
             get { return (APPreciseControl)HydroJebCore.autopilots[AutopilotIDs.precise]; }
         }
 
-        protected override string nameString
+        protected override string NameString
         {
             get { return Str.nameString; }
         }
+        #endregion
 
+        #region Constructor
         public APPreciseControl()
         {
             this.fileName = new FileName("precise", "cfg", HydroJebCore.autopilotSaveFolder);
         }
+        #endregion
 
+        #region Autopilot
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
         {
             base.DriveAutopilot(ctrlState);
@@ -39,15 +44,12 @@ namespace HydroTech_RCS.Autopilots
                 RcsActive.MakeTranslation(ctrlState, this.acc);
             }
         }
-
-        #region public variables for user input
-
-        #region bool
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "byRate")]
-        public bool byRate = Default.Bool.byRate;
         #endregion
 
-        #region float
+        #region User input vars     
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "byRate")]
+        public bool byRate = Default.Bool.byRate;
+        
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "RotationRate")]
         public float rotationRate = Default.Float.rotationRate;
 
@@ -61,7 +63,7 @@ namespace HydroTech_RCS.Autopilots
         public float acc = Default.Float.acc;
         #endregion
 
-        #region override
+        #region Functions
         protected override void LoadDefault()
         {
             base.LoadDefault();
@@ -71,8 +73,6 @@ namespace HydroTech_RCS.Autopilots
             this.angularAcc = Default.Float.angularAcc;
             this.acc = Default.Float.acc;
         }
-        #endregion
-
         #endregion
     }
 }

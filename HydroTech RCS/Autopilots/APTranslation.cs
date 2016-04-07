@@ -19,9 +19,12 @@ namespace HydroTech_RCS.Autopilots
             ADVANCED
         }
 
+        #region Fields
         protected Vector3 curOrient;
         protected Vector3 curRoll;
+        #endregion
 
+        #region Properties
         public static APTranslation TheAutopilot
         {
             get { return (APTranslation)HydroJebCore.autopilots[AutopilotIDs.translation]; }
@@ -31,21 +34,16 @@ namespace HydroTech_RCS.Autopilots
         {
             get { return Str.nameString; }
         }
+        #endregion
 
+        #region Constructor
         public APTranslation()
         {
             this.fileName = new FileName("translation", "cfg", HydroJebCore.autopilotSaveFolder);
         }
+        #endregion
 
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            this.HoldOrient = Default.Bool.holdOrient;
-            this.mainThrottleRespond = Default.Bool.mainThrottleRespond;
-            this.thrustRate = Default.Float.thrustRate;
-            this.TransMode = Default.Misc.transMode;
-        }
-
+        #region Autopilot
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
         {
             base.DriveAutopilot(ctrlState);
@@ -58,53 +56,61 @@ namespace HydroTech_RCS.Autopilots
                 stateCal.SetCtrlStateRotation(ctrlState);
             }
 
-            float realThrustRate = this.thrustRate * (this.mainThrottleRespond ? ctrlState.mainThrottle : 1.0F);
+            float realThrustRate = this.thrustRate * (this.mainThrottleRespond ? ctrlState.mainThrottle : 1);
             ctrlState.X = -this.thrustVector.x * realThrustRate;
             ctrlState.Y = -this.thrustVector.y * realThrustRate;
             ctrlState.Z = -this.thrustVector.z * realThrustRate;
         }
+        #endregion
 
-        public static Vector3 GetUnitVector(TransDir dir)
-        {
-            Vector3 vec = new Vector3(0.0F, 0.0F, 0.0F);
-            switch (dir)
-            {
-                case TransDir.RIGHT:
-                    vec.x = 1.0F;
-                    break;
-                case TransDir.LEFT:
-                    vec.x = -1.0F;
-                    break;
-                case TransDir.DOWN:
-                    vec.y = 1.0F;
-                    break;
-                case TransDir.UP:
-                    vec.y = -1.0F;
-                    break;
-                case TransDir.FORWARD:
-                    vec.z = 1.0F;
-                    break;
-                case TransDir.BACKWARD:
-                    vec.z = -1.0F;
-                    break;
-            }
-            return vec;
-        }
-
+        #region Methods
         protected Vector3 GetVector(TransDir dir)
         {
             return dir != TransDir.ADVANCED ? GetUnitVector(dir) : this.thrustVector;
         }
+        #endregion
 
-        #region public variables for user input
+        #region Static Methods
+        public static Vector3 GetUnitVector(TransDir dir)
+        {
+            Vector3 vec = new Vector3();
+            switch (dir)
+            {
+                case TransDir.RIGHT:
+                    vec.x = 1;
+                    break;
+                case TransDir.LEFT:
+                    vec.x = -1;
+                    break;
+                case TransDir.DOWN:
+                    vec.y = 1;
+                    break;
+                case TransDir.UP:
+                    vec.y = -1;
+                    break;
+                case TransDir.FORWARD:
+                    vec.z = 1;
+                    break;
+                case TransDir.BACKWARD:
+                    vec.z = -1;
+                    break;
+            }
+            return vec;
+        }
+        #endregion
 
-        #region bool
+        #region User input vars
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
         public bool mainThrottleRespond = Default.Bool.mainThrottleRespond;
 
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
+        public float thrustRate = Default.Float.thrustRate;
+
+        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
+        public Vector3 thrustVector = Default.Misc.thrustVector;
+
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
         public bool holdOrient = Default.Bool.holdOrient;
-
         public bool HoldOrient
         {
             get { return this.holdOrient; }
@@ -118,17 +124,9 @@ namespace HydroTech_RCS.Autopilots
                 this.holdOrient = value;
             }
         }
-        #endregion
 
-        #region float
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
-        public float thrustRate = Default.Float.thrustRate;
-        #endregion
-
-        #region misc
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TransMode")]
         public TransDir transMode = Default.Misc.transMode;
-
         public TransDir TransMode
         {
             get { return this.transMode; }
@@ -138,12 +136,7 @@ namespace HydroTech_RCS.Autopilots
                 this.transMode = value;
             }
         }
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
-        public Vector3 thrustVector = Default.Misc.thrustVector;
-        #endregion
-
-        #region override
+        
         public override bool Engaged
         {
             set
@@ -154,11 +147,20 @@ namespace HydroTech_RCS.Autopilots
                     this.HoldOrient = false;
                     this.HoldOrient = true;
                 }
-                this.Engaged = value;
+                base.Engaged = value;
             }
         }
         #endregion
 
+        #region Functions
+        protected override void LoadDefault()
+        {
+            base.LoadDefault();
+            this.HoldOrient = Default.Bool.holdOrient;
+            this.mainThrottleRespond = Default.Bool.mainThrottleRespond;
+            this.thrustRate = Default.Float.thrustRate;
+            this.TransMode = Default.Misc.transMode;
+        }
         #endregion
     }
 }

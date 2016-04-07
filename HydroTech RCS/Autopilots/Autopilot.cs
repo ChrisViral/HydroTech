@@ -1,4 +1,5 @@
-﻿using HydroTech_FC;
+﻿using System.Linq;
+using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Modules;
 using UnityEngine;
 
@@ -6,12 +7,12 @@ namespace HydroTech_RCS.Autopilots
 {
     public abstract class RCSAutopilot : LoadSaveFileBasic
     {
-        protected bool active;
-
+        #region Fields
         protected Vessel drivingVessel;
+        #endregion
 
-        protected bool engaged;
-
+        #region Properties
+        protected bool active;
         public virtual bool Active
         {
             get { return this.active; }
@@ -29,6 +30,7 @@ namespace HydroTech_RCS.Autopilots
             }
         }
 
+        protected bool engaged;
         public virtual bool Engaged
         {
             get { return this.Active && this.engaged; }
@@ -62,24 +64,24 @@ namespace HydroTech_RCS.Autopilots
 
         public static RCSAutopilot EngagedAutopilot
         {
-            get
-            {
-                foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values) { if (ap.Engaged) { return ap; } }
-                return null;
-            }
+            get { return HydroJebCore.autopilots.Values.FirstOrDefault(ap => ap.Engaged); }
         }
 
         public static bool AutopilotEngaged
         {
             get { return EngagedAutopilot != null; }
         }
+        #endregion
 
+        #region Destructor
         ~RCSAutopilot()
         {
             this.Engaged = false;
             this.Active = false;
         }
+        #endregion
 
+        #region Methods
         protected void AddDrive()
         {
             HydroFlightInputManager.AddOnFlyByWire(ActiveVessel, this.NameString, DriveAutopilot);
@@ -92,6 +94,31 @@ namespace HydroTech_RCS.Autopilots
             this.drivingVessel = null;
         }
 
+        public void MakeSaveAtNextUpdate()
+        {
+            this.needSave = true;
+        }
+
+        protected void RemoveUserInput(FlightCtrlState ctrlState)
+        {
+            ctrlState.yaw = 0;
+            ctrlState.roll = 0;
+            ctrlState.pitch = 0;
+            ctrlState.X = 0;
+            ctrlState.Y = 0;
+            ctrlState.Z = 0;
+        }
+
+        protected void RemoveOtherAutopilots()
+        {
+            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values)
+            {
+                if (ap != this) { ap.Engaged = false; }
+            }
+        }
+        #endregion
+       
+        #region Static Methods
         protected static void TurnOnRcs(Vessel vessel)
         {
             HydroActionGroupManager.SetState(vessel, KSPActionGroup.RCS, true);
@@ -102,25 +129,31 @@ namespace HydroTech_RCS.Autopilots
             HydroActionGroupManager.SetState(vessel, KSPActionGroup.SAS, false);
         }
 
-        protected void RemoveUserInput(FlightCtrlState ctrlState)
+        protected static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
         {
-            ctrlState.yaw = 0.0F;
-            ctrlState.roll = 0.0F;
-            ctrlState.pitch = 0.0F;
-            ctrlState.X = 0.0F;
-            ctrlState.Y = 0.0F;
-            ctrlState.Z = 0.0F;
+            return SwitchTransformCalculator.VectorTransform(vec, x, y, z);
         }
 
+        protected static Vector3 VectorTransform(Vector3 vec, Transform trans)
+        {
+            return SwitchTransformCalculator.VectorTransform(vec, trans);
+        }
+
+        protected static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
+        {
+            return SwitchTransformCalculator.ReverseVectorTransform(vec, x, y, z);
+        }
+
+        protected static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
+        {
+            return SwitchTransformCalculator.ReverseVectorTransform(vec, trans);
+        }
+        #endregion
+
+        #region Functions
         protected virtual void DriveAutopilot(FlightCtrlState ctrlState)
         {
             HydroActionGroupManager.ActiveVessel.RCS = true;
-            // HydroActionGroupManager.ActiveVessel.SAS = false;
-        }
-
-        protected void RemoveOtherAutopilots()
-        {
-            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values) { if (ap != this) { ap.Engaged = false; } }
         }
 
         public virtual void OnFlightStart()
@@ -163,54 +196,37 @@ namespace HydroTech_RCS.Autopilots
             }
             if (this.needSave) { Save(); }
         }
+        #endregion
 
-        public void MakeSaveAtNextUpdate()
-        {
-            this.needSave = true;
-        }
-
-        protected static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return SwitchTransformCalculator.VectorTransform(vec, x, y, z);
-        }
-
-        protected static Vector3 VectorTransform(Vector3 vec, Transform trans)
-        {
-            return SwitchTransformCalculator.VectorTransform(vec, trans);
-        }
-
-        protected static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return SwitchTransformCalculator.ReverseVectorTransform(vec, x, y, z);
-        }
-
-        protected static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
-        {
-            return SwitchTransformCalculator.ReverseVectorTransform(vec, trans);
-        }
-
+        #region Debug
 #if DEBUG
         public static string StringCtrlState(FlightCtrlState ctrlState)
         {
-            return "yaw = " + ctrlState.yaw.ToString("#0.000") + ", roll = " + ctrlState.roll.ToString("#0.000") + ", pitch = " + ctrlState.pitch.ToString("#0.000") + "\nX = " + ctrlState.X.ToString("#0.000") + ", Y = " + ctrlState.Y.ToString("#0.000") + ", Z = " + ctrlState.Z.ToString("#0.000");
+            return string.Format("yaw = {0}, roll = {1}, pitch = {2}\nX = {3}, Y = {4}, Z = {5}",
+                ctrlState.yaw.ToString("#0.000"), ctrlState.roll.ToString("#0.000"), ctrlState.pitch.ToString("#0.000"),
+                ctrlState.X.ToString("#0.000"), ctrlState.Y.ToString("#0.000"), ctrlState.Z.ToString("#0.000"));
         }
 
         public static void PrintCtrlState(FlightCtrlState ctrlState)
         {
-            print(StringCtrlState(ctrlState));
+            Debug.Log(StringCtrlState(ctrlState));
         }
 
         public static string StringAllAPStatus()
         {
             string msg = AutopilotEngaged ? "Autopilot engaged" : "No autopilot engaged";
-            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values) { msg += "\n" + ap.NameString + " " + ap.Engaged; }
+            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values)
+            {
+                msg += string.Format("\n{0} {1}", ap.NameString, ap.Engaged);
+            }
             return msg;
         }
 
         public static void PrintAllAPStatus()
         {
-            print(StringAllAPStatus());
+            Debug.Log(StringAllAPStatus());
         }
 #endif
+        #endregion
     }
 }

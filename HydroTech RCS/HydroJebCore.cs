@@ -12,6 +12,11 @@ namespace HydroTech_RCS
 {
     public static class HydroJebCore
     {
+        #region Folders
+        public static readonly FileName.Folder autopilotSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "autopilots");
+        public static readonly FileName.Folder panelSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "panels");
+        #endregion
+
         #region Constructor
         static HydroJebCore()
         {
@@ -43,11 +48,6 @@ namespace HydroTech_RCS
                 ExceptionHandler(e, "HydroJebCore.HydroJebCore()");
             }
         }
-        #endregion
-
-        #region Folders
-        public static readonly FileName.Folder autopilotSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "autopilots");
-        public static readonly FileName.Folder panelSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "panels");
         #endregion
 
         #region Core #1: Autopilot (HydroJeb)

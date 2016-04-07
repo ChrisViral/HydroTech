@@ -219,52 +219,6 @@ namespace HydroTech_RCS.Autopilots
         public SubList<Part> jebsTargetVessel;
         #endregion
 
-        #region Methods
-        public bool NullCamera()
-        {
-            return this.Cam == null || !this.Cam.IsOnActiveVessel();
-        }
-
-        public bool NullTarget()
-        {
-            return this.target == null || !this.target.IsNear();
-        }
-
-        protected bool IsJebTargetVessel(Part jeb)
-        {
-            return !NullTarget() && jeb.vessel == this.target.vessel;
-        }
-
-        public bool TargetHasJeb()
-        {
-            return this.jebsTargetVessel.Count != 0;
-        }
-
-        protected void AddDriveTarget()
-        {
-            HydroFlightInputManager.AddOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
-            this.drivingTargetVessel = this.target.vessel;
-        }
-
-        protected void RemoveDriveTarget()
-        {
-            HydroFlightInputManager.RemoveOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
-            this.drivingTargetVessel = null;
-        }
-
-        protected void ClearDockAssistLine()
-        {
-            this.line.SetWidth(0, 0);
-            this.line.SetPosition(0, Vector3.zero);
-            this.line.SetPosition(1, Vector3.zero);
-        }
-
-        protected Vector3 RelV()
-        {
-            return this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity);
-        }
-        #endregion
-
         #region Autopilot
         protected virtual void DriveAutoOrient(FlightCtrlState ctrlState)
         {
@@ -460,6 +414,52 @@ namespace HydroTech_RCS.Autopilots
             }
             RcsActive.MakeRotation(ctrlState, this.angularAcc);
             RcsActive.MakeTranslation(ctrlState, this.acc);
+        }
+        #endregion
+
+        #region Methods
+        public bool NullCamera()
+        {
+            return this.Cam == null || !this.Cam.IsOnActiveVessel();
+        }
+
+        public bool NullTarget()
+        {
+            return this.target == null || !this.target.IsNear();
+        }
+
+        protected bool IsJebTargetVessel(Part jeb)
+        {
+            return !NullTarget() && jeb.vessel == this.target.vessel;
+        }
+
+        public bool TargetHasJeb()
+        {
+            return this.jebsTargetVessel.Count != 0;
+        }
+
+        protected void AddDriveTarget()
+        {
+            HydroFlightInputManager.AddOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
+            this.drivingTargetVessel = this.target.vessel;
+        }
+
+        protected void RemoveDriveTarget()
+        {
+            HydroFlightInputManager.RemoveOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
+            this.drivingTargetVessel = null;
+        }
+
+        protected void ClearDockAssistLine()
+        {
+            this.line.SetWidth(0, 0);
+            this.line.SetPosition(0, Vector3.zero);
+            this.line.SetPosition(1, Vector3.zero);
+        }
+
+        protected Vector3 RelV()
+        {
+            return this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity);
         }
         #endregion
 
