@@ -486,12 +486,12 @@ namespace HydroTech_RCS.Panels
             else
             {
                 GUILayout.Label("Camera:");
-                if (Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(Cam.ToString(), Cam.IsOnActiveVessel() ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)))
+                if (Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(Cam.ToString(), Cam.IsOnActiveVessel ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)))
                 {
                     this.ChoosingCamera = true;
                 }
                 GUILayout.Label("Target:");
-                if (Target == null ? GUILayout.Button("Choose target") : GUILayout.Button(Target.vessel.vesselName + "\n" + Target, Target.IsNear() ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)))
+                if (Target == null ? GUILayout.Button("Choose target") : GUILayout.Button(Target.vessel.vesselName + "\n" + Target, Target.IsNear ? BtnStyle_Wrap(Color.green) : BtnStyle_Wrap(Color.red)))
                 {
                     this.ChoosingTarget = true;
                 }

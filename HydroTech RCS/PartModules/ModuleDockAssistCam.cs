@@ -67,7 +67,7 @@ namespace HydroTech_RCS.PartModules
 
         #region Fields
         private LineRenderer lineDir, lineRight, lineUp;
-        private Rigidbody rigidbody = null;
+        private Rigidbody rigidbody;
         public int mag = 1;
         #endregion
 

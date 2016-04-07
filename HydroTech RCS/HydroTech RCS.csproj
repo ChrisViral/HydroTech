@@ -100,7 +100,7 @@
     <Compile Include="PartModules\ModuleDockAssistCam.cs" />
     <Compile Include="PartModules\ModuleDockAssistTarget.cs" />
     <Compile Include="PartModules\ModulePartRename.cs" />
-    <Compile Include="Parts\PartJeb.cs" />
+    <Compile Include="Parts\HydroJeb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
