@@ -71,14 +71,23 @@ namespace HydroTech_RCS.Panels
                 for (int j = 0; j < 3; j++)
                 {
                     float thr = (i + j) * 10;
-                    if (GUILayout.Button(thr.ToString("#0"), this.Throttle == thr ? curThrStyle : BtnStyle())) { this.Throttle = thr; }
+                    if (GUILayout.Button(thr.ToString("#0"), this.Throttle == thr ? curThrStyle : BtnStyle()))
+                    {
+                        this.Throttle = thr;
+                    }
                 }
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             //The conditionals only change the label colour... not obvious <.<
-            if (GUILayout.Button("OFF", this.Throttle == 0 ? curThrStyle : BtnStyle())) { this.Throttle = 0; }
-            if (GUILayout.Button("100", this.Throttle == 100 ? curThrStyle : BtnStyle())) { this.Throttle = 100; }
+            if (GUILayout.Button("OFF", this.Throttle == 0 ? curThrStyle : BtnStyle()))
+            {
+                this.Throttle = 0;
+            }
+            if (GUILayout.Button("100", this.Throttle == 100 ? curThrStyle : BtnStyle()))
+            {
+                this.Throttle = 100;
+            }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("-1")) { this.Throttle = Clamp0(this.Throttle - 1); }
