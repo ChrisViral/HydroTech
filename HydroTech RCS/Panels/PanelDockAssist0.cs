@@ -40,8 +40,8 @@ namespace HydroTech_RCS.Panels
 
         protected override bool Engaged
         {
-            get { return Da.engaged; }
-            set { Da.engaged = value; }
+            get { return Da.Engaged; }
+            set { Da.Engaged = value; }
         }
 
         protected static ModuleDockAssistCam Cam

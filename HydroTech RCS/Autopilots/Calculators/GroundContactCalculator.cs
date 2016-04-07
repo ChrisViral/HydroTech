@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using HydroTech_FC;
-using HydroTech_RCS.Constants.Autopilots.Landing;
+using HydroTech_RCS.Constants;
 using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots.Calculators
@@ -17,14 +17,14 @@ namespace HydroTech_RCS.Autopilots.Calculators
         }
 
         #region Constants
-        private const float radiusAltAsl = Position.Gcd.radiusAltAsl;
-        private const float radiusMin = Position.Gcd.radiusMin;
-        private const float physicsContactDistanceAdd = Position.Gcd.physicsContactDistanceAdd;
+        private const float radiusAltAsl = AutopilotConsts.radiusAltAsl;
+        private const float radiusMin = AutopilotConsts.radiusMin;
+        private const float physicsContactDistanceAdd = AutopilotConsts.physicsContactDistanceAdd;
         #endregion
 
         #region Fields
         private float altAsl;
-        private Dictionary<Direction, float> distance;
+        private readonly Dictionary<Direction, float> distance;
         public bool terrain;
         private Vessel vessel;
         #endregion
@@ -188,7 +188,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
             return false;
         }
 
-        //wtf is this shit. Need to work with vessel.pqsAltitude
+        //TODO: scrap this pqs bullshit and implement vessel.pqsaltitude
         private bool PQSAltitude(Vector3 origin, out float result)
         {
             if (this.MainBody.pqsController != null)

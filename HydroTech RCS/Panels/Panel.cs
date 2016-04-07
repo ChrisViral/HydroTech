@@ -18,12 +18,12 @@ namespace HydroTech_RCS.Panels
         [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "WindowPos", cmd = CMD.Rect_TopLeft)]
         public Rect windowRect;
 
-        protected abstract int PanelId { get; }
+        protected abstract int PanelID { get; }
         public abstract string PanelTitle { get; }
 
         protected int QueueSpot
         {
-            get { return this.PanelId + ManagerConsts.renderMgrQueueSpot; }
+            get { return this.PanelID + ManagerConsts.renderMgrQueueSpot; }
         }
 
         public virtual bool Active
@@ -76,12 +76,12 @@ namespace HydroTech_RCS.Panels
 
         protected void AddPanel()
         {
-            HydroRenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGui);
+            HydroRenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGUI);
         }
 
         protected void RemovePanel()
         {
-            HydroRenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGui);
+            HydroRenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGUI);
         }
 
         public static GUIStyle BtnStyle()
@@ -121,12 +121,12 @@ namespace HydroTech_RCS.Panels
             return GUILayout.Button(engageBtnText, engageBtnStyle);
         }
 
-        protected abstract void WindowGui(int windowId);
+        protected abstract void WindowGUI(int windowId);
 
-        public virtual void DrawGui()
+        public virtual void DrawGUI()
         {
             GUI.skin = HighLogic.Skin;
-            Rect newWindowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGui, this.PanelTitle);
+            Rect newWindowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGUI, this.PanelTitle);
             if (newWindowRect.xMin != this.windowRect.xMin || newWindowRect.yMin != this.windowRect.yMin) { this.needSave = true; }
             this.windowRect = newWindowRect;
         }

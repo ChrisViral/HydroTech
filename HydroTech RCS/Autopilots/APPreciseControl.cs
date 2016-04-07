@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Constants.Autopilots.PreciseControl;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Core;
 
 namespace HydroTech_RCS.Autopilots
@@ -14,7 +14,7 @@ namespace HydroTech_RCS.Autopilots
 
         protected override string NameString
         {
-            get { return Str.nameString; }
+            get { return AutopilotConsts.pcName; }
         }
         #endregion
 
@@ -48,30 +48,30 @@ namespace HydroTech_RCS.Autopilots
 
         #region User input vars     
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "byRate")]
-        public bool byRate = Default.Bool.byRate;
+        public bool byRate = AutopilotConsts.byRate;
         
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "RotationRate")]
-        public float rotationRate = Default.Float.rotationRate;
+        public float rotationRate = AutopilotConsts.rotationRate;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TranslationRate")]
-        public float translationRate = Default.Float.translationRate;
+        public float translationRate = AutopilotConsts.translationRate;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AngularAcc")]
-        public float angularAcc = Default.Float.angularAcc;
+        public float angularAcc = AutopilotConsts.pcAngularAcc;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Acc")]
-        public float acc = Default.Float.acc;
+        public float acc = AutopilotConsts.pcAcc;
         #endregion
 
         #region Functions
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.byRate = Default.Bool.byRate;
-            this.rotationRate = Default.Float.rotationRate;
-            this.translationRate = Default.Float.translationRate;
-            this.angularAcc = Default.Float.angularAcc;
-            this.acc = Default.Float.acc;
+            this.byRate = AutopilotConsts.byRate;
+            this.rotationRate = AutopilotConsts.rotationRate;
+            this.translationRate = AutopilotConsts.translationRate;
+            this.angularAcc = AutopilotConsts.pcAngularAcc;
+            this.acc = AutopilotConsts.pcAcc;
         }
         #endregion
     }

@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Constants.Autopilots.General;
+using HydroTech_RCS.Constants;
 using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots.Calculators
@@ -18,7 +18,7 @@ namespace HydroTech_RCS.Autopilots.Calculators
             Vector3 r = SwitchTransformCalculator.VectorTransform(right, transformRight, transformDown, transformDir);
             Vector3 av = SwitchTransformCalculator.VectorTransform(angularV, transformRight, transformDown, transformDir);
             this.reverse = false;
-            if (Steer(Angle.reverseDirSin))
+            if (Steer(AutopilotConsts.reverseDirSin))
             {
                 this.reverse = true;
                 bool upDown = d.z < 0;
@@ -34,9 +34,9 @@ namespace HydroTech_RCS.Autopilots.Calculators
                 this.yaw = d.x;
                 this.pitch = -d.y;
                 this.roll = r.y;
-                if (av.y * this.yaw > 0) { this.yaw *= Rotation.rotationHoldRate; }
-                if (av.z * this.roll > 0) { this.roll *= Rotation.rotationHoldRate; }
-                if (av.x * this.pitch > 0) { this.pitch *= Rotation.rotationHoldRate; }
+                if (av.y * this.yaw > 0) { this.yaw *= AutopilotConsts.rotationHoldRate; }
+                if (av.z * this.roll > 0) { this.roll *= AutopilotConsts.rotationHoldRate; }
+                if (av.x * this.pitch > 0) { this.pitch *= AutopilotConsts.rotationHoldRate; }
             }
 
             ChangeTransformRotation(transformRight, transformDown, transformDir, vesselTransform);

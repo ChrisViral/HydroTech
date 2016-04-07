@@ -23,7 +23,7 @@ namespace HydroTech_RCS.Panels
 
         protected abstract void MakeAPSave();
 
-        protected virtual void DrawSettingsUi()
+        protected virtual void DrawSettingsUI()
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("OK")) { this.Settings = false; }

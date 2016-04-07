@@ -71,7 +71,7 @@ namespace HydroTech_RCS.Panels
                 GUILayout.EndHorizontal();
             }
 
-            DrawSettingsUi();
+            DrawSettingsUI();
         }
     }
 }

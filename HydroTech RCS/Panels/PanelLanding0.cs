@@ -34,8 +34,8 @@ namespace HydroTech_RCS.Panels
 
         protected override bool Engaged
         {
-            get { return La.engaged; }
-            set { La.engaged = value; }
+            get { return La.Engaged; }
+            set { La.Engaged = value; }
         }
 
         protected static float SafeTouchDownSpeed

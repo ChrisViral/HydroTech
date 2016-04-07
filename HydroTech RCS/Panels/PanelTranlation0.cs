@@ -25,8 +25,8 @@ namespace HydroTech_RCS.Panels
 
         protected override bool Engaged
         {
-            get { return Ta.engaged; }
-            set { Ta.engaged = value; }
+            get { return Ta.Engaged; }
+            set { Ta.Engaged = value; }
         }
 
         protected static APTranslation.TransDir TransMode

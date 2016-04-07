@@ -108,7 +108,7 @@ namespace HydroTech_RCS.Panels
             this.tempRespond = GUILayout.Toggle(this.tempRespond, "Respond to main throttle");
             this.tempHoldOrient = GUILayout.Toggle(this.tempHoldOrient, "Hold current orientation");
 
-            DrawSettingsUi();
+            base.DrawSettingsUI();
         }
     }
 }

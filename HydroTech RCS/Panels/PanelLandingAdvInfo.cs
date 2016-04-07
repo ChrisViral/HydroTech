@@ -12,7 +12,7 @@ namespace HydroTech_RCS.Panels
     {
         protected bool slopeDetection;
 
-        protected override int PanelId
+        protected override int PanelID
         {
             get { return PanelIDs.landingInfo; }
         }
@@ -133,7 +133,7 @@ namespace HydroTech_RCS.Panels
             return this.TwrTotal < this.GAsl * 1.5F ? LabelStyle(Color.yellow) : LabelStyle();
         }
 
-        protected override void WindowGui(int windowId)
+        protected override void WindowGUI(int windowId)
         {
             GUILayout.Label("Orbiting body: " + this.MainBodyName);
             GUILayout.Label("Surface g: " + this.GAsl.ToString("#0.00") + UnitStrings.acceleration);

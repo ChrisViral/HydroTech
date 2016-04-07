@@ -5,7 +5,7 @@ namespace HydroTech_RCS.Panels
 {
     public partial class PanelRcsThrustInfo
     {
-        public override void drawGUI()
+        public override void DrawGUI()
         {
             if (this.editor)
             {
@@ -16,7 +16,7 @@ namespace HydroTech_RCS.Panels
             }
             else
             {
-                DrawGui();
+                DrawGUI();
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿using HydroTech_FC;
-using HydroTech_RCS.Constants.Autopilots.Landing;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Units;
 using UnityEngine;
 
@@ -101,7 +101,7 @@ namespace HydroTech_RCS.Panels
                     if (!this.tempUseTrueAlt)
                     {
                         this.tempAltKeep -= this.TerrainHeight;
-                        if (this.tempAltKeep < Position.finalDescentHeight) { this.tempAltKeep = Position.finalDescentHeight; }
+                        if (this.tempAltKeep < AutopilotConsts.finalDescentHeight) { this.tempAltKeep = AutopilotConsts.finalDescentHeight; }
                         this.altKeepText = this.tempAltKeep.ToString("#0.0");
                     }
                     this.tempUseTrueAlt = true;
@@ -123,7 +123,7 @@ namespace HydroTech_RCS.Panels
                 if (this.tempUseTrueAlt)
                 {
                     float tryParse;
-                    if (float.TryParse(this.altKeepText, out tryParse) && tryParse >= Position.finalDescentHeight)
+                    if (float.TryParse(this.altKeepText, out tryParse) && tryParse >= AutopilotConsts.finalDescentHeight)
                     {
                         this.tempAltKeep = tryParse;
                         float tempAltKeepAsl = this.tempAltKeep + this.TerrainHeight;
@@ -141,7 +141,7 @@ namespace HydroTech_RCS.Panels
                     if (float.TryParse(this.altKeepText, out tryParse))
                     {
                         this.tempAltKeep = tryParse;
-                        float tempAltKeepTrue = HMaths.Max(this.tempAltKeep - this.TerrainHeight, Position.finalDescentHeight);
+                        float tempAltKeepTrue = HMaths.Max(this.tempAltKeep - this.TerrainHeight, AutopilotConsts.finalDescentHeight);
                         GUILayout.Label("True alt: " + tempAltKeepTrue.ToString("#0.0") + " " + UnitStrings.length);
                         GUILayout.Label("Max allowed horizontal speed: " + La.AllowedHoriSpeed(tempAltKeepTrue).ToString("#0.0") + UnitStrings.speedSimple);
                     }
@@ -152,7 +152,7 @@ namespace HydroTech_RCS.Panels
                 }
             }
 
-            DrawSettingsUi();
+            base.DrawSettingsUI();
         }
     }
 }

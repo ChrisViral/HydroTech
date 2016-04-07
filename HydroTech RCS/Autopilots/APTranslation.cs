@@ -1,6 +1,6 @@
 ﻿using HydroTech_FC;
 using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants.Autopilots.Translation;
+using HydroTech_RCS.Constants;
 using HydroTech_RCS.Constants.Core;
 using UnityEngine;
 
@@ -32,7 +32,7 @@ namespace HydroTech_RCS.Autopilots
 
         protected override string NameString
         {
-            get { return Str.nameString; }
+            get { return AutopilotConsts.translationName; }
         }
         #endregion
 
@@ -101,16 +101,16 @@ namespace HydroTech_RCS.Autopilots
 
         #region User input vars
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
-        public bool mainThrottleRespond = Default.Bool.mainThrottleRespond;
+        public bool mainThrottleRespond = AutopilotConsts.mainThrottleRespond;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
-        public float thrustRate = Default.Float.thrustRate;
+        public float thrustRate = AutopilotConsts.thrustRate;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
-        public Vector3 thrustVector = Default.Misc.thrustVector;
+        public Vector3 thrustVector = AutopilotConsts.thrustVector;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
-        public bool holdOrient = Default.Bool.holdOrient;
+        public bool holdOrient = AutopilotConsts.holdOrient;
         public bool HoldOrient
         {
             get { return this.holdOrient; }
@@ -126,7 +126,7 @@ namespace HydroTech_RCS.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TransMode")]
-        public TransDir transMode = Default.Misc.transMode;
+        public TransDir transMode = AutopilotConsts.transMode;
         public TransDir TransMode
         {
             get { return this.transMode; }
@@ -156,10 +156,10 @@ namespace HydroTech_RCS.Autopilots
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.HoldOrient = Default.Bool.holdOrient;
-            this.mainThrottleRespond = Default.Bool.mainThrottleRespond;
-            this.thrustRate = Default.Float.thrustRate;
-            this.TransMode = Default.Misc.transMode;
+            this.HoldOrient = AutopilotConsts.holdOrient;
+            this.mainThrottleRespond = AutopilotConsts.mainThrottleRespond;
+            this.thrustRate = AutopilotConsts.thrustRate;
+            this.TransMode = AutopilotConsts.transMode;
         }
         #endregion
     }
