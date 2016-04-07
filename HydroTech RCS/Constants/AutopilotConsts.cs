@@ -1,4 +1,5 @@
 ﻿using HydroTech_RCS.Autopilots;
+using HydroTech_RCS.PartModules;
 using UnityEngine;
 
 namespace HydroTech_RCS.Constants

@@ -1,10 +1,14 @@
-﻿using HydroTech_RCS;
-using HydroTech_RCS.PartModules.Base;
+﻿using HydroTech_RCS.PartModules.Base;
 
-public class ModuleActiveHydroJebIndicator : ModuleActiveIndicator
+namespace HydroTech_RCS.PartModules
 {
-    protected override Status GetStatus()
+    public class ModuleActiveHydroJebIndicator : ModuleActiveIndicator
     {
-        return HydroJebCore.IsActiveJeb((HydroJeb)this.part) ? Status.ACTIVE : Status.IDLE;
+        #region Overrides
+        protected override Status GetStatus()
+        {
+            return HydroJebCore.IsActiveJeb((HydroJeb)this.part) ? Status.ACTIVE : Status.IDLE;
+        }
+        #endregion
     }
 }

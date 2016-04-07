@@ -2,104 +2,112 @@
 using HydroTech_RCS.PartModules.Base;
 using UnityEngine;
 
-public class ModulePartRename : HydroPartModulePanel
+namespace HydroTech_RCS.PartModules
 {
-    private static bool registered;
-
-    [KSPField(guiActive = false, guiName = "Name")]
-    public string nameString = "";
-
-    protected bool renamed;
-
-    protected string tempName = "";
-
-    public bool Renamed
+    public class ModulePartRename : HydroPartModulePanel
     {
-        get { return this.renamed; }
-        set
+        #region KSPFields
+        [KSPField(guiActive = false, guiName = "Name")]
+        public string nameString = string.Empty;
+        #endregion
+
+        #region Fields
+        protected string tempName = string.Empty;
+        #endregion
+
+        #region Properties
+        protected bool renamed;
+        public bool Renamed
         {
-            this.Fields["nameString"].guiActive = value;
-            this.renamed = value;
-        }
-    }
-
-    protected override int QueueSpot
-    {
-        get { return CoreConsts.renderMgrModulePartRename; }
-    }
-
-    protected override string PanelTitle
-    {
-        get { return "Rename part"; }
-    }
-
-    protected override bool Registered
-    {
-        get { return registered; }
-        set { registered = value; }
-    }
-
-    public override void OnLoad(ConfigNode node)
-    {
-        base.OnLoad(node);
-        if (node.HasValue(GeneralConsts.name))
-        {
-            this.nameString = node.GetValue(GeneralConsts.name);
-            this.tempName = this.nameString;
-            this.Renamed = true;
-        }
-        else
-        {
-            this.Renamed = false;
-        }
-    }
-
-    public override void OnSave(ConfigNode node)
-    {
-        base.OnSave(node);
-        if (this.Renamed) { node.AddValue(GeneralConsts.name, this.nameString); }
-    }
-
-    [KSPEvent(guiActive = true, guiName = "Rename")]
-    protected void RenameEvent()
-    {
-        if (!this.PanelShown) { this.PanelShown = true; }
-    }
-
-    protected override void WindowGUI(int id)
-    {
-        GUILayout.BeginVertical();
-        this.tempName = GUILayout.TextField(this.tempName);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("OK"))
-        {
-            if (this.tempName != "")
+            get { return this.renamed; }
+            set
             {
-                this.nameString = this.tempName;
-                this.Renamed = true;
-                this.PanelShown = false;
+                this.Fields["nameString"].guiActive = value;
+                this.renamed = value;
             }
         }
-        if (GUILayout.Button("Clear"))
-        {
-            this.tempName = "";
-            this.nameString = "";
-            this.Renamed = false;
-            this.PanelShown = false;
-        }
-        if (GUILayout.Button("Cancel"))
-        {
-            this.tempName = this.nameString;
-            this.PanelShown = false;
-        }
-        GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
-        GUI.DragWindow();
-    }
 
-    public void EditorRename(bool renamed, string name)
-    {
-        this.renamed = renamed;
-        this.nameString = name;
+        private static bool registered;
+        protected override bool Registered
+        {
+            get { return registered; }
+            set { registered = value; }
+        }
+
+        protected override int QueueSpot
+        {
+            get { return CoreConsts.renderMgrModulePartRename; }
+        }
+
+        protected override string PanelTitle
+        {
+            get { return "Rename part"; }
+        }
+        #endregion
+
+        #region KSPEvents
+        [KSPEvent(guiActive = true, guiName = "Rename")]
+        protected void RenameEvent()
+        {
+            if (!this.PanelShown) { this.PanelShown = true; }
+        }
+        #endregion
+
+        #region Methods
+        public void EditorRename(bool renamed, string name)
+        {
+            this.renamed = renamed;
+            this.nameString = name;
+        }
+        #endregion
+
+        #region Overrides
+        public override void OnLoad(ConfigNode node)
+        {
+            if (node.HasValue(GeneralConsts.name))
+            {
+                this.nameString = node.GetValue(GeneralConsts.name);
+                this.tempName = this.nameString;
+                this.Renamed = true;
+            }
+            else { this.Renamed = false; }
+        }
+
+        public override void OnSave(ConfigNode node)
+        {
+            if (this.Renamed) { node.AddValue(GeneralConsts.name, this.nameString); }
+        }
+
+        protected override void WindowGUI(int id)
+        {
+            GUILayout.BeginVertical();
+            this.tempName = GUILayout.TextField(this.tempName);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("OK"))
+            {
+                if (this.tempName != string.Empty)
+                {
+                    this.nameString = this.tempName;
+                    this.Renamed = true;
+                    this.PanelShown = false;
+                }
+            }
+            if (GUILayout.Button("Clear"))
+            {
+                this.tempName = string.Empty;
+                this.nameString = string.Empty;
+                this.Renamed = false;
+                this.PanelShown = false;
+            }
+            if (GUILayout.Button("Cancel"))
+            {
+                this.tempName = this.nameString;
+                this.PanelShown = false;
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            GUI.DragWindow();
+        }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HydroTech_FC;
+using HydroTech_RCS.PartModules;
 using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots.Calculators

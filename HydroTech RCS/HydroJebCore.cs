@@ -5,7 +5,9 @@ using HydroTech_RCS.Autopilots;
 using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
+using HydroTech_RCS.PartModules;
 using UnityEngine;
+using HydroPartModule = HydroTech_RCS.PartModules.Base.HydroPartModulePanel; 
 
 namespace HydroTech_RCS
 {

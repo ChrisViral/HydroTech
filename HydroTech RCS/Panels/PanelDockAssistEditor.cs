@@ -2,9 +2,10 @@
 using HydroTech_FC;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels.UI;
+using HydroTech_RCS.PartModules;
 using UnityEngine;
-using GetItemFunctionCam = HydroTech_FC.AffiliationList<Part, ModuleDockAssistCam>.GetItemFunction_Multi;
-using GetItemFunctionTarget= HydroTech_FC.AffiliationList<Part, ModuleDockAssistCam>.GetItemFunction_Multi;
+using GetItemFunctionCam = HydroTech_FC.AffiliationList<Part, HydroTech_RCS.PartModules.ModuleDockAssistCam>.GetItemFunction_Multi;
+using GetItemFunctionTarget= HydroTech_FC.AffiliationList<Part, HydroTech_RCS.PartModules.ModuleDockAssistCam>.GetItemFunction_Multi;
 
 namespace HydroTech_RCS.Panels
 {

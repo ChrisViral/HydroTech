@@ -2,6 +2,7 @@
 using HydroTech_RCS.Autopilots.Calculators;
 using HydroTech_RCS.Constants;
 using HydroTech_RCS.Panels;
+using HydroTech_RCS.PartModules;
 using UnityEngine;
 
 namespace HydroTech_RCS.Autopilots
@@ -57,7 +58,7 @@ namespace HydroTech_RCS.Autopilots
         public bool showLine = AutopilotConsts.showLine;
         public bool ShowLine
         {
-            get { return !NullCamera() && !NullTarget() && this.showLine; }
+            get { return !this.NullCamera && !this.NullTarget && this.showLine; }
             set { this.showLine = value; }
         }
 
@@ -65,7 +66,7 @@ namespace HydroTech_RCS.Autopilots
         public bool autoOrient = AutopilotConsts.autoOrient;
         public bool AutoOrient
         {
-            get { return !NullCamera() && !NullTarget() && this.autoOrient; }
+            get { return !this.NullCamera && !this.NullTarget && this.autoOrient; }
             set { this.autoOrient = value; }
         }
 
@@ -73,7 +74,7 @@ namespace HydroTech_RCS.Autopilots
         public bool killRelV = AutopilotConsts.killRelV;
         public bool KillRelV
         {
-            get { return !NullCamera() && !NullTarget() && this.killRelV; }
+            get { return !this.NullCamera && !this.NullTarget && this.killRelV; }
             set { this.killRelV = value; }
         }
 
@@ -81,10 +82,10 @@ namespace HydroTech_RCS.Autopilots
         public bool camView = AutopilotConsts.camView;
         public bool CamView
         {
-            get { return !NullCamera() && this.camView; }
+            get { return !this.NullCamera && this.camView; }
             set
             {
-                if (!NullCamera() && this.Engaged && !this.CameraPaused) { this.Cam.CamActivate = value; }
+                if (!this.NullCamera && this.Engaged && !this.CameraPaused) { this.Cam.CamActivate = value; }
                 this.camView = value;
             }
         }
@@ -93,7 +94,7 @@ namespace HydroTech_RCS.Autopilots
         public bool manual = AutopilotConsts.manual;
         public bool Manual
         {
-            get { return NullCamera() || NullTarget() || this.manual; }
+            get { return this.NullCamera || this.NullTarget || this.manual; }
             set
             {
                 if (this.manual != value && this.Engaged && this.DriveTarget)
@@ -112,10 +113,10 @@ namespace HydroTech_RCS.Autopilots
         public bool driveTarget = AutopilotConsts.driveTarget;
         public bool DriveTarget
         {
-            get { return !this.Manual && TargetHasJeb() && this.driveTarget; }
+            get { return !this.Manual && this.TargetHasJeb && this.driveTarget; }
             set
             {
-                if (!this.Active || this.Manual || !TargetHasJeb()) { return; }
+                if (!this.Active || this.Manual || !this.TargetHasJeb) { return; }
                 if (value && !this.driveTarget) { this.drivingTargetVessel = this.target.vessel; }
                 if (this.Engaged)
                 {
@@ -163,7 +164,7 @@ namespace HydroTech_RCS.Autopilots
                 else
                 {
                     Panel.ResetHeight();
-                    if (!NullCamera()) { this.Cam.CamActivate = false; }
+                    if (!this.NullCamera) { this.Cam.CamActivate = false; }
                 }
                 base.Engaged = value;
             }
@@ -426,7 +427,7 @@ namespace HydroTech_RCS.Autopilots
         #region Methods
         protected bool IsJebTargetVessel(Part jeb)
         {
-            return !NullTarget() && jeb.vessel == this.target.vessel;
+            return !this.NullTarget && jeb.vessel == this.target.vessel;
         }
 
         protected void AddDriveTarget()
@@ -516,7 +517,7 @@ namespace HydroTech_RCS.Autopilots
                 }
             }
 
-            if (!NullTarget()) { this.jebsTargetVessel.OnUpdate(); }
+            if (!this.NullTarget) { this.jebsTargetVessel.OnUpdate(); }
         }
 
         protected override void LoadDefault()
