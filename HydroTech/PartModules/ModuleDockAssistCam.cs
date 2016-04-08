@@ -1,6 +1,5 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Constants;
-using HydroTech.InGame;
 using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.PartModules.Base;

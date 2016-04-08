@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.File;
-using HydroTech.InGame;
 using HydroTech.Managers;
 using UnityEngine;
 

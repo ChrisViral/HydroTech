@@ -81,8 +81,8 @@
     <Compile Include="File\FileName.cs" />
     <Compile Include="File\HydroSLAttributes.cs" />
     <Compile Include="File\LoadSaveFileBasic.cs" />
-    <Compile Include="InGame\CtrlStateCalculator.cs" />
-    <Compile Include="InGame\SwitchTransformCalculator.cs" />
+    <Compile Include="CtrlStateCalculator.cs" />
+    <Compile Include="SwitchTransformCalculator.cs" />
     <Compile Include="Managers\ManagerActionGroup.cs" />
     <Compile Include="Managers\ManagerFlightCamera.cs" />
     <Compile Include="Managers\ManagerFlightInput.cs" />

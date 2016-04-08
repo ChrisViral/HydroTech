@@ -1,36 +1,14 @@
 ﻿using UnityEngine;
 
-namespace HydroTech.InGame
+namespace HydroTech
 {
     public class SwitchTransformCalculator
     {
+        #region Fields
         protected Vector3 state;
+        #endregion
 
-        public static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return new Vector3(Vector3.Dot(vec, x), Vector3.Dot(vec, y), Vector3.Dot(vec, z));
-        }
-
-        public static Vector3 VectorTransform(Vector3 vec, Transform trans)
-        {
-            /*  For rotation, input: rotation vector (that you rotate along)
-             *  output: (pitch, yaw, roll).
-             *  For translation, input: direction vector (that you move along)
-             *  output: (X, Y, Z).
-             */
-            return VectorTransform(vec, trans.right, trans.forward, trans.up);
-        }
-
-        public static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return (vec.x * x) + (vec.y * y) + (vec.z * z);
-        }
-
-        public static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
-        {
-            return ReverseVectorTransform(vec, trans.right, trans.forward, trans.up);
-        }
-
+        #region Methods
         public void ChangeTransformRotation(Vector3 right, Vector3 down, Vector3 forward, Transform transform)
         {
             float yaw = this.state.x;
@@ -112,5 +90,34 @@ namespace HydroTech.InGame
             ctrlState.Y = this.state.y;
             ctrlState.Z = this.state.z;
         }
+        #endregion
+
+        #region Static Methods
+        public static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
+        {
+            return new Vector3(Vector3.Dot(vec, x), Vector3.Dot(vec, y), Vector3.Dot(vec, z));
+        }
+
+        public static Vector3 VectorTransform(Vector3 vec, Transform trans)
+        {
+            /* For rotation
+             * input: rotation vector (that you rotate along)
+             * output: (pitch, yaw, roll)
+             * For translation
+             * input: direction vector (that you move along)
+             * output: (X, Y, Z) */
+            return VectorTransform(vec, trans.right, trans.forward, trans.up);
+        }
+
+        public static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
+        {
+            return (vec.x * x) + (vec.y * y) + (vec.z * z);
+        }
+
+        public static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
+        {
+            return ReverseVectorTransform(vec, trans.right, trans.forward, trans.up);
+        }
+        #endregion
     }
 }

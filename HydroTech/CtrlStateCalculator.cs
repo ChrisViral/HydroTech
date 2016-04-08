@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
 
-namespace HydroTech.InGame
+namespace HydroTech
 {
     public class CtrlStateCalculator
     {
-        public float yaw;
-        public float roll;
-        public float pitch;
-        public float x;
-        public float y;
-        public float z;
+        #region Fields
+        public float pitch, yaw, roll;
+        public float x, y, z;
+        #endregion
 
+        #region Methods
         protected void ChangeTransformRotation(Vector3 right, Vector3 down, Vector3 forward, Transform transform)
         {
             SwitchTransformCalculator sCal = new SwitchTransformCalculator();
@@ -54,37 +53,25 @@ namespace HydroTech.InGame
             ctrlState.Y = this.y;
             ctrlState.Z = this.z;
         }
+        #endregion
 
+        #region Debug
 #if DEBUG
         public string PrintRot()
         {
-            return "yaw = " + this.yaw.ToString("#0.000")
-                + ", roll = " + this.roll.ToString("#0.000")
-                + ", pitch = " + this.pitch.ToString("#0.000");
+            return string.Format("ptich: {0:#0.000}, yaw: {1:#0.000}, roll: {2:#0.000}", this.pitch, this.yaw, this.roll);
         }
 
         public string PrintTrans()
         {
-            return "X = " + this.x.ToString("#0.000")
-                + ", Y = " + this.y.ToString("#0.000")
-                + ", Z = " + this.z.ToString("#0.000");
-        }
-
-        public string Print()
-        {
-            return "yaw = " + this.yaw.ToString("#0.000")
-                + ", roll = " + this.roll.ToString("#0.000")
-                + ", pitch = " + this.pitch.ToString("#0.000")
-                + "\n"
-                + "X = " + this.x.ToString("#0.000")
-                + ", Y = " + this.y.ToString("#0.000")
-                + ", Z = " + this.z.ToString("#0.000");
+            return string.Format("X: {0:#0.000}, Y: {1:#0.000}, Z: {2:#0.000}", this.x, this.y, this.z);
         }
 
         public override string ToString()
         {
-            return Print();
+            return string.Format("ptich: {0:#0.000}, yaw: {1:#0.000}, roll: {2:#0.000}\nX: {3:#0.000}, Y: {4:#0.000}, Z: {5:#0.000}", this.pitch, this.yaw, this.roll, this.x, this.y, this.z);
         }
 #endif
+        #endregion
     }
 }
