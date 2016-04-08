@@ -127,7 +127,7 @@ namespace HydroTech.Panels
         protected UISingleSelectionList<HydroPartModule> camListUI;
         protected UISingleSelectionList<HydroPartModule> targetListUI;
         protected UISingleSelectionList<Vessel> targetVesselListUI;
-        protected Vessel targetVessel = null;
+        protected Vessel targetVessel;
         protected string accText;
         protected string angularAccText;
         protected string fssText;
@@ -558,7 +558,7 @@ namespace HydroTech.Panels
             if (mcam == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(((ModuleDockAssistCam)mcam).ToString(), mcam == Cam ? (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.ButtonStyle(true)))
+                if (GUILayout.Button(((ModuleDockAssistCam)mcam).ToString(), mcam == Cam ? (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
                 {
                     this.camListUI.SetSelectionToItem(mcam);
                 }
@@ -570,7 +570,7 @@ namespace HydroTech.Panels
             if (v == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(v.vesselName, v == this.targetVessel ? v == this.PreviewVessel ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : v == this.PreviewVessel ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.ButtonStyle(true)))
+                if (GUILayout.Button(v.vesselName, v == this.targetVessel ? v == this.PreviewVessel ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : v == this.PreviewVessel ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
                 {
                     this.targetVesselListUI.SetSelectionToItem(v);
                 }
@@ -582,7 +582,7 @@ namespace HydroTech.Panels
             if (mtgt == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.ButtonStyle(true)))
+                if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
                 {
                     this.targetListUI.SetSelectionToItem(mtgt);
                 }

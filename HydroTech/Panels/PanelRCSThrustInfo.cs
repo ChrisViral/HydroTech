@@ -133,12 +133,12 @@ namespace HydroTech.Panels
                     return;
                 }
             }
-            if (GUILayout.Button("Rotation", this.showRotation ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.ButtonStyle()))
+            if (GUILayout.Button("Rotation", this.showRotation ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
             {
                 this.showRotation = true;
                 this.needSave = true;
             }
-            if (GUILayout.Button("Translation", this.showRotation ? GUIUtils.ButtonStyle() : GUIUtils.ButtonStyle(Color.green)))
+            if (GUILayout.Button("Translation", this.showRotation ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
             {
                 this.showRotation = false;
                 this.needSave = true;
@@ -166,7 +166,7 @@ namespace HydroTech.Panels
             }
             if (!this.editor && !TheCalculator.AllRcsEnabled)
             {
-                GUILayout.Label("Some RCS thrusters are not enabled.", GUIUtils.LabelStyle(Color.red));
+                GUILayout.Label("Some RCS thrusters are not enabled.", GUIUtils.ColouredLabel(Color.red));
                 if (GUILayout.Button("Enable all")) { TheCalculator.EnableAllRcs(); }
             }
             GUI.DragWindow();

@@ -105,8 +105,8 @@ namespace HydroTech.Panels
         {
             get
             {
-                if (this.TwrTotal < this.GeeASL) { return GUIUtils.LabelStyle(Color.red); }
-                return this.TwrTotal < this.GeeASL * 1.5f ? GUIUtils.LabelStyle(Color.yellow) : GUIUtils.LabelStyle();
+                if (this.TwrTotal < this.GeeASL) { return GUIUtils.ColouredLabel(Color.red); }
+                return this.TwrTotal < this.GeeASL * 1.5f ? GUIUtils.ColouredLabel(Color.yellow) : GUIUtils.Skin.label;
             }
         }
 
@@ -156,14 +156,14 @@ namespace HydroTech.Panels
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Slope detection: ");
-                GUILayout.Label("out of range", GUIUtils.LabelStyle(Color.red));
+                GUILayout.Label("out of range", GUIUtils.ColouredLabel(Color.red));
                 GUILayout.EndHorizontal();
             }
             else if (!this.Terrain)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Slope detection: ");
-                GUILayout.Label("not available", GUIUtils.LabelStyle(Color.red));
+                GUILayout.Label("not available", GUIUtils.ColouredLabel(Color.red));
                 GUILayout.EndHorizontal();
             }
             else

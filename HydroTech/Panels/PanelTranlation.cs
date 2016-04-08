@@ -156,7 +156,7 @@ namespace HydroTech.Panels
             for (int i = 0; i <= 6; i++)
             {
                 TransDir x = (TransDir)i;
-                if (GUILayout.Button(x.ToString(), this.tempTransMode == x ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.ButtonStyle()))
+                if (GUILayout.Button(x.ToString(), this.tempTransMode == x ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
                 {
                     this.tempTransMode = x;
                     if (i != 6) { ResetHeight(); }
@@ -192,7 +192,7 @@ namespace HydroTech.Panels
                     GUILayout.Label("Normalized vector:");
                     GUILayout.Label(tempThrustVector.ToString("#0.00"));
                 }
-                else { GUILayout.Label("Invalid input", GUIUtils.LabelStyle(Color.red)); }
+                else { GUILayout.Label("Invalid input", GUIUtils.ColouredLabel(Color.red)); }
             }
             GUILayout.BeginHorizontal();
             GUILayout.Label("Thrust rate (0-1)");

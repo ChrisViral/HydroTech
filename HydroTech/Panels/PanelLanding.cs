@@ -314,7 +314,7 @@ namespace HydroTech.Panels
                 this.panelInfo.PanelShown = GUILayout.Toggle(this.panelInfo.PanelShown, "Advanced info");
                 if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
                 GUILayout.Label("Status: " + this.StatusString);
-                GUILayout.Label(this.WarningString, GUIUtils.LabelStyle(this.WarningColor));
+                GUILayout.Label(this.WarningString, GUIUtils.ColouredLabel(this.WarningColor));
             }
 
             GUI.DragWindow();
@@ -346,7 +346,7 @@ namespace HydroTech.Panels
             if (!this.TempTouchdown)
             {
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("True Alt", this.tempUseTrueAlt ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.ButtonStyle()))
+                if (GUILayout.Button("True Alt", this.tempUseTrueAlt ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
                 {
                     if (!this.tempUseTrueAlt)
                     {
@@ -356,7 +356,7 @@ namespace HydroTech.Panels
                     }
                     this.tempUseTrueAlt = true;
                 }
-                if (GUILayout.Button("ASL Alt", this.tempUseTrueAlt ? GUIUtils.ButtonStyle() : GUIUtils.ButtonStyle(Color.green)))
+                if (GUILayout.Button("ASL Alt", this.tempUseTrueAlt ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
                 {
                     if (this.tempUseTrueAlt)
                     {
@@ -380,7 +380,7 @@ namespace HydroTech.Panels
                         GUILayout.Label(string.Format("ASL alt: {0:#0.0}{1}", tempAltKeepAsl, GeneralConsts.length));
                         GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}{1}", LA.AllowedHoriSpeed(this.tempAltKeep), GeneralConsts.speedSimple));
                     }
-                    else { GUILayout.Label("Invalid altitude", GUIUtils.LabelStyle(Color.red)); }
+                    else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }
                 else
                 {
@@ -391,7 +391,7 @@ namespace HydroTech.Panels
                         GUILayout.Label(string.Format("True alt: {0:#0.0}{1}", tempAltKeepTrue, GeneralConsts.length));
                         GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}{1}", LA.AllowedHoriSpeed(tempAltKeepTrue), GeneralConsts.speedSimple));
                     }
-                    else { GUILayout.Label("Invalid altitude", GUIUtils.LabelStyle(Color.red)); }
+                    else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }
             }
 
