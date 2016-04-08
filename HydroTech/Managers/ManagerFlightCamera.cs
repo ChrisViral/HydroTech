@@ -237,22 +237,22 @@ namespace HydroTech.Managers
 
         public static float GetFoV()
         {
-            return Camera.mainCamera.fov;
+            return Camera.main.fieldOfView;
         }
 
         public static void SetFoV(float fov)
         {
-            Camera.mainCamera.fov = fov;
+            Camera.main.fieldOfView = fov;
         }
 
         public static float GetNearClipPlane()
         {
-            return Camera.mainCamera.nearClipPlane;
+            return Camera.main.nearClipPlane;
         }
 
         public static void SetNearClipPlane(float clip)
         {
-            Camera.mainCamera.nearClipPlane = clip;
+            Camera.main.nearClipPlane = clip;
         }
 
         private static Callback camCallback;
