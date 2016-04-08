@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HydroTech_FC
+namespace HydroTech.Data
 {
     public class AffiliationList<T, TU> : List<TU>
     {

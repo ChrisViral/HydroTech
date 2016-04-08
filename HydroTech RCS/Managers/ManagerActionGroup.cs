@@ -1,4 +1,4 @@
-﻿namespace HydroTech_FC
+﻿namespace HydroTech.Managers
 {
     public static class HydroActionGroupManager
     {
@@ -96,13 +96,13 @@
                 set { SetState(KSPActionGroup.Light, value); }
             }
 
-            public bool Rcs
+            public bool RCS
             {
                 get { return GetState(KSPActionGroup.RCS); }
                 set { SetState(KSPActionGroup.RCS, value); }
             }
 
-            public bool Sas
+            public bool SAS
             {
                 get { return GetState(KSPActionGroup.SAS); }
                 set { SetState(KSPActionGroup.SAS, value); }

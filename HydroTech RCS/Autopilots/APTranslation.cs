@@ -1,9 +1,10 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants;
+﻿using HydroTech.Autopilots.Calculators;
+using HydroTech.Constants;
+using HydroTech.File;
+using HydroTech.Managers;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots
+namespace HydroTech.Autopilots
 {
     public class APTranslation : RCSAutopilot
     {

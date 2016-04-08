@@ -1,9 +1,11 @@
 ﻿using System.Linq;
-using HydroTech_FC;
-using HydroTech_RCS.Autopilots.Calculators;
+using HydroTech.Autopilots.Calculators;
+using HydroTech.File;
+using HydroTech.InGame;
+using HydroTech.Managers;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots
+namespace HydroTech.Autopilots
 {
     public abstract class RCSAutopilot : LoadSaveFileBasic
     {

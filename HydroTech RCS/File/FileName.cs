@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace HydroTech_FC
+namespace HydroTech.File
 {
     public class FileName
     {

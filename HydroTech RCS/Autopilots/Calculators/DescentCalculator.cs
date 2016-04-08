@@ -1,8 +1,6 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Utils;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Calculators
+namespace HydroTech.Autopilots.Calculators
 {
     public class DescentCalculator
     {

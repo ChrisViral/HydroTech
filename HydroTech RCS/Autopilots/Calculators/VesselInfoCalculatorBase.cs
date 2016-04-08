@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using HydroTech_FC;
+using HydroTech.InGame;
+using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Calculators
+namespace HydroTech.Autopilots.Calculators
 {
     public class VesselInfoCalculatorBase
     {

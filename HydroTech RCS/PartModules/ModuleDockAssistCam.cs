@@ -1,13 +1,12 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Panels;
-using HydroTech_RCS.PartModules.Base;
-using HydroTech_RCS.Utils;
+﻿using HydroTech.Autopilots;
+using HydroTech.Constants;
+using HydroTech.InGame;
+using HydroTech.Managers;
+using HydroTech.Panels;
+using HydroTech.PartModules.Base;
 using UnityEngine;
-using HydroPartModule = HydroTech_RCS.PartModules.Base.HydroPartModule;
 
-namespace HydroTech_RCS.PartModules
+namespace HydroTech.PartModules
 {
     public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorAid
     {

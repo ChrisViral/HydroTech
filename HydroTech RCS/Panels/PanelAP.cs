@@ -1,7 +1,7 @@
-﻿using HydroTech_RCS.Utils;
+﻿using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public abstract class PanelAP : Panel
     {

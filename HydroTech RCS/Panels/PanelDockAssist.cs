@@ -1,15 +1,16 @@
 ﻿using System;
-using HydroTech_FC;
-using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Panels.UI;
-using HydroTech_RCS.PartModules;
-using HydroTech_RCS.PartModules.Base;
-using HydroTech_RCS.Utils;
+using HydroTech.Autopilots;
+using HydroTech.Constants;
+using HydroTech.Data;
+using HydroTech.File;
+using HydroTech.Managers;
+using HydroTech.Panels.UI;
+using HydroTech.PartModules;
+using HydroTech.PartModules.Base;
+using HydroTech.Utils;
 using UnityEngine;
-using HydroPartModule = HydroTech_RCS.PartModules.Base.HydroPartModule;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public class PanelDockAssist : PanelAP
     {
@@ -333,7 +334,7 @@ namespace HydroTech_RCS.Panels
         {
             this.fileName = new FileName("dock", "cfg", HydroJebCore.panelSaveFolder);
             this.camListUI = new UISingleSelectionList<HydroPartModule>(HydroJebCore.dockCams.listActiveVessel);
-            this.targetVesselList = new AffiliationList<HydroPartModule, Vessel>(HydroJebCore.dockTargets.listInactiveVessel, (AffiliationList<HydroPartModule, Vessel>.GetItemFunction_Single)GetTargetVessel);
+            this.targetVesselList = new AffiliationList<HydroPartModule, Vessel>(HydroJebCore.dockTargets.listInactiveVessel, (AffiliationList<HydroPartModule, Vessel>.GetItemFunctionSingle)GetTargetVessel);
             this.targetVesselListUI = new UISingleSelectionList<Vessel>(this.targetVesselList);
             this.targetList = new SubList<HydroPartModule>(HydroJebCore.dockTargets.listInactiveVessel, IsOnTargetVessel);
             this.targetListUI = new UISingleSelectionList<HydroPartModule>(this.targetList);

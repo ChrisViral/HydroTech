@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace HydroTech_FC
+namespace HydroTech.File
 {
     public abstract partial class LoadSaveFileBasic
     {
@@ -17,14 +17,14 @@ namespace HydroTech_FC
             if (ResetRequest(node)) { return; }
             foreach (FieldInfo field in GetType().GetFields())
             {
-                HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
+                HydroSLField att = (HydroSLField)Attribute.GetCustomAttribute(field, typeof(HydroSLField));
                 if (att == null || att.isTesting) { continue; }
-                HydroSlNodeInfoAttribute[] nodes = (HydroSlNodeInfoAttribute[])Attribute.GetCustomAttributes(field, typeof(HydroSlNodeInfoAttribute));
+                HydroSLNodeInfo[] nodes = (HydroSLNodeInfo[])Attribute.GetCustomAttributes(field, typeof(HydroSLNodeInfo));
                 if (nodes.Count() == 0) { ReadField(field, node, att.saveName, att.cmd); }
                 else
                 {
                     Dictionary<int, string> nodesDict = new Dictionary<int, string>();
-                    foreach (HydroSlNodeInfoAttribute nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
+                    foreach (HydroSLNodeInfo nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
                     ConfigNode tempNode = node;
                     for (int i = 0; i < nodesDict.Count; i++)
                     {
@@ -46,14 +46,14 @@ namespace HydroTech_FC
             node.AddValue("Reset", false);
             foreach (FieldInfo field in GetType().GetFields())
             {
-                HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
+                HydroSLField att = (HydroSLField)Attribute.GetCustomAttribute(field, typeof(HydroSLField));
                 if (att == null || att.isTesting) { continue; }
-                HydroSlNodeInfoAttribute[] nodes = (HydroSlNodeInfoAttribute[])Attribute.GetCustomAttributes(field, typeof(HydroSlNodeInfoAttribute));
+                HydroSLNodeInfo[] nodes = (HydroSLNodeInfo[])Attribute.GetCustomAttributes(field, typeof(HydroSLNodeInfo));
                 if (nodes.Count() == 0) { Write(node, att.saveName, field.GetValue(this), att.cmd); }
                 else
                 {
                     Dictionary<int, string> nodesDict = new Dictionary<int, string>();
-                    foreach (HydroSlNodeInfoAttribute nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
+                    foreach (HydroSLNodeInfo nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
                     ConfigNode tempNode = node;
                     for (int i = 0; i < nodesDict.Count; i++)
                     {
@@ -93,7 +93,7 @@ namespace HydroTech_FC
             return node.HasValue("Reset") && bool.Parse(node.GetValue("Reset"));
         }
 
-        protected static bool ReadField(object obj, FieldInfo field, ConfigNode node, string name, Cmd cmd)
+        protected static bool ReadField(object obj, FieldInfo field, ConfigNode node, string name, CMD cmd)
         {
             object val = field.GetValue(obj);
             if (Read(node, name, ref val, cmd))
@@ -104,7 +104,7 @@ namespace HydroTech_FC
             return false;
         }
 
-        protected bool ReadField(FieldInfo field, ConfigNode node, string name, Cmd cmd)
+        protected bool ReadField(FieldInfo field, ConfigNode node, string name, CMD cmd)
         {
             return ReadField(this, field, node, name, cmd);
         }

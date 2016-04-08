@@ -1,11 +1,11 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Utils;
+﻿using HydroTech.Autopilots;
+using HydroTech.Constants;
+using HydroTech.File;
+using HydroTech.Utils;
 using UnityEngine;
-using TransDir = HydroTech_RCS.Autopilots.APTranslation.TransDir;
+using TransDir = HydroTech.Autopilots.APTranslation.TransDir;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public class PanelTranslation : PanelAP
     {

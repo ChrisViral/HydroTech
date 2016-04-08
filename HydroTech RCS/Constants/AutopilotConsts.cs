@@ -1,8 +1,8 @@
-﻿using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.PartModules;
+﻿using HydroTech.Autopilots;
+using HydroTech.PartModules;
 using UnityEngine;
 
-namespace HydroTech_RCS.Constants
+namespace HydroTech.Constants
 {
     //TODO: get rid of these classes... honestly this is redundant.
     public static class AutopilotConsts

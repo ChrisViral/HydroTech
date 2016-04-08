@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace HydroTech_RCS.Utils
+namespace HydroTech.Utils
 {
     public class Matrix3x3
     {

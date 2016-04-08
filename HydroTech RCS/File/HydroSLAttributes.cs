@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace HydroTech_FC
+namespace HydroTech.File
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public class HydroSlNodeInfoAttribute : Attribute
+    public class HydroSLNodeInfo : Attribute
     {
         public int i = 0;
         public string name = "NODE";
     }
 
     [AttributeUsage(AttributeTargets.Field)]
-    public class HydroSlFieldAttribute : Attribute
+    public class HydroSLField : Attribute
     {
-        public LoadSaveFileBasic.Cmd cmd = LoadSaveFileBasic.Cmd.NONE;
+        public LoadSaveFileBasic.CMD cmd = LoadSaveFileBasic.CMD.NONE;
         public bool isTesting = false;
         public string saveName = "";
     }

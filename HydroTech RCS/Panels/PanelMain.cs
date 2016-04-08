@@ -1,8 +1,8 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Constants;
+﻿using HydroTech.Constants;
+using HydroTech.File;
 using UnityEngine;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public class PanelMain : Panel
     {

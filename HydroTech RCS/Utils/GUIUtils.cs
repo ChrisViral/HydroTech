@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HydroTech_RCS.Utils
+namespace HydroTech.Utils
 {
     //TODO: add some caching on coloured GUI styles to prevent creating the same styles over again
     public static class GUIUtils
@@ -8,7 +8,7 @@ namespace HydroTech_RCS.Utils
         #region Buttons
         public static GUIStyle ButtonStyle(bool wrap = false)
         {
-            return new GUIStyle(GUI.skin.button) { wordWrap = wrap }; ;
+            return new GUIStyle(GUI.skin.button) { wordWrap = wrap };
         }
 
         public static GUIStyle ButtonStyle(Color textColor, bool wrap = false)

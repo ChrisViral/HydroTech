@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HydroTech_RCS.Panels.UI
+namespace HydroTech.Panels.UI
 {
     public class UISingleSelectionList<T> : UIMultiPageList<T> where T : class
     {

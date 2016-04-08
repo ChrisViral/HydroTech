@@ -1,7 +1,7 @@
-﻿using HydroTech_FC;
+﻿using HydroTech.InGame;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Calculators
+namespace HydroTech.Autopilots.Calculators
 {
     public class EngineCalculator : VesselInfoCalculatorBase
     {

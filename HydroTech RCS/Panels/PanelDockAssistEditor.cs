@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using HydroTech_FC;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Panels.UI;
-using HydroTech_RCS.PartModules;
-using HydroTech_RCS.Utils;
+using HydroTech.Constants;
+using HydroTech.Data;
+using HydroTech.File;
+using HydroTech.Panels.UI;
+using HydroTech.PartModules;
+using HydroTech.Utils;
 using UnityEngine;
-using GetItemFunctionCam = HydroTech_FC.AffiliationList<Part, HydroTech_RCS.PartModules.ModuleDockAssistCam>.GetItemFunction_Multi;
-using GetItemFunctionTarget= HydroTech_FC.AffiliationList<Part, HydroTech_RCS.PartModules.ModuleDockAssistCam>.GetItemFunction_Multi;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public class PanelDockAssistEditor : Panel, IPanelEditor
     {
@@ -57,8 +56,8 @@ namespace HydroTech_RCS.Panels
         public PanelDockAssistEditor()
         {
             this.fileName = new FileName("dockeditor", "cfg", HydroJebCore.panelSaveFolder);
-            this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, (GetItemFunctionCam)GetCam);
-            this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (GetItemFunctionTarget)GetTgt);
+            this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, (AffiliationList<Part, ModuleDockAssistCam>.GetItemFunctionMulti)GetCam);
+            this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunctionMulti)GetTgt);
             this.camSet = new DictionaryFromList<ModuleDockAssistCam, DAEditorSet>(this.cams, new DAEditorSet(false));
             this.tgtSet = new DictionaryFromList<ModuleDockAssistTarget, DAEditorSet>(this.targets, new DAEditorSet(false));
             this.camUI = new UIMultiPageList<ModuleDockAssistCam>(this.cams, 2);

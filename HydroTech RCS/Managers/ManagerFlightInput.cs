@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace HydroTech_FC
+namespace HydroTech.Managers
 {
     public static class HydroFlightInputManager
     {

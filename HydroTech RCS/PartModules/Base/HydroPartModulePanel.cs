@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydroTech_RCS.PartModules.Base
+namespace HydroTech.PartModules.Base
 {
     public abstract class HydroPartModulePanel : HydroPartModule
     {

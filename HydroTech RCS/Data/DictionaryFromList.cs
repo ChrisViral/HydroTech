@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HydroTech_FC
+namespace HydroTech.Data
 {
     public class DictionaryFromList<T, TU> : Dictionary<T, TU> where TU : struct
     {

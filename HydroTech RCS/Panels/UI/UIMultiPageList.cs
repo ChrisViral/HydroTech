@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech_RCS.Panels.UI
+namespace HydroTech.Panels.UI
 {
     public class UIMultiPageList<T> where T : class
     {
@@ -61,7 +62,7 @@ namespace HydroTech_RCS.Panels.UI
             if (count > this.perPage)
             {
                 GUILayout.BeginHorizontal();
-                if (this.curPage == 0) { GUILayout.Button("Prev", Panel.BtnStyle(Color.red)); }
+                if (this.curPage == 0) { GUILayout.Button("Prev", GUIUtils.ButtonStyle(Color.red)); }
                 else
                 {
                     if (GUILayout.Button("Prev"))
@@ -70,7 +71,7 @@ namespace HydroTech_RCS.Panels.UI
                         pageChanged = true;
                     }
                 }
-                if (this.OnLastPage) { GUILayout.Button("Next", Panel.BtnStyle(Color.red)); }
+                if (this.OnLastPage) { GUILayout.Button("Next", GUIUtils.ButtonStyle(Color.red)); }
                 else
                 {
                     if (GUILayout.Button("Next"))

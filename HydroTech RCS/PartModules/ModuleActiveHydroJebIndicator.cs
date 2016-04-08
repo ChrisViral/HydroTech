@@ -1,7 +1,7 @@
-﻿using HydroTech_RCS.PartModules.Base;
-using HydroTech_RCS.Parts;
+﻿using HydroTech.PartModules.Base;
+using HydroTech.Parts;
 
-namespace HydroTech_RCS.PartModules
+namespace HydroTech.PartModules
 {
     public class ModuleActiveHydroJebIndicator : ModuleActiveIndicator
     {

@@ -1,12 +1,13 @@
 ﻿using System;
-using HydroTech_FC;
-using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Panels;
-using HydroTech_RCS.Utils;
+using HydroTech.Autopilots.Calculators;
+using HydroTech.Constants;
+using HydroTech.File;
+using HydroTech.Managers;
+using HydroTech.Panels;
+using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots
+namespace HydroTech.Autopilots
 {
     public class APLanding : RCSAutopilot
     {

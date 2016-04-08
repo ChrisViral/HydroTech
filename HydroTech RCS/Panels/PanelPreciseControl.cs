@@ -1,10 +1,10 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Utils;
+﻿using HydroTech.Autopilots;
+using HydroTech.Constants;
+using HydroTech.File;
+using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public class PanelPreciseControl : PanelAP
     {

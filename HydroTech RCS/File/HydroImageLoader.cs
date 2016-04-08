@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydroTech_FC
+namespace HydroTech.File
 {
     public class HydroImageLoader
     {

@@ -1,7 +1,7 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Constants;
+﻿using HydroTech.Constants;
+using HydroTech.File;
 
-namespace HydroTech_RCS.Autopilots
+namespace HydroTech.Autopilots
 {
     public class APPreciseControl : RCSAutopilot
     {

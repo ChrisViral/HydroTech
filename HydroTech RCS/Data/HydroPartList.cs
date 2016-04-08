@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HydroTech.PartModules.Base;
 
-namespace HydroTech_FC
+namespace HydroTech.Data
 {
     public class HydroPartListBase<T>
     {

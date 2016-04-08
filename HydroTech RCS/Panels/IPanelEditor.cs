@@ -1,5 +1,5 @@
 ﻿
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public interface IPanelEditor
     {

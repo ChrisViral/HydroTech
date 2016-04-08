@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants;
+using HydroTech.Autopilots;
+using HydroTech.Constants;
 
-namespace HydroTech_RCS.Parts
+namespace HydroTech.Parts
 {
     //TODO: transform this into a PartModule
     public class HydroJeb : Part

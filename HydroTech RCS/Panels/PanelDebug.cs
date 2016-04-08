@@ -1,11 +1,12 @@
 ﻿#if DEBUG
 using System.Collections.Generic;
-using HydroTech_FC;
-using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Constants;
+using HydroTech.Autopilots;
+using HydroTech.Constants;
+using HydroTech.File;
+using HydroTech.Managers;
 using UnityEngine;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public class PanelDebug : Panel
     {

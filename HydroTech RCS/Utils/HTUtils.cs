@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydroTech_RCS.Utils
+namespace HydroTech.Utils
 {
     public static class HTUtils
     {

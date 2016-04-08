@@ -1,5 +1,5 @@
 ﻿
-namespace HydroTech_RCS.Constants
+namespace HydroTech.Constants
 {
     public static class CoreConsts
     {

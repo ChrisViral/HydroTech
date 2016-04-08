@@ -1,7 +1,7 @@
-﻿using HydroTech_FC;
+﻿using HydroTech.InGame;
 using UnityEngine;
 
-namespace HydroTech_RCS.PartModules.Base
+namespace HydroTech.PartModules.Base
 {
     public class HydroPartModule : PartModule
     {

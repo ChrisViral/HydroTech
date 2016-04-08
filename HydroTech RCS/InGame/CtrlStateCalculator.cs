@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydroTech_FC
+namespace HydroTech.InGame
 {
     public class CtrlStateCalculator
     {
@@ -58,27 +58,27 @@ namespace HydroTech_FC
 #if DEBUG
         public string PrintRot()
         {
-            return "yaw = " + yaw.ToString("#0.000")
-                + ", roll = " + roll.ToString("#0.000")
-                + ", pitch = " + pitch.ToString("#0.000");
+            return "yaw = " + this.yaw.ToString("#0.000")
+                + ", roll = " + this.roll.ToString("#0.000")
+                + ", pitch = " + this.pitch.ToString("#0.000");
         }
 
         public string PrintTrans()
         {
-            return "X = " + X.ToString("#0.000")
-                + ", Y = " + Y.ToString("#0.000")
-                + ", Z = " + Z.ToString("#0.000");
+            return "X = " + this.x.ToString("#0.000")
+                + ", Y = " + this.y.ToString("#0.000")
+                + ", Z = " + this.z.ToString("#0.000");
         }
 
         public string Print()
         {
-            return "yaw = " + yaw.ToString("#0.000")
-                + ", roll = " + roll.ToString("#0.000")
-                + ", pitch = " + pitch.ToString("#0.000")
+            return "yaw = " + this.yaw.ToString("#0.000")
+                + ", roll = " + this.roll.ToString("#0.000")
+                + ", pitch = " + this.pitch.ToString("#0.000")
                 + "\n"
-                + "X = " + X.ToString("#0.000")
-                + ", Y = " + Y.ToString("#0.000")
-                + ", Z = " + Z.ToString("#0.000");
+                + "X = " + this.x.ToString("#0.000")
+                + ", Y = " + this.y.ToString("#0.000")
+                + ", Z = " + this.z.ToString("#0.000");
         }
 
         public override string ToString()

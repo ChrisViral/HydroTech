@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace HydroTech_FC
+namespace HydroTech.File
 {
     public partial class LoadSaveFileBasic
     {
-        public enum Cmd
+        public enum CMD
         {
             NONE,
             RECT_TOP_LEFT
@@ -34,7 +34,7 @@ namespace HydroTech_FC
             return new Vector4(r.xMin, r.yMin, r.width, r.height);
         }
 
-        public static bool Read(ConfigNode node, string name, ref object result, Cmd cmd = Cmd.NONE)
+        public static bool Read(ConfigNode node, string name, ref object result, CMD cmd = CMD.NONE)
         {
             if (node.HasValue(name))
             {
@@ -47,7 +47,7 @@ namespace HydroTech_FC
                 else if (result is Vector4) { result = ConfigNode.ParseVector4(value); }
                 else if (result is Rect)
                 {
-                    if (cmd == Cmd.RECT_TOP_LEFT)
+                    if (cmd == CMD.RECT_TOP_LEFT)
                     {
                         object topleft = RectToVector2((Rect)result);
                         Read(node, name, ref topleft);
@@ -70,7 +70,7 @@ namespace HydroTech_FC
                 {
                     foreach (FieldInfo field in result.GetType().GetFields())
                     {
-                        HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
+                        HydroSLField att = (HydroSLField)Attribute.GetCustomAttribute(field, typeof(HydroSLField));
                         if (att == null || att.isTesting) { continue; }
                         object val = field.GetValue(result);
                         if (Read(node, name, ref val, cmd))
@@ -94,14 +94,14 @@ namespace HydroTech_FC
                     ConfigNode fieldNode = node.GetNode(name);
                     foreach (FieldInfo field in result.GetType().GetFields())
                     {
-                        HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
+                        HydroSLField att = (HydroSLField)Attribute.GetCustomAttribute(field, typeof(HydroSLField));
                         if (att == null || att.isTesting) { continue; }
-                        HydroSlNodeInfoAttribute[] nodes = (HydroSlNodeInfoAttribute[])Attribute.GetCustomAttributes(field, typeof(HydroSlNodeInfoAttribute));
+                        HydroSLNodeInfo[] nodes = (HydroSLNodeInfo[])Attribute.GetCustomAttributes(field, typeof(HydroSLNodeInfo));
                         if (nodes.Count() == 0) { ReadField(result, field, fieldNode, att.saveName, att.cmd); }
                         else
                         {
                             Dictionary<int, string> nodesDict = new Dictionary<int, string>();
-                            foreach (HydroSlNodeInfoAttribute nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
+                            foreach (HydroSLNodeInfo nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
                             ConfigNode tempNode = fieldNode;
                             for (int i = 0; i < nodesDict.Count; i++)
                             {
@@ -121,14 +121,14 @@ namespace HydroTech_FC
             return false;
         }
 
-        public static void Write(ConfigNode node, string name, object value, Cmd cmd = Cmd.NONE)
+        public static void Write(ConfigNode node, string name, object value, CMD cmd = CMD.NONE)
         {
             if (value is Vector2) { node.AddValue(name, ConfigNode.WriteVector((Vector2)value)); }
             else if (value is Vector3) { node.AddValue(name, ConfigNode.WriteVector((Vector3)value)); }
             else if (value is Vector4) { node.AddValue(name, ConfigNode.WriteVector((Vector4)value)); }
             else if (value is Rect)
             {
-                if (cmd == Cmd.RECT_TOP_LEFT) { Write(node, name, RectToVector2((Rect)value)); }
+                if (cmd == CMD.RECT_TOP_LEFT) { Write(node, name, RectToVector2((Rect)value)); }
                 else
                 {
                     Write(node, name, RectToVector4((Rect)value));
@@ -139,7 +139,7 @@ namespace HydroTech_FC
             {
                 foreach (FieldInfo field in value.GetType().GetFields())
                 {
-                    HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
+                    HydroSLField att = (HydroSLField)Attribute.GetCustomAttribute(field, typeof(HydroSLField));
                     if (att == null || att.isTesting) { continue; }
                     Write(node, name, field.GetValue(value), att.cmd);
                     break;
@@ -152,14 +152,14 @@ namespace HydroTech_FC
                 {
                     foreach (FieldInfo field in value.GetType().GetFields())
                     {
-                        HydroSlFieldAttribute att = (HydroSlFieldAttribute)Attribute.GetCustomAttribute(field, typeof(HydroSlFieldAttribute));
+                        HydroSLField att = (HydroSLField)Attribute.GetCustomAttribute(field, typeof(HydroSLField));
                         if (att == null || att.isTesting) { continue; }
-                        HydroSlNodeInfoAttribute[] nodes = (HydroSlNodeInfoAttribute[])Attribute.GetCustomAttributes(field, typeof(HydroSlNodeInfoAttribute));
+                        HydroSLNodeInfo[] nodes = (HydroSLNodeInfo[])Attribute.GetCustomAttributes(field, typeof(HydroSLNodeInfo));
                         if (nodes.Count() == 0) { Write(fieldNode, att.saveName, field.GetValue(value), att.cmd); }
                         else
                         {
                             Dictionary<int, string> nodesDict = new Dictionary<int, string>();
-                            foreach (HydroSlNodeInfoAttribute nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
+                            foreach (HydroSLNodeInfo nodeInfo in nodes) { nodesDict.Add(nodeInfo.i, nodeInfo.name); }
                             ConfigNode tempNode = fieldNode;
                             for (int i = 0; i < nodesDict.Count; i++)
                             {

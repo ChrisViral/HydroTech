@@ -1,8 +1,8 @@
-﻿using HydroTech_RCS.Constants;
-using HydroTech_RCS.PartModules.Base;
+﻿using HydroTech.Constants;
+using HydroTech.PartModules.Base;
 using UnityEngine;
 
-namespace HydroTech_RCS.PartModules
+namespace HydroTech.PartModules
 {
     public class ModulePartRename : HydroPartModulePanel
     {

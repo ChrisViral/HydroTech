@@ -1,9 +1,8 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Utils;
+﻿using HydroTech.InGame;
+using HydroTech.Utils;
 using UnityEngine;
-using Vector6 = HydroTech_RCS.Utils.Vector6;
 
-namespace HydroTech_RCS.Autopilots.Calculators
+namespace HydroTech.Autopilots.Calculators
 {
     public class RCSCalculator : VesselInfoCalculatorBase
     {

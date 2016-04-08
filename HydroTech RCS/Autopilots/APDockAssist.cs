@@ -1,12 +1,14 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Panels;
-using HydroTech_RCS.PartModules;
-using HydroTech_RCS.Utils;
+﻿using HydroTech.Autopilots.Calculators;
+using HydroTech.Constants;
+using HydroTech.Data;
+using HydroTech.File;
+using HydroTech.InGame;
+using HydroTech.Managers;
+using HydroTech.Panels;
+using HydroTech.PartModules;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots
+namespace HydroTech.Autopilots
 {
     public class APDockAssist : RCSAutopilot
     {
@@ -51,6 +53,11 @@ namespace HydroTech_RCS.Autopilots
         public bool TargetHasJeb
         {
             get { return this.jebsTargetVessel.Count != 0;}
+        }
+
+        public Vector3 RelV
+        {
+            get { return this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity); }
         }
         #endregion
 
@@ -176,7 +183,6 @@ namespace HydroTech_RCS.Autopilots
 
         #region Autopilot vars
         protected bool cameraPaused;
-
         public bool CameraPaused
         {
             get { return this.Engaged && this.CamView && this.cameraPaused; }
@@ -250,7 +256,7 @@ namespace HydroTech_RCS.Autopilots
 
         protected virtual void DriveKillRelV(FlightCtrlState ctrlState)
         {
-            Vector3 relVCam = RelV();
+            Vector3 relVCam = RelV;
             ctrlState.X = -relVCam.x / AutopilotConsts.vel0;
             ctrlState.Y = -relVCam.y / AutopilotConsts.vel0;
             ctrlState.Z = -relVCam.z / AutopilotConsts.vel0;
@@ -288,15 +294,15 @@ namespace HydroTech_RCS.Autopilots
             if (!stateCal.Steer(AutopilotConsts.translationReadyAngleSin)) { DriveKillRelV(ctrlState); }
             else //HoldErr
             {
-                Vector3 relPTarget = new Vector3(stateCal.X, stateCal.Y, stateCal.Z);
-                Vector2 relPTargetXy = new Vector2(stateCal.X, stateCal.Y);
-                Vector3 relVCam = RelV();
+                Vector3 relPTarget = new Vector3(stateCal.x, stateCal.y, stateCal.z);
+                Vector2 relPTargetXy = new Vector2(stateCal.x, stateCal.y);
+                Vector3 relVCam = RelV;
                 Vector2 relVCamXy = new Vector2(relVCam.x, relVCam.y);
-                if (relPTargetXy.magnitude < AutopilotConsts.finalStageErr && stateCal.Z < AutopilotConsts.finalStagePos.z + AutopilotConsts.finalStageErr && stateCal.Z > 0) { DriveFinalStage(ctrlState, relPTarget, relVCam); }
+                if (relPTargetXy.magnitude < AutopilotConsts.finalStageErr && stateCal.z < AutopilotConsts.finalStagePos.z + AutopilotConsts.finalStageErr && stateCal.z > 0) { DriveFinalStage(ctrlState, relPTarget, relVCam); }
                 else if (relVCam.magnitude > AutopilotConsts.maxSpeed) { DriveKillRelV(ctrlState); }
                 else //< MaxSpeed
                 {
-                    if (stateCal.Z < AutopilotConsts.minZ)
+                    if (stateCal.z < AutopilotConsts.minZ)
                     {
                         if (relPTargetXy.magnitude < AutopilotConsts.minXy)
                         {
@@ -397,7 +403,7 @@ namespace HydroTech_RCS.Autopilots
                         bool orientReady = stateCal.Steer(AutopilotConsts.translationReadyAngleSin);
                         if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < AutopilotConsts.maxAngularV)
                         {
-                            DriveFinalStage(ctrlState, VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), RelV());
+                            DriveFinalStage(ctrlState, VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), RelV);
                             CamToVessel_Trans(ctrlState, this.Cam);
                         }
                         else
@@ -448,11 +454,6 @@ namespace HydroTech_RCS.Autopilots
             this.line.SetWidth(0, 0);
             this.line.SetPosition(0, Vector3.zero);
             this.line.SetPosition(1, Vector3.zero);
-        }
-
-        protected Vector3 RelV()
-        {
-            return this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity);
         }
         #endregion
 

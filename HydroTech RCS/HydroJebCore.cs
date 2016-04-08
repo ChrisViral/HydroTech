@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using HydroTech_FC;
-using HydroTech_RCS.Autopilots;
-using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Panels;
-using HydroTech_RCS.PartModules;
-using HydroTech_RCS.Parts;
-using HydroTech_RCS.Utils;
+using HydroTech.Autopilots;
+using HydroTech.Autopilots.Calculators;
+using HydroTech.Constants;
+using HydroTech.Data;
+using HydroTech.File;
+using HydroTech.Managers;
+using HydroTech.Panels;
+using HydroTech.PartModules;
+using HydroTech.Parts;
+using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech_RCS
+namespace HydroTech
 {
     public static class HydroJebCore
     {
         #region Folders
-        public static readonly FileName.Folder autopilotSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "autopilots");
-        public static readonly FileName.Folder panelSaveFolder = new FileName.Folder(FileName.HydroTechFolder, "PluginData", "rcsautopilot", "panels");
+        public static readonly FileName.Folder autopilotSaveFolder = new FileName.Folder(FileName.hydroTechFolder, "PluginData", "rcsautopilot", "autopilots");
+        public static readonly FileName.Folder panelSaveFolder = new FileName.Folder(FileName.hydroTechFolder, "PluginData", "rcsautopilot", "panels");
         #endregion
 
         #region Constructor
@@ -121,10 +123,10 @@ namespace HydroTech_RCS
                 jebs.OnStart();
                 if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
                 if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 1) { return; }
-                HydroFlightCameraManager.onFlightStart();
+                HydroFlightCameraManager.OnFlightStart();
                 foreach (RCSAutopilot ap in autopilots.Values) { ap.OnFlightStart(); }
                 foreach (Panel panel in panels.Values) { panel.OnFlightStart(); }
-                HydroFlightInputManager.onFlightStart();
+                HydroFlightInputManager.OnFlightStart();
                 if (HydroRenderingManager.Contains(CoreConsts.renderMgrQueueSpot)) { RemoveMainButton(); }
                 AddMainButton();
                 electricity = true;

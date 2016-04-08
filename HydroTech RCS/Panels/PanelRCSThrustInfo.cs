@@ -1,10 +1,10 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.Autopilots.Calculators;
-using HydroTech_RCS.Constants;
-using HydroTech_RCS.Utils;
+﻿using HydroTech.Autopilots.Calculators;
+using HydroTech.Constants;
+using HydroTech.File;
+using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech_RCS.Panels
+namespace HydroTech.Panels
 {
     public class PanelRCSThrustInfo : Panel, IPanelEditor
     {
@@ -27,7 +27,7 @@ namespace HydroTech_RCS.Panels
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLNodeInfo(i = 1, name = "SETTINGS"), HydroSLField(saveName = "ShowRotation")]
         public bool showRotation = true;
 
-        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "WindowPos", cmd = CMD.Rect_TopLeft)]
+        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "WindowPos", cmd = CMD.RECT_TOP_LEFT)]
         public Rect windowRectEditor;
 
         protected bool editor;

@@ -7,8 +7,8 @@
     <ProjectGuid>{A6616A0F-8958-4DCD-BE81-C6B0943B1EBA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HydroTech_RCS</RootNamespace>
-    <AssemblyName>HydroTech RCS</AssemblyName>
+    <RootNamespace>HydroTech</RootNamespace>
+    <AssemblyName>HydroTech</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -37,11 +37,6 @@
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="HydroTech_FC, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Output\GameData\HydroTech\Plugins\HydroTech_FC.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KSPUtil">
@@ -76,6 +71,22 @@
     <Compile Include="Constants\CoreConsts.cs" />
     <Compile Include="Constants\GeneralConsts.cs" />
     <Compile Include="Constants\PanelConsts.cs" />
+    <Compile Include="Data\AffiliationList.cs" />
+    <Compile Include="Data\DictionaryFromList.cs" />
+    <Compile Include="Data\HydroPartList.cs" />
+    <Compile Include="Data\HydroPartListEditor.cs" />
+    <Compile Include="Data\SubList.cs" />
+    <Compile Include="File\FileName.cs" />
+    <Compile Include="File\HydroImageLoader.cs" />
+    <Compile Include="File\HydroSLAttributes.cs" />
+    <Compile Include="File\LoadSaveFileBasic0.cs" />
+    <Compile Include="File\LoadSaveFileBasic1.cs" />
+    <Compile Include="InGame\CtrlStateCalculator.cs" />
+    <Compile Include="InGame\SwitchTransformCalculator.cs" />
+    <Compile Include="Managers\ManagerActionGroup.cs" />
+    <Compile Include="Managers\ManagerFlightCamera.cs" />
+    <Compile Include="Managers\ManagerFlightInput.cs" />
+    <Compile Include="Managers\ManagerRendering.cs" />
     <Compile Include="Utils\GUIUtils.cs" />
     <Compile Include="HydroJebCore.cs" />
     <Compile Include="Panels\IPanelEditor.cs" />

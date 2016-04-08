@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HydroTech_FC
+namespace HydroTech.Managers
 {
     public static class HydroFlightCameraManager
     {

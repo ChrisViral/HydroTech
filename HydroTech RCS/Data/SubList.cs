@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HydroTech_FC
+namespace HydroTech.Data
 {
     public class SubList<T> : List<T>
     {

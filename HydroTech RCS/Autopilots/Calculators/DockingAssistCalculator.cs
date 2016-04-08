@@ -1,9 +1,7 @@
-﻿using HydroTech_FC;
-using HydroTech_RCS.PartModules;
-using HydroTech_RCS.Utils;
+﻿using HydroTech.PartModules;
 using UnityEngine;
 
-namespace HydroTech_RCS.Autopilots.Calculators
+namespace HydroTech.Autopilots.Calculators
 {
     public class DockingAssistCalculator : HoldDirectionCalculator
     {
@@ -12,9 +10,9 @@ namespace HydroTech_RCS.Autopilots.Calculators
         {
             Calculate(mtgt.Dir, mtgt.Right, mcam.Dir, mcam.Right, mcam.vessel);
             Vector3 r = mtgt.Pos - mcam.Pos;
-            this.X = Vector3.Dot(r, mtgt.Right);
-            this.Y = Vector3.Dot(r, mtgt.Down);
-            this.Z = Vector3.Dot(r, mtgt.Dir);
+            this.x = Vector3.Dot(r, mtgt.Right);
+            this.y = Vector3.Dot(r, mtgt.Down);
+            this.z = Vector3.Dot(r, mtgt.Dir);
         }
         #endregion
     }
