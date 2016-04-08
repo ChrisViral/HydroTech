@@ -49,7 +49,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
         #endregion
@@ -110,7 +110,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -136,7 +136,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -156,7 +156,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -172,7 +172,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -205,7 +205,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -222,7 +222,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -255,7 +255,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -287,7 +287,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
 
@@ -300,7 +300,7 @@ namespace HydroTech
             }
             catch (Exception e)
             {
-                Debug.LogError("[HydroTech]: Error thrown in HydroJebCore\n" + e.StackTrace);
+                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
             }
         }
         #endregion

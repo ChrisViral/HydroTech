@@ -133,7 +133,7 @@ namespace HydroTech.Autopilots.Calculators
             this.maxForce.Reset();
             foreach (Part p in this.partList)
             {
-                Vector3 r = SwitchTransformCalculator.VectorTransform(p.GetComponent<Rigidbody>().worldCenterOfMass - this.CoM, this.transformRight, this.transformDown, this.transformForward);
+                Vector3 r = SwitchTransformCalculator.VectorTransform(p.WCoM - this.CoM, this.transformRight, this.transformDown, this.transformForward);
                 foreach (PartModule pm in p.Modules)
                 {
                     if (pm is ModuleRCS)
