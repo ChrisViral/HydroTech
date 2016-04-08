@@ -1,28 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace HydroTech.Data
 {
     public class HydroPartListEditor : List<Part>
     {
-        public void OnStart(out bool clear)
+        #region Methods
+        public void Initialize(out bool clear)
         {
-            clear = false;
-            foreach (Part p in this)
-            {
-                if (p == null)
-                {
-                    clear = true;
-                    break;
-                }
-            }
+            clear = this.Any(p => p == null);
             if (clear) { Clear(); }
         }
 
-        public void OnUpdate()
+        public void Update()
         {
-            List<Part> partsToRemove = new List<Part>();
-            foreach (Part p in this) { if (p == null) { partsToRemove.Add(p); } }
-            foreach (Part p in partsToRemove) { Remove(p); }
+            RemoveAll(p => p == null);
         }
+        #endregion
     }
 }

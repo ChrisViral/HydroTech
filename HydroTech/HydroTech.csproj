@@ -74,7 +74,9 @@
     <Compile Include="Data\AffiliationList.cs" />
     <Compile Include="Data\DictionaryFromList.cs" />
     <Compile Include="Data\HydroPartList.cs" />
+    <Compile Include="Data\HydroPartListBase.cs" />
     <Compile Include="Data\HydroPartListEditor.cs" />
+    <Compile Include="Data\HydroPartModuleList.cs" />
     <Compile Include="Data\SubList.cs" />
     <Compile Include="File\FileName.cs" />
     <Compile Include="File\HydroImageLoader.cs" />

@@ -333,10 +333,10 @@ namespace HydroTech.Panels
         public PanelDockAssist()
         {
             this.fileName = new FileName("dock", "cfg", HydroJebCore.panelSaveFolder);
-            this.camListUI = new UISingleSelectionList<HydroPartModule>(HydroJebCore.dockCams.listActiveVessel);
-            this.targetVesselList = new AffiliationList<HydroPartModule, Vessel>(HydroJebCore.dockTargets.listInactiveVessel, (AffiliationList<HydroPartModule, Vessel>.GetItemFunctionSingle)GetTargetVessel);
+            this.camListUI = new UISingleSelectionList<HydroPartModule>(HydroJebCore.dockCams.ListActiveVessel);
+            this.targetVesselList = new AffiliationList<HydroPartModule, Vessel>(HydroJebCore.dockTargets.ListInactiveVessel, (AffiliationList<HydroPartModule, Vessel>.GetItemFunctionSingle)GetTargetVessel);
             this.targetVesselListUI = new UISingleSelectionList<Vessel>(this.targetVesselList);
-            this.targetList = new SubList<HydroPartModule>(HydroJebCore.dockTargets.listInactiveVessel, IsOnTargetVessel);
+            this.targetList = new SubList<HydroPartModule>(HydroJebCore.dockTargets.ListInactiveVessel, IsOnTargetVessel);
             this.targetListUI = new UISingleSelectionList<HydroPartModule>(this.targetList);
         }
         #endregion
@@ -471,7 +471,7 @@ namespace HydroTech.Panels
         public override void OnUpdate()
         {
             base.OnUpdate();
-            this.targetVesselList.OnUpdate();
+            this.targetVesselList.Update();
             this.targetList.OnUpdate();
             this.camListUI.OnUpdate();
             this.targetVesselListUI.OnUpdate();

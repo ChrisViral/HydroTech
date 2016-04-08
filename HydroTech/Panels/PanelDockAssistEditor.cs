@@ -85,10 +85,10 @@ namespace HydroTech.Panels
         {
             this.cams.SetParent(EditorLogic.SortedShipList);
             this.targets.SetParent(EditorLogic.SortedShipList);
-            this.cams.OnUpdate();
-            this.targets.OnUpdate();
-            this.camSet.OnUpdate();
-            this.tgtSet.OnUpdate();
+            this.cams.Update();
+            this.targets.Update();
+            this.camSet.Update();
+            this.tgtSet.Update();
             this.camUI.OnUpdate();
             this.tgtUI.OnUpdate();
             if (this.needSave) { Save(); }

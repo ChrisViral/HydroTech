@@ -101,7 +101,7 @@ namespace HydroTech
         {
             try
             {
-                jebsEditor.OnUpdate();
+                jebsEditor.Update();
                 activeVesselRcs.OnEditorUpdate();
                 foreach (IPanelEditor p in panelsEditor.Values) { p.OnEditorUpdate(); }
             }
@@ -120,7 +120,7 @@ namespace HydroTech
                     jebsEditor.Clear();
                     foreach (IPanelEditor p in panelsEditor.Values) { p.HideInEditor(); }
                 }
-                jebs.OnStart();
+                jebs.Initialize();
                 if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
                 if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 1) { return; }
                 HydroFlightCameraManager.OnFlightStart();
@@ -212,7 +212,7 @@ namespace HydroTech
             {
                 if (!HighLogic.LoadedSceneIsEditor) { return; }
                 bool clear;
-                jebsEditor.OnStart(out clear);
+                jebsEditor.Initialize(out clear);
                 if (clear) { foreach (IPanelEditor p in panelsEditor.Values) { p.HideInEditor(); } }
                 jebsEditor.Add(jeb);
                 if (jebsEditor.Count == 1) { foreach (IPanelEditor p in panelsEditor.Values) { p.ShowInEditor(); } }
@@ -227,7 +227,7 @@ namespace HydroTech
         {
             try
             {
-                jebs.OnUpdate();
+                jebs.Update();
                 if (jebs.CountActive == 0)
                 {
                     foreach (Panel panel in panels.Values) { panel.OnDeactivate(); }
@@ -277,7 +277,7 @@ namespace HydroTech
             try
             {
                 if (!dockCams.Contains(mcam)) { dockCams.Add(mcam); }
-                dockCams.OnUpdate();
+                dockCams.Update();
             }
             catch (Exception e)
             {
@@ -290,7 +290,7 @@ namespace HydroTech
             try
             {
                 if (!dockTargets.Contains(mtgt)) { dockTargets.Add(mtgt); }
-                dockTargets.OnUpdate();
+                dockTargets.Update();
             }
             catch (Exception e)
             {

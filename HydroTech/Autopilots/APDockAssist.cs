@@ -229,7 +229,7 @@ namespace HydroTech.Autopilots
         public APDockAssist()
         {
             this.fileName = new FileName("dock", "cfg", HydroJebCore.autopilotSaveFolder);
-            this.jebsTargetVessel = new SubList<Part>(HydroJebCore.jebs.listInactiveVessel, IsJebTargetVessel);
+            this.jebsTargetVessel = new SubList<Part>(HydroJebCore.jebs.ListInactiveVessel, IsJebTargetVessel);
         }
         #endregion
 
