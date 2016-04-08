@@ -167,7 +167,7 @@ namespace HydroTech.Autopilots.Calculators
                 this.terrain = false;
             }
 
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Direction dir = (Direction)i;
                 if (this.distance[dir] > this.altASL && this.MainBody.ocean) { this.distance[dir] = this.altASL; }
