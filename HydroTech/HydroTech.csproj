@@ -79,7 +79,6 @@
     <Compile Include="Data\HydroPartModuleList.cs" />
     <Compile Include="Data\SubList.cs" />
     <Compile Include="File\FileName.cs" />
-    <Compile Include="File\HydroImageLoader.cs" />
     <Compile Include="File\HydroSLAttributes.cs" />
     <Compile Include="File\LoadSaveFileBasic0.cs" />
     <Compile Include="File\LoadSaveFileBasic1.cs" />

@@ -6,7 +6,7 @@ namespace HydroTech.File
     {
         public class Folder
         {
-            public string name = "";
+            public string name = string.Empty;
 
             public Folder subfolder;
 
