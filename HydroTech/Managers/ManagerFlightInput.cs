@@ -1,8 +1,4 @@
-﻿#if DEBUG
-#define HANDLER_SHOW_ADD_REMOVE
-#endif
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,93 +7,101 @@ namespace HydroTech.Managers
 {
     public static class HydroFlightInputManager
     {
-        public class HydroFlightInputCallback
+        public struct HydroFlightInputCallback
         {
+            #region Fields
             public FlightInputCallback callback;
-            public string nameString = "";
-
+            public string nameString;
             public Vessel vessel;
+            #endregion
 
+            #region Constructor
             public HydroFlightInputCallback(Vessel v, string str, FlightInputCallback cb)
             {
                 this.vessel = v;
                 this.nameString = str;
                 this.callback = cb;
             }
+            #endregion
         }
 
         private class HydroFlightInputHandler
         {
-            public Dictionary<string, FlightInputCallback> flightInputList = new Dictionary<string, FlightInputCallback>();
-
+            #region Fields
+            public readonly Dictionary<string, FlightInputCallback> flightInputList;
             public bool isDestroyed;
-
-            public Vessel vessel;
+            public readonly Vessel vessel;
             public Part vesselRootPart;
+            #endregion
 
+            #region Constructor
             public HydroFlightInputHandler(Vessel v)
             {
+                this.flightInputList = new Dictionary<string, FlightInputCallback>();
                 this.vessel = v;
                 this.vesselRootPart = v.rootPart;
             }
+            #endregion
         }
 
-        private static List<HydroFlightInputHandler> handlerList = new List<HydroFlightInputHandler>();
+        #region Static Fields
+        private static readonly List<HydroFlightInputHandler> handlerList = new List<HydroFlightInputHandler>();
+        #endregion
 
+        #region Static methods
         private static bool ContainsVessel(Vessel vessel)
         {
-            if (vessel == null) { throw new Exception("HydroFlightInputManager.ContainsVessel: vessel is null"); }
+            if (vessel == null) { throw new NullReferenceException("HydroFlightInputManager.ContainsVessel: vessel is null"); }
             return handlerList.Any(handler => handler.vessel == vessel);
         }
 
         public static bool ContainsNameString(string str)
         {
-            foreach (HydroFlightInputHandler handler in handlerList) { if (!handler.isDestroyed && handler.flightInputList.Keys.Contains(str)) { return true; } }
-            return false;
+            return handlerList.Any(handler => !handler.isDestroyed && handler.flightInputList.Keys.Contains(str));
         }
 
         private static Dictionary<string, FlightInputCallback> InputList(Vessel vessel)
         {
-            HydroFlightInputHandler h = null;
-            try { h = Handler(vessel); }
-            catch (Exception)
+            HydroFlightInputHandler h;
+            try {h = Handler(vessel); }
+            catch (Exception e)
             {
-                throw new Exception("HydroFlightInputHandler.InputList fail: vessel not found; please check before calling");
+                throw new InvalidOperationException("HydroFlightInputHandler.InputList fail: vessel not found; please check before calling", e);
             }
             return h.flightInputList;
         }
 
         private static HydroFlightInputHandler Handler(Vessel vessel)
         {
-            foreach (HydroFlightInputHandler handler in handlerList) { if (handler.vessel == vessel) { return handler; } }
-            throw new Exception("HydroFlightInputHandler.Handler fail: vessel not found; please check before calling");
+            foreach (HydroFlightInputHandler handler in handlerList.Where(handler => handler.vessel == vessel)) { return handler; }
+            throw new InvalidOperationException("HydroFlightInputHandler.Handler fail: vessel not found; please check before calling");
         }
 
         public static void AddOnFlyByWire(HydroFlightInputCallback callback)
         {
-            if (callback.vessel == null) { throw new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding " + callback.nameString + ": vessel is null"); }
+            if (callback.vessel == null) { throw new NullReferenceException("HydroFlightInputManager.AddOnFlyByWire failed when adding " + callback.nameString + ": vessel is null"); }
             if (!ContainsVessel(callback.vessel)) { handlerList.Add(new HydroFlightInputHandler(callback.vessel)); }
-            if (InputList(callback.vessel).Values.Contains(callback.callback)) { throw new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding " + callback.nameString + ": OnFlyByWire already added"); }
-            if (ContainsNameString(callback.nameString)) { throw new Exception("HydroFlightInputManager.AddOnFlyByWire fail when adding " + callback.nameString + ": duplicate nameString"); }
+            if (InputList(callback.vessel).Values.Contains(callback.callback)) { throw new InvalidOperationException("HydroFlightInputManager.AddOnFlyByWire failed when adding " + callback.nameString + ": OnFlyByWire already added"); }
+            if (ContainsNameString(callback.nameString)) { throw new InvalidOperationException("HydroFlightInputManager.AddOnFlyByWire fail when adding " + callback.nameString + ": duplicate nameString"); }
             InputList(callback.vessel).Add(callback.nameString, callback.callback);
             callback.vessel.OnFlyByWire += callback.callback;
-#if HANDLER_SHOW_ADD_REMOVE
-            Debug.Log("Added an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
+#if DEBUG
+            Debug.Log("Added an OnFlyByWire, vessel " + (callback.vessel.isActiveVessel ? "is" : " is not") + " ActiveVessel, name: " + callback.nameString);
             PrintCount();
 #endif
         }
 
         public static void RemoveOnFlyByWire(HydroFlightInputCallback callback)
         {
-            if (callback.vessel == null) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": vessel is null"); }
-            if (!ContainsVessel(callback.vessel)) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": vessel does not have OnFlyByWire"); }
-            if (!InputList(callback.vessel).Values.Contains(callback.callback)) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": OnFlyByWire not found"); }
-            if (!InputList(callback.vessel).Keys.Contains(callback.nameString)) { throw new Exception("HydroFlightInputManager.RemoveOnFlyByWire fail when removing " + callback.nameString + ": nameString not found"); }
+            if (callback.vessel == null) { throw new NullReferenceException("HydroFlightInputManager.RemoveOnFlyByWire failed when removing " + callback.nameString + ": vessel is null"); }
+            if (!ContainsVessel(callback.vessel)) { throw new NullReferenceException("HydroFlightInputManager.RemoveOnFlyByWire failed when removing " + callback.nameString + ": vessel does not have OnFlyByWire"); }
+            if (!InputList(callback.vessel).Values.Contains(callback.callback)) { throw new InvalidOperationException("HydroFlightInputManager.RemoveOnFlyByWire failed when removing " + callback.nameString + ": OnFlyByWire not found"); }
+            if (!InputList(callback.vessel).Keys.Contains(callback.nameString)) { throw new InvalidOperationException("HydroFlightInputManager.RemoveOnFlyByWire failed when removing " + callback.nameString + ": nameString not found"); }
             InputList(callback.vessel).Remove(callback.nameString);
             callback.vessel.OnFlyByWire -= callback.callback;
             if (InputList(callback.vessel).Count == 0) { handlerList.Remove(Handler(callback.vessel)); }
-#if HANDLER_SHOW_ADD_REMOVE
-            Debug.Log("Removed an OnFlyByWire, vessel " + (callback.vessel == FlightGlobals.ActiveVessel ? "==" : "!=") + " ActiveVessel, name = " + callback.nameString);
+#if DEBUG
+            Debug.Log("Removed an OnFlyByWire, vessel " + (callback.vessel.isActiveVessel ? "is" : " is not") + " ActiveVessel, name: " + callback.nameString);
             PrintCount();
 #endif
         }
@@ -129,36 +133,27 @@ namespace HydroTech.Managers
                         if (v.packed || ContainsVessel(v)) { continue; }
                         if (v.rootPart == handler.vesselRootPart)
                         {
-#if HANDLER_SHOW_ADD_REMOVE
+#if DEBUG
                             Debug.Log("A previously destroyed vessel has been detected.");
 #endif
                             listToRemove.Add(handler);
                         }
                     }
                 }
-                else
+                else if(handler.vessel == null)
                 {
-                    if (handler.vessel == null)
-                    {
-#if HANDLER_SHOW_ADD_REMOVE
-                        Debug.Log("A vessel has been detected destroyed.");
+#if DEBUG
+                    Debug.Log("A vessel has been detected destroyed.");
 #endif
-                        handler.isDestroyed = true;
-                    }
-                    else
-                    {
-                        handler.vesselRootPart = handler.vessel.rootPart;
-                    }
+                    handler.isDestroyed = true;
                 }
+                else { handler.vesselRootPart = handler.vessel.rootPart; }
             }
             foreach (HydroFlightInputHandler h in listToRemove)
             {
-                /*
-                foreach (FlightInputCallback callback in h.flightInputList.Values)
-                    h.vesselRootPart.vessel.OnFlyByWire -= callback;*/
                 handlerList.Remove(h);
             }
-#if HANDLER_SHOW_ADD_REMOVE
+#if DEBUG
             if (listToRemove.Count != 0)
             {
                 Debug.Log("OnFlyByWire's on destroyed vessels has been removed.");
@@ -166,7 +161,9 @@ namespace HydroTech.Managers
             }
 #endif
         }
+        #endregion
 
+        #region Debug
 #if DEBUG
         public static void PrintCount()
         {
@@ -185,27 +182,24 @@ namespace HydroTech.Managers
                     apActive += handler.flightInputList.Count;
                 }
             }
-            Debug.Log("Total " + (vesselActive + vesselDestroyed) + " vessels, " + (apActive + apInactive) + " autopilots" + "\nActive: " + vesselActive + " vessels, " + apActive + " autopilots" + "\nInactive: " + vesselDestroyed + " vessels, " + apInactive + " autopilots");
+            Debug.Log(string.Format("Total {0} vessels, {1} autopilots\nActive: {2} vessels, {3} autopilots\nInactive: {4} vessels, {5} autopilots", vesselActive + vesselDestroyed, apActive + apInactive, vesselActive, apActive, vesselDestroyed, apInactive));
         }
 
         public static string StringList()
         {
-            string msgStr = "Vessel count = " + handlerList.Count;
+            string msgStr = "Vessel count: " + handlerList.Count;
             int count = 0;
             foreach (HydroFlightInputHandler handler in handlerList)
             {
                 if (handler.isDestroyed)
                 {
-                    msgStr += "\nVessel " + count++ + " destroyed" + ", count = " + handler.flightInputList.Count;
+                    msgStr += string.Format("\nVessel {0} destroyed, count: {1}", count++, handler.flightInputList.Count);
                 }
                 else
                 {
-                    msgStr += "\nVessel " + count++ + " isActiveVessel = " + (handler.vessel == FlightGlobals.ActiveVessel) + ", count = " + handler.flightInputList.Count;
+                    msgStr += string.Format("\nVessel {0} isActiveVessel = {1}, count = {2}", count++, handler.vessel.isActiveVessel, handler.flightInputList.Count);
                 }
-                foreach (string str in handler.flightInputList.Keys)
-                {
-                    msgStr += "\n\t" + str;
-                }
+                msgStr = handler.flightInputList.Keys.Aggregate(msgStr, (current, str) => current + "\n\t" + str);
             }
             return msgStr;
         }
@@ -215,5 +209,6 @@ namespace HydroTech.Managers
             Debug.Log(StringList());
         }
 #endif
+        #endregion
     }
 }
