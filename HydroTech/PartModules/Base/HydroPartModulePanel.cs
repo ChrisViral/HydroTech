@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using HydroTech.Managers;
+using UnityEngine;
 
 namespace HydroTech.PartModules.Base
 {
@@ -17,8 +18,8 @@ namespace HydroTech.PartModules.Base
             {
                 if (this.Registered && !this.panelShown) { return; }
                 //TODO: More RenderingManager
-                if (value && !this.panelShown) { RenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGUI); }
-                else if (!value && this.panelShown) { RenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGUI); }
+                if (value && !this.panelShown) { HydroRenderingManager.Instance.AddToDrawQueue(DrawGUI); }
+                else if (!value && this.panelShown) { HydroRenderingManager.Instance.RemoveFromDrawQueue(DrawGUI); }
                 this.panelShown = value;
                 this.Registered = value;
             }

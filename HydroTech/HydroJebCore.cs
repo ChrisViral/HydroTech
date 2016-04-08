@@ -106,7 +106,10 @@ namespace HydroTech
             {
                 jebsEditor.Update();
                 activeVesselRcs.OnEditorUpdate();
-                foreach (IPanelEditor p in panelsEditor.Values) { p.OnEditorUpdate(); }
+                foreach (IPanelEditor p in panelsEditor.Values)
+                {
+                    p.OnEditorUpdate();
+                }
             }
             catch (Exception e)
             {
@@ -121,14 +124,23 @@ namespace HydroTech
                 if (jebsEditor.Count != 0) //Check for jebsEditor
                 {
                     jebsEditor.Clear();
-                    foreach (IPanelEditor p in panelsEditor.Values) { p.HideInEditor(); }
+                    foreach (IPanelEditor p in panelsEditor.Values)
+                    {
+                        p.HideInEditor();
+                    }
                 }
                 jebs.Initialize();
                 if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
-                if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 1) { return; }
+                if (!jeb.vessel.isActiveVessel || jebs.CountActive != 1) { return; }
                 HydroFlightCameraManager.OnFlightStart();
-                foreach (RCSAutopilot ap in autopilots.Values) { ap.OnFlightStart(); }
-                foreach (Panel panel in panels.Values) { panel.OnFlightStart(); }
+                foreach (RCSAutopilot ap in autopilots.Values)
+                {
+                    ap.OnFlightStart();
+                }
+                foreach (Panel panel in panels.Values)
+                {
+                    panel.OnFlightStart();
+                }
                 HydroFlightInputManager.OnFlightStart();
                 if (inQueue) { RemoveMainButton(); }
                 AddMainButton();
@@ -144,14 +156,17 @@ namespace HydroTech
         {
             try
             {
-                if (!jebs.Contains(jeb)) { jebs.Remove(jeb); }
-                else
+                if (!jebs.Contains(jeb)) { return; }
+                jebs.Remove(jeb);
+                if (!jeb.vessel.isActiveVessel || jebs.CountActive != 0) { return; }
+                foreach (Panel panel in panels.Values)
                 {
-                    return;
+                    panel.OnGamePause();
                 }
-                if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 0) { return; }
-                foreach (Panel panel in panels.Values) { panel.OnGamePause(); }
-                foreach (RCSAutopilot ap in autopilots.Values) { ap.OnGamePause(); }
+                foreach (RCSAutopilot ap in autopilots.Values)
+                {
+                    ap.OnGamePause();
+                }
                 RemoveMainButton();
             }
             catch (Exception e)
@@ -165,9 +180,15 @@ namespace HydroTech
             try
             {
                 if (!jebs.Contains(jeb)) { jebs.Add(jeb); }
-                if (jeb.vessel != FlightGlobals.ActiveVessel || jebs.CountActive != 1) { return; }
-                foreach (RCSAutopilot ap in autopilots.Values) { ap.OnGameResume(); }
-                foreach (Panel panel in panels.Values) { panel.OnGameResume(); }
+                if (!jeb.vessel.isActiveVessel || jebs.CountActive != 1) { return; }
+                foreach (RCSAutopilot ap in autopilots.Values)
+                {
+                    ap.OnGameResume();
+                }
+                foreach (Panel panel in panels.Values)
+                {
+                    panel.OnGameResume();
+                }
                 AddMainButton();
             }
             catch (Exception e)
@@ -182,24 +203,27 @@ namespace HydroTech
             {
                 if (HighLogic.LoadedSceneIsEditor)
                 {
-                    if (jebsEditor.Contains(jeb)) { jebsEditor.Remove(jeb); }
-                    else
-                    {
-                        return;
-                    }
+                    if (!jebsEditor.Contains(jeb)) { return;}
+                    jebsEditor.Remove(jeb);
                     if (jebsEditor.Count != 0) { return; }
-                    foreach (IPanelEditor p in panelsEditor.Values) { p.HideInEditor(); }
+                    foreach (IPanelEditor p in panelsEditor.Values)
+                    {
+                        p.HideInEditor();
+                    }
                 }
                 else if (HighLogic.LoadedSceneIsFlight)
                 {
-                    if (jebs.Contains(jeb)) { jebs.Remove(jeb); }
-                    else
-                    {
-                        return;
-                    }
+                    if (!jebs.Contains(jeb)) { return;}
+                    jebs.Remove(jeb);
                     if (jebs.CountActive != 0) { return; }
-                    foreach (Panel panel in panels.Values) { panel.OnDeactivate(); }
-                    foreach (RCSAutopilot ap in autopilots.Values) { ap.OnDeactivate(); }
+                    foreach (Panel panel in panels.Values)
+                    {
+                        panel.OnDeactivate();
+                    }
+                    foreach (RCSAutopilot ap in autopilots.Values)
+                    {
+                        ap.OnDeactivate();
+                    }
                     RemoveMainButton();
                 }
             }
@@ -216,9 +240,21 @@ namespace HydroTech
                 if (!HighLogic.LoadedSceneIsEditor) { return; }
                 bool clear;
                 jebsEditor.Initialize(out clear);
-                if (clear) { foreach (IPanelEditor p in panelsEditor.Values) { p.HideInEditor(); } }
+                if (clear)
+                {
+                    foreach (IPanelEditor p in panelsEditor.Values)
+                    {
+                        p.HideInEditor();
+                    }
+                }
                 jebsEditor.Add(jeb);
-                if (jebsEditor.Count == 1) { foreach (IPanelEditor p in panelsEditor.Values) { p.ShowInEditor(); } }
+                if (jebsEditor.Count == 1)
+                {
+                    foreach (IPanelEditor p in panelsEditor.Values)
+                    {
+                        p.ShowInEditor();
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -233,8 +269,14 @@ namespace HydroTech
                 jebs.Update();
                 if (jebs.CountActive == 0)
                 {
-                    foreach (Panel panel in panels.Values) { panel.OnDeactivate(); }
-                    foreach (RCSAutopilot ap in autopilots.Values) { ap.OnDeactivate(); }
+                    foreach (Panel panel in panels.Values)
+                    {
+                        panel.OnDeactivate();
+                    }
+                    foreach (RCSAutopilot ap in autopilots.Values)
+                    {
+                        ap.OnDeactivate();
+                    }
                     if (inQueue) { RemoveMainButton(); }
                 }
                 else
@@ -243,14 +285,17 @@ namespace HydroTech
                     activeVesselRcs.OnUpdate(FlightGlobals.ActiveVessel);
                     HydroFlightCameraManager.OnUpdate();
                     HydroFlightInputManager.OnUpdate();
-                    foreach (RCSAutopilot ap in autopilots.Values) { ap.OnUpdate(); }
-                    foreach (Panel panel in panels.Values) { panel.OnUpdate(); }
+                    foreach (RCSAutopilot ap in autopilots.Values)
+                    {
+                        ap.OnUpdate();
+                    }
+                    foreach (Panel panel in panels.Values)
+                    {
+                        panel.OnUpdate();
+                    }
                     if (!inQueue) { AddMainButton(); }
                     if (!isReady) { mainBtnColor = Color.yellow; }
-                    else
-                    {
-                        mainBtnColor = electricity ? Color.green : Color.red;
-                    }
+                    else { mainBtnColor = electricity ? Color.green : Color.red; }
                 }
             }
             catch (Exception e)
