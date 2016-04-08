@@ -1,17 +1,15 @@
-﻿namespace HydroTech.Managers
+﻿
+namespace HydroTech.Managers
 {
     public static class HydroActionGroupManager
     {
         public class ActionGroupState
         {
-            private Vessel vessel;
+            #region Fields
+            private readonly Vessel vessel;
+            #endregion
 
-            public bool this[KSPActionGroup action]
-            {
-                get { return GetState(action); }
-                set { SetState(action, value); }
-            }
-
+            #region Properties
             public bool Abort
             {
                 get { return GetState(KSPActionGroup.Abort); }
@@ -113,12 +111,24 @@
                 get { return GetState(KSPActionGroup.Stage); }
                 set { SetState(KSPActionGroup.Stage, value); }
             }
+            #endregion
 
+            #region Indexer
+            public bool this[KSPActionGroup action]
+            {
+                get { return GetState(action); }
+                set { SetState(action, value); }
+            }
+            #endregion
+
+            #region Constructor
             public ActionGroupState(Vessel v)
             {
                 this.vessel = v;
             }
+            #endregion
 
+            #region Methods
             public bool GetState(KSPActionGroup action)
             {
                 return HydroActionGroupManager.GetState(this.vessel, action);
@@ -128,11 +138,18 @@
             {
                 HydroActionGroupManager.SetState(this.vessel, action, active);
             }
+            #endregion
         }
 
+        #region Static methods
         public static ActionGroupState ActiveVessel
         {
             get { return new ActionGroupState(FlightGlobals.ActiveVessel); }
+        }
+
+        public static ActionGroupState Vessel(Vessel v)
+        {
+            return new ActionGroupState(v);
         }
 
         public static bool GetState(Vessel vessel, KSPActionGroup action)
@@ -144,10 +161,6 @@
         {
             vessel.ActionGroups.SetGroup(action, active);
         }
-
-        public static ActionGroupState Vessel(Vessel v)
-        {
-            return new ActionGroupState(v);
-        }
+        #endregion
     }
 }

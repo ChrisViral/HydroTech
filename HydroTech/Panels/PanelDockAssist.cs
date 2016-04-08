@@ -153,7 +153,7 @@ namespace HydroTech.Panels
                     else
                     {
                         if (this.previewPart == null && this.PreviewVessel == null) { HydroFlightCameraManager.SaveCurrent(); }
-                        HydroFlightCameraManager.SetCallback(value.DoPreview);
+                        HydroFlightCameraManager.CamCallback = value.DoPreview;
                     }
                     this.previewPart = value;
                 }
@@ -199,7 +199,7 @@ namespace HydroTech.Panels
                     else
                     {
                         if (this.previewVessel == null && this.PreviewPart == null) { HydroFlightCameraManager.SaveCurrent(); }
-                        HydroFlightCameraManager.SetCallback(DoPreviewVessel);
+                        HydroFlightCameraManager.CamCallback = DoPreviewVessel;
                     }
                     this.previewVessel = value;
                 }
@@ -354,8 +354,8 @@ namespace HydroTech.Panels
 
         protected void DoPreviewVessel()
         {
-            HydroFlightCameraManager.SetFoV(CoreConsts.defaultFoVPreviewVessel);
-            HydroFlightCameraManager.SetTarget(this.PreviewVessel);
+            HydroFlightCameraManager.FoV = CoreConsts.defaultFoVPreviewVessel;
+            HydroFlightCameraManager.Target = this.PreviewVessel.transform;
         }
 
         protected void DrawChoosingCameraUI()

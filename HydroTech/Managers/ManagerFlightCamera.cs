@@ -1,8 +1,4 @@
-﻿#if DEBUG
-#define SHOW_MANAGER_OPERATIONS
-#endif
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace HydroTech.Managers
@@ -11,8 +7,58 @@ namespace HydroTech.Managers
     {
         private class Settings
         {
-            private static Stack<Settings> settingsStack = new Stack<Settings>();
+            #region Static Fields
+            private static readonly Stack<Settings> settingsStack = new Stack<Settings>();
+            #endregion
 
+            #region Fields
+            private Vessel vessel;
+            private Transform tgt;
+            private Transform parent;
+            private float fov = 60;
+            private Vector3 position;
+            private Quaternion rotation;
+            private float clip = 0.01f;
+            private Callback callback;
+            #endregion
+
+            #region Constructor
+            public Settings()
+            {
+                Get();
+            }
+            #endregion
+
+            #region Methods
+            private void Get()
+            {
+                this.vessel = FlightGlobals.ActiveVessel;
+                this.tgt = Target;
+                this.parent = TransformParent;
+                this.fov = FoV;
+                this.position = Position;
+                this.rotation = Rotation;
+                this.clip = NearClipPlane;
+                this.callback = CamCallback;
+            }
+
+            private void Set()
+            {
+                if (this.vessel == FlightGlobals.ActiveVessel)
+                {
+                    Target = this.tgt;
+                    TransformParent = this.parent;
+                    FoV = this.fov;
+                    Position = this.position;
+                    Rotation = this.rotation;
+                    NearClipPlane = this.clip;
+                    CamCallback = this.callback;
+                }
+                else { ResetToActiveVessel(); }
+            }
+            #endregion
+
+            #region Static methods
             public static void SaveCurrent()
             {
                 settingsStack.Push(new Settings());
@@ -22,145 +68,49 @@ namespace HydroTech.Managers
             {
                 settingsStack.Pop().Set();
             }
+            #endregion
 
-            public static void AbandonLast()
-            {
-                settingsStack.Pop();
-            }
-
-            public static void UseLast()
-            {
-                settingsStack.Peek().Set();
-            }
-
-            public static void ResetAll()
-            {
-                settingsStack.Clear();
-            }
-
-            public Settings()
-            {
-                Get();
-            }
-
-            public Vessel vessel;
-            public Transform tgt;
-            public Transform parent;
-            public float fov = 60.0F;
-            public Vector3 position;
-            public Quaternion rotation;
-            public float clip = 0.01F;
-            public Callback callback;
-
-            public void Get()
-            {
-                this.vessel = ActiveVessel;
-                this.tgt = GetTarget();
-                this.parent = GetTransformParent();
-                this.fov = GetFoV();
-                this.position = GetPostition();
-                this.rotation = GetRotation();
-                this.clip = GetNearClipPlane();
-                this.callback = GetCallback();
-            }
-
-            public void Set()
-            {
-                if (this.vessel == ActiveVessel)
-                {
-                    SetTarget(this.tgt);
-                    SetTransformParent(this.parent);
-                    SetFoV(this.fov);
-                    SetPosition(this.position);
-                    SetRotation(this.rotation);
-                    SetNearClipPlane(this.clip);
-                    SetCallback(this.callback);
-                }
-                else
-                {
-                    ResetToActiveVessel();
-                }
-            }
-
+            #region Overrides
             public override string ToString()
             {
-                return "Vessel is" + (this.vessel == ActiveVessel ? "" : " not") + " ActiveVessel\n" + (this.tgt == null ? "Null" : "Has") + " Target\n" + (this.parent == null ? "Null" : "Has") + " Parent\n" + "FoV = " + this.fov + "\n" + "Position = " + this.position + "\n" + "Rotation = " + this.rotation + "\n" + "Clip = " + this.clip + "\n" + "Is" + (this.callback == null ? " Not" : "") + " Callback";
+                return string.Format("Vessel is{0} ActiveVessel\n{1} Target\n{2} Parent\nFoV = {3}\nPosition = {4}\nRotation = {5}\nClip = {6}\nIs{7} Callback", (this.vessel.isActiveVessel ? string.Empty : " not"), (this.tgt == null ? "Null" : "Has"), (this.parent == null ? "Null" : "Has"), this.fov, this.position, this.rotation, this.clip, (this.callback == null ? " not" : string.Empty));
             }
 
             public string ToString(string format)
             {
-                return "Vessel is" + (this.vessel == ActiveVessel ? "" : " not") + " ActiveVessel\n" + (this.tgt == null ? "Null" : "Has") + " Target\n" + (this.parent == null ? "Null" : "Has") + " Parent\n" + "FoV = " + this.fov.ToString(format) + "\n" + "Position = " + this.position.ToString(format) + "\n" + "Rotation = " + this.rotation.ToString(format) + "\n" + "Clip = " + this.clip.ToString(format) + "\n" + "Is" + (this.callback == null ? " Not" : "") + " Callback";
+                return string.Format("Vessel is{0} ActiveVessel\n{1} Target\n{2} Parent\n" + "FoV = {3}\n" + "Position = {4}\n" + "Rotation = {5}\n" + "Clip = {6}\n" + "Is{7} Callback", (this.vessel.isActiveVessel ? string.Empty : " not"), (this.tgt == null ? "Null" : "Has"), (this.parent == null ? "Null" : "Has"), this.fov.ToString(format), this.position.ToString(format), this.rotation.ToString(format), this.clip.ToString(format), (this.callback == null ? " not" : string.Empty));
+            }
+            #endregion
+
+            #region Debug
+#if DEBUG
+            public static int StackCount
+            {
+                get { return settingsStack.Count;}
             }
 
-#if DEBUG
-            public static int StackCount() { return settingsStack.Count; }
-            public static Settings Top() { return settingsStack.Peek(); }
+            public static Settings Top
+            {
+                get { return settingsStack.Peek();}
+            }
 #endif
+            #endregion
         }
 
+        #region Constants
+        private const float defaultFoV = 60;
+        private const float defaultNearClip = 0.01f;
+        #endregion
+
+        #region Static fields
         private static FlightCamera cam;
-
-        private static Vessel ActiveVessel
-        {
-            get { return FlightGlobals.ActiveVessel; }
-        }
-
         private static Vessel origVessel;
         private static Transform origParent;
-        const float defaultFoV = 60.0F;
-        const float defaultNearClip = 0.01F;
+        #endregion
 
-        public static void ResetToActiveVessel()
-        {
-#if SHOW_MANAGER_OPERATIONS
-            Debug.Log("HydroFlightCameraManager: Setting to active vessel");
-#endif
-            SetTransformParent(origParent);
-            SetFoV(defaultFoV);
-            SetTarget(ActiveVessel);
-            SetNearClipPlane(defaultNearClip);
-            SetCallback(null);
-        }
-
-        public static void SaveCurrent()
-        {
-            Settings.SaveCurrent();
-#if SHOW_MANAGER_OPERATIONS
-            Debug.Log("HydroFlightCameraManager: Settings pushed into stack. Current count = " + Settings.StackCount());
-#endif
-        }
-
-        public static void RetrieveLast()
-        {
-            Settings.RetrieveLast();
-#if SHOW_MANAGER_OPERATIONS
-            Debug.Log("HydroFlightCameraManager: Settings retrieved from stack. Current count = " + Settings.StackCount());
-#endif
-        }
-
-        public static void OnFlightStart()
-        {
-            cam = (FlightCamera)Object.FindObjectOfType(typeof(FlightCamera));
-            origVessel = ActiveVessel;
-            target = ActiveVessel.transform;
-            origParent = GetTransformParent();
-            camCallback = null;
-        }
-
-        public static void OnUpdate()
-        {
-            if (origVessel != ActiveVessel && camCallback == null)
-            {
-                origVessel = ActiveVessel;
-                origParent = GetTransformParent();
-                target = ActiveVessel.transform;
-            }
-            if (camCallback != null) { camCallback(); }
-        }
-
+        #region Static Properties
         private static Transform target;
-
-        private static Transform Target
+        public static Transform Target
         {
             get { return target; }
             set
@@ -170,119 +120,131 @@ namespace HydroTech.Managers
             }
         }
 
-        public static Transform GetTarget()
-        {
-            return Target;
-        }
-
-        public static void SetNullTarget()
-        {
-            Target = null;
-        }
-
-        public static void SetTarget(Transform tgt)
-        {
-            Target = tgt;
-        }
-
-        public static void SetTarget(Vessel v)
-        {
-            Target = v.transform;
-        }
-
-        public static void SetTarget(Part p)
-        {
-            Target = p.transform;
-        }
-
-        public static Transform GetTransformParent()
-        {
-            return cam.transform.parent;
-        }
-
-        public static void SetTransformParent(Transform parentTrans)
-        {
-            cam.transform.parent = parentTrans;
-        }
-
-        public static Vector3 GetPostition()
-        {
-            return cam.transform.localPosition;
-        }
-
-        public static void SetPosition(Vector3 r)
-        {
-            cam.transform.localPosition = r;
-        }
-
-        public static void SetPosition(float x, float y, float z)
-        {
-            cam.transform.localPosition.Set(x, y, z);
-        }
-
-        public static Quaternion GetRotation()
-        {
-            return cam.transform.localRotation;
-        }
-
-        public static void SetRotation(Quaternion quat)
-        {
-            cam.transform.localRotation = quat;
-        }
-
-        public static void SetRotation(Vector3 forward, Vector3 up)
-        {
-            SetRotation(Quaternion.LookRotation(forward, up));
-        }
-
-        public static float GetFoV()
-        {
-            return Camera.main.fieldOfView;
-        }
-
-        public static void SetFoV(float fov)
-        {
-            Camera.main.fieldOfView = fov;
-        }
-
-        public static float GetNearClipPlane()
-        {
-            return Camera.main.nearClipPlane;
-        }
-
-        public static void SetNearClipPlane(float clip)
-        {
-            Camera.main.nearClipPlane = clip;
-        }
-
         private static Callback camCallback;
-
-        public static Callback GetCallback()
+        public static Callback CamCallback
         {
-            return camCallback;
+            get { return camCallback; }
+            set { camCallback = value; }
         }
 
-        public static void SetCallback(Callback callback)
+        public static Transform TransformParent
         {
-            camCallback = callback;
+            get { return cam.transform.parent; }
+            set { cam.transform.parent = value; }
         }
 
+        public static Quaternion Rotation
+        {
+            get { return cam.transform.localRotation; }
+            set { cam.transform.localRotation = value; }
+        }
+
+        public static Vector3 Position
+        {
+            get { return cam.transform.localPosition; }
+            set { cam.transform.localPosition = value; }
+        }
+
+        public static float FoV
+        {
+            get { return Camera.main.fieldOfView; }
+            set { Camera.main.fieldOfView = value; }
+        }
+
+        public static float NearClipPlane
+        {
+            get { return Camera.main.nearClipPlane; }
+            set { Camera.main.nearClipPlane = value; }
+        }
+        #endregion
+
+        #region Static methods
+        public static void SetLookRotation(Vector3 forward, Vector3 up)
+        {
+            Rotation = Quaternion.LookRotation(forward, up);
+        }
+
+        public static void ResetToActiveVessel()
+        {
 #if DEBUG
-        public static string StringCameraState() { return new Settings().ToString("#0.00"); }
-        public static void PrintCameraState() { Debug.Log(StringCameraState()); }
+            Debug.Log("HydroFlightCameraManager: Setting to active vessel");
+#endif
+            TransformParent = origParent;
+            FoV = defaultFoV;
+            Target = FlightGlobals.ActiveVessel.transform;
+            NearClipPlane = defaultNearClip;
+            CamCallback = null;
+        }
+
+        public static void SaveCurrent()
+        {
+            Settings.SaveCurrent();
+#if DEBUG
+            Debug.Log("HydroFlightCameraManager: Settings pushed into stack. Current count: " + Settings.StackCount);
+#endif
+        }
+
+        public static void RetrieveLast()
+        {
+            Settings.RetrieveLast();
+#if DEBUG
+            Debug.Log("HydroFlightCameraManager: Settings retrieved from stack. Current count: " + Settings.StackCount);
+#endif
+        }
+
+        public static void OnFlightStart()
+        {
+            cam = (FlightCamera)Object.FindObjectOfType(typeof(FlightCamera));
+            origVessel = FlightGlobals.ActiveVessel;
+            target = FlightGlobals.ActiveVessel.transform;
+            origParent = TransformParent;
+            camCallback = null;
+        }
+
+        public static void OnUpdate()
+        {
+            if (!origVessel.isActiveVessel && camCallback == null)
+            {
+                origVessel = FlightGlobals.ActiveVessel;
+                origParent = TransformParent;
+                target = FlightGlobals.ActiveVessel.transform;
+            }
+            if (camCallback != null) { camCallback(); }
+        }
+        #endregion
+
+        #region Debug
+#if DEBUG
+        public static string StringCameraState()
+        {
+            return new Settings().ToString("#0.00");
+        }
+
+        public static void PrintCameraState()
+        {
+            Debug.Log(StringCameraState());
+        }
 
         public static string StringCameraStack()
         {
-            return "Stack count = " + Settings.StackCount();
+            return "Stack count = " + Settings.StackCount;
         }
-        public static void PrintCameraStack() { Debug.Log(StringCameraStack()); }
+
+        public static void PrintCameraStack()
+        {
+            Debug.Log(StringCameraStack());
+        }
 
         public static string StringTopState()
         {
-            return Settings.StackCount() == 0 ? "" : Settings.Top().ToString("#0.00");
+            return Settings.StackCount == 0 ? string.Empty : Settings.Top.ToString("#0.00");
         }
 
-        public static void PrintTopState() { Debug.Log(StringTopState()); }
+        public static void PrintTopState()
+        {
+            Debug.Log(StringTopState());
+        }
 #endif
+        #endregion
     }
 }

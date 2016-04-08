@@ -82,7 +82,7 @@ namespace HydroTech.PartModules
         {
             get
             {
-                if (this.vessel != FlightGlobals.ActiveVessel)
+                if (!this.vessel.isActiveVessel)
                 {
                     if (this.isOnActiveVessel && CurCam == this)
                     {
@@ -106,7 +106,7 @@ namespace HydroTech.PartModules
                 if (!this.camActivate && value)
                 {
                     if (activeCam == null) { HydroFlightCameraManager.SaveCurrent(); }
-                    HydroFlightCameraManager.SetCallback(DoCamera);
+                    HydroFlightCameraManager.CamCallback = DoCamera;
                     activeCam = this;
                 }
                 else if (this.camActivate && !value)
@@ -184,21 +184,21 @@ namespace HydroTech.PartModules
 
         public void DoPreview()
         {
-            HydroFlightCameraManager.SetNullTarget();
-            HydroFlightCameraManager.SetTransformParent(this.transform);
-            HydroFlightCameraManager.SetFoV(this.previewFoV);
-            HydroFlightCameraManager.SetPosition(this.previewPos);
-            HydroFlightCameraManager.SetRotation(this.previewForward, this.previewUp);
+            HydroFlightCameraManager.Target = null;
+            HydroFlightCameraManager.TransformParent = this.transform;
+            HydroFlightCameraManager.FoV = this.previewFoV;
+            HydroFlightCameraManager.Position = this.previewPos;
+            HydroFlightCameraManager.SetLookRotation(this.previewForward, this.previewUp);
         }
 
         public void DoCamera()
         {
-            HydroFlightCameraManager.SetNullTarget();
-            HydroFlightCameraManager.SetTransformParent(this.transform);
-            HydroFlightCameraManager.SetPosition(this.camPos);
-            HydroFlightCameraManager.SetRotation(this.camForward, this.camUp);
-            HydroFlightCameraManager.SetFoV(this.camDefFoV / this.mag);
-            HydroFlightCameraManager.SetNearClipPlane(this.camClip);
+            HydroFlightCameraManager.Target = null;
+            HydroFlightCameraManager.TransformParent = this.transform;
+            HydroFlightCameraManager.Position = this.camPos;
+            HydroFlightCameraManager.SetLookRotation(this.camForward, this.camUp);
+            HydroFlightCameraManager.FoV = this.camDefFoV / this.mag;
+            HydroFlightCameraManager.NearClipPlane = this.camClip;
         }
 
         public Vector3 VectorTransform(Vector3 vec)

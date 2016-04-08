@@ -126,11 +126,11 @@ namespace HydroTech.PartModules
 
         public void DoPreview()
         {
-            HydroFlightCameraManager.SetNullTarget();
-            HydroFlightCameraManager.SetTransformParent(this.transform);
-            HydroFlightCameraManager.SetFoV(this.previewFoV);
-            HydroFlightCameraManager.SetPosition(this.previewPos);
-            HydroFlightCameraManager.SetRotation(this.previewForward, this.previewUp);
+            HydroFlightCameraManager.Target = null;
+            HydroFlightCameraManager.TransformParent = this.transform;
+            HydroFlightCameraManager.FoV = this.previewFoV;
+            HydroFlightCameraManager.Position = this.previewPos;
+            HydroFlightCameraManager.SetLookRotation(this.previewForward, this.previewUp);
         }
         #endregion
 
