@@ -202,36 +202,6 @@ namespace HydroTech_RCS.Utils
         }
         #endregion
 
-        #region Operators
-        public static Vector3 operator *(Matrix3x3 matrix, Vector3 vec)
-        {
-            return new Vector3(Vector3.Dot(matrix.RowX, vec), Vector3.Dot(matrix.RowY, vec), Vector3.Dot(matrix.RowZ, vec));
-        }
-
-        public static Vector3 operator /(Vector3 vec, Matrix3x3 matrix)
-        {
-            return matrix.InverseMatrix * vec;
-        }
-
-        public static bool operator ==(Matrix3x3 m1, Matrix3x3 m2)
-        {
-            if ((object)m1 == null) { return (object)m2 == null; }
-            if ((object)m2 == null) { return false;}
-            return m1.m00 == m2.m00 && m1.m01 == m2.m01 && m1.m02 == m2.m02
-                && m1.m10 == m2.m10 && m1.m11 == m2.m11 && m1.m12 == m2.m12
-                && m1.m20 == m2.m20 && m1.m21 == m2.m21 && m1.m22 == m2.m22;
-        }
-
-        public static bool operator !=(Matrix3x3 m1, Matrix3x3 m2)
-        {
-            if ((object)m1 == null) { return (object)m2 != null; }
-            if ((object)m2 == null) { return true; }
-            return !(m1.m00 == m2.m00) || !(m1.m01 == m2.m01) || !(m1.m02 == m2.m02)
-                || !(m1.m10 == m2.m10) || !(m1.m11 == m2.m11) || !(m1.m12 == m2.m12)
-                || !(m1.m20 == m2.m20) || !(m1.m21 == m2.m21) || !(m1.m22 == m2.m22);
-        }
-        #endregion
-
         #region Overrides
         public override string ToString()
         {
@@ -272,6 +242,36 @@ namespace HydroTech_RCS.Utils
                 hashCode = (hashCode * 397) ^ this.m22.GetHashCode();
                 return hashCode;
             }
+        }
+        #endregion
+
+        #region Operators
+        public static Vector3 operator *(Matrix3x3 matrix, Vector3 vec)
+        {
+            return new Vector3(Vector3.Dot(matrix.RowX, vec), Vector3.Dot(matrix.RowY, vec), Vector3.Dot(matrix.RowZ, vec));
+        }
+
+        public static Vector3 operator /(Vector3 vec, Matrix3x3 matrix)
+        {
+            return matrix.InverseMatrix * vec;
+        }
+
+        public static bool operator ==(Matrix3x3 m1, Matrix3x3 m2)
+        {
+            if ((object)m1 == null) { return (object)m2 == null; }
+            if ((object)m2 == null) { return false;}
+            return m1.m00 == m2.m00 && m1.m01 == m2.m01 && m1.m02 == m2.m02
+                && m1.m10 == m2.m10 && m1.m11 == m2.m11 && m1.m12 == m2.m12
+                && m1.m20 == m2.m20 && m1.m21 == m2.m21 && m1.m22 == m2.m22;
+        }
+
+        public static bool operator !=(Matrix3x3 m1, Matrix3x3 m2)
+        {
+            if ((object)m1 == null) { return (object)m2 != null; }
+            if ((object)m2 == null) { return true; }
+            return !(m1.m00 == m2.m00) || !(m1.m01 == m2.m01) || !(m1.m02 == m2.m02)
+                || !(m1.m10 == m2.m10) || !(m1.m11 == m2.m11) || !(m1.m12 == m2.m12)
+                || !(m1.m20 == m2.m20) || !(m1.m21 == m2.m21) || !(m1.m22 == m2.m22);
         }
         #endregion
     }

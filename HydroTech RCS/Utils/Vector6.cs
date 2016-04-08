@@ -4,10 +4,13 @@ namespace HydroTech_RCS.Utils
 {
     public class Vector6
     {
+        #region Fields
         public float xp, xn;
         public float yp, yn;
         public float zp, zn;
+        #endregion
 
+        #region Properties
         public Vector3 VectorPositive
         {
             get { return new Vector3(this.xp, this.yp, this.zp); }
@@ -29,11 +32,10 @@ namespace HydroTech_RCS.Utils
                 this.zn = value.z;
             }
         }
+        #endregion
 
-        public Vector6()
-        {
-            Reset();
-        }
+        #region Constructors
+        public Vector6() { }
 
         public Vector6(Vector6 vec)
         {
@@ -50,39 +52,48 @@ namespace HydroTech_RCS.Utils
             this.VectorPositive = vectorP;
             this.VectorNegative = vectorN;
         }
+        #endregion
 
+        #region Methods
         public void Reset()
         {
-            this.xp = this.xn = this.yp = this.yn = this.zp = this.zn = 0.0F;
+            this.xp = this.xn = 0;
+            this.yp = this.yn = 0;
+            this.zp = this.zn = 0;
         }
 
         public void AddX(float x)
         {
-            if (x >= 0.0F) { this.xp += x; }
-            else
-            {
-                this.xn -= x;
-            }
+            if (x > 0) { this.xp += x; }
+            else { this.xn -= x; }
         }
 
         public void AddY(float y)
         {
-            if (y >= 0.0F) { this.yp += y; }
-            else
-            {
-                this.yn -= y;
-            }
+            if (y > 0) { this.yp += y; }
+            else { this.yn -= y; }
         }
 
         public void AddZ(float z)
         {
-            if (z >= 0.0F) { this.zp += z; }
-            else
-            {
-                this.zn -= z;
-            }
+            if (z > 0) { this.zp += z; }
+            else { this.zn -= z; }
+        }
+        #endregion
+
+        #region Overrides
+        public override string ToString()
+        {
+            return string.Format("({0}, -{1}; {2}, -{3}; {4}, -{5})", this.xp, this.xn, this.yp, this.yn, this.zp, this.zn);
         }
 
+        public virtual string ToString(string format)
+        {
+            return string.Format("({0}, -{1}; {2}, -{3}; {4}, -{5})", this.xp.ToString(format), this.xn.ToString(format), this.yp.ToString(format), this.yn.ToString(format), this.zp.ToString(format), this.zn.ToString(format));
+        }
+        #endregion
+
+        #region Operators
         public static Vector6 operator *(Vector6 vec, float num)
         {
             return new Vector6(vec.VectorPositive * num, vec.VectorNegative * num);
@@ -109,15 +120,6 @@ namespace HydroTech_RCS.Utils
         {
             return vec * new Vector3(1 / vec2.x, 1 / vec2.y, 1 / vec2.y);
         }
-
-        public override string ToString()
-        {
-            return "(" + this.xp + ", -" + this.xn + "; " + this.yp + ", -" + this.yn + "; " + this.zp + ", -" + this.zn + ")";
-        }
-
-        public virtual string ToString(string format)
-        {
-            return "(" + this.xp.ToString(format) + ", -" + this.xn.ToString(format) + "; " + this.yp.ToString(format) + ", -" + this.yn.ToString(format) + "; " + this.zp.ToString(format) + ", -" + this.zn.ToString(format) + ")";
-        }
+        #endregion
     }
 }
