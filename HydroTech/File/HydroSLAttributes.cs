@@ -22,7 +22,7 @@ namespace HydroTech.File
         #endregion
     }
 
-    public interface IHydroCustomClassSingleSl { }
+    public interface IHydroCustomClassSingleSL { }
 
-    public interface IHydroCustomClassComplexSl { }
+    public interface IHydroCustomClassComplexSL { }
 }
