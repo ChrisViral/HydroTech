@@ -56,23 +56,13 @@ namespace HydroTech
 
         #region Core #1: Autopilot (HydroJeb)
         #region Fields
+        private static bool inQueue;
         public static bool isReady = true;
         public static bool electricity;
         private static Color mainBtnColor = Color.green;
         public static HydroPartList jebs = new HydroPartList();
         public static Dictionary<int, RCSAutopilot> autopilots = new Dictionary<int, RCSAutopilot>();
         public static Dictionary<int, Panel> panels = new Dictionary<int, Panel>();
-
-        public static HydroJeb ActiveJeb
-        {
-            get { return (HydroJeb)jebs.FirstActive; }
-        }
-
-        public static bool IsActiveJeb(HydroJeb jeb)
-        {
-            return ActiveJeb == jeb;
-        }
-
         public static RCSCalculator activeVesselRcs = new RCSCalculator();
         public static HydroPartListEditor jebsEditor = new HydroPartListEditor();
         public static Dictionary<int, IPanelEditor> panelsEditor = new Dictionary<int, IPanelEditor>();
@@ -84,17 +74,30 @@ namespace HydroTech
             get { return panels[CoreConsts.main].PanelShown; }
             set { panels[CoreConsts.main].PanelShown = value; }
         }
+
+        public static HydroJeb ActiveJeb
+        {
+            get { return (HydroJeb)jebs.FirstActive; }
+        }
         #endregion
 
         #region Methods
-        //TODO: change from deprecated RenderingManager to the AppLauncher
+        //TODO: change to AppLauncher
         private static void AddMainButton()
         {
-            HydroRenderingManager.AddToPostDrawQueue(CoreConsts.renderMgrQueueSpot, DrawGUI);
+            HydroRenderingManager.Instance.AddToDrawQueue(DrawGUI);
+            inQueue = true;
         }
+
         private static void RemoveMainButton()
         {
-            HydroRenderingManager.RemoveFromPostDrawQueue(CoreConsts.renderMgrQueueSpot, DrawGUI);
+            HydroRenderingManager.Instance.RemoveFromDrawQueue(DrawGUI);
+            inQueue = false;
+        }
+
+        public static bool IsActiveJeb(HydroJeb jeb)
+        {
+            return ActiveJeb == jeb;
         }
 
         public static void OnEditorUpdate(HydroJeb jeb)
@@ -127,7 +130,7 @@ namespace HydroTech
                 foreach (RCSAutopilot ap in autopilots.Values) { ap.OnFlightStart(); }
                 foreach (Panel panel in panels.Values) { panel.OnFlightStart(); }
                 HydroFlightInputManager.OnFlightStart();
-                if (HydroRenderingManager.Contains(CoreConsts.renderMgrQueueSpot)) { RemoveMainButton(); }
+                if (inQueue) { RemoveMainButton(); }
                 AddMainButton();
                 electricity = true;
             }
@@ -232,7 +235,7 @@ namespace HydroTech
                 {
                     foreach (Panel panel in panels.Values) { panel.OnDeactivate(); }
                     foreach (RCSAutopilot ap in autopilots.Values) { ap.OnDeactivate(); }
-                    if (HydroRenderingManager.Contains(CoreConsts.renderMgrQueueSpot)) { RemoveMainButton(); }
+                    if (inQueue) { RemoveMainButton(); }
                 }
                 else
                 {
@@ -242,7 +245,7 @@ namespace HydroTech
                     HydroFlightInputManager.OnUpdate();
                     foreach (RCSAutopilot ap in autopilots.Values) { ap.OnUpdate(); }
                     foreach (Panel panel in panels.Values) { panel.OnUpdate(); }
-                    if (!HydroRenderingManager.Contains(CoreConsts.renderMgrQueueSpot)) { AddMainButton(); }
+                    if (!inQueue) { AddMainButton(); }
                     if (!isReady) { mainBtnColor = Color.yellow; }
                     else
                     {
@@ -260,7 +263,10 @@ namespace HydroTech
         {
             GUI.skin = HighLogic.Skin;
             bool mainBtnRespond = electricity && isReady;
-            if (GUI.Button(PanelConsts.mainButton, mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb", GUIUtils.ButtonStyle(mainBtnColor)) && mainBtnRespond) { MainPanel = !MainPanel; }
+            if (GUI.Button(PanelConsts.mainButton, mainBtnRespond ? (MainPanel ? "/\\ HydroJeb /\\" : "\\/ HydroJeb \\/") : "HydroJeb", GUIUtils.ButtonStyle(mainBtnColor)) && mainBtnRespond)
+            {
+                MainPanel = !MainPanel;
+            }
         }
         #endregion
         #endregion

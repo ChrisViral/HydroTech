@@ -4,37 +4,96 @@ using UnityEngine;
 
 namespace HydroTech.Managers
 {
-    public static class HydroRenderingManager
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
+    public class HydroRenderingManager : MonoBehaviour
     {
-        #region Static Fields
-        private static readonly Dictionary<int, Callback> callbackList = new Dictionary<int, Callback>();
+        #region Instance
+        public static HydroRenderingManager Instance { get; private set; }
         #endregion
 
-        #region Static methods
-        public static void AddToPostDrawQueue(int queueSpot, Callback drawFunction)
+        #region Static Fields
+        private static readonly List<Callback> drawQueue = new List<Callback>();
+        private static bool visible;
+        #endregion
+
+        #region Methods
+        public void AddToDrawQueue(Callback drawFunction)
         {
-            if (callbackList.ContainsKey(queueSpot) || callbackList.ContainsValue(drawFunction)) { throw new InvalidOperationException("AddToPostDrawQueue fail: draw function (" + queueSpot + ") already added."); }
-            callbackList.Add(queueSpot, drawFunction);
-            RenderingManager.AddToPostDrawQueue(queueSpot, drawFunction);
+            if (drawQueue.Contains(drawFunction)) { throw new InvalidOperationException("AddToPostDrawQueue fail: draw function already added."); }
+            drawQueue.Add(drawFunction);
 #if DEBUG
-            Debug.Log("Added a draw function (" + queueSpot + ")");
+            Debug.Log("Added a draw function");
 #endif
         }
 
-        public static void RemoveFromPostDrawQueue(int queueSpot, Callback drawFunction)
+        public void RemoveFromDrawQueue(Callback drawFunction)
         {
-            if (!callbackList.ContainsKey(queueSpot)) { throw new InvalidOperationException("RemoveFromPostDrawQueue fail: queue spot (" + queueSpot + ") not found"); }
-            if (callbackList[queueSpot] != drawFunction) { throw new InvalidOperationException("RemoveFromPostDrawQueue fail: draw function not matching with queue spot (" + queueSpot + ")"); }
-            callbackList.Remove(queueSpot);
-            RenderingManager.RemoveFromPostDrawQueue(queueSpot, drawFunction);
+            if (!drawQueue.Contains(drawFunction)) { throw new InvalidOperationException("RemoveFromPostDrawQueue fail: draw function not in the queue"); }
+            drawQueue.Remove(drawFunction);
 #if DEBUG
-            Debug.Log("Removed a draw function (" + queueSpot + ")");
+            Debug.Log("Removed a draw function");
 #endif
         }
 
-        public static bool Contains(int queueSpot)
+        private void ShowUI()
         {
-            return callbackList.ContainsKey(queueSpot);
+            visible = true;
+        }
+
+        private void HideUI()
+        {
+            visible = false;
+        }
+        #endregion
+
+        #region Functions
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(this);
+            }
+            else { Destroy(this); }
+        }
+
+        private void Start()
+        {
+            GameEvents.onShowUI.Add(ShowUI);
+            GameEvents.onHideUI.Add(HideUI);
+            GameEvents.onGUIAstronautComplexSpawn.Add(HideUI);
+            GameEvents.onGUIAstronautComplexDespawn.Add(ShowUI);
+            GameEvents.onGUIRnDComplexSpawn.Add(HideUI);
+            GameEvents.onGUIRnDComplexDespawn.Add(ShowUI);
+            GameEvents.onGUIMissionControlSpawn.Add(HideUI);
+            GameEvents.onGUIMissionControlDespawn.Add(ShowUI);
+            GameEvents.onGUIAdministrationFacilitySpawn.Add(HideUI);
+            GameEvents.onGUIAdministrationFacilityDespawn.Add(ShowUI);
+        }
+
+        private void OnDestroy()
+        {
+            GameEvents.onShowUI.Remove(ShowUI);
+            GameEvents.onHideUI.Remove(HideUI);
+            GameEvents.onGUIAstronautComplexSpawn.Remove(HideUI);
+            GameEvents.onGUIAstronautComplexDespawn.Remove(ShowUI);
+            GameEvents.onGUIRnDComplexSpawn.Remove(HideUI);
+            GameEvents.onGUIRnDComplexDespawn.Remove(ShowUI);
+            GameEvents.onGUIMissionControlSpawn.Remove(HideUI);
+            GameEvents.onGUIMissionControlDespawn.Remove(ShowUI);
+            GameEvents.onGUIAdministrationFacilitySpawn.Remove(HideUI);
+            GameEvents.onGUIAdministrationFacilityDespawn.Remove(ShowUI);
+        }
+
+        private void OnGUI()
+        {
+            if (visible)
+            {
+                for (int i = 0; i < drawQueue.Count; i++)
+                {
+                    drawQueue[i]();
+                }
+            }
         }
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using HydroTech.Constants;
 using HydroTech.File;
+using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -73,11 +74,12 @@ namespace HydroTech.Panels
         //TODO: Make this work with the AppLauncher, as well
         protected void AddPanel()
         {
-            //HydroRenderingManager.AddToPostDrawQueue(this.QueueSpot, DrawGUI);
+            HydroRenderingManager.Instance.AddToDrawQueue(DrawGUI);
         }
+
         protected void RemovePanel()
         {
-            //HydroRenderingManager.RemoveFromPostDrawQueue(this.QueueSpot, DrawGUI);
+            HydroRenderingManager.Instance.RemoveFromDrawQueue(DrawGUI);
         }
 
         public void ResetHeight()
