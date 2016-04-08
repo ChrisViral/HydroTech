@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace HydroTech_RCS.Utils
 {
-    public class Matrix3X3
+    public class Matrix3x3
     {
         #region Static properties
-        private static readonly Matrix3X3 i = new Matrix3X3 { m00 = 1, m11 = 1, m22 = 1 };
-        public static Matrix3X3 I
+        private static readonly Matrix3x3 i = new Matrix3x3 { m00 = 1, m11 = 1, m22 = 1 };
+        public static Matrix3x3 I
         {
             get { return i; }
         }
@@ -97,12 +97,12 @@ namespace HydroTech_RCS.Utils
             }
         }
 
-        public Matrix3X3 InverseMatrix
+        public Matrix3x3 InverseMatrix
         {
             get
             {
-                Matrix3X3 thisMatrix = new Matrix3X3(this);
-                Matrix3X3 resMatrix = new Matrix3X3(I);
+                Matrix3x3 thisMatrix = new Matrix3x3(this);
+                Matrix3x3 resMatrix = new Matrix3x3(I);
                 /*  We start with
                  *  m00 m01 m02 | 1   0   0
                  *  m10 m11 m12 | 0   1   0
@@ -177,9 +177,9 @@ namespace HydroTech_RCS.Utils
         #endregion
 
         #region Constructors
-        public Matrix3X3() { }
+        public Matrix3x3() { }
 
-        public Matrix3X3(Matrix3X3 m)
+        public Matrix3x3(Matrix3x3 m)
         {
             this.m00 = m.m00;
             this.m01 = m.m01;
@@ -203,17 +203,17 @@ namespace HydroTech_RCS.Utils
         #endregion
 
         #region Operators
-        public static Vector3 operator *(Matrix3X3 matrix, Vector3 vec)
+        public static Vector3 operator *(Matrix3x3 matrix, Vector3 vec)
         {
             return new Vector3(Vector3.Dot(matrix.RowX, vec), Vector3.Dot(matrix.RowY, vec), Vector3.Dot(matrix.RowZ, vec));
         }
 
-        public static Vector3 operator /(Vector3 vec, Matrix3X3 matrix)
+        public static Vector3 operator /(Vector3 vec, Matrix3x3 matrix)
         {
             return matrix.InverseMatrix * vec;
         }
 
-        public static bool operator ==(Matrix3X3 m1, Matrix3X3 m2)
+        public static bool operator ==(Matrix3x3 m1, Matrix3x3 m2)
         {
             if ((object)m1 == null) { return (object)m2 == null; }
             if ((object)m2 == null) { return false;}
@@ -222,7 +222,7 @@ namespace HydroTech_RCS.Utils
                 && m1.m20 == m2.m20 && m1.m21 == m2.m21 && m1.m22 == m2.m22;
         }
 
-        public static bool operator !=(Matrix3X3 m1, Matrix3X3 m2)
+        public static bool operator !=(Matrix3x3 m1, Matrix3x3 m2)
         {
             if ((object)m1 == null) { return (object)m2 != null; }
             if ((object)m2 == null) { return true; }
@@ -247,10 +247,10 @@ namespace HydroTech_RCS.Utils
         {
             if (obj == null) { return false; }
             if (ReferenceEquals(this, obj)) { return true; }
-            return obj is Matrix3X3 && Equals((Matrix3X3)obj);
+            return obj is Matrix3x3 && Equals((Matrix3x3)obj);
         }
 
-        public virtual bool Equals(Matrix3X3 other)
+        public virtual bool Equals(Matrix3x3 other)
         {
             return this.m00.Equals(other.m00) && this.m01.Equals(other.m01) && this.m02.Equals(other.m02)
                 && this.m10.Equals(other.m10) && this.m11.Equals(other.m11) && this.m12.Equals(other.m12)
