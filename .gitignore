@@ -6,7 +6,6 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.DotSettings
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -96,7 +95,7 @@ $tf/
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
-*.DotSettings.user
+*.DotSettings
 
 # JustCode is a .NET coding add-in
 .JustCode
@@ -238,3 +237,4 @@ _Pvt_Extensions
 
 # Personal
 autocopy.bat
+Thumbs.db

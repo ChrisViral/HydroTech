@@ -14,13 +14,15 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Output\GameData\HydroTech\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -34,6 +36,7 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
@@ -83,10 +86,10 @@
     <Compile Include="File\LoadSaveFileBasic.cs" />
     <Compile Include="CtrlStateCalculator.cs" />
     <Compile Include="SwitchTransformCalculator.cs" />
-    <Compile Include="Managers\ManagerActionGroup.cs" />
-    <Compile Include="Managers\ManagerFlightCamera.cs" />
-    <Compile Include="Managers\ManagerFlightInput.cs" />
-    <Compile Include="Managers\ManagerRendering.cs" />
+    <Compile Include="Managers\HydroActionGroupManager.cs" />
+    <Compile Include="Managers\HydroFlightCameraManager.cs" />
+    <Compile Include="Managers\HydroFlightInpuManager.cs" />
+    <Compile Include="Managers\HydroRenderingManager.cs" />
     <Compile Include="Utils\GUIUtils.cs" />
     <Compile Include="HydroJebCore.cs" />
     <Compile Include="Panels\IPanelEditor.cs" />
