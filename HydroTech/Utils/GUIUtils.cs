@@ -4,7 +4,6 @@ using UnityEngine;
 namespace HydroTech.Utils
 {
     //TODO: add some caching on coloured GUI styles to prevent creating the same styles over again
-    //Ready to test
     public static class GUIUtils
     {
         #region Skins

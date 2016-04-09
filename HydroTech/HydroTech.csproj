@@ -85,6 +85,7 @@
     <Compile Include="File\HydroSLAttributes.cs" />
     <Compile Include="File\LoadSaveFileBasic.cs" />
     <Compile Include="CtrlStateCalculator.cs" />
+    <Compile Include="HydroJebModule.cs" />
     <Compile Include="SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroActionGroupManager.cs" />
     <Compile Include="Managers\HydroFlightCameraManager.cs" />
