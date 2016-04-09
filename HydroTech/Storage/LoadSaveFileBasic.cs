@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace HydroTech.File
+namespace HydroTech.Storage
 {
     //TODO: Get rid of this class, this level of complexity isn't necessary at all
     public abstract class LoadSaveFileBasic

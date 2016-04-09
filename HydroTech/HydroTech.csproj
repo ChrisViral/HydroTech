@@ -32,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -81,11 +82,15 @@
     <Compile Include="Data\HydroPartListEditor.cs" />
     <Compile Include="Data\HydroPartModuleList.cs" />
     <Compile Include="Data\SubList.cs" />
-    <Compile Include="File\FileName.cs" />
-    <Compile Include="File\HydroSLAttributes.cs" />
-    <Compile Include="File\LoadSaveFileBasic.cs" />
+    <Compile Include="Managers\EditorToolbarManager.cs" />
+    <Compile Include="Panels\EditorMainPanel.cs" />
+    <Compile Include="Panels\FlightMainPanel.cs" />
+    <Compile Include="Storage\FileName.cs" />
+    <Compile Include="Storage\HydroSLAttributes.cs" />
+    <Compile Include="Storage\LoadSaveFileBasic.cs" />
     <Compile Include="CtrlStateCalculator.cs" />
     <Compile Include="HydroJebModule.cs" />
+    <Compile Include="Managers\PersistentManager.cs" />
     <Compile Include="SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroActionGroupManager.cs" />
     <Compile Include="Managers\HydroFlightCameraManager.cs" />
@@ -125,7 +130,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)Output\*" "D:\Games\KSP Modding\*" /D /E /C /R /I /K /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)Output" "D:\Games\KSP Modding" /D /E /C /R /I /K /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

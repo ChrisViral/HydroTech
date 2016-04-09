@@ -1,5 +1,5 @@
 ﻿
-namespace HydroTech.File
+namespace HydroTech.Storage
 {
     public class FileName
     {

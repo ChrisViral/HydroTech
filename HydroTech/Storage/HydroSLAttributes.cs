@@ -1,7 +1,7 @@
 ﻿using System;
-using CMD = HydroTech.File.LoadSaveFileBasic.CMD;
+using CMD = HydroTech.Storage.LoadSaveFileBasic.CMD;
 
-namespace HydroTech.File
+namespace HydroTech.Storage
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class HydroSLNodeInfo : Attribute
