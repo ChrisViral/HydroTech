@@ -147,7 +147,7 @@ namespace HydroTech
         #region Functions
         private void Update()
         {
-            if (!HighLogic.LoadedSceneIsFlight || this.vessel.packed || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
+            if (!HighLogic.LoadedSceneIsFlight || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
             if (this == this.vessel.GetMasterJeb())
             {
                 if (this.State == AutopilotStatus.Idle) { this.State = AutopilotStatus.Online; }
@@ -157,7 +157,7 @@ namespace HydroTech
 
         private void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight || !this.IsOnline || this.vessel.packed || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
+            if (!HighLogic.LoadedSceneIsFlight || !this.IsOnline || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
             if (!CheatOptions.InfiniteElectricity)
             {
@@ -224,7 +224,7 @@ namespace HydroTech
             StringBuilder sb = new StringBuilder("HydroJeb Autopilot Unit");
             sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
             sb.AppendLine("ElectricCharge");
-            sb.Append(string.Format("Rate: {0:0.#}U/s", this.consumptionRate));
+            sb.Append(string.Format("Rate: {0:0.###}U/s", this.consumptionRate));
             return sb.ToString();
         }
         #endregion
