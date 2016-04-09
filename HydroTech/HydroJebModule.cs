@@ -87,12 +87,14 @@ namespace HydroTech
             }
         }
 
-        private IEnumerator<YieldInstruction> AddButton()
+        private void AddButton()
         {
-            while (!ApplicationLauncher.Ready) { yield return new WaitForEndOfFrame(); }
-
-            this.button = ApplicationLauncher.Instance.AddModApplication(ShowFlightPanel, HideFlightPanel,
-                          Empty, Empty, Empty, Empty, ApplicationLauncher.AppScenes.FLIGHT, HTUtils.LauncherIcon);
+            if (!this.added)
+            {
+                this.button = ApplicationLauncher.Instance.AddModApplication(ShowFlightPanel, HideFlightPanel,
+                              Empty, Empty, Empty, Empty, ApplicationLauncher.AppScenes.FLIGHT, HTUtils.LauncherIcon);
+                this.added = true;
+            }
         }
 
         private void ShowFlightPanel()
@@ -119,7 +121,7 @@ namespace HydroTech
         {
             if (to == this.vessel)
             {
-                if (!this.added) { StartCoroutine(AddButton()); }
+                if (!this.added) { AddButton(); }
                 else { this.button.Enable(); }
             }
             else if (from == this.vessel && this.added)
@@ -194,9 +196,10 @@ namespace HydroTech
             }
             else if (HighLogic.LoadedSceneIsFlight)
             {
-                GameEvents.onVesselSwitching.Add(SwitchingVessels);
-                StartCoroutine(AddButton());
+                AddButton();
+                if (!this.vessel.isActiveVessel) { this.button.Disable(); }
                 this.requests = new double[this.resources.Count];
+                GameEvents.onVesselSwitching.Add(SwitchingVessels);
             }
         }
 
