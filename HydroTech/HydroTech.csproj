@@ -96,6 +96,8 @@
     <Compile Include="Managers\HydroFlightCameraManager.cs" />
     <Compile Include="Managers\HydroFlightInpuManager.cs" />
     <Compile Include="Managers\HydroRenderingManager.cs" />
+    <Compile Include="Utils\EnumUtils.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GUIUtils.cs" />
     <Compile Include="HydroJebCore.cs" />
     <Compile Include="Panels\IPanelEditor.cs" />
