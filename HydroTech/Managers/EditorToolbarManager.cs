@@ -10,7 +10,7 @@ namespace HydroTech.Managers
     public class EditorToolbarManager : MonoBehaviour
     {
         #region Static fields
-        private static readonly AppScenes editors = AppScenes.VAB | AppScenes.SPH;
+        private const AppScenes editors = AppScenes.VAB | AppScenes.SPH;
         private static ApplicationLauncherButton button;
         private static GameObject panel;
         private static bool added, visible;

@@ -157,33 +157,29 @@ namespace HydroTech
 
         private void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight || !this.IsOnline || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
+            if (!HighLogic.LoadedSceneIsFlight || (!this.IsOnline && this != this.vessel.GetMasterJeb()) || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
-            if (!CheatOptions.InfiniteElectricity)
+            if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(ecID, this.consumptionRate * TimeWarp.fixedDeltaTime)) <= 0)
             {
-                double amount = this.part.RequestResource(ecID, this.consumptionRate * TimeWarp.fixedDeltaTime);
-                if (amount <= 0)
+                if (this.IsOnline)
                 {
-                    if (amount != 0) { this.part.RequestResource(ecID, -amount); }
-                    if (this.State != AutopilotStatus.Offline)
-                    {
-                        this.button.SetTexture(HTUtils.InactiveIcon);
-                        this.button.Disable();
-                        this.vessel.FindPartModulesImplementing<HydroJebModule>().ForEach(m => m.State = AutopilotStatus.Offline);
-                    }
+                    this.button.SetTexture(HTUtils.InactiveIcon);
+                    this.button.SetFalse();
+                    this.button.Disable();
+                    this.vessel.FindPartModulesImplementing<HydroJebModule>().ForEach(m => m.State = AutopilotStatus.Offline);
                 }
-                else
+            }
+            else
+            {
+                if (!this.IsOnline)
                 {
-                    if (!this.IsOnline)
+                    this.State = AutopilotStatus.Online;
+                    this.button.Enable();
+                    this.button.SetTexture(HTUtils.LauncherIcon);
+                    foreach (HydroJebModule jeb in this.vessel.FindPartModulesImplementing<HydroJebModule>())
                     {
-                        this.State = AutopilotStatus.Online;
-                        this.button.SetTexture(HTUtils.LauncherIcon);
-                        this.button.Enable();
-                        foreach (HydroJebModule jeb in this.vessel.FindPartModulesImplementing<HydroJebModule>())
-                        {
-                            if (jeb == this) { continue; }
-                            jeb.State = AutopilotStatus.Idle;
-                        }
+                        if (jeb == this) { continue; }
+                        jeb.State = AutopilotStatus.Idle;
                     }
                 }
             }
