@@ -167,6 +167,8 @@ namespace HydroTech
                     if (amount != 0) { this.part.RequestResource(ecID, -amount); }
                     if (this.State != AutopilotStatus.Offline)
                     {
+                        this.button.SetTexture(HTUtils.InactiveIcon);
+                        this.button.Disable();
                         this.vessel.FindPartModulesImplementing<HydroJebModule>().ForEach(m => m.State = AutopilotStatus.Offline);
                     }
                 }
@@ -175,6 +177,8 @@ namespace HydroTech
                     if (!this.IsOnline)
                     {
                         this.State = AutopilotStatus.Online;
+                        this.button.SetTexture(HTUtils.LauncherIcon);
+                        this.button.Enable();
                         foreach (HydroJebModule jeb in this.vessel.FindPartModulesImplementing<HydroJebModule>())
                         {
                             if (jeb == this) { continue; }
