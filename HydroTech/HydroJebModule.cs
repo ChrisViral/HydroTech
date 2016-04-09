@@ -148,10 +148,11 @@ namespace HydroTech
         private void Update()
         {
             if (!HighLogic.LoadedSceneIsFlight || this.vessel.packed || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
-            if (this.state == AutopilotStatus.Idle && this == this.vessel.GetMasterJeb())
+            if (this == this.vessel.GetMasterJeb())
             {
-                this.State = AutopilotStatus.Online;
+                if (this.State == AutopilotStatus.Idle) { this.State = AutopilotStatus.Online; }
             }
+            else if (this.IsOnline) { this.State = AutopilotStatus.Idle; }
         }
 
         private void FixedUpdate()
