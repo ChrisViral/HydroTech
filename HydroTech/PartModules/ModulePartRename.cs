@@ -34,11 +34,6 @@ namespace HydroTech.PartModules
             set { registered = value; }
         }
 
-        protected override int QueueSpot
-        {
-            get { return CoreConsts.renderMgrModulePartRename; }
-        }
-
         protected override string PanelTitle
         {
             get { return "Rename part"; }

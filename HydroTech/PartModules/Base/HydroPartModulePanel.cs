@@ -1,4 +1,5 @@
-﻿using HydroTech.Managers;
+﻿using System;
+using HydroTech.Managers;
 using UnityEngine;
 
 namespace HydroTech.PartModules.Base
@@ -7,6 +8,7 @@ namespace HydroTech.PartModules.Base
     {
         #region Fields
         protected Rect windowRect = new Rect(Screen.width * 0.5f, Screen.height * 0.45f, 0, Screen.height * 0.1f);
+        protected readonly int id = Guid.NewGuid().GetHashCode();
         #endregion
 
         #region Properties
@@ -27,7 +29,6 @@ namespace HydroTech.PartModules.Base
         #endregion
 
         #region Abstract properties
-        protected abstract int QueueSpot { get; }
         protected abstract string PanelTitle { get; }
         protected abstract bool Registered { get; set; }
         #endregion
@@ -36,7 +37,7 @@ namespace HydroTech.PartModules.Base
         protected void DrawGUI()
         {
             GUI.skin = HighLogic.Skin;
-            this.windowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGUI, this.PanelTitle);
+            this.windowRect = GUILayout.Window(this.id, this.windowRect, WindowGUI, this.PanelTitle);
         }
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
 namespace HydroTech.Utils
 {
@@ -6,6 +7,22 @@ namespace HydroTech.Utils
     {
         #region Constants
         public const float radToDeg = 180 / Mathf.PI;
+        public const string localPluginDataURL = @"GameData\HydroTech\Plugins\PluginData";
+        #endregion
+
+        #region Properties
+        private static readonly string pluginDataURL;
+        public static string PluginDataURL
+        {
+            get { return pluginDataURL; }
+        }
+        #endregion
+
+        #region Constructor
+        static HTUtils()
+        {
+            pluginDataURL = Path.Combine(KSPUtil.ApplicationRootPath, localPluginDataURL);
+        }
         #endregion
 
         #region Methods

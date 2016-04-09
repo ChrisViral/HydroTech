@@ -8,7 +8,7 @@ namespace HydroTech.Panels
 {
     public class PanelRCSThrustInfo : Panel, IPanelEditor
     {
-        #region Sttic Properties
+        #region Static Properties
         public static PanelRCSThrustInfo ThePanel
         {
             get { return (PanelRCSThrustInfo)HydroJebCore.panels[CoreConsts.rcsInfo]; }
@@ -177,7 +177,7 @@ namespace HydroTech.Panels
             if (this.editor)
             {
                 GUI.skin = HighLogic.Skin;
-                Rect newWindowRect = GUILayout.Window(this.QueueSpot, this.windowRectEditor, WindowGUI, this.PanelTitle);
+                Rect newWindowRect = GUILayout.Window(this.id, this.windowRectEditor, WindowGUI, this.PanelTitle);
                 if (newWindowRect.yMin != this.windowRectEditor.yMin || newWindowRect.yMin != this.windowRectEditor.yMin) { this.needSave = true; }
                 this.windowRectEditor = newWindowRect;
             }

@@ -1,4 +1,4 @@
-﻿using HydroTech.Constants;
+﻿using System;
 using HydroTech.File;
 using HydroTech.Managers;
 using HydroTech.Utils;
@@ -11,6 +11,8 @@ namespace HydroTech.Panels
         #region Fields
         [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "WindowPos", cmd = CMD.RECT_TOP_LEFT)]
         public Rect windowRect;
+
+        protected readonly int id = Guid.NewGuid().GetHashCode();
         #endregion
 
         #region Properties
@@ -50,11 +52,6 @@ namespace HydroTech.Panels
         protected abstract int PanelID { get; }
 
         public abstract string PanelTitle { get; }
-
-        protected int QueueSpot
-        {
-            get { return this.PanelID + CoreConsts.renderMgrQueueSpot; }
-        }
         #endregion
 
         #region Destructor
@@ -99,7 +96,7 @@ namespace HydroTech.Panels
         public virtual void DrawGUI()
         {
             GUI.skin = HighLogic.Skin;
-            Rect newWindowRect = GUILayout.Window(this.QueueSpot, this.windowRect, WindowGUI, this.PanelTitle);
+            Rect newWindowRect = GUILayout.Window(this.id, this.windowRect, WindowGUI, this.PanelTitle);
             if (newWindowRect.xMin != this.windowRect.xMin || newWindowRect.yMin != this.windowRect.yMin) { this.needSave = true; }
             this.windowRect = newWindowRect;
         }

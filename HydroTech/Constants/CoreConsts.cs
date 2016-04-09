@@ -21,12 +21,6 @@ namespace HydroTech.Constants
         public const string lowerLandingLeg = "LowerLeg";
         public const string lowerLandingGear = "LowerLandingGear";
         #endregion
-       
-        #region Manager
-        public const int renderMgrQueueSpot = 3;
-        public const int renderMgrModulePartRename = 20;
-        public const int renderMgrModuleHydroAsas = 21;
-        #endregion
 
         #region Panel IDs
         public const int main = 1;
