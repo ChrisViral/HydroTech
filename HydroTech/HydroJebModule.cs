@@ -32,7 +32,7 @@ namespace HydroTech
 
         #region KSPFields
         [KSPField]
-        public float electricityRate = 0.1f;
+        public float consumptionRate = 0.1f;
 
         [KSPField(guiActive = true, guiName = "Status")]
         public string status = "Online";
@@ -161,7 +161,7 @@ namespace HydroTech
 
             if (!CheatOptions.InfiniteElectricity)
             {
-                double amount = this.part.RequestResource(ecID, this.electricityRate * TimeWarp.fixedDeltaTime);
+                double amount = this.part.RequestResource(ecID, this.consumptionRate * TimeWarp.fixedDeltaTime);
                 if (amount <= 0)
                 {
                     if (amount != 0) { this.part.RequestResource(ecID, -amount); }
@@ -224,7 +224,7 @@ namespace HydroTech
             StringBuilder sb = new StringBuilder("HydroJeb Autopilot Unit");
             sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
             sb.AppendLine("ElectricCharge");
-            sb.Append(string.Format("Rate: {0:0.#}U/s", this.electricityRate));
+            sb.Append(string.Format("Rate: {0:0.#}U/s", this.consumptionRate));
             return sb.ToString();
         }
         #endregion
