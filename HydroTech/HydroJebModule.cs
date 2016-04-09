@@ -176,6 +176,7 @@ namespace HydroTech
                         {
                             this.part.RequestResource(this.resources[j].resource.id, -this.requests[j]);
                         }
+                        print("refunding");
                         SetOffline(res.resource.name);
                         break;
                     }
@@ -220,7 +221,7 @@ namespace HydroTech
                 PersistentManager.Instance.AddNode<HydroJebModule>(this.part.name, node);
                 LoadResources(node);
             }
-            else if(node != null || PersistentManager.Instance.TryGetNode<HydroJebModule>(this.part.name, ref node))
+            else if(HighLogic.LoadedSceneIsFlight && PersistentManager.Instance.TryGetNode<HydroJebModule>(this.part.name, ref node))
             {
                 LoadResources(node);
             }
@@ -233,7 +234,7 @@ namespace HydroTech
             {
                 foreach (InputResource res in this.resources)
                 {
-                    sb.Append("\n\n<b><color=#99ff00ff>Input:</color></b>");
+                    sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
                     sb.AppendLine(res.resource.name);
                     sb.Append(string.Format("Rate: {0:0.#}U/s", res.rate));
                 }
