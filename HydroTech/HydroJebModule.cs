@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
+using HydroTech.Autopilots;
 using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.Utils;
@@ -12,82 +12,57 @@ namespace HydroTech
 {
     public class HydroJebModule : PartModule, IModuleInfo
     {
-        internal struct InputResource
+        public enum AutopilotStatus
         {
-            #region Fields
-            public readonly double rate;
-            public readonly PartResourceDefinition resource;
-            #endregion
-
-            #region Constructors
-            private InputResource(ConfigNode node)
-            {
-                string name = string.Empty;
-                this.rate = 0;
-                this.resource = node.TryGetValue("resourceName", ref name) ? PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(r => r.name == name) : null;
-                node.TryGetValue("rate", ref this.rate);
-            }
-            #endregion
-
-            #region Static methods
-            internal static bool TryGetResource(ConfigNode node, out InputResource input)
-            {
-                input = new InputResource(node);
-                if (input.resource == null || input.rate <= 0)
-                {
-                    input = new InputResource();
-                    Debug.LogError("[HydroJebModule]: Invalid resource name or invalid resource flow rate");
-                    return false;
-                }
-                return true;
-            }
-            #endregion
+            Online,
+            Offline,
+            Idle
         }
 
+        #region Static fields
+        private static readonly int ecID = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge").id;
+        #endregion
+
+        #region Static Properties
+        protected static APDockAssist DA
+        {
+            get { return APDockAssist.TheAutopilot; }
+        }
+        #endregion
+
         #region KSPFields
+        [KSPField]
+        public float electricityRate = 0.1f;
+
         [KSPField(guiActive = true, guiName = "Status")]
         public string status = "Online";
         #endregion
 
         #region Fields
-        private readonly List<InputResource> resources = new List<InputResource>();
         private ApplicationLauncherButton button;
         private GameObject flightPanel;
-        private bool added, visible, online;
-        private double[] requests;
+        private bool added, visible;
+        #endregion
+
+        #region Properties
+        private AutopilotStatus state;
+        public AutopilotStatus State
+        {
+            get { return this.state; }
+            set
+            {
+                this.status = EnumUtils.GetName(value);
+                this.state = value;
+            }
+        }
+
+        public bool IsOnline
+        {
+            get { return this.state == AutopilotStatus.Online; }
+        }
         #endregion
 
         #region Methods
-        private void SetOnline()
-        {
-            if (!this.online)
-            {
-                this.online = true;
-                this.status = "Online";
-            }
-        }
-
-        private void SetOffline(string resourceName)
-        {
-            if (this.online)
-            {
-                this.online = false;
-                this.status = "Out of " + resourceName;
-            }
-        }
-
-        private void LoadResources(ConfigNode node)
-        {
-            if (this.resources.Count == 0 && node.HasNode("INPUT"))
-            {
-                foreach (ConfigNode n in node.GetNodes("INPUT"))
-                {
-                    InputResource resource;
-                    if (InputResource.TryGetResource(n, out resource)) { this.resources.Add(resource); }
-                }
-            }
-        }
-
         private void AddButton()
         {
             if (!this.added)
@@ -106,6 +81,20 @@ namespace HydroTech
                 Destroy(this.button);
                 this.added = false;
             }
+        }
+
+        private void HideButton()
+        {
+            this.button.SetFalse();
+            this.button.VisibleInScenes = AppScenes.NEVER;
+        }
+
+        private void SetupModule()
+        {
+            AddButton();
+            if (!this.vessel.isActiveVessel) { this.button.VisibleInScenes = AppScenes.NEVER; }
+            GameEvents.onVesselSwitching.Add(SwitchingVessels);
+            GameEvents.onGameSceneSwitchRequested.Add(GameSceneChanging);
         }
 
         private void ShowFlightPanel()
@@ -131,11 +120,7 @@ namespace HydroTech
         private void SwitchingVessels(Vessel from, Vessel to)
         {
             if (to == this.vessel) { this.button.VisibleInScenes = AppScenes.FLIGHT; }
-            else if (from == this.vessel)
-            {
-                this.button.SetFalse();
-                this.button.VisibleInScenes = AppScenes.NEVER;
-            }
+            else if (from == this.vessel) { HideButton(); }
         }
 
         private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
@@ -160,34 +145,48 @@ namespace HydroTech
         #endregion
 
         #region Functions
+        private void Update()
+        {
+            if (!HighLogic.LoadedSceneIsFlight || this.vessel.packed || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
+            if (this.state == AutopilotStatus.Idle && this == this.vessel.GetMasterJeb())
+            {
+                this.State = AutopilotStatus.Online;
+            }
+        }
+
         private void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight) { return; }
+            if (!HighLogic.LoadedSceneIsFlight || !this.IsOnline || this.vessel.packed || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
-            if (!CheatOptions.InfinitePropellant)
+            if (!CheatOptions.InfiniteElectricity)
             {
-                for (int i = 0; i < this.resources.Count; i++)
+                double amount = this.part.RequestResource(ecID, this.electricityRate * TimeWarp.fixedDeltaTime);
+                if (amount <= 0)
                 {
-                    InputResource res = this.resources[i];
-                    this.requests[i] = this.part.RequestResource(res.resource.id, res.rate * TimeWarp.fixedDeltaTime);
-                    if (this.requests[i] <= 0)
+                    if (amount != 0) { this.part.RequestResource(ecID, -amount); }
+                    if (this.State != AutopilotStatus.Offline)
                     {
-                        for (int j = 0; j <= i; j++)
-                        {
-                            this.part.RequestResource(this.resources[j].resource.id, -this.requests[j]);
-                        }
-                        print("refunding");
-                        SetOffline(res.resource.name);
-                        break;
+                        this.vessel.FindPartModulesImplementing<HydroJebModule>().ForEach(m => m.State = AutopilotStatus.Offline);
                     }
                 }
-                SetOnline();
+                else
+                {
+                    if (!this.IsOnline)
+                    {
+                        this.State = AutopilotStatus.Online;
+                        foreach (HydroJebModule jeb in this.vessel.FindPartModulesImplementing<HydroJebModule>())
+                        {
+                            if (jeb == this) { continue; }
+                            jeb.State = AutopilotStatus.Idle;
+                        }
+                    }
+                }
             }
         }
 
         private void OnDestroy()
         {
-            if (HighLogic.LoadedSceneIsFlight)
+            if (HighLogic.LoadedSceneIsFlight && this.IsOnline)
             {
                 RemoveButton();
                 GameEvents.onVesselSwitching.Remove(SwitchingVessels);
@@ -206,39 +205,21 @@ namespace HydroTech
             }
             else if (HighLogic.LoadedSceneIsFlight)
             {
-                AddButton();
-                if (!this.vessel.isActiveVessel) { this.button.VisibleInScenes = AppScenes.NEVER; }
-                this.requests = new double[this.resources.Count];
-                GameEvents.onVesselSwitching.Add(SwitchingVessels);
-                GameEvents.onGameSceneSwitchRequested.Add(GameSceneChanging);
-            }
-        }
-
-        public override void OnLoad(ConfigNode node)
-        {
-            if (HighLogic.LoadedScene == GameScenes.LOADING)
-            {
-                PersistentManager.Instance.AddNode<HydroJebModule>(this.part.name, node);
-                LoadResources(node);
-            }
-            else if(HighLogic.LoadedSceneIsFlight && PersistentManager.Instance.TryGetNode<HydroJebModule>(this.part.name, ref node))
-            {
-                LoadResources(node);
+                this.state = EnumUtils.GetValue<AutopilotStatus>(this.status);
+                if (this.IsOnline)
+                {
+                    if (this == this.vessel.GetMasterJeb()) { SetupModule(); }
+                    else { this.State = AutopilotStatus.Idle; }
+                }
             }
         }
 
         public override string GetInfo()
         {
             StringBuilder sb = new StringBuilder("HydroJeb Autopilot Unit");
-            if (this.resources.Count > 0)
-            {
-                foreach (InputResource res in this.resources)
-                {
-                    sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
-                    sb.AppendLine(res.resource.name);
-                    sb.Append(string.Format("Rate: {0:0.#}U/s", res.rate));
-                }
-            }
+            sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
+            sb.AppendLine("ElectricCharge");
+            sb.Append(string.Format("Rate: {0:0.#}U/s", this.electricityRate));
             return sb.ToString();
         }
         #endregion
