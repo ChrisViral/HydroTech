@@ -6,6 +6,7 @@ using HydroTech.Panels;
 using HydroTech.Utils;
 using KSP.UI.Screens;
 using UnityEngine;
+using AppScenes = KSP.UI.Screens.ApplicationLauncher.AppScenes;
 
 namespace HydroTech
 {
@@ -77,7 +78,7 @@ namespace HydroTech
 
         private void LoadResources(ConfigNode node)
         {
-            if (this.resources.Count == 0)
+            if (this.resources.Count == 0 && node.HasNode("INPUT"))
             {
                 foreach (ConfigNode n in node.GetNodes("INPUT"))
                 {
@@ -92,8 +93,18 @@ namespace HydroTech
             if (!this.added)
             {
                 this.button = ApplicationLauncher.Instance.AddModApplication(ShowFlightPanel, HideFlightPanel,
-                              Empty, Empty, Empty, Empty, ApplicationLauncher.AppScenes.FLIGHT, HTUtils.LauncherIcon);
+                              Empty, Empty, Empty, Empty, AppScenes.FLIGHT, HTUtils.LauncherIcon);
                 this.added = true;
+            }
+        }
+
+        private void RemoveButton()
+        {
+            if (this.added)
+            {
+                ApplicationLauncher.Instance.RemoveModApplication(this.button);
+                Destroy(this.button);
+                this.added = false;
             }
         }
 
@@ -119,15 +130,17 @@ namespace HydroTech
 
         private void SwitchingVessels(Vessel from, Vessel to)
         {
-            if (to == this.vessel)
+            if (to == this.vessel) { this.button.VisibleInScenes = AppScenes.FLIGHT; }
+            else if (from == this.vessel)
             {
-                if (!this.added) { AddButton(); }
-                else { this.button.Enable(); }
+                this.button.SetFalse();
+                this.button.VisibleInScenes = AppScenes.NEVER;
             }
-            else if (from == this.vessel && this.added)
-            {
-                this.button.Disable();
-            }
+        }
+
+        private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
+        {
+            if (evnt.from == GameScenes.FLIGHT) { RemoveButton(); }
         }
 
         public string GetModuleTitle()
@@ -175,13 +188,9 @@ namespace HydroTech
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                if (this.added)
-                {
-                    ApplicationLauncher.Instance.RemoveModApplication(this.button);
-                    Destroy(this.button);
-                    this.added = false;
-                }
+                RemoveButton();
                 GameEvents.onVesselSwitching.Remove(SwitchingVessels);
+                GameEvents.onGameSceneSwitchRequested.Remove(GameSceneChanging);
             }
             else if (HighLogic.LoadedSceneIsEditor) { EditorToolbarManager.RemoveEnabler(); }
         }
@@ -197,9 +206,10 @@ namespace HydroTech
             else if (HighLogic.LoadedSceneIsFlight)
             {
                 AddButton();
-                if (!this.vessel.isActiveVessel) { this.button.Disable(); }
+                if (!this.vessel.isActiveVessel) { this.button.VisibleInScenes = AppScenes.NEVER; }
                 this.requests = new double[this.resources.Count];
                 GameEvents.onVesselSwitching.Add(SwitchingVessels);
+                GameEvents.onGameSceneSwitchRequested.Add(GameSceneChanging);
             }
         }
 
@@ -208,6 +218,7 @@ namespace HydroTech
             if (HighLogic.LoadedScene == GameScenes.LOADING)
             {
                 PersistentManager.Instance.AddNode<HydroJebModule>(this.part.name, node);
+                LoadResources(node);
             }
             else if(node != null || PersistentManager.Instance.TryGetNode<HydroJebModule>(this.part.name, ref node))
             {

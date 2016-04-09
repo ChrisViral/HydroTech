@@ -36,7 +36,7 @@ namespace HydroTech.Utils
         static GUIUtils()
         {
             kspSkin = HighLogic.Skin;
-            unitySkin = new GUISkin();
+            unitySkin = GUI.skin;
 
             //TODO: when custom settings are implemented, set the right one to start with
             Skin = kspSkin;

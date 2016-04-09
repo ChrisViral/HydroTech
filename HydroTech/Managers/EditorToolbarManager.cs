@@ -2,6 +2,7 @@
 using HydroTech.Utils;
 using KSP.UI.Screens;
 using UnityEngine;
+using AppScenes = KSP.UI.Screens.ApplicationLauncher.AppScenes;
 
 namespace HydroTech.Managers
 {
@@ -9,6 +10,7 @@ namespace HydroTech.Managers
     public class EditorToolbarManager : MonoBehaviour
     {
         #region Static fields
+        private static readonly AppScenes editors = AppScenes.VAB | AppScenes.SPH;
         private static ApplicationLauncherButton button;
         private static GameObject panel;
         private static bool added, visible;
@@ -20,9 +22,9 @@ namespace HydroTech.Managers
         {
             if (!added)
             {
-                button = ApplicationLauncher.Instance.AddModApplication(ShowPanel, HidePanel, Empty, Empty, Empty, Empty,
-                         ApplicationLauncher.AppScenes.VAB,HTUtils.LauncherIcon);
-                button.Disable();
+                button = ApplicationLauncher.Instance.AddModApplication(ShowPanel, HidePanel,
+                         Empty, Empty, Empty, Empty, AppScenes.NEVER ,HTUtils.LauncherIcon);
+                button.enabled = false;
                 added = true;
             }
         }
@@ -55,14 +57,14 @@ namespace HydroTech.Managers
 
         private void Empty() { }
 
-        private void GameSceneChanged(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
+        private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
         {
             if (evnt.from == GameScenes.EDITOR)
             {
                 if (visible) { button.SetFalse(); }
                 button.Disable();
             }
-            else if (evnt.to == GameScenes.EDITOR) { enablers = 0;}
+            else if (evnt.to == GameScenes.EDITOR) { enablers = 0; }
         }
         #endregion
 
@@ -71,7 +73,7 @@ namespace HydroTech.Managers
         {
             if (++enablers == 1)
             {
-                button.Enable();
+                button.VisibleInScenes = editors;
             }
         }
 
@@ -80,7 +82,7 @@ namespace HydroTech.Managers
             if (--enablers == 0)
             {
                 if (visible) { button.SetFalse(); }
-                button.Disable();
+                button.VisibleInScenes = AppScenes.NEVER;
             }
         }
         #endregion
@@ -90,7 +92,7 @@ namespace HydroTech.Managers
         {
             GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
             GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveButton);
-            GameEvents.onGameSceneSwitchRequested.Add(GameSceneChanged);
+            GameEvents.onGameSceneSwitchRequested.Add(GameSceneChanging);
         }
         #endregion
     }
