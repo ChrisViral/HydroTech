@@ -193,7 +193,7 @@ namespace HydroTech
                 GameEvents.onVesselSwitching.Remove(SwitchingVessels);
                 GameEvents.onGameSceneSwitchRequested.Remove(GameSceneChanging);
             }
-            else if (HighLogic.LoadedSceneIsEditor) { EditorToolbarManager.RemoveEnabler(); }
+            else if (HighLogic.LoadedSceneIsEditor) { HydroToolbarManager.editor.RemoveEnabler(); }
         }
         #endregion
 
@@ -202,7 +202,7 @@ namespace HydroTech
         {
             if (HighLogic.LoadedSceneIsEditor)
             {
-                EditorToolbarManager.AddEnabler();
+                HydroToolbarManager.editor.AddEnabler();
             }
             else if (HighLogic.LoadedSceneIsFlight)
             {

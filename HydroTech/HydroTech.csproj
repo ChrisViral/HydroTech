@@ -82,7 +82,7 @@
     <Compile Include="Data\HydroPartListEditor.cs" />
     <Compile Include="Data\HydroPartModuleList.cs" />
     <Compile Include="Data\SubList.cs" />
-    <Compile Include="Managers\EditorToolbarManager.cs" />
+    <Compile Include="Managers\HydroToolbarManager.cs" />
     <Compile Include="Panels\EditorMainPanel.cs" />
     <Compile Include="Panels\FlightMainPanel.cs" />
     <Compile Include="Storage\FileName.cs" />

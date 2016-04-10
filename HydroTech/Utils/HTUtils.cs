@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace HydroTech.Utils
@@ -9,6 +10,7 @@ namespace HydroTech.Utils
         public const float radToDeg = 180 / Mathf.PI;
         public const string localPluginDataURL = @"GameData\HydroTech\Plugins\PluginData";
         public const string localIconURL = @"GameData\HydroTech\Plugins\PluginData\HydroTech_icon.png";
+        public const string localActiveIconURL = @"GameData\HydroTech\Plugins\PluginData\HydroTech_active_icon.png";
         public const string localInactiveIconURL = @"GameData\HydroTech\Plugins\PluginData\HydroTech_inactive_icon.png";
         #endregion
 
@@ -25,6 +27,12 @@ namespace HydroTech.Utils
             get { return launcherIcon; }
         }
 
+        private static readonly Texture2D activeIcon;
+        public static Texture2D ActiveIcon
+        {
+            get { return activeIcon; }
+        }
+
         private static readonly Texture2D inactiveIcon;
         public static Texture2D InactiveIcon
         {
@@ -39,6 +47,9 @@ namespace HydroTech.Utils
 
             launcherIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
             launcherIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localIconURL)));
+
+            activeIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
+            activeIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localActiveIconURL)));
 
             inactiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
             inactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localInactiveIconURL)));
