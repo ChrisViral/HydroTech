@@ -1,5 +1,5 @@
-﻿using HydroTech.PartModules.Base;
-using HydroTech.Parts;
+﻿using HydroTech.Managers;
+using HydroTech.PartModules.Base;
 
 namespace HydroTech.PartModules
 {
@@ -8,7 +8,7 @@ namespace HydroTech.PartModules
         #region Overrides
         protected override Status GetStatus()
         {
-            return HydroJebCore.IsActiveJeb((HydroJeb)this.part) ? Status.ACTIVE : Status.IDLE;
+            return HydroFlightManager.Instance.IsActiveJeb(this.part.Modules["HydroJebModule"] as HydroJebModule) ? Status.ACTIVE : Status.IDLE;
         }
         #endregion
     }

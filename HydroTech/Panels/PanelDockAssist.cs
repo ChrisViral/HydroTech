@@ -15,14 +15,9 @@ namespace HydroTech.Panels
     public class PanelDockAssist : PanelAP
     {
         #region Static properties
-        public static PanelDockAssist ThePanel
-        {
-            get { return (PanelDockAssist)HydroJebCore.panels[CoreConsts.pDock]; }
-        }
-
         protected static APDockAssist DA
         {
-            get { return APDockAssist.TheAutopilot; }
+            get { return APDockAssist.DockingAP; }
         }
 
         protected static ModuleDockAssistCam Cam
@@ -122,10 +117,10 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        protected AffiliationList<HydroPartModule, Vessel> targetVesselList;
-        protected SubList<HydroPartModule> targetList;
-        protected UISingleSelectionList<HydroPartModule> camListUI;
-        protected UISingleSelectionList<HydroPartModule> targetListUI;
+        protected AffiliationList<ModuleDockAssistTarget, Vessel> targetVesselList;
+        protected SubList<ModuleDockAssistTarget> targetList;
+        protected UISingleSelectionList<ModuleDockAssistCam> camListUI;
+        protected UISingleSelectionList<ModuleDockAssistTarget> targetListUI;
         protected UISingleSelectionList<Vessel> targetVesselListUI;
         protected Vessel targetVessel;
         protected string accText;
@@ -149,11 +144,11 @@ namespace HydroTech.Panels
             {
                 if (value != this.previewPart)
                 {
-                    if (value == null) { HydroFlightCameraManager.RetrieveLast(); }
+                    if (value == null) { HydroFlightManager.Instance.CameraManager.RetrieveLast(); }
                     else
                     {
-                        if (this.previewPart == null && this.PreviewVessel == null) { HydroFlightCameraManager.SaveCurrent(); }
-                        HydroFlightCameraManager.CamCallback = value.DoPreview;
+                        if (this.previewPart == null && this.PreviewVessel == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                        HydroFlightManager.Instance.CameraManager.CamCallback = value.DoPreview;
                     }
                     this.previewPart = value;
                 }
@@ -195,11 +190,11 @@ namespace HydroTech.Panels
             {
                 if (value != this.previewVessel)
                 {
-                    if (value == null) { HydroFlightCameraManager.RetrieveLast(); }
+                    if (value == null) { HydroFlightManager.Instance.CameraManager.RetrieveLast(); }
                     else
                     {
-                        if (this.previewVessel == null && this.PreviewPart == null) { HydroFlightCameraManager.SaveCurrent(); }
-                        HydroFlightCameraManager.CamCallback = DoPreviewVessel;
+                        if (this.previewVessel == null && this.PreviewPart == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                        HydroFlightManager.Instance.CameraManager.CamCallback = DoPreviewVessel;
                     }
                     this.previewVessel = value;
                 }
@@ -332,12 +327,12 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelDockAssist()
         {
-            this.fileName = new FileName("dock", "cfg", HydroJebCore.panelSaveFolder);
-            this.camListUI = new UISingleSelectionList<HydroPartModule>(HydroJebCore.dockCams.ListActiveVessel);
-            this.targetVesselList = new AffiliationList<HydroPartModule, Vessel>(HydroJebCore.dockTargets.ListInactiveVessel, (AffiliationList<HydroPartModule, Vessel>.GetItemFunctionSingle)GetTargetVessel);
+            this.fileName = new FileName("dock", "cfg", FileName.panelSaveFolder);
+            this.camListUI = new UISingleSelectionList<ModuleDockAssistCam>(HydroFlightManager.Instance.ActiveCams);
+            this.targetVesselList = new AffiliationList<ModuleDockAssistTarget, Vessel>(HydroFlightManager.Instance.NearbyTargets, (AffiliationList<ModuleDockAssistTarget, Vessel>.GetItemFunctionSingle)GetTargetVessel);
             this.targetVesselListUI = new UISingleSelectionList<Vessel>(this.targetVesselList);
-            this.targetList = new SubList<HydroPartModule>(HydroJebCore.dockTargets.ListInactiveVessel, IsOnTargetVessel);
-            this.targetListUI = new UISingleSelectionList<HydroPartModule>(this.targetList);
+            this.targetList = new SubList<ModuleDockAssistTarget>(HydroFlightManager.Instance.NearbyTargets, IsOnTargetVessel);
+            this.targetListUI = new UISingleSelectionList<ModuleDockAssistTarget>(this.targetList);
         }
         #endregion
 
@@ -354,8 +349,8 @@ namespace HydroTech.Panels
 
         protected void DoPreviewVessel()
         {
-            HydroFlightCameraManager.FoV = CoreConsts.defaultFoVPreviewVessel;
-            HydroFlightCameraManager.Target = this.PreviewVessel.transform;
+            HydroFlightManager.Instance.CameraManager.FoV = CoreConsts.defaultFoVPreviewVessel;
+            HydroFlightManager.Instance.CameraManager.Target = this.PreviewVessel.transform;
         }
 
         protected void DrawChoosingCameraUI()
@@ -363,7 +358,7 @@ namespace HydroTech.Panels
             bool pageChanged, noCam;
             GUILayout.Label("Camera:");
             this.camListUI.OnDrawUI(DrawCamBtn, out pageChanged, out noCam);
-            this.PreviewPart = (ModuleDockAssistCam)this.camListUI.CurSelect;
+            this.PreviewPart = this.camListUI.CurSelect;
             if (pageChanged) { ResetHeight(); }
             if (noCam) { GUILayout.Label("Not installed"); }
             GUILayout.BeginHorizontal();
@@ -422,7 +417,7 @@ namespace HydroTech.Panels
             bool pageChanged;
             bool noTarget;
             this.targetListUI.OnDrawUI(DrawTargetBtn, out pageChanged, out noTarget);
-            this.PreviewPart = (ModuleDockAssistTarget)this.targetListUI.CurSelect;
+            this.PreviewPart = this.targetListUI.CurSelect;
             if (this.PreviewPart != null) { this.previewVessel = null; }
             if (pageChanged) { ResetHeight(); }
             if (noTarget) { GUILayout.Label("Not installed"); }
@@ -553,12 +548,12 @@ namespace HydroTech.Panels
             base.DrawSettingsUI();
         }
 
-        protected virtual void DrawCamBtn(HydroPartModule mcam)
+        protected virtual void DrawCamBtn(ModuleDockAssistCam mcam)
         {
-            if (mcam == null) { GUILayout.Button(""); }
+            if (mcam == null) { GUILayout.Button(string.Empty); }
             else
             {
-                if (GUILayout.Button(((ModuleDockAssistCam)mcam).ToString(), mcam == Cam ? (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mcam == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
+                if (GUILayout.Button(mcam.ToString(), mcam == Cam ? ReferenceEquals(mcam, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : ReferenceEquals(mcam, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
                 {
                     this.camListUI.SetSelectionToItem(mcam);
                 }
@@ -577,12 +572,12 @@ namespace HydroTech.Panels
             }
         }
 
-        protected virtual void DrawTargetBtn(HydroPartModule mtgt)
+        protected virtual void DrawTargetBtn(ModuleDockAssistTarget mtgt)
         {
             if (mtgt == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(((ModuleDockAssistTarget)mtgt).ToString(), mtgt == Target ? (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : (IPartPreview)mtgt == this.PreviewPart ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
+                if (GUILayout.Button(mtgt.ToString(), mtgt == Target ? ReferenceEquals(mtgt, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : ReferenceEquals(mtgt, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
                 {
                     this.targetListUI.SetSelectionToItem(mtgt);
                 }

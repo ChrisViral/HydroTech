@@ -12,7 +12,7 @@ namespace HydroTech.Panels
         #region Static Properties
         protected static APTranslation TA
         {
-            get { return APTranslation.TheAutopilot; }
+            get { return APTranslation.TranslationAP; }
         }
 
         protected static TransDir TransMode
@@ -114,7 +114,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelTranslation()
         {
-            this.fileName = new FileName("translation", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("translation", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

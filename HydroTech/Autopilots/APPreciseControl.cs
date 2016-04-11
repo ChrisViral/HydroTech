@@ -1,14 +1,15 @@
 ﻿using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 
 namespace HydroTech.Autopilots
 {
-    public class APPreciseControl : RCSAutopilot
+    public class APPreciseControl : Autopilot
     {
         #region Properties
-        public static APPreciseControl TheAutopilot
+        public static APPreciseControl PreciseControlAP
         {
-            get { return (APPreciseControl)HydroJebCore.autopilots[CoreConsts.precise]; }
+            get { return HydroFlightManager.Instance.PreciseControlAutopilot; }
         }
 
         protected override string NameString
@@ -37,7 +38,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APPreciseControl()
         {
-            this.fileName = new FileName("precise", "cfg", HydroJebCore.autopilotSaveFolder);
+            this.fileName = new FileName("precise", "cfg", FileName.autopilotSaveFolder);
         }
         #endregion
 
@@ -56,8 +57,8 @@ namespace HydroTech.Autopilots
             }
             else
             {
-                RcsActive.MakeRotation(ctrlState, this.angularAcc);
-                RcsActive.MakeTranslation(ctrlState, this.acc);
+                ActiveRCS.MakeRotation(ctrlState, this.angularAcc);
+                ActiveRCS.MakeTranslation(ctrlState, this.acc);
             }
         }
         #endregion

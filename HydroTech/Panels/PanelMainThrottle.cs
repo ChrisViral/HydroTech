@@ -33,7 +33,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelMainThrottle()
         {
-            this.fileName = new FileName("throttle", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("throttle", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

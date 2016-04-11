@@ -9,15 +9,10 @@ namespace HydroTech.PartModules
     public class ModuleDockAssistTarget : HydroPartModule, IPartPreview, IDAPartEditorAid
     {
         #region Static Properties
-        protected static PanelDockAssist Panel
-        {
-            get { return PanelDockAssist.ThePanel; }
-        }
-
         protected static ModuleDockAssistTarget CurTarget
         {
-            get { return APDockAssist.TheAutopilot.target; }
-            set { APDockAssist.TheAutopilot.target = value; }
+            get { return APDockAssist.DockingAP.target; }
+            set { APDockAssist.DockingAP.target = value; }
         }
         #endregion
 
@@ -85,9 +80,9 @@ namespace HydroTech.PartModules
         {
             get
             {
-                if (this.vessel == FlightGlobals.ActiveVessel) // || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist
+                if (this.vessel.isActiveVessel) // || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist
                 {
-                    if (this.isNear && CurTarget == this) { Panel.ResetHeight(); }
+                    if (this.isNear && CurTarget == this) { FlightMainPanel.Instance.DockAssist.ResetHeight(); }
                     this.isNear = false;
                 }
                 else
@@ -126,21 +121,15 @@ namespace HydroTech.PartModules
 
         public void DoPreview()
         {
-            HydroFlightCameraManager.Target = null;
-            HydroFlightCameraManager.TransformParent = this.transform;
-            HydroFlightCameraManager.FoV = this.previewFoV;
-            HydroFlightCameraManager.Position = this.previewPos;
-            HydroFlightCameraManager.SetLookRotation(this.previewForward, this.previewUp);
+            HydroFlightManager.Instance.CameraManager.Target = null;
+            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
+            HydroFlightManager.Instance.CameraManager.FoV = this.previewFoV;
+            HydroFlightManager.Instance.CameraManager.Position = this.previewPos;
+            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.previewForward, this.previewUp);
         }
         #endregion
 
         #region Overrides
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-            HydroJebCore.OnUpdate(this);
-        }
-
         public override void OnFlightStart()
         {
             base.OnFlightStart();
@@ -154,7 +143,7 @@ namespace HydroTech.PartModules
             if (this == CurTarget)
             {
                 CurTarget = null;
-                Panel.ResetHeight();
+                FlightMainPanel.Instance.DockAssist.ResetHeight();
             }
         }
 

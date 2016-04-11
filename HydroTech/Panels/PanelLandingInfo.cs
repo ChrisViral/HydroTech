@@ -12,7 +12,7 @@ namespace HydroTech.Panels
         #region Static properties
         protected static APLanding LA
         {
-            get { return APLanding.TheAutopilot; }
+            get { return APLanding.LandingAP; }
         }
         #endregion
 
@@ -124,7 +124,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelLandingInfo()
         {
-            this.fileName = new FileName("landinfo", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("landinfo", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

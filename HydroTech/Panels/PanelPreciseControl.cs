@@ -11,7 +11,7 @@ namespace HydroTech.Panels
         #region Static properties
         protected static APPreciseControl PC
         {
-            get { return APPreciseControl.TheAutopilot; }
+            get { return APPreciseControl.PreciseControlAP; }
         }
 
         protected static bool ByRate
@@ -102,7 +102,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelPreciseControl()
         {
-            this.fileName = new FileName("precise", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("precise", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

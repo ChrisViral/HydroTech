@@ -9,14 +9,9 @@ namespace HydroTech.Panels
     public class PanelLanding : PanelAP
     {
         #region Static properties
-        public static PanelLanding ThePanel
-        {
-            get { return (PanelLanding)HydroJebCore.panels[CoreConsts.pLanding]; }
-        }
-
         protected static APLanding LA
         {
-            get { return APLanding.TheAutopilot; }
+            get { return APLanding.LandingAP; }
         }
 
         protected static float SafeTouchDownSpeed
@@ -236,7 +231,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelLanding()
         {
-            this.fileName = new FileName("landing", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("landing", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

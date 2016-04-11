@@ -53,6 +53,13 @@ namespace HydroTech.Storage
             #endregion
         }
 
+        #region Static properties
+        //Temporary
+        public static readonly Folder hydroTechFolder = new Folder("GameData", "HydroTech");
+        public static readonly Folder autopilotSaveFolder = new Folder(hydroTechFolder, "PluginData", "rcsautopilot", "autopilots");
+        public static readonly Folder panelSaveFolder = new Folder(hydroTechFolder, "PluginData", "rcsautopilot", "panels");
+        #endregion
+
         #region Properties
         public string WWWForm
         {
@@ -61,7 +68,6 @@ namespace HydroTech.Storage
         #endregion
 
         #region Fields
-        public static readonly Folder hydroTechFolder = new Folder("GameData", "HydroTech");
         private readonly string ext, name;
         private readonly Folder folder;
         #endregion

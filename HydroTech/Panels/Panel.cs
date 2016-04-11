@@ -131,7 +131,6 @@ namespace HydroTech.Panels
 
         public virtual void OnUpdate()
         {
-            this.Active = HydroJebCore.electricity;
             if (this.needSave) { Save(); }
         }
 

@@ -16,12 +16,7 @@ namespace HydroTech.PartModules
         #region Static properties
         protected static APDockAssist DA
         {
-            get { return APDockAssist.TheAutopilot; }
-        }
-
-        protected static PanelDockAssist Panel
-        {
-            get { return PanelDockAssist.ThePanel; }
+            get { return APDockAssist.DockingAP; }
         }
 
         protected static ModuleDockAssistCam CurCam
@@ -86,7 +81,7 @@ namespace HydroTech.PartModules
                 {
                     if (this.isOnActiveVessel && CurCam == this)
                     {
-                        Panel.ResetHeight();
+                        FlightMainPanel.Instance.DockAssist.ResetHeight();
                         if (this.CamActivate) { this.CamActivate = false; }
                     }
                     this.isOnActiveVessel = false;
@@ -105,13 +100,13 @@ namespace HydroTech.PartModules
             {
                 if (!this.camActivate && value)
                 {
-                    if (activeCam == null) { HydroFlightCameraManager.SaveCurrent(); }
-                    HydroFlightCameraManager.CamCallback = DoCamera;
+                    if (activeCam == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                    HydroFlightManager.Instance.CameraManager.CamCallback = DoCamera;
                     activeCam = this;
                 }
                 else if (this.camActivate && !value)
                 {
-                    HydroFlightCameraManager.RetrieveLast();
+                    HydroFlightManager.Instance.CameraManager.RetrieveLast();
                     this.mag = 1;
                     activeCam = null;
                 }
@@ -184,21 +179,21 @@ namespace HydroTech.PartModules
 
         public void DoPreview()
         {
-            HydroFlightCameraManager.Target = null;
-            HydroFlightCameraManager.TransformParent = this.transform;
-            HydroFlightCameraManager.FoV = this.previewFoV;
-            HydroFlightCameraManager.Position = this.previewPos;
-            HydroFlightCameraManager.SetLookRotation(this.previewForward, this.previewUp);
+            HydroFlightManager.Instance.CameraManager.Target = null;
+            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
+            HydroFlightManager.Instance.CameraManager.FoV = this.previewFoV;
+            HydroFlightManager.Instance.CameraManager.Position = this.previewPos;
+            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.previewForward, this.previewUp);
         }
 
         public void DoCamera()
         {
-            HydroFlightCameraManager.Target = null;
-            HydroFlightCameraManager.TransformParent = this.transform;
-            HydroFlightCameraManager.Position = this.camPos;
-            HydroFlightCameraManager.SetLookRotation(this.camForward, this.camUp);
-            HydroFlightCameraManager.FoV = this.camDefFoV / this.mag;
-            HydroFlightCameraManager.NearClipPlane = this.camClip;
+            HydroFlightManager.Instance.CameraManager.Target = null;
+            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
+            HydroFlightManager.Instance.CameraManager.Position = this.camPos;
+            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.camForward, this.camUp);
+            HydroFlightManager.Instance.CameraManager.FoV = this.camDefFoV / this.mag;
+            HydroFlightManager.Instance.CameraManager.NearClipPlane = this.camClip;
         }
 
         public Vector3 VectorTransform(Vector3 vec)
@@ -218,7 +213,6 @@ namespace HydroTech.PartModules
         public override void OnUpdate()
         {
             base.OnUpdate();
-            HydroJebCore.OnUpdate(this);
             if (this.CamActivate) { this.part.RequestResource("ElectricCharge", CoreConsts.electricConsumptionCamera * TimeWarp.deltaTime); }
         }
 
@@ -239,7 +233,7 @@ namespace HydroTech.PartModules
             if (this == CurCam)
             {
                 CurCam = null;
-                Panel.ResetHeight();
+                FlightMainPanel.Instance.DockAssist.ResetHeight();
                 if (this.CamActivate) { this.CamActivate = false; }
             }
         }

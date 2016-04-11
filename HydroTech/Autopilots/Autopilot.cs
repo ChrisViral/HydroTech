@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HydroTech.Autopilots
 {
-    public abstract class RCSAutopilot : LoadSaveFileBasic
+    public abstract class Autopilot : LoadSaveFileBasic
     {
         #region Fields
         protected Vessel drivingVessel;
@@ -53,9 +53,9 @@ namespace HydroTech.Autopilots
             get { return FlightGlobals.ActiveVessel; }
         }
 
-        protected static RCSCalculator RcsActive
+        protected static RCSCalculator ActiveRCS
         {
-            get { return HydroJebCore.activeVesselRcs; }
+            get { return HydroFlightManager.Instance.ActiveRCS; }
         }
 
         protected virtual string NameString
@@ -63,9 +63,9 @@ namespace HydroTech.Autopilots
             get { return "Autopilot"; }
         }
 
-        public static RCSAutopilot EngagedAutopilot
+        public static Autopilot EngagedAutopilot
         {
-            get { return HydroJebCore.autopilots.Values.FirstOrDefault(ap => ap.Engaged); }
+            get { return HydroFlightManager.Instance.Autopilots.SingleOrDefault(ap => ap.Engaged); }
         }
 
         public static bool AutopilotEngaged
@@ -75,7 +75,7 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Destructor
-        ~RCSAutopilot()
+        ~Autopilot()
         {
             this.Engaged = false;
             this.Active = false;
@@ -85,13 +85,13 @@ namespace HydroTech.Autopilots
         #region Methods
         protected void AddDrive()
         {
-            HydroFlightInputManager.AddOnFlyByWire(ActiveVessel, this.NameString, DriveAutopilot);
+            HydroFlightManager.Instance.InputManager.AddOnFlyByWire(ActiveVessel, this.NameString, DriveAutopilot);
             this.drivingVessel = ActiveVessel;
         }
 
         protected void RemoveDrive()
         {
-            HydroFlightInputManager.RemoveOnFlyByWire(ActiveVessel, this.NameString, DriveAutopilot);
+            HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(ActiveVessel, this.NameString, DriveAutopilot);
             this.drivingVessel = null;
         }
 
@@ -112,7 +112,7 @@ namespace HydroTech.Autopilots
 
         protected void RemoveOtherAutopilots()
         {
-            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values)
+            foreach (Autopilot ap in HydroFlightManager.Instance.Autopilots)
             {
                 if (ap != this) { ap.Engaged = false; }
             }
@@ -186,12 +186,11 @@ namespace HydroTech.Autopilots
 
         public virtual void OnUpdate()
         {
-            this.Active = HydroJebCore.electricity;
             if (this.Engaged)
             {
                 if (this.drivingVessel != ActiveVessel)
                 {
-                    if (this.drivingVessel != null) { HydroFlightInputManager.RemoveOnFlyByWire(this.drivingVessel, this.NameString, DriveAutopilot); }
+                    if (this.drivingVessel != null) { HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.drivingVessel, this.NameString, DriveAutopilot); }
                     AddDrive();
                 }
             }
@@ -216,7 +215,7 @@ namespace HydroTech.Autopilots
         public static string StringAllAPStatus()
         {
             string msg = AutopilotEngaged ? "Autopilot engaged" : "No autopilot engaged";
-            foreach (RCSAutopilot ap in HydroJebCore.autopilots.Values)
+            foreach (Autopilot ap in HydroFlightManager.Instance.Autopilots)
             {
                 msg += string.Format("\n{0} {1}", ap.NameString, ap.Engaged);
             }
