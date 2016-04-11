@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace HydroTech.Managers
 {
-    public static class HydroFlightInputManager
+    [KSPAddon(KSPAddon.Startup.Flight, false)]
+    public class HydroFlightInputManager : MonoBehaviour
     {
         public struct HydroFlightInputCallback
         {
@@ -115,13 +116,15 @@ namespace HydroTech.Managers
         {
             RemoveOnFlyByWire(new HydroFlightInputCallback(vessel, nameString, callback));
         }
+        #endregion
 
-        public static void OnFlightStart()
+        #region Functions
+        public void Start()
         {
             handlerList.Clear();
         }
 
-        public static void OnUpdate()
+        public void Update()
         {
             List<HydroFlightInputHandler> listToRemove = new List<HydroFlightInputHandler>();
             foreach (HydroFlightInputHandler handler in handlerList)

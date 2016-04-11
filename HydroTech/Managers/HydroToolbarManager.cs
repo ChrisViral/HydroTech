@@ -85,6 +85,7 @@ namespace HydroTech.Managers
                 if (++this.enablers == 1)
                 {
                     this.button.VisibleInScenes = editors;
+                    HydroEditorManager.Instance.SetActive(true);
                 }
             }
 
@@ -94,6 +95,7 @@ namespace HydroTech.Managers
                 {
                     if (this.visible) { this.button.SetFalse(); }
                     this.button.VisibleInScenes = AppScenes.NEVER;
+                    HydroEditorManager.Instance.SetActive(false);
                 }
             }
             #endregion
@@ -196,6 +198,11 @@ namespace HydroTech.Managers
                     this.button.SetFalse();
                 }
                 else { this.button.VisibleInScenes = AppScenes.FLIGHT; }
+            }
+
+            public bool IsActive(HydroJebModule jeb)
+            {
+                return this.module == jeb;
             }
 
             private void SwitchingVessels(Vessel from, Vessel to)

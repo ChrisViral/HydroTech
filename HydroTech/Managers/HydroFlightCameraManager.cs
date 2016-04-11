@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace HydroTech.Managers
 {
-    public static class HydroFlightCameraManager
+    [KSPAddon(KSPAddon.Startup.Flight, false)]
+    public class HydroFlightCameraManager : MonoBehaviour
     {
         private class Settings
         {
@@ -190,18 +191,20 @@ namespace HydroTech.Managers
 #if DEBUG
             Debug.Log("HydroFlightCameraManager: Settings retrieved from stack. Current count: " + Settings.StackCount);
 #endif
-        }
+        }     
+        #endregion
 
-        public static void OnFlightStart()
+        #region Functions
+        private void Start()
         {
-            cam = (FlightCamera)Object.FindObjectOfType(typeof(FlightCamera));
+            cam = FindObjectOfType<FlightCamera>();
             origVessel = FlightGlobals.ActiveVessel;
             target = FlightGlobals.ActiveVessel.transform;
             origParent = TransformParent;
             camCallback = null;
         }
 
-        public static void OnUpdate()
+        public void Update()
         {
             if (!origVessel.isActiveVessel && camCallback == null)
             {
