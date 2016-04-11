@@ -66,15 +66,15 @@ namespace HydroTech.Panels
         #endregion
 
         #region Methods
-        //TODO: Make this work with the AppLauncher, as well
+        //TODO: Make this work with the AppLauncher as well
         protected void AddPanel()
         {
-            HydroRenderingManager.Instance.AddToDrawQueue(DrawGUI);
+
         }
 
         protected void RemovePanel()
         {
-            HydroRenderingManager.Instance.RemoveFromDrawQueue(DrawGUI);
+
         }
 
         public void ResetHeight()

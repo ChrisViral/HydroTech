@@ -17,7 +17,7 @@ namespace HydroTech.Panels
         #region Properties
         public PanelDockAssistEditor EditorDockAssist { get; private set; }
 
-        public PanelRCSThrustInfo RCSThrustInfo { get; private set; }
+        public PanelRCSThrustInfo RCSInfo { get; private set; }
 
         public List<Panel> Panels { get; private set; }
         #endregion
@@ -29,11 +29,11 @@ namespace HydroTech.Panels
 
             Instance = this;
             this.EditorDockAssist = new PanelDockAssistEditor();
-            this.RCSThrustInfo = new PanelRCSThrustInfo();
+            this.RCSInfo = new PanelRCSThrustInfo();
             this.Panels = new List<Panel>(2)
             {
                 this.EditorDockAssist,
-                this.RCSThrustInfo
+                this.RCSInfo
             };
         }
 

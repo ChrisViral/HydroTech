@@ -26,6 +26,8 @@ namespace HydroTech.Panels
 
         public PanelPreciseControl PreciseControl { get; private set; }
 
+        public PanelRCSThrustInfo RCSInfo { get; private set; }
+
         public PanelTranslation Translation { get; private set; }
 #if DEBUG
         public PanelDebug Debug { get; private set; }
@@ -51,14 +53,16 @@ namespace HydroTech.Panels
             this.LandingInfo = new PanelLandingInfo();
             this.MainThrottle = new PanelMainThrottle();
             this.PreciseControl = new PanelPreciseControl();
+            this.RCSInfo = new PanelRCSThrustInfo();
             this.Translation = new PanelTranslation();
-            this.Panels = new List<Panel>(6)
+            this.Panels = new List<Panel>(7)
             {
                 this.DockAssist,
                 this.Landing,
                 this.LandingInfo,
                 this.MainThrottle,
                 this.PreciseControl,
+                this.RCSInfo,
                 this.Translation
             };
 
