@@ -2,7 +2,6 @@
 using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.PartModules;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -34,7 +33,7 @@ namespace HydroTech.Managers
 
         public HydroJebModule Active { get; private set; }
 
-        public List<Part> Targets { get; private set; }
+        public List<HydroJebModule> Targets { get; private set; }
 
         public List<ModuleDockAssistCam> ActiveCams { get; private set; }
 
@@ -71,7 +70,7 @@ namespace HydroTech.Managers
                 this.TranslationAutopilot
             };
             this.ActiveRCS = new RCSCalculator();
-            this.Targets = new List<Part>();
+            this.Targets = new List<HydroJebModule>();
             this.ActiveCams = new List<ModuleDockAssistCam>();
             this.NearbyCams = new List<ModuleDockAssistCam>();
             this.ActiveTargets = new List<ModuleDockAssistTarget>();
@@ -119,7 +118,7 @@ namespace HydroTech.Managers
                     }
                     else
                     {
-                        this.Targets.Add(jeb.part);
+                        this.Targets.Add(jeb);
                         this.NearbyCams.AddRange(cams);
                         this.NearbyTargets.AddRange(targets);
                     }

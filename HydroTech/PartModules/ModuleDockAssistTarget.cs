@@ -80,13 +80,12 @@ namespace HydroTech.PartModules
         {
             get
             {
-                if (this.vessel.isActiveVessel) // || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist
+                if (this.vessel.isActiveVessel)
                 {
                     if (this.isNear && CurTarget == this) { FlightMainPanel.Instance.DockAssist.ResetHeight(); }
                     this.isNear = false;
                 }
-                else
-                { this.isNear = true; }
+                else { this.isNear = true; }
                 return this.isNear;
             }
         }

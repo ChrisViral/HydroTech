@@ -76,10 +76,6 @@
     <Compile Include="Constants\PanelConsts.cs" />
     <Compile Include="Data\AffiliationList.cs" />
     <Compile Include="Data\DictionaryFromList.cs" />
-    <Compile Include="Data\HydroPartList.cs" />
-    <Compile Include="Data\HydroPartListBase.cs" />
-    <Compile Include="Data\HydroPartListEditor.cs" />
-    <Compile Include="Data\HydroPartModuleList.cs" />
     <Compile Include="Data\SubList.cs" />
     <Compile Include="Managers\HydroEditorManager.cs" />
     <Compile Include="Managers\HydroCameraManager.cs" />
@@ -92,11 +88,9 @@
     <Compile Include="Storage\LoadSaveFileBasic.cs" />
     <Compile Include="CtrlStateCalculator.cs" />
     <Compile Include="HydroJebModule.cs" />
-    <Compile Include="Managers\PersistentManager.cs" />
     <Compile Include="SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroActionGroupManager.cs" />
     <Compile Include="Managers\HydroInputManager.cs" />
-    <Compile Include="Managers\HydroRenderingManager.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GUIUtils.cs" />

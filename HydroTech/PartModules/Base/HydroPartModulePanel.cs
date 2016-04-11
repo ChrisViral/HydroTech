@@ -20,8 +20,8 @@ namespace HydroTech.PartModules.Base
             {
                 if (this.Registered && !this.panelShown) { return; }
                 //TODO: More RenderingManager
-                if (value && !this.panelShown) { HydroRenderingManager.Instance.AddToDrawQueue(DrawGUI); }
-                else if (!value && this.panelShown) { HydroRenderingManager.Instance.RemoveFromDrawQueue(DrawGUI); }
+                if (value && !this.panelShown) { /*HydroRenderingManager.Instance.AddToDrawQueue(DrawGUI);*/ }
+                else if (!value && this.panelShown) { /*HydroRenderingManager.Instance.RemoveFromDrawQueue(DrawGUI);*/ }
                 this.panelShown = value;
                 this.Registered = value;
             }

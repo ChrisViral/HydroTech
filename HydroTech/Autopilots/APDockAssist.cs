@@ -216,14 +216,14 @@ namespace HydroTech.Autopilots
 
         protected bool targetOrientReady = true;
         protected LineRenderer line;
-        public SubList<Part> jebsTargetVessel;
+        public SubList<HydroJebModule> jebsTargetVessel;
         #endregion
 
         #region Constructor
         public APDockAssist()
         {
             this.fileName = new FileName("dock", "cfg", FileName.autopilotSaveFolder);
-            this.jebsTargetVessel = new SubList<Part>(HydroFlightManager.Instance.Targets, IsJebTargetVessel);
+            this.jebsTargetVessel = new SubList<HydroJebModule>(HydroFlightManager.Instance.Targets, IsJebTargetVessel);
         }
         #endregion
 
@@ -426,7 +426,7 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Methods
-        protected bool IsJebTargetVessel(Part jeb)
+        protected bool IsJebTargetVessel(HydroJebModule jeb)
         {
             return !this.NullTarget && jeb.vessel == this.target.vessel;
         }
