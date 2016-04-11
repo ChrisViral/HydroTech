@@ -124,7 +124,8 @@ namespace HydroTech.Managers
                 if (!this.added)
                 {
                     this.button = ApplicationLauncher.Instance.AddModApplication(ShowPanel, HidePanel,
-                             Empty, Empty, Empty, Empty, AppScenes.NEVER, HTUtils.LauncherIcon);
+                             Empty, Empty, SetActive, SetInactive, AppScenes.NEVER, HTUtils.LauncherIcon);
+                    this.enabled = true;
                     this.added = true;
                 }
             }
@@ -143,20 +144,43 @@ namespace HydroTech.Managers
 
             private void ShowPanel()
             {
-                if (!this.visible && this.enabled)
+                if (this.enabled)
                 {
-                    this.panel = new GameObject("FlightMainPanel", typeof(FlightMainPanel));
-                    this.panel.GetComponent<FlightMainPanel>().SetModule(this.module);
-                    this.visible = true;
+                    if (!this.visible)
+                    {
+                        this.panel = new GameObject("FlightMainPanel", typeof(FlightMainPanel));
+                        this.panel.GetComponent<FlightMainPanel>().SetModule(this.module);
+                        this.visible = true;
+                    }
                 }
+                else { this.button.SetFalse(false); }
             }
 
             private void HidePanel()
             {
-                if (this.visible)
+                if (this.visible && this.enabled)
                 {
                     Destroy(this.panel);
                     this.visible = false;
+                }
+            }
+
+            private void SetActive()
+            {
+                if (!this.enabled)
+                {
+                    this.enabled = true;
+                    this.button.SetTexture(HTUtils.LauncherIcon);
+                }
+            }
+
+            private void SetInactive()
+            {
+                if (this.enabled)
+                {
+                    this.button.SetFalse();
+                    this.enabled = false;
+                    this.button.SetTexture(HTUtils.InactiveIcon);
                 }
             }
 
@@ -165,7 +189,13 @@ namespace HydroTech.Managers
             private void SetSubscription(HydroJebModule jeb)
             {
                 this.module = jeb;
-                this.button.VisibleInScenes = jeb == null ? AppScenes.NEVER : AppScenes.FLIGHT;
+                if (this.module == null)
+                {
+                    this.button.VisibleInScenes = AppScenes.NEVER;
+                    this.button.Enable();
+                    this.button.SetFalse();
+                }
+                else { this.button.VisibleInScenes = AppScenes.FLIGHT; }
             }
 
             private void SwitchingVessels(Vessel from, Vessel to)
@@ -195,7 +225,7 @@ namespace HydroTech.Managers
                 {
                     if (this.enabled)
                     {
-                        if (this.module.IsOnline)
+                        if (!this.module.IsOnline)
                         {
                             this.button.SetFalse();
                             this.button.Disable();
@@ -203,11 +233,9 @@ namespace HydroTech.Managers
                             this.button.SetTexture(HTUtils.InactiveIcon);
                         }
                     }
-                    else if (!this.module.IsOnline)
+                    else if (this.module.IsOnline)
                     {
                         this.button.Enable();
-                        this.enabled = true;
-                        this.button.SetTexture(HTUtils.LauncherIcon);
                     }
                 }
             }
