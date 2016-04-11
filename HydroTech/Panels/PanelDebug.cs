@@ -10,13 +10,6 @@ namespace HydroTech.Panels
 {
     public class PanelDebug : Panel
     {
-        #region Static properies
-        public static PanelDebug ThePanel
-        {
-            get { return (PanelDebug)HydroJebCore.panels[CoreConsts.debug]; }
-        }
-        #endregion
-
         #region Fields
         private bool apStatus;
         private bool cameraMgr;
@@ -28,11 +21,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected override int PanelID
-        {
-            get { return CoreConsts.debug; }
-        }
-
         public override string PanelTitle
         {
             get { return PanelConsts.debugTitle; }
@@ -48,7 +36,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelDebug()
         {
-            this.fileName = new FileName("debug", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("debug", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 
@@ -73,25 +61,25 @@ namespace HydroTech.Panels
                 this.ctrlState = !this.ctrlState;
                 ResetHeight();
             }
-            if (this.ctrlState) { GUILayout.Label(RCSAutopilot.StringCtrlState(FlightGlobals.ActiveVessel.ctrlState)); }
+            if (this.ctrlState) { GUILayout.Label(Autopilot.StringCtrlState(FlightGlobals.ActiveVessel.ctrlState)); }
             if (GUILayout.Button("AP Status"))
             {
                 this.apStatus = !this.apStatus;
                 ResetHeight();
             }
-            if (this.apStatus) { GUILayout.Label(RCSAutopilot.StringAllAPStatus()); }
+            if (this.apStatus) { GUILayout.Label(Autopilot.StringAllAPStatus()); }
             if (GUILayout.Button("FlightInput"))
             {
                 this.flightInput = !this.flightInput;
                 ResetHeight();
             }
-            if (this.flightInput) { GUILayout.Label(HydroFlightInputManager.StringList()); }
+            if (this.flightInput) { GUILayout.Label(HydroFlightManager.Instance.InputManager.StringList()); }
             if (GUILayout.Button("Camera State"))
             {
                 this.cameraState = !this.cameraState;
                 ResetHeight();
             }
-            if (this.cameraState) { GUILayout.Label(HydroFlightCameraManager.StringCameraState()); }
+            if (this.cameraState) { GUILayout.Label(HydroFlightManager.Instance.CameraManager.StringCameraState()); }
             if (GUILayout.Button("Camera Manager"))
             {
                 this.cameraMgr = !this.cameraMgr;
@@ -99,13 +87,13 @@ namespace HydroTech.Panels
             }
             if (this.cameraMgr)
             {
-                GUILayout.Label(HydroFlightCameraManager.StringCameraStack());
+                GUILayout.Label(HydroFlightManager.Instance.CameraManager.StringCameraStack());
                 if (GUILayout.Button("Peek top"))
                 {
                     this.Peektop = !this.Peektop;
                     ResetHeight();
                 }
-                if (this.Peektop) { GUILayout.Label(HydroFlightCameraManager.StringTopState()); }
+                if (this.Peektop) { GUILayout.Label(HydroFlightManager.Instance.CameraManager.StringTopState()); }
             }
 
             foreach (string name in this.watchList.Keys)

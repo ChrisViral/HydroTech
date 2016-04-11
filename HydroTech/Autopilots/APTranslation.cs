@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HydroTech.Autopilots
 {
-    public class APTranslation : RCSAutopilot
+    public class APTranslation : Autopilot
     {
         public enum TransDir
         {
@@ -18,13 +18,6 @@ namespace HydroTech.Autopilots
             BACKWARD,
             ADVANCED
         }
-
-        #region Static properties
-        public static APTranslation TheAutopilot
-        {
-            get { return (APTranslation)HydroJebCore.autopilots[CoreConsts.apTranslation]; }
-        }
-        #endregion
 
         #region Fields
         protected Vector3 curOrient;
@@ -94,7 +87,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APTranslation()
         {
-            this.fileName = new FileName("translation", "cfg", HydroJebCore.autopilotSaveFolder);
+            this.fileName = new FileName("translation", "cfg", FileName.autopilotSaveFolder);
         }
         #endregion
 

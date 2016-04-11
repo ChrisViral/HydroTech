@@ -1,5 +1,4 @@
-﻿using HydroTech.Constants;
-using HydroTech.PartModules.Base;
+﻿using HydroTech.PartModules.Base;
 using UnityEngine;
 
 namespace HydroTech.PartModules
@@ -59,9 +58,9 @@ namespace HydroTech.PartModules
         #region Overrides
         public override void OnLoad(ConfigNode node)
         {
-            if (node.HasValue(GeneralConsts.name))
+            if (node.HasValue("PartNewName"))
             {
-                this.nameString = node.GetValue(GeneralConsts.name);
+                this.nameString = node.GetValue("PartNewName");
                 this.tempName = this.nameString;
                 this.Renamed = true;
             }
@@ -70,7 +69,7 @@ namespace HydroTech.PartModules
 
         public override void OnSave(ConfigNode node)
         {
-            if (this.Renamed) { node.AddValue(GeneralConsts.name, this.nameString); }
+            if (this.Renamed) { node.AddValue("PartNewName", this.nameString); }
         }
 
         protected override void WindowGUI(int id)

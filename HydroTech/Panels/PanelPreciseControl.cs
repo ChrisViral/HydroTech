@@ -1,5 +1,6 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -9,9 +10,9 @@ namespace HydroTech.Panels
     public class PanelPreciseControl : PanelAP
     {
         #region Static properties
-        protected static APPreciseControl PC
+        private static APPreciseControl PC
         {
-            get { return APPreciseControl.TheAutopilot; }
+            get { return HydroFlightManager.Instance.PreciseControlAutopilot; }
         }
 
         protected static bool ByRate
@@ -54,11 +55,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected override int PanelID
-        {
-            get { return CoreConsts.preciseControl; }
-        }
-
         public override string PanelTitle
         {
             get { return PanelConsts.preciseControlTitle; }
@@ -102,7 +98,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelPreciseControl()
         {
-            this.fileName = new FileName("precise", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("precise", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 
@@ -129,8 +125,8 @@ namespace HydroTech.Panels
                 }
                 else
                 {
-                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}{1}", AngA, GeneralConsts.angularAcc));
-                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}{1}", Acc, GeneralConsts.acceleration));
+                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}{1}", AngA, UnitConsts.angularAcc));
+                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}{1}", Acc, UnitConsts.acceleration));
                 }
                 if (GUILayout.Button("Change settings"))
                 {
@@ -170,12 +166,12 @@ namespace HydroTech.Panels
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Angular Acc");
                 this.angAText = GUILayout.TextField(this.angAText);
-                GUILayout.Label(GeneralConsts.angularAcc);
+                GUILayout.Label(UnitConsts.angularAcc);
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Acceleration");
                 this.accText = GUILayout.TextField(this.accText);
-                GUILayout.Label(GeneralConsts.acceleration);
+                GUILayout.Label(UnitConsts.acceleration);
                 GUILayout.EndHorizontal();
             }
 

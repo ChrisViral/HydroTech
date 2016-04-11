@@ -1,5 +1,6 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -10,9 +11,9 @@ namespace HydroTech.Panels
     public class PanelTranslation : PanelAP
     {
         #region Static Properties
-        protected static APTranslation TA
+        private static APTranslation TA
         {
-            get { return APTranslation.TheAutopilot; }
+            get { return HydroFlightManager.Instance.TranslationAutopilot; }
         }
 
         protected static TransDir TransMode
@@ -57,11 +58,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected override int PanelID
-        {
-            get { return CoreConsts.pTranslation; }
-        }
-
         public override string PanelTitle
         {
             get { return PanelConsts.translationTitle; }
@@ -114,7 +110,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelTranslation()
         {
-            this.fileName = new FileName("translation", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("translation", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

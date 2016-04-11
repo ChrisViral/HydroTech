@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Text;
-using HydroTech.Autopilots;
 using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
@@ -18,13 +17,6 @@ namespace HydroTech
 
         #region Static fields
         private static readonly int ecID = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge").id;
-        #endregion
-
-        #region Static Properties
-        protected static APDockAssist DA
-        {
-            get { return APDockAssist.TheAutopilot; }
-        }
         #endregion
 
         #region KSPFields

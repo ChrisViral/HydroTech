@@ -1,5 +1,4 @@
 ﻿using System;
-using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -49,8 +48,6 @@ namespace HydroTech.Panels
             }
         }
 
-        protected abstract int PanelID { get; }
-
         public abstract string PanelTitle { get; }
         #endregion
 
@@ -68,15 +65,15 @@ namespace HydroTech.Panels
         #endregion
 
         #region Methods
-        //TODO: Make this work with the AppLauncher, as well
+        //TODO: Make this work with the AppLauncher as well
         protected void AddPanel()
         {
-            HydroRenderingManager.Instance.AddToDrawQueue(DrawGUI);
+
         }
 
         protected void RemovePanel()
         {
-            HydroRenderingManager.Instance.RemoveFromDrawQueue(DrawGUI);
+
         }
 
         public void ResetHeight()
@@ -131,7 +128,6 @@ namespace HydroTech.Panels
 
         public virtual void OnUpdate()
         {
-            this.Active = HydroJebCore.electricity;
             if (this.needSave) { Save(); }
         }
 

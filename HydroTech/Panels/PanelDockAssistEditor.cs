@@ -41,11 +41,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Propeties
-        protected override int PanelID
-        {
-            get { return CoreConsts.pDock; }
-        }
-
         public override string PanelTitle
         {
             get { return this.editorHide ? PanelConsts.dockAssistEditorAidHideTitle : PanelConsts.dockAssistEditorAidTitle; }
@@ -55,7 +50,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelDockAssistEditor()
         {
-            this.fileName = new FileName("dockeditor", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("dockeditor", "cfg", FileName.panelSaveFolder);
             this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, (AffiliationList<Part, ModuleDockAssistCam>.GetItemFunctionMulti)GetCam);
             this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunctionMulti)GetTgt);
             this.camSet = new DictionaryFromList<ModuleDockAssistCam, DAEditorSet>(this.cams, new DAEditorSet(false));

@@ -19,11 +19,6 @@ namespace HydroTech.Panels
             set { FlightInputHandler.state.mainThrottle = value / 100f; }
         }
 
-        protected override int PanelID
-        {
-            get { return CoreConsts.mainThrottle; }
-        }
-
         public override string PanelTitle
         {
             get { return PanelConsts.mainThrottleTitle; }
@@ -33,7 +28,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelMainThrottle()
         {
-            this.fileName = new FileName("throttle", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("throttle", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 
