@@ -35,17 +35,19 @@ namespace HydroTech.Managers
                 {
                     this.button = ApplicationLauncher.Instance.AddModApplication(ShowPanel, HidePanel,
                              Empty, Empty, Empty, Empty, AppScenes.NEVER, HTUtils.LauncherIcon);
-                    this.button.enabled = false;
                     this.added = true;
                 }
             }
 
             private void RemoveButton()
             {
-                ApplicationLauncher.Instance.RemoveModApplication(this.button);
-                Destroy(this.button);
-                this.added = false;
-                this.visible = false;
+                if (this.added)
+                {
+                    ApplicationLauncher.Instance.RemoveModApplication(this.button);
+                    Destroy(this.button);
+                    this.added = false;
+                    this.visible = false;
+                }
             }
 
             private void ShowPanel()
@@ -139,20 +141,6 @@ namespace HydroTech.Managers
                 }
             }
 
-            private void SwitchingVessels(Vessel from, Vessel to)
-            {
-                SetSubscription(to.GetMasterJeb());
-            }
-
-            private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
-            {
-                if (evnt.from == GameScenes.FLIGHT && this.module != null)
-                {
-                    this.module = null;
-                    this.button.VisibleInScenes = AppScenes.NEVER;
-                }
-            }
-
             private void ShowPanel()
             {
                 if (!this.visible && this.enabled)
@@ -179,6 +167,20 @@ namespace HydroTech.Managers
                 this.module = jeb;
                 this.button.VisibleInScenes = jeb == null ? AppScenes.NEVER : AppScenes.FLIGHT;
             }
+
+            private void SwitchingVessels(Vessel from, Vessel to)
+            {
+                SetSubscription(to.GetMasterJeb());
+            }
+
+            private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
+            {
+                if (evnt.from == GameScenes.FLIGHT && this.module != null)
+                {
+                    this.module = null;
+                    this.button.VisibleInScenes = AppScenes.NEVER;
+                }
+            }    
             #endregion
 
             #region Functions
