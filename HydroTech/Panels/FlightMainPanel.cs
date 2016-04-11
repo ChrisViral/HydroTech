@@ -12,7 +12,7 @@ namespace HydroTech.Panels
 
         #region Fields
         private Rect pos = new Rect(Screen.width / 2, Screen.height / 2, 20, 20);
-        private HydroJebModule module;
+        private bool visible, active, hid;
         #endregion
 
         #region Properties
@@ -36,9 +36,29 @@ namespace HydroTech.Panels
         #endregion
 
         #region Methods
-        public void SetModule(HydroJebModule module)
+        internal void ShowPanel()
         {
-            this.module = module;
+            if (this.active && !this.visible) { this.visible = true; }
+        }
+
+        internal void HidePanel()
+        {
+            if (this.visible) { this.visible = false; }
+        }
+
+        private void ShowUI()
+        {
+            this.hid = false;
+        }
+
+        private void HideUI()
+        {
+            this.hid = true;
+        }
+
+        internal void SetActive(bool active)
+        {
+            this.active = active;
         }
         #endregion
 
@@ -71,11 +91,26 @@ namespace HydroTech.Panels
             this.Panels.Add(this.Debug);
 #endif
 
+            GameEvents.onShowUI.Add(ShowUI);
+            GameEvents.onHideUI.Add(HideUI);
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+                GameEvents.onShowUI.Remove(ShowUI);
+                GameEvents.onHideUI.Remove(HideUI);
+            }
         }
 
         private void OnGUI()
         {
-            GUI.Label(this.pos, ":D", GUIUtils.Skin.label);
+            if (this.visible && !this.hid)
+            {
+                GUI.Label(this.pos, ":D", GUIUtils.Skin.label);
+            }
         }
         #endregion
     }

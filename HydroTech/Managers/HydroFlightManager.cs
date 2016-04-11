@@ -110,14 +110,17 @@ namespace HydroTech.Managers
 
         private void OnDestroy()
         {
-            Instance = null;
-            GameEvents.onGamePause.Remove(OnPause);
-            GameEvents.onGameUnpause.Remove(OnResume);
+            if (Instance == this)
+            {
+                Instance = null;
+                GameEvents.onGamePause.Remove(OnPause);
+                GameEvents.onGameUnpause.Remove(OnResume);
+            }
         }
 
         private void Update()
         {
-            HydroToolbarManager.Flight.Update();
+            HydroToolbarManager.Flight.Update(this.Active);
             this.CameraManager.Update();
             this.InputManager.Update();
         }

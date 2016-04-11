@@ -11,7 +11,8 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        private Rect pos = new Rect(Screen.width / 2, Screen.height / 2, 20, 20);
+        private Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
+        private bool visible;
         #endregion
 
         #region Properties
@@ -20,6 +21,18 @@ namespace HydroTech.Panels
         public PanelRCSThrustInfo RCSInfo { get; private set; }
 
         public List<Panel> Panels { get; private set; }
+        #endregion
+
+        #region Methods
+        internal void ShowPanel()
+        {
+            if (!this.visible) { this.visible = true; }
+        }
+
+        internal void HidePanel()
+        {
+            if (this.visible) { this.visible = false; }
+        }
         #endregion
 
         #region Functions
@@ -37,9 +50,17 @@ namespace HydroTech.Panels
             };
         }
 
+        private void OnDestroy()
+        {
+            if (Instance == this) { Instance = null; }
+        }
+
         private void OnGUI()
         {
-            GUI.Label(this.pos, ":D", GUIUtils.Skin.label);
+            if (this.visible)
+            {
+                GUI.Label(this.pos, ":D", GUIUtils.Skin.label);
+            }
         }
         #endregion
     }
