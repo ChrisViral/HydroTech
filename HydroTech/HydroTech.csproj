@@ -83,6 +83,8 @@
     <Compile Include="Data\HydroPartModuleList.cs" />
     <Compile Include="Data\SubList.cs" />
     <Compile Include="Managers\HydroEditorManager.cs" />
+    <Compile Include="Managers\HydroCameraManager.cs" />
+    <Compile Include="Managers\HydroFlightManager.cs" />
     <Compile Include="Managers\HydroToolbarManager.cs" />
     <Compile Include="Panels\EditorMainPanel.cs" />
     <Compile Include="Panels\FlightMainPanel.cs" />
@@ -94,8 +96,7 @@
     <Compile Include="Managers\PersistentManager.cs" />
     <Compile Include="SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroActionGroupManager.cs" />
-    <Compile Include="Managers\HydroFlightCameraManager.cs" />
-    <Compile Include="Managers\HydroFlightInpuManager.cs" />
+    <Compile Include="Managers\HydroInputManager.cs" />
     <Compile Include="Managers\HydroRenderingManager.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
@@ -124,7 +125,6 @@
     <Compile Include="PartModules\ModuleDockAssistCam.cs" />
     <Compile Include="PartModules\ModuleDockAssistTarget.cs" />
     <Compile Include="PartModules\ModulePartRename.cs" />
-    <Compile Include="Parts\HydroJeb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\HTUtils.cs" />
     <Compile Include="Utils\Matrix3x3.cs" />

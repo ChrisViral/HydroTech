@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HydroTech.Autopilots
 {
-    public class APLanding : RCSAutopilot
+    public class APLanding : Autopilot
     {
         public enum Indicator
         {
@@ -38,17 +38,19 @@ namespace HydroTech.Autopilots
             HOVER
         }
 
-        #region Properties
-        public static APLanding TheAutopilot
+        #region Static properties
+        public static APLanding LandingAP
         {
-            get { return (APLanding)HydroJebCore.autopilots[CoreConsts.apLanding]; }
+            get { return HydroFlightManager.Instance.LandingAutopilot; }
         }
 
         public static PanelLanding Panel
         {
             get { return PanelLanding.ThePanel; }
         }
+        #endregion
 
+        #region Properties
         protected override string NameString
         {
             get { return AutopilotConsts.landingName; }

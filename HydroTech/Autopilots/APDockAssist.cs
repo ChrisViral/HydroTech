@@ -9,12 +9,12 @@ using UnityEngine;
 
 namespace HydroTech.Autopilots
 {
-    public class APDockAssist : RCSAutopilot
+    public class APDockAssist : Autopilot
     {
         #region Static properties
-        public static APDockAssist TheAutopilot
+        public static APDockAssist DockingAP
         {
-            get { return (APDockAssist)HydroJebCore.autopilots[CoreConsts.apDock]; }
+            get { return HydroFlightManager.Instance.DockingAutopilot; }
         }
 
         protected static Panel Panel
@@ -191,12 +191,12 @@ namespace HydroTech.Autopilots
                 {
                     if (value)
                     {
-                        HydroFlightCameraManager.SaveCurrent();
-                        HydroFlightCameraManager.ResetToActiveVessel();
+                        HydroFlightManager.Instance.CameraManager.SaveCurrent();
+                        HydroFlightManager.Instance.CameraManager.ResetToActiveVessel();
                     }
                     else
                     {
-                        HydroFlightCameraManager.RetrieveLast();
+                        HydroFlightManager.Instance.CameraManager.RetrieveLast();
                     }
                 }
                 this.cameraPaused = value;
@@ -228,7 +228,7 @@ namespace HydroTech.Autopilots
         public APDockAssist()
         {
             this.fileName = new FileName("dock", "cfg", HydroJebCore.autopilotSaveFolder);
-            this.jebsTargetVessel = new SubList<Part>(HydroJebCore.jebs.ListInactiveVessel, IsJebTargetVessel);
+            this.jebsTargetVessel = new SubList<Part>(HydroFlightManager.Instance.Targets, IsJebTargetVessel);
         }
         #endregion
 
@@ -438,13 +438,13 @@ namespace HydroTech.Autopilots
 
         protected void AddDriveTarget()
         {
-            HydroFlightInputManager.AddOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
+            HydroFlightManager.Instance.InputManager.AddOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
             this.drivingTargetVessel = this.target.vessel;
         }
 
         protected void RemoveDriveTarget()
         {
-            HydroFlightInputManager.RemoveOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
+            HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
             this.drivingTargetVessel = null;
         }
 
@@ -508,7 +508,7 @@ namespace HydroTech.Autopilots
                 {
                     if (this.drivingTargetVessel != this.target.vessel) //Vessel change detected
                     {
-                        if (this.drivingTargetVessel != null) { HydroFlightInputManager.RemoveOnFlyByWire(this.drivingTargetVessel, this.NameStringTarget, DriveTargetAutopilot); }
+                        if (this.drivingTargetVessel != null) { HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.drivingTargetVessel, this.NameStringTarget, DriveTargetAutopilot); }
                         AddDriveTarget();
                     }
                 }

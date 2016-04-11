@@ -16,7 +16,7 @@ namespace HydroTech.Panels
 
         protected static APLanding LA
         {
-            get { return APLanding.TheAutopilot; }
+            get { return APLanding.LandingAP; }
         }
 
         protected static float SafeTouchDownSpeed

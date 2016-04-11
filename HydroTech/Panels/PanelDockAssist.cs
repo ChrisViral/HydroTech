@@ -22,7 +22,7 @@ namespace HydroTech.Panels
 
         protected static APDockAssist DA
         {
-            get { return APDockAssist.TheAutopilot; }
+            get { return APDockAssist.DockingAP; }
         }
 
         protected static ModuleDockAssistCam Cam
@@ -149,11 +149,11 @@ namespace HydroTech.Panels
             {
                 if (value != this.previewPart)
                 {
-                    if (value == null) { HydroFlightCameraManager.RetrieveLast(); }
+                    if (value == null) { HydroFlightManager.Instance.CameraManager.RetrieveLast(); }
                     else
                     {
-                        if (this.previewPart == null && this.PreviewVessel == null) { HydroFlightCameraManager.SaveCurrent(); }
-                        HydroFlightCameraManager.CamCallback = value.DoPreview;
+                        if (this.previewPart == null && this.PreviewVessel == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                        HydroFlightManager.Instance.CameraManager.CamCallback = value.DoPreview;
                     }
                     this.previewPart = value;
                 }
@@ -195,11 +195,11 @@ namespace HydroTech.Panels
             {
                 if (value != this.previewVessel)
                 {
-                    if (value == null) { HydroFlightCameraManager.RetrieveLast(); }
+                    if (value == null) { HydroFlightManager.Instance.CameraManager.RetrieveLast(); }
                     else
                     {
-                        if (this.previewVessel == null && this.PreviewPart == null) { HydroFlightCameraManager.SaveCurrent(); }
-                        HydroFlightCameraManager.CamCallback = DoPreviewVessel;
+                        if (this.previewVessel == null && this.PreviewPart == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                        HydroFlightManager.Instance.CameraManager.CamCallback = DoPreviewVessel;
                     }
                     this.previewVessel = value;
                 }
@@ -354,8 +354,8 @@ namespace HydroTech.Panels
 
         protected void DoPreviewVessel()
         {
-            HydroFlightCameraManager.FoV = CoreConsts.defaultFoVPreviewVessel;
-            HydroFlightCameraManager.Target = this.PreviewVessel.transform;
+            HydroFlightManager.Instance.CameraManager.FoV = CoreConsts.defaultFoVPreviewVessel;
+            HydroFlightManager.Instance.CameraManager.Target = this.PreviewVessel.transform;
         }
 
         protected void DrawChoosingCameraUI()

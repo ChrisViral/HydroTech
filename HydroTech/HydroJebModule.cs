@@ -23,7 +23,7 @@ namespace HydroTech
         #region Static Properties
         protected static APDockAssist DA
         {
-            get { return APDockAssist.TheAutopilot; }
+            get { return APDockAssist.DockingAP; }
         }
         #endregion
 

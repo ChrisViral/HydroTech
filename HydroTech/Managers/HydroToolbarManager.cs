@@ -262,15 +262,4 @@ namespace HydroTech.Managers
         }
         #endregion
     }
-
-    [KSPAddon(KSPAddon.Startup.Flight, false)]
-    public class HydroFlightHandler : MonoBehaviour
-    {
-        #region Functions
-        private void Update()
-        {
-            HydroToolbarManager.Flight.Update();
-        }
-        #endregion
-    }
 }

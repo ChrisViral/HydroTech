@@ -12,7 +12,7 @@ namespace HydroTech.Panels
         #region Static Properties
         protected static APTranslation TA
         {
-            get { return APTranslation.TheAutopilot; }
+            get { return APTranslation.TranslationAP; }
         }
 
         protected static TransDir TransMode

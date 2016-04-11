@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Constants;
 using HydroTech.Data;
-using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.PartModules;
-using HydroTech.Parts;
 using HydroTech.Storage;
-using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech
@@ -56,7 +52,6 @@ namespace HydroTech
         public static RCSCalculator activeVesselRcs = new RCSCalculator();
         public static Dictionary<int, IPanelEditor> panelsEditor = new Dictionary<int, IPanelEditor>();
         #endregion
-
         #endregion
 
         #region Core #2: Docking Assistant (HydroDockAssistCam, HydroDockAssistTarget)

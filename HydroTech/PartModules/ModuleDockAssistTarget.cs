@@ -16,8 +16,8 @@ namespace HydroTech.PartModules
 
         protected static ModuleDockAssistTarget CurTarget
         {
-            get { return APDockAssist.TheAutopilot.target; }
-            set { APDockAssist.TheAutopilot.target = value; }
+            get { return APDockAssist.DockingAP.target; }
+            set { APDockAssist.DockingAP.target = value; }
         }
         #endregion
 
@@ -126,11 +126,11 @@ namespace HydroTech.PartModules
 
         public void DoPreview()
         {
-            HydroFlightCameraManager.Target = null;
-            HydroFlightCameraManager.TransformParent = this.transform;
-            HydroFlightCameraManager.FoV = this.previewFoV;
-            HydroFlightCameraManager.Position = this.previewPos;
-            HydroFlightCameraManager.SetLookRotation(this.previewForward, this.previewUp);
+            HydroFlightManager.Instance.CameraManager.Target = null;
+            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
+            HydroFlightManager.Instance.CameraManager.FoV = this.previewFoV;
+            HydroFlightManager.Instance.CameraManager.Position = this.previewPos;
+            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.previewForward, this.previewUp);
         }
         #endregion
 

@@ -12,7 +12,7 @@ namespace HydroTech.Panels
         #region Static properties
         protected static APLanding LA
         {
-            get { return APLanding.TheAutopilot; }
+            get { return APLanding.LandingAP; }
         }
         #endregion
 

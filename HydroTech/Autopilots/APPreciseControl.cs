@@ -1,14 +1,15 @@
 ﻿using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 
 namespace HydroTech.Autopilots
 {
-    public class APPreciseControl : RCSAutopilot
+    public class APPreciseControl : Autopilot
     {
         #region Properties
-        public static APPreciseControl TheAutopilot
+        public static APPreciseControl PreciseControlAP
         {
-            get { return (APPreciseControl)HydroJebCore.autopilots[CoreConsts.precise]; }
+            get { return HydroFlightManager.Instance.PreciseControlAutopilot; }
         }
 
         protected override string NameString

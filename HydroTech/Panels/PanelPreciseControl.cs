@@ -11,7 +11,7 @@ namespace HydroTech.Panels
         #region Static properties
         protected static APPreciseControl PC
         {
-            get { return APPreciseControl.TheAutopilot; }
+            get { return APPreciseControl.PreciseControlAP; }
         }
 
         protected static bool ByRate
