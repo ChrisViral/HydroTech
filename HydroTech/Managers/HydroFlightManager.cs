@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
+using HydroTech.Panels;
 using HydroTech.PartModules;
 using HydroTech.Utils;
 using UnityEngine;
@@ -15,20 +16,6 @@ namespace HydroTech.Managers
         #endregion
 
         #region Properties
-        public HydroCameraManager CameraManager { get; private set; }
-
-        public HydroInputManager InputManager { get; private set; }
-
-        public APDockAssist DockingAutopilot { get; private set; }
-
-        public APLanding LandingAutopilot { get; private set; }
-
-        public APPreciseControl PreciseControlAutopilot { get; private set; }
-
-        public APTranslation TranslationAutopilot { get; private set; }
-
-        public List<Autopilot> Autopilots { get; private set; }
-
         public RCSCalculator ActiveRCS { get; private set; }
 
         public HydroJebCore Active { get; private set; }
@@ -42,6 +29,20 @@ namespace HydroTech.Managers
         public List<ModuleDockAssistTarget> ActiveTargets { get; private set; }
 
         public List<ModuleDockAssistTarget> NearbyTargets { get; private set; }
+
+        public HydroCameraManager CameraManager { get; private set; }
+
+        public HydroInputManager InputManager { get; private set; }
+
+        public APDockAssist DockingAutopilot { get; private set; }
+
+        public APLanding LandingAutopilot { get; private set; }
+
+        public APPreciseControl PreciseControlAutopilot { get; private set; }
+
+        public APTranslation TranslationAutopilot { get; private set; }
+
+        public List<Autopilot> Autopilots { get; private set; }
         #endregion
 
         #region Methods
@@ -73,6 +74,14 @@ namespace HydroTech.Managers
             if (Instance != null) { Destroy(this); return; }
 
             Instance = this;
+
+            this.ActiveRCS = new RCSCalculator();
+            this.Targets = new List<HydroJebCore>();
+            this.ActiveCams = new List<ModuleDockAssistCam>();
+            this.NearbyCams = new List<ModuleDockAssistCam>();
+            this.ActiveTargets = new List<ModuleDockAssistTarget>();
+            this.NearbyTargets = new List<ModuleDockAssistTarget>();
+
             this.CameraManager = new HydroCameraManager();
             this.InputManager = new HydroInputManager();
             this.DockingAutopilot = new APDockAssist();
@@ -87,13 +96,6 @@ namespace HydroTech.Managers
                 this.TranslationAutopilot
             };
 
-            this.ActiveRCS = new RCSCalculator();
-            this.Targets = new List<HydroJebCore>();
-            this.ActiveCams = new List<ModuleDockAssistCam>();
-            this.NearbyCams = new List<ModuleDockAssistCam>();
-            this.ActiveTargets = new List<ModuleDockAssistTarget>();
-            this.NearbyTargets = new List<ModuleDockAssistTarget>();
-
             GameEvents.onGamePause.Add(OnPause);
             GameEvents.onGameUnpause.Add(OnResume);
         }
@@ -105,6 +107,10 @@ namespace HydroTech.Managers
             foreach (Autopilot ap in this.Autopilots)
             {
                 ap.OnFlightStart();
+            }
+            foreach (Panel panel in FlightMainPanel.Instance.Panels)
+            {
+                panel.OnFlightStart();
             }
         }
 

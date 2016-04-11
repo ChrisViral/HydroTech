@@ -323,11 +323,6 @@ namespace HydroTech.Panels
         public PanelDockAssist()
         {
             this.fileName = new FileName("dock", "cfg", FileName.panelSaveFolder);
-            this.camListUI = new UISingleSelectionList<ModuleDockAssistCam>(HydroFlightManager.Instance.ActiveCams);
-            this.targetVesselList = new AffiliationList<ModuleDockAssistTarget, Vessel>(HydroFlightManager.Instance.NearbyTargets, (AffiliationList<ModuleDockAssistTarget, Vessel>.GetItemFunctionSingle)GetTargetVessel);
-            this.targetVesselListUI = new UISingleSelectionList<Vessel>(this.targetVesselList);
-            this.targetList = new SubList<ModuleDockAssistTarget>(HydroFlightManager.Instance.NearbyTargets, IsOnTargetVessel);
-            this.targetListUI = new UISingleSelectionList<ModuleDockAssistTarget>(this.targetList);
         }
         #endregion
 
@@ -454,6 +449,11 @@ namespace HydroTech.Panels
         public override void OnFlightStart()
         {
             base.OnFlightStart();
+            this.camListUI = new UISingleSelectionList<ModuleDockAssistCam>(HydroFlightManager.Instance.ActiveCams);
+            this.targetVesselList = new AffiliationList<ModuleDockAssistTarget, Vessel>(HydroFlightManager.Instance.NearbyTargets, (AffiliationList<ModuleDockAssistTarget, Vessel>.GetItemFunctionSingle)GetTargetVessel);
+            this.targetVesselListUI = new UISingleSelectionList<Vessel>(this.targetVesselList);
+            this.targetList = new SubList<ModuleDockAssistTarget>(HydroFlightManager.Instance.NearbyTargets, IsOnTargetVessel);
+            this.targetListUI = new UISingleSelectionList<ModuleDockAssistTarget>(this.targetList);
             this.ChoosingCamera = false;
             this.ChoosingTarget = false;
         }
