@@ -49,12 +49,29 @@ namespace HydroTech.Managers
         {
             return this.Active == module;
         }
+
+        private void OnPause()
+        {
+            foreach (Autopilot ap in this.Autopilots)
+            {
+                ap.OnGamePause();
+            }
+        }
+
+        private void OnResume()
+        {
+            foreach (Autopilot ap in this.Autopilots)
+            {
+                ap.OnGameResume();
+            }
+        }
         #endregion
 
         #region Functions
         private void Awake()
         {
             if (Instance != null) { Destroy(this); return; }
+
             Instance = this;
             this.CameraManager = new HydroCameraManager();
             this.InputManager = new HydroInputManager();
@@ -69,23 +86,33 @@ namespace HydroTech.Managers
                 this.PreciseControlAutopilot,
                 this.TranslationAutopilot
             };
+
             this.ActiveRCS = new RCSCalculator();
             this.Targets = new List<HydroJebModule>();
             this.ActiveCams = new List<ModuleDockAssistCam>();
             this.NearbyCams = new List<ModuleDockAssistCam>();
             this.ActiveTargets = new List<ModuleDockAssistTarget>();
             this.NearbyTargets = new List<ModuleDockAssistTarget>();
+
+            GameEvents.onGamePause.Add(OnPause);
+            GameEvents.onGameUnpause.Add(OnResume);
         }
 
         private void Start()
         {
             this.CameraManager.Start();
             this.InputManager.Start();
+            foreach (Autopilot ap in this.Autopilots)
+            {
+                ap.OnFlightStart();
+            }
         }
 
         private void OnDestroy()
         {
             Instance = null;
+            GameEvents.onGamePause.Remove(OnPause);
+            GameEvents.onGameUnpause.Remove(OnResume);
         }
 
         private void Update()
@@ -123,6 +150,11 @@ namespace HydroTech.Managers
                         this.NearbyTargets.AddRange(targets);
                     }
                 }
+            }
+
+            foreach (Autopilot ap in this.Autopilots)
+            {
+                ap.OnUpdate();
             }
         }
         #endregion
