@@ -1,5 +1,4 @@
-﻿using HydroTech.Autopilots;
-using HydroTech.Managers;
+﻿using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.PartModules.Base;
 using UnityEngine;
@@ -9,10 +8,10 @@ namespace HydroTech.PartModules
     public class ModuleDockAssistTarget : HydroPartModule, IPartPreview, IDAPartEditorAid
     {
         #region Static Properties
-        protected static ModuleDockAssistTarget CurTarget
+        protected static ModuleDockAssistTarget Current
         {
-            get { return APDockAssist.DockingAP.target; }
-            set { APDockAssist.DockingAP.target = value; }
+            get { return HydroFlightManager.Instance.DockingAutopilot.target; }
+            set { HydroFlightManager.Instance.DockingAutopilot.target = value; }
         }
         #endregion
 
@@ -82,7 +81,7 @@ namespace HydroTech.PartModules
             {
                 if (this.vessel.isActiveVessel)
                 {
-                    if (this.isNear && CurTarget == this) { FlightMainPanel.Instance.DockAssist.ResetHeight(); }
+                    if (this.isNear && Current == this) { FlightMainPanel.Instance.DockAssist.ResetHeight(); }
                     this.isNear = false;
                 }
                 else { this.isNear = true; }
@@ -139,9 +138,9 @@ namespace HydroTech.PartModules
         {
             base.OnDestroy();
             if (!HighLogic.LoadedSceneIsFlight) { return; }
-            if (this == CurTarget)
+            if (this == Current)
             {
-                CurTarget = null;
+                Current = null;
                 FlightMainPanel.Instance.DockAssist.ResetHeight();
             }
         }

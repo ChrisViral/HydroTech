@@ -15,18 +15,18 @@ namespace HydroTech.Panels
     public class PanelDockAssist : PanelAP
     {
         #region Static properties
-        protected static APDockAssist DA
+        private static APDockAssist DA
         {
-            get { return APDockAssist.DockingAP; }
+            get { return HydroFlightManager.Instance.DockingAutopilot; }
         }
 
-        protected static ModuleDockAssistCam Cam
+        private static ModuleDockAssistCam Cam
         {
             get { return DA.Cam; }
             set { DA.Cam = value; }
         }
 
-        protected static ModuleDockAssistTarget Target
+        private static ModuleDockAssistTarget Target
         {
             get { return DA.target; }
             set { DA.target = value; }

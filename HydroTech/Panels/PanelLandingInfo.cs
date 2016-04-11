@@ -1,6 +1,7 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -10,9 +11,9 @@ namespace HydroTech.Panels
     public class PanelLandingInfo : Panel
     {
         #region Static properties
-        protected static APLanding LA
+        private static APLanding LA
         {
-            get { return APLanding.LandingAP; }
+            get { return HydroFlightManager.Instance.LandingAutopilot; }
         }
         #endregion
 

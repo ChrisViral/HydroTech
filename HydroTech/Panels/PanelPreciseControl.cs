@@ -1,5 +1,6 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -9,9 +10,9 @@ namespace HydroTech.Panels
     public class PanelPreciseControl : PanelAP
     {
         #region Static properties
-        protected static APPreciseControl PC
+        private static APPreciseControl PC
         {
-            get { return APPreciseControl.PreciseControlAP; }
+            get { return HydroFlightManager.Instance.PreciseControlAutopilot; }
         }
 
         protected static bool ByRate

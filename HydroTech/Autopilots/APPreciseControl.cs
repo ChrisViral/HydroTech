@@ -1,5 +1,4 @@
 ﻿using HydroTech.Constants;
-using HydroTech.Managers;
 using HydroTech.Storage;
 
 namespace HydroTech.Autopilots
@@ -7,11 +6,6 @@ namespace HydroTech.Autopilots
     public class APPreciseControl : Autopilot
     {
         #region Properties
-        public static APPreciseControl PreciseControlAP
-        {
-            get { return HydroFlightManager.Instance.PreciseControlAutopilot; }
-        }
-
         protected override string NameString
         {
             get { return AutopilotConsts.pcName; }

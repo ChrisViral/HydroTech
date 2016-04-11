@@ -1,6 +1,4 @@
-﻿using HydroTech.Autopilots;
-using HydroTech.Constants;
-using HydroTech.Managers;
+﻿using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.PartModules.Base;
 using UnityEngine;
@@ -9,21 +7,14 @@ namespace HydroTech.PartModules
 {
     public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorAid
     {
-        #region Static fields
-        public static ModuleDockAssistCam activeCam;
-        #endregion
-
         #region Static properties
-        protected static APDockAssist DA
+        protected static ModuleDockAssistCam Current
         {
-            get { return APDockAssist.DockingAP; }
+            get { return HydroFlightManager.Instance.DockingAutopilot.Cam; }
+            set { HydroFlightManager.Instance.DockingAutopilot.Cam = value; }
         }
 
-        protected static ModuleDockAssistCam CurCam
-        {
-            get { return DA.Cam; }
-            set { DA.Cam = value; }
-        }
+        private static ModuleDockAssistCam ActiveCam { get; set; }
         #endregion
 
         #region KSPFields
@@ -79,7 +70,7 @@ namespace HydroTech.PartModules
             {
                 if (!this.vessel.isActiveVessel)
                 {
-                    if (this.isOnActiveVessel && CurCam == this)
+                    if (this.isOnActiveVessel && Current == this)
                     {
                         FlightMainPanel.Instance.DockAssist.ResetHeight();
                         if (this.CamActivate) { this.CamActivate = false; }
@@ -100,15 +91,15 @@ namespace HydroTech.PartModules
             {
                 if (!this.camActivate && value)
                 {
-                    if (activeCam == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                    if (ActiveCam == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
                     HydroFlightManager.Instance.CameraManager.CamCallback = DoCamera;
-                    activeCam = this;
+                    ActiveCam = this;
                 }
                 else if (this.camActivate && !value)
                 {
                     HydroFlightManager.Instance.CameraManager.RetrieveLast();
                     this.mag = 1;
-                    activeCam = null;
+                    ActiveCam = null;
                 }
                 this.camActivate = value;
             }
@@ -230,9 +221,9 @@ namespace HydroTech.PartModules
         public override void OnDestroy()
         {
             if (!HighLogic.LoadedSceneIsFlight) { return; }
-            if (this == CurCam)
+            if (this == Current)
             {
-                CurCam = null;
+                Current = null;
                 FlightMainPanel.Instance.DockAssist.ResetHeight();
                 if (this.CamActivate) { this.CamActivate = false; }
             }
@@ -245,7 +236,7 @@ namespace HydroTech.PartModules
 
         public override void OnStart(StartState state)
         {
-            if (state != StartState.Editor) { return; }
+            if (!HighLogic.LoadedSceneIsEditor) { return; }
 
             GameObject obj = new GameObject("DockCamLine");
             this.lineDir = obj.AddComponent<LineRenderer>();

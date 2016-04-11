@@ -1,5 +1,4 @@
-﻿using HydroTech.Constants;
-using HydroTech.PartModules.Base;
+﻿using HydroTech.PartModules.Base;
 using UnityEngine;
 
 namespace HydroTech.PartModules

@@ -38,13 +38,6 @@ namespace HydroTech.Autopilots
             HOVER
         }
 
-        #region Static properties
-        public static APLanding LandingAP
-        {
-            get { return HydroFlightManager.Instance.LandingAutopilot; }
-        }
-        #endregion
-
         #region Properties
         protected override string NameString
         {

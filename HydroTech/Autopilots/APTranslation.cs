@@ -19,13 +19,6 @@ namespace HydroTech.Autopilots
             ADVANCED
         }
 
-        #region Static properties
-        public static APTranslation TranslationAP
-        {
-            get { return HydroFlightManager.Instance.TranslationAutopilot; }
-        }
-        #endregion
-
         #region Fields
         protected Vector3 curOrient;
         protected Vector3 curRoll;

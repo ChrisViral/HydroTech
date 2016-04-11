@@ -11,10 +11,14 @@ namespace HydroTech.Managers
     {
         public class EditorToolbar
         {
-            #region Fields
+            #region Constants
             private const AppScenes editors = AppScenes.VAB | AppScenes.SPH;
+            #endregion
+
+            #region Fields
             private ApplicationLauncherButton button;
-            private GameObject panel;
+            private GameObject go;
+            private EditorMainPanel panel;
             private bool added, visible;
             private int enablers;
             #endregion
@@ -33,8 +37,11 @@ namespace HydroTech.Managers
             {
                 if (!this.added)
                 {
-                    this.button = ApplicationLauncher.Instance.AddModApplication(ShowPanel, HidePanel,
-                             Empty, Empty, Empty, Empty, AppScenes.NEVER, HTUtils.LauncherIcon);
+                    this.go = new GameObject("EditorMainPanel", typeof(EditorMainPanel));
+                    DontDestroyOnLoad(this.go);
+                    this.panel = this.go.GetComponent<EditorMainPanel>();
+                    this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
+                                  Empty, Empty, Empty, Empty, AppScenes.NEVER, HTUtils.LauncherIcon);
                     this.added = true;
                 }
             }
@@ -45,25 +52,8 @@ namespace HydroTech.Managers
                 {
                     ApplicationLauncher.Instance.RemoveModApplication(this.button);
                     Destroy(this.button);
+                    Destroy(this.go);
                     this.added = false;
-                    this.visible = false;
-                }
-            }
-
-            private void ShowPanel()
-            {
-                if (!this.visible)
-                {
-                    this.panel = new GameObject("EditorMainPanel", typeof(EditorMainPanel));
-                    this.visible = true;
-                }
-            }
-
-            private void HidePanel()
-            {
-                if (this.visible)
-                {
-                    Destroy(this.panel);
                     this.visible = false;
                 }
             }
@@ -106,8 +96,9 @@ namespace HydroTech.Managers
             #region Fields
             private ApplicationLauncherButton button;
             private HydroJebModule module;
-            private GameObject panel;
-            private bool visible, added, enabled;
+            private GameObject go;
+            private FlightMainPanel panel;
+            private bool added, enabled;
             #endregion
 
             #region Constructors
@@ -125,8 +116,11 @@ namespace HydroTech.Managers
             {
                 if (!this.added)
                 {
-                    this.button = ApplicationLauncher.Instance.AddModApplication(ShowPanel, HidePanel,
-                             Empty, Empty, SetActive, SetInactive, AppScenes.NEVER, HTUtils.LauncherIcon);
+                    this.go = new GameObject("FlightMainPanel", typeof(FlightMainPanel));
+                    DontDestroyOnLoad(this.go);
+                    this.panel = this.go.GetComponent<FlightMainPanel>();
+                    this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
+                                  Empty, Empty, SetActive, SetInactive, AppScenes.NEVER, HTUtils.LauncherIcon);
                     this.enabled = true;
                     this.added = true;
                 }
@@ -138,40 +132,20 @@ namespace HydroTech.Managers
                 {
                     ApplicationLauncher.Instance.RemoveModApplication(this.button);
                     Destroy(this.button);
+                    Destroy(this.go);
                     this.module = null;
                     this.added = false;
-                    this.visible = false;
                 }
             }
 
-            private void ShowPanel()
-            {
-                if (this.enabled)
-                {
-                    if (!this.visible)
-                    {
-                        this.panel = new GameObject("FlightMainPanel", typeof(FlightMainPanel));
-                        this.panel.GetComponent<FlightMainPanel>().SetModule(this.module);
-                        this.visible = true;
-                    }
-                }
-                else { this.button.SetFalse(false); }
-            }
-
-            private void HidePanel()
-            {
-                if (this.visible && this.enabled)
-                {
-                    Destroy(this.panel);
-                    this.visible = false;
-                }
-            }
+            private void Empty() { }
 
             private void SetActive()
             {
                 if (!this.enabled)
                 {
                     this.enabled = true;
+                    this.panel.SetActive(true);
                     this.button.SetTexture(HTUtils.LauncherIcon);
                 }
             }
@@ -182,11 +156,10 @@ namespace HydroTech.Managers
                 {
                     this.button.SetFalse();
                     this.enabled = false;
+                    this.panel.SetActive(false);
                     this.button.SetTexture(HTUtils.InactiveIcon);
                 }
             }
-
-            private void Empty() { }
 
             private void SetSubscription(HydroJebModule jeb)
             {
@@ -221,9 +194,8 @@ namespace HydroTech.Managers
             #endregion
 
             #region Functions
-            internal void Update()
+            internal void Update(HydroJebModule jeb)
             {
-                HydroJebModule jeb = FlightGlobals.ActiveVessel.GetMasterJeb();
                 if (jeb != this.module)
                 {
                     SetSubscription(jeb);
@@ -251,6 +223,7 @@ namespace HydroTech.Managers
 
         #region Static properties
         public static EditorToolbar Editor { get; private set; }
+
         public static FlightToolbar Flight { get; private set; }
         #endregion
 

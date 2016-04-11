@@ -11,13 +11,6 @@ namespace HydroTech.Autopilots
 {
     public class APDockAssist : Autopilot
     {
-        #region Static properties
-        public static APDockAssist DockingAP
-        {
-            get { return HydroFlightManager.Instance.DockingAutopilot; }
-        }
-        #endregion
-
         #region Fields
         protected RCSCalculator rcsTarget = new RCSCalculator();
         protected Vessel drivingTargetVessel;

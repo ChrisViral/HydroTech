@@ -1,5 +1,6 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -10,9 +11,9 @@ namespace HydroTech.Panels
     public class PanelTranslation : PanelAP
     {
         #region Static Properties
-        protected static APTranslation TA
+        private static APTranslation TA
         {
-            get { return APTranslation.TranslationAP; }
+            get { return HydroFlightManager.Instance.TranslationAutopilot; }
         }
 
         protected static TransDir TransMode
