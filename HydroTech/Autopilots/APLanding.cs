@@ -272,7 +272,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APLanding()
         {
-            this.fileName = new FileName("landing", "cfg", HydroJebCore.autopilotSaveFolder);
+            this.fileName = new FileName("landing", "cfg", FileName.autopilotSaveFolder);
         }
         #endregion
 

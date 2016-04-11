@@ -38,7 +38,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APPreciseControl()
         {
-            this.fileName = new FileName("precise", "cfg", HydroJebCore.autopilotSaveFolder);
+            this.fileName = new FileName("precise", "cfg", FileName.autopilotSaveFolder);
         }
         #endregion
 

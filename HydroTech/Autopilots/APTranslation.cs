@@ -94,7 +94,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APTranslation()
         {
-            this.fileName = new FileName("translation", "cfg", HydroJebCore.autopilotSaveFolder);
+            this.fileName = new FileName("translation", "cfg", FileName.autopilotSaveFolder);
         }
         #endregion
 

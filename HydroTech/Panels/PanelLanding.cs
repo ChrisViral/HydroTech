@@ -231,7 +231,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelLanding()
         {
-            this.fileName = new FileName("landing", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("landing", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

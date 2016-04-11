@@ -213,7 +213,6 @@ namespace HydroTech.PartModules
         public override void OnUpdate()
         {
             base.OnUpdate();
-            HydroJebCore.OnUpdate(this);
             if (this.CamActivate) { this.part.RequestResource("ElectricCharge", CoreConsts.electricConsumptionCamera * TimeWarp.deltaTime); }
         }
 

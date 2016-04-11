@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
+using HydroTech.PartModules;
+using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -33,6 +35,14 @@ namespace HydroTech.Managers
         public HydroJebModule Active { get; private set; }
 
         public List<Part> Targets { get; private set; }
+
+        public List<ModuleDockAssistCam> ActiveCams { get; private set; }
+
+        public List<ModuleDockAssistCam> NearbyCams { get; private set; }
+
+        public List<ModuleDockAssistTarget> ActiveTargets { get; private set; }
+
+        public List<ModuleDockAssistTarget> NearbyTargets { get; private set; }
         #endregion
 
         #region Methods
@@ -62,6 +72,10 @@ namespace HydroTech.Managers
             };
             this.ActiveRCS = new RCSCalculator();
             this.Targets = new List<Part>();
+            this.ActiveCams = new List<ModuleDockAssistCam>();
+            this.NearbyCams = new List<ModuleDockAssistCam>();
+            this.ActiveTargets = new List<ModuleDockAssistTarget>();
+            this.NearbyTargets = new List<ModuleDockAssistTarget>();
         }
 
         private void Start()
@@ -85,13 +99,30 @@ namespace HydroTech.Managers
         private void FixedUpdate()
         {
             if (this.Targets.Count != 0) { this.Targets.Clear(); }
+            if (this.ActiveCams.Count != 0) { this.ActiveCams.Clear(); }
+            if (this.NearbyCams.Count != 0) { this.NearbyCams.Clear(); }
+            if (this.ActiveTargets.Count != 0) { this.ActiveTargets.Clear(); }
+            if (this.NearbyTargets.Count != 0) { this.NearbyTargets.Clear(); }
+
             foreach (Vessel vessel in FlightGlobals.Vessels)
             {
                 HydroJebModule jeb = vessel.GetMasterJeb();
+                List<ModuleDockAssistCam> cams = vessel.FindPartModulesImplementing<ModuleDockAssistCam>();
+                List<ModuleDockAssistTarget> targets = vessel.FindPartModulesImplementing<ModuleDockAssistTarget>();
                 if (jeb != null)
                 {
-                    if (vessel.isActiveVessel) { this.Active = jeb; }
-                    else { this.Targets.Add(jeb.part); }
+                    if (vessel.isActiveVessel)
+                    {
+                        this.Active = jeb;
+                        this.ActiveCams.AddRange(cams);
+                        this.ActiveTargets.AddRange(targets);
+                    }
+                    else
+                    {
+                        this.Targets.Add(jeb.part);
+                        this.NearbyCams.AddRange(cams);
+                        this.NearbyTargets.AddRange(targets);
+                    }
                 }
             }
         }

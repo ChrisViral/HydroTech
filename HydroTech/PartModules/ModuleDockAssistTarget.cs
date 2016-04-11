@@ -130,12 +130,6 @@ namespace HydroTech.PartModules
         #endregion
 
         #region Overrides
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-            HydroJebCore.OnUpdate(this);
-        }
-
         public override void OnFlightStart()
         {
             base.OnFlightStart();

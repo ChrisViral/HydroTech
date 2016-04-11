@@ -114,7 +114,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelTranslation()
         {
-            this.fileName = new FileName("translation", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("translation", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

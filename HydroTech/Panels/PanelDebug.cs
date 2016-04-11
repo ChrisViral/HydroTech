@@ -41,7 +41,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelDebug()
         {
-            this.fileName = new FileName("debug", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("debug", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

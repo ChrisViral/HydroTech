@@ -222,7 +222,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APDockAssist()
         {
-            this.fileName = new FileName("dock", "cfg", HydroJebCore.autopilotSaveFolder);
+            this.fileName = new FileName("dock", "cfg", FileName.autopilotSaveFolder);
             this.jebsTargetVessel = new SubList<Part>(HydroFlightManager.Instance.Targets, IsJebTargetVessel);
         }
         #endregion
@@ -250,7 +250,7 @@ namespace HydroTech.Autopilots
 
         protected virtual void DriveKillRelV(FlightCtrlState ctrlState)
         {
-            Vector3 relVCam = RelV;
+            Vector3 relVCam = this.RelV;
             ctrlState.X = -relVCam.x / AutopilotConsts.vel0;
             ctrlState.Y = -relVCam.y / AutopilotConsts.vel0;
             ctrlState.Z = -relVCam.z / AutopilotConsts.vel0;
@@ -290,7 +290,7 @@ namespace HydroTech.Autopilots
             {
                 Vector3 relPTarget = new Vector3(stateCal.x, stateCal.y, stateCal.z);
                 Vector2 relPTargetXy = new Vector2(stateCal.x, stateCal.y);
-                Vector3 relVCam = RelV;
+                Vector3 relVCam = this.RelV;
                 Vector2 relVCamXy = new Vector2(relVCam.x, relVCam.y);
                 if (relPTargetXy.magnitude < AutopilotConsts.finalStageErr && stateCal.z < AutopilotConsts.finalStagePos.z + AutopilotConsts.finalStageErr && stateCal.z > 0) { DriveFinalStage(ctrlState, relPTarget, relVCam); }
                 else if (relVCam.magnitude > AutopilotConsts.maxSpeed) { DriveKillRelV(ctrlState); }
@@ -397,7 +397,7 @@ namespace HydroTech.Autopilots
                         bool orientReady = stateCal.Steer(AutopilotConsts.translationReadyAngleSin);
                         if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < AutopilotConsts.maxAngularV)
                         {
-                            DriveFinalStage(ctrlState, VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), RelV);
+                            DriveFinalStage(ctrlState, VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), this.RelV);
                             CamToVessel_Trans(ctrlState, this.Cam);
                         }
                         else

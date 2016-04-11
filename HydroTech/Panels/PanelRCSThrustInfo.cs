@@ -64,7 +64,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelRCSThrustInfo()
         {
-            this.fileName = new FileName("rcsinfo", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("rcsinfo", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 

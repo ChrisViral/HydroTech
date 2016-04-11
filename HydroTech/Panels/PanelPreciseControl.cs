@@ -102,7 +102,7 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelPreciseControl()
         {
-            this.fileName = new FileName("precise", "cfg", HydroJebCore.panelSaveFolder);
+            this.fileName = new FileName("precise", "cfg", FileName.panelSaveFolder);
         }
         #endregion
 
