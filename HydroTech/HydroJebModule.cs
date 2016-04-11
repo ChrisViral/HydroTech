@@ -2,11 +2,8 @@
 using System.Text;
 using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Panels;
 using HydroTech.Utils;
-using KSP.UI.Screens;
 using UnityEngine;
-using AppScenes = KSP.UI.Screens.ApplicationLauncher.AppScenes;
 
 namespace HydroTech
 {
@@ -38,12 +35,6 @@ namespace HydroTech
         public string status = "Online";
         #endregion
 
-        #region Fields
-        private ApplicationLauncherButton button;
-        private GameObject flightPanel;
-        private bool added, visible;
-        #endregion
-
         #region Properties
         private AutopilotStatus state;
         public AutopilotStatus State
@@ -63,71 +54,6 @@ namespace HydroTech
         #endregion
 
         #region Methods
-        private void AddButton()
-        {
-            if (!this.added)
-            {
-                this.button = ApplicationLauncher.Instance.AddModApplication(ShowFlightPanel, HideFlightPanel,
-                              Empty, Empty, Empty, Empty, AppScenes.FLIGHT, HTUtils.LauncherIcon);
-                this.added = true;
-            }
-        }
-
-        private void RemoveButton()
-        {
-            if (this.added)
-            {
-                ApplicationLauncher.Instance.RemoveModApplication(this.button);
-                Destroy(this.button);
-                this.added = false;
-            }
-        }
-
-        private void HideButton()
-        {
-            this.button.SetFalse();
-            this.button.VisibleInScenes = AppScenes.NEVER;
-        }
-
-        private void SetupModule()
-        {
-            AddButton();
-            if (!this.vessel.isActiveVessel) { this.button.VisibleInScenes = AppScenes.NEVER; }
-            GameEvents.onVesselSwitching.Add(SwitchingVessels);
-            GameEvents.onGameSceneSwitchRequested.Add(GameSceneChanging);
-        }
-
-        private void ShowFlightPanel()
-        {
-            if (!this.visible)
-            {
-                this.flightPanel = new GameObject("FlightMainPanel", typeof(FlightMainPanel));
-                this.visible = true;
-            }
-        }
-
-        private void HideFlightPanel()
-        {
-            if (this.visible)
-            {
-                Destroy(this.flightPanel);
-                this.visible = false;
-            }
-        }
-
-        private void Empty() { }
-
-        private void SwitchingVessels(Vessel from, Vessel to)
-        {
-            if (to == this.vessel) { this.button.VisibleInScenes = AppScenes.FLIGHT; }
-            else if (from == this.vessel) { HideButton(); }
-        }
-
-        private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
-        {
-            if (evnt.from == GameScenes.FLIGHT) { RemoveButton(); }
-        }
-
         public string GetModuleTitle()
         {
             return "HydroTech Autopilot";
@@ -163,9 +89,6 @@ namespace HydroTech
             {
                 if (this.IsOnline)
                 {
-                    this.button.SetTexture(HTUtils.InactiveIcon);
-                    this.button.SetFalse();
-                    this.button.Disable();
                     this.vessel.FindPartModulesImplementing<HydroJebModule>().ForEach(m => m.State = AutopilotStatus.Offline);
                 }
             }
@@ -174,8 +97,6 @@ namespace HydroTech
                 if (!this.IsOnline)
                 {
                     this.State = AutopilotStatus.Online;
-                    this.button.Enable();
-                    this.button.SetTexture(HTUtils.LauncherIcon);
                     foreach (HydroJebModule jeb in this.vessel.FindPartModulesImplementing<HydroJebModule>())
                     {
                         if (jeb == this) { continue; }
@@ -187,13 +108,7 @@ namespace HydroTech
 
         private void OnDestroy()
         {
-            if (HighLogic.LoadedSceneIsFlight && this.IsOnline)
-            {
-                RemoveButton();
-                GameEvents.onVesselSwitching.Remove(SwitchingVessels);
-                GameEvents.onGameSceneSwitchRequested.Remove(GameSceneChanging);
-            }
-            else if (HighLogic.LoadedSceneIsEditor) { HydroToolbarManager.editor.RemoveEnabler(); }
+            if (HighLogic.LoadedSceneIsEditor) { HydroToolbarManager.Editor.RemoveEnabler(); }
         }
         #endregion
 
@@ -202,15 +117,14 @@ namespace HydroTech
         {
             if (HighLogic.LoadedSceneIsEditor)
             {
-                HydroToolbarManager.editor.AddEnabler();
+                HydroToolbarManager.Editor.AddEnabler();
             }
             else if (HighLogic.LoadedSceneIsFlight)
             {
                 this.state = EnumUtils.GetValue<AutopilotStatus>(this.status);
-                if (this.IsOnline)
+                if (this.IsOnline && (!this.vessel.isActiveVessel || this != this.vessel.GetMasterJeb()))
                 {
-                    if (this == this.vessel.GetMasterJeb()) { SetupModule(); }
-                    else { this.State = AutopilotStatus.Idle; }
+                    this.State = AutopilotStatus.Idle;
                 }
             }
         }
