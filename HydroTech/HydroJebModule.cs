@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HydroTech
 {
-    public class HydroJebModule : PartModule, IModuleInfo
+    public class HydroJebCore : PartModule, IModuleInfo
     {
         public enum AutopilotStatus
         {
@@ -81,7 +81,7 @@ namespace HydroTech
             {
                 if (this.IsOnline)
                 {
-                    this.vessel.FindPartModulesImplementing<HydroJebModule>().ForEach(m => m.State = AutopilotStatus.Offline);
+                    this.vessel.FindPartModulesImplementing<HydroJebCore>().ForEach(m => m.State = AutopilotStatus.Offline);
                 }
             }
             else
@@ -89,7 +89,7 @@ namespace HydroTech
                 if (!this.IsOnline)
                 {
                     this.State = AutopilotStatus.Online;
-                    foreach (HydroJebModule jeb in this.vessel.FindPartModulesImplementing<HydroJebModule>())
+                    foreach (HydroJebCore jeb in this.vessel.FindPartModulesImplementing<HydroJebCore>())
                     {
                         if (jeb == this) { continue; }
                         jeb.State = AutopilotStatus.Idle;

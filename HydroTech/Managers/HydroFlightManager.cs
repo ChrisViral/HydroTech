@@ -31,9 +31,9 @@ namespace HydroTech.Managers
 
         public RCSCalculator ActiveRCS { get; private set; }
 
-        public HydroJebModule Active { get; private set; }
+        public HydroJebCore Active { get; private set; }
 
-        public List<HydroJebModule> Targets { get; private set; }
+        public List<HydroJebCore> Targets { get; private set; }
 
         public List<ModuleDockAssistCam> ActiveCams { get; private set; }
 
@@ -45,9 +45,9 @@ namespace HydroTech.Managers
         #endregion
 
         #region Methods
-        public bool IsActiveJeb(HydroJebModule module)
+        public bool IsActiveJeb(HydroJebCore core)
         {
-            return this.Active == module;
+            return this.Active == core;
         }
 
         private void OnPause()
@@ -88,7 +88,7 @@ namespace HydroTech.Managers
             };
 
             this.ActiveRCS = new RCSCalculator();
-            this.Targets = new List<HydroJebModule>();
+            this.Targets = new List<HydroJebCore>();
             this.ActiveCams = new List<ModuleDockAssistCam>();
             this.NearbyCams = new List<ModuleDockAssistCam>();
             this.ActiveTargets = new List<ModuleDockAssistTarget>();
@@ -135,7 +135,7 @@ namespace HydroTech.Managers
 
             foreach (Vessel vessel in FlightGlobals.Vessels)
             {
-                HydroJebModule jeb = vessel.GetMasterJeb();
+                HydroJebCore jeb = vessel.GetMasterJeb();
                 List<ModuleDockAssistCam> cams = vessel.FindPartModulesImplementing<ModuleDockAssistCam>();
                 List<ModuleDockAssistTarget> targets = vessel.FindPartModulesImplementing<ModuleDockAssistTarget>();
                 if (jeb != null)

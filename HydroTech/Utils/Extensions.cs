@@ -10,22 +10,22 @@ namespace HydroTech.Utils
         #region VesselExtensions
         //From https://github.com/MuMech/MechJeb2/blob/master/MechJeb2/VesselExtensions.cs#L47-L66
         private static float lastFixedTime;
-        private static readonly Dictionary<Guid, HydroJebModule> jebCache = new Dictionary<Guid, HydroJebModule>();
+        private static readonly Dictionary<Guid, HydroJebCore> coreCache = new Dictionary<Guid, HydroJebCore>();
 
-        public static HydroJebModule GetMasterJeb(this Vessel vessel)
+        public static HydroJebCore GetMasterJeb(this Vessel vessel)
         {
             if (lastFixedTime != Time.fixedTime)
             {
-                jebCache.Clear();
+                coreCache.Clear();
                 lastFixedTime = Time.fixedTime;
             }
 
             Guid vesselKey = vessel.id;
-            HydroJebModule jeb;
-            if (!jebCache.TryGetValue(vesselKey, out jeb))
+            HydroJebCore jeb;
+            if (!coreCache.TryGetValue(vesselKey, out jeb))
             {
-                jeb = vessel.FindPartModulesImplementing<HydroJebModule>().FirstOrDefault();
-                if (jeb != null) { jebCache.Add(vesselKey, jeb); }
+                jeb = vessel.FindPartModulesImplementing<HydroJebCore>().FirstOrDefault();
+                if (jeb != null) { coreCache.Add(vesselKey, jeb); }
             }
             return jeb;
         }

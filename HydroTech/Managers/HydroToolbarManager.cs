@@ -95,7 +95,7 @@ namespace HydroTech.Managers
         {
             #region Fields
             private ApplicationLauncherButton button;
-            private HydroJebModule module;
+            private HydroJebCore core;
             private GameObject go;
             private FlightMainPanel panel;
             private bool added, enabled;
@@ -133,7 +133,7 @@ namespace HydroTech.Managers
                     ApplicationLauncher.Instance.RemoveModApplication(this.button);
                     Destroy(this.button);
                     Destroy(this.go);
-                    this.module = null;
+                    this.core = null;
                     this.added = false;
                 }
             }
@@ -161,10 +161,10 @@ namespace HydroTech.Managers
                 }
             }
 
-            private void SetSubscription(HydroJebModule jeb)
+            private void SetSubscription(HydroJebCore jeb)
             {
-                this.module = jeb;
-                if (this.module == null)
+                this.core = jeb;
+                if (this.core == null)
                 {
                     this.button.VisibleInScenes = AppScenes.NEVER;
                     this.button.Enable();
@@ -173,9 +173,9 @@ namespace HydroTech.Managers
                 else { this.button.VisibleInScenes = AppScenes.FLIGHT; }
             }
 
-            public bool IsActive(HydroJebModule jeb)
+            public bool IsActive(HydroJebCore jeb)
             {
-                return this.module == jeb;
+                return this.core == jeb;
             }
 
             private void SwitchingVessels(Vessel from, Vessel to)
@@ -185,26 +185,26 @@ namespace HydroTech.Managers
 
             private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
             {
-                if (evnt.from == GameScenes.FLIGHT && this.module != null)
+                if (evnt.from == GameScenes.FLIGHT && this.core != null)
                 {
-                    this.module = null;
+                    this.core = null;
                     this.button.VisibleInScenes = AppScenes.NEVER;
                 }
             }    
             #endregion
 
             #region Functions
-            internal void Update(HydroJebModule jeb)
+            internal void Update(HydroJebCore jeb)
             {
-                if (jeb != this.module)
+                if (jeb != this.core)
                 {
                     SetSubscription(jeb);
                 }
-                if (this.module != null)
+                if (this.core != null)
                 {
                     if (this.enabled)
                     {
-                        if (!this.module.IsOnline)
+                        if (!this.core.IsOnline)
                         {
                             this.button.SetFalse();
                             this.button.Disable();
@@ -212,7 +212,7 @@ namespace HydroTech.Managers
                             this.button.SetTexture(HTUtils.InactiveIcon);
                         }
                     }
-                    else if (this.module.IsOnline)
+                    else if (this.core.IsOnline)
                     {
                         this.button.Enable();
                     }

@@ -8,7 +8,7 @@ namespace HydroTech.PartModules
         #region Overrides
         protected override Status GetStatus()
         {
-            return HydroFlightManager.Instance.IsActiveJeb(this.part.Modules["HydroJebModule"] as HydroJebModule) ? Status.ACTIVE : Status.IDLE;
+            return HydroFlightManager.Instance.IsActiveJeb(this.part.Modules["HydroJebModule"] as HydroJebCore) ? Status.ACTIVE : Status.IDLE;
         }
         #endregion
     }
