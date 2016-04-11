@@ -1,5 +1,6 @@
 ﻿using HydroTech.Autopilots.Calculators;
 using HydroTech.Constants;
+using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -9,14 +10,9 @@ namespace HydroTech.Panels
     public class PanelRCSThrustInfo : Panel, IPanelEditor
     {
         #region Static Properties
-        public static PanelRCSThrustInfo ThePanel
+        protected static RCSCalculator ActiveRCS
         {
-            get { return (PanelRCSThrustInfo)HydroJebCore.panels[CoreConsts.rcsInfo]; }
-        }
-
-        protected static RCSCalculator TheCalculator
-        {
-            get { return HydroJebCore.activeVesselRcs; }
+            get { return HydroFlightManager.Instance.ActiveRCS; }
         }
         #endregion
 
@@ -97,7 +93,7 @@ namespace HydroTech.Panels
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if (TheCalculator.AllRcsEnabledChanged) { ResetHeight(); }
+            if (ActiveRCS.AllRcsEnabledChanged) { ResetHeight(); }
         }
 
         protected override void LoadDefault()
@@ -147,27 +143,27 @@ namespace HydroTech.Panels
             if (this.showRotation)
             {
                 GUILayout.Label(string.Format("Max torque ({0}) and\nangular acceleration ({1})", GeneralConsts.torque, GeneralConsts.angularAcc));
-                GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", TheCalculator.maxTorque.xp, TheCalculator.maxAngularAcc.xp));
-                GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", TheCalculator.maxTorque.xn, TheCalculator.maxAngularAcc.xn));
-                GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", TheCalculator.maxTorque.yp, TheCalculator.maxAngularAcc.yp));
-                GUILayout.Label(string.Format("yaw right : {0:#0.00} , {1:#0.00}", TheCalculator.maxTorque.yn, TheCalculator.maxAngularAcc.yn));
-                GUILayout.Label(string.Format("Roll left : {0:#0.00} , {1:#0.00}", TheCalculator.maxTorque.zp, TheCalculator.maxAngularAcc.zp));
-                GUILayout.Label(string.Format("Roll right : {0:#0.00} , {1:#0.00}", TheCalculator.maxTorque.zn, TheCalculator.maxAngularAcc.zn));
+                GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.xp, ActiveRCS.maxAngularAcc.xp));
+                GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.xn, ActiveRCS.maxAngularAcc.xn));
+                GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.yp, ActiveRCS.maxAngularAcc.yp));
+                GUILayout.Label(string.Format("yaw right : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.yn, ActiveRCS.maxAngularAcc.yn));
+                GUILayout.Label(string.Format("Roll left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.zp, ActiveRCS.maxAngularAcc.zp));
+                GUILayout.Label(string.Format("Roll right : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.zn, ActiveRCS.maxAngularAcc.zn));
             }
             else
             {
                 GUILayout.Label(string.Format("Max thrust ({0}) and\nacceleration ({1})", GeneralConsts.force, GeneralConsts.acceleration));
-                GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", TheCalculator.maxForce.xp, TheCalculator.maxAcc.xp));
-                GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", TheCalculator.maxForce.xn, TheCalculator.maxAcc.xn));
-                GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", TheCalculator.maxForce.yp, TheCalculator.maxAcc.yp));
-                GUILayout.Label(string.Format("Translate down : {0:#0.00} , {1:#0.00}", TheCalculator.maxForce.yn, TheCalculator.maxAcc.yn));
-                GUILayout.Label(string.Format("Translate backward : {0:#0.00} , {1:#0.00}", TheCalculator.maxForce.zp, TheCalculator.maxAcc.zp));
-                GUILayout.Label(string.Format("Translate forward : {0:#0.00} , {1:#0.00}", TheCalculator.maxForce.zn, TheCalculator.maxAcc.zn));
+                GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.xp, ActiveRCS.maxAcc.xp));
+                GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.xn, ActiveRCS.maxAcc.xn));
+                GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.yp, ActiveRCS.maxAcc.yp));
+                GUILayout.Label(string.Format("Translate down : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.yn, ActiveRCS.maxAcc.yn));
+                GUILayout.Label(string.Format("Translate backward : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.zp, ActiveRCS.maxAcc.zp));
+                GUILayout.Label(string.Format("Translate forward : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.zn, ActiveRCS.maxAcc.zn));
             }
-            if (!this.editor && !TheCalculator.AllRcsEnabled)
+            if (!this.editor && !ActiveRCS.AllRcsEnabled)
             {
                 GUILayout.Label("Some RCS thrusters are not enabled.", GUIUtils.ColouredLabel(Color.red));
-                if (GUILayout.Button("Enable all")) { TheCalculator.EnableAllRcs(); }
+                if (GUILayout.Button("Enable all")) { ActiveRCS.EnableAllRcs(); }
             }
             GUI.DragWindow();
         }

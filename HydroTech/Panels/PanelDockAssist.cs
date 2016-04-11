@@ -15,11 +15,6 @@ namespace HydroTech.Panels
     public class PanelDockAssist : PanelAP
     {
         #region Static properties
-        public static PanelDockAssist ThePanel
-        {
-            get { return (PanelDockAssist)HydroJebCore.panels[CoreConsts.pDock]; }
-        }
-
         protected static APDockAssist DA
         {
             get { return APDockAssist.DockingAP; }

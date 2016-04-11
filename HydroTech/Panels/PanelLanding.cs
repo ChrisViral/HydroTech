@@ -9,11 +9,6 @@ namespace HydroTech.Panels
     public class PanelLanding : PanelAP
     {
         #region Static properties
-        public static PanelLanding ThePanel
-        {
-            get { return (PanelLanding)HydroJebCore.panels[CoreConsts.pLanding]; }
-        }
-
         protected static APLanding LA
         {
             get { return APLanding.LandingAP; }

@@ -53,9 +53,9 @@ namespace HydroTech.Autopilots
             get { return FlightGlobals.ActiveVessel; }
         }
 
-        protected static RCSCalculator RcsActive
+        protected static RCSCalculator ActiveRCS
         {
-            get { return HydroJebCore.activeVesselRcs; }
+            get { return HydroFlightManager.Instance.ActiveRCS; }
         }
 
         protected virtual string NameString
@@ -186,7 +186,6 @@ namespace HydroTech.Autopilots
 
         public virtual void OnUpdate()
         {
-            this.Active = HydroJebCore.electricity;
             if (this.Engaged)
             {
                 if (this.drivingVessel != ActiveVessel)

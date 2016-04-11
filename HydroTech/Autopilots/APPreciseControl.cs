@@ -57,8 +57,8 @@ namespace HydroTech.Autopilots
             }
             else
             {
-                RcsActive.MakeRotation(ctrlState, this.angularAcc);
-                RcsActive.MakeTranslation(ctrlState, this.acc);
+                ActiveRCS.MakeRotation(ctrlState, this.angularAcc);
+                ActiveRCS.MakeTranslation(ctrlState, this.acc);
             }
         }
         #endregion

@@ -10,13 +10,6 @@ namespace HydroTech.Panels
 {
     public class PanelDebug : Panel
     {
-        #region Static properies
-        public static PanelDebug ThePanel
-        {
-            get { return (PanelDebug)HydroJebCore.panels[CoreConsts.debug]; }
-        }
-        #endregion
-
         #region Fields
         private bool apStatus;
         private bool cameraMgr;

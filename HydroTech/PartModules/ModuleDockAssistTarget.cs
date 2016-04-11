@@ -9,11 +9,6 @@ namespace HydroTech.PartModules
     public class ModuleDockAssistTarget : HydroPartModule, IPartPreview, IDAPartEditorAid
     {
         #region Static Properties
-        protected static PanelDockAssist Panel
-        {
-            get { return PanelDockAssist.ThePanel; }
-        }
-
         protected static ModuleDockAssistTarget CurTarget
         {
             get { return APDockAssist.DockingAP.target; }
@@ -85,9 +80,9 @@ namespace HydroTech.PartModules
         {
             get
             {
-                if (this.vessel == FlightGlobals.ActiveVessel) // || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist
+                if (this.vessel.isActiveVessel) // || (vessel.findWorldCenterOfMass() - HydroJebCore.ActiveVessel.CoM).magnitude > Position.MaxDist
                 {
-                    if (this.isNear && CurTarget == this) { Panel.ResetHeight(); }
+                    if (this.isNear && CurTarget == this) { FlightMainPanel.Instance.DockAssist.ResetHeight(); }
                     this.isNear = false;
                 }
                 else
@@ -154,7 +149,7 @@ namespace HydroTech.PartModules
             if (this == CurTarget)
             {
                 CurTarget = null;
-                Panel.ResetHeight();
+                FlightMainPanel.Instance.DockAssist.ResetHeight();
             }
         }
 

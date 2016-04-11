@@ -109,7 +109,6 @@
     <Compile Include="Panels\PanelDockAssistEditor.cs" />
     <Compile Include="Panels\PanelLanding.cs" />
     <Compile Include="Panels\PanelLandingInfo.cs" />
-    <Compile Include="Panels\PanelMain.cs" />
     <Compile Include="Panels\PanelMainThrottle.cs" />
     <Compile Include="Panels\PanelPreciseControl.cs" />
     <Compile Include="Panels\PanelRCSThrustInfo.cs" />

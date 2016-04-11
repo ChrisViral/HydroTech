@@ -43,11 +43,6 @@ namespace HydroTech.Autopilots
         {
             get { return HydroFlightManager.Instance.LandingAutopilot; }
         }
-
-        public static PanelLanding Panel
-        {
-            get { return PanelLanding.ThePanel; }
-        }
         #endregion
 
         #region Properties
@@ -195,7 +190,7 @@ namespace HydroTech.Autopilots
             get { return this.engines; }
             set
             {
-                if (value != this.engines) { Panel.ResetHeight(); }
+                if (value != this.engines) { FlightMainPanel.Instance.Landing.ResetHeight(); }
                 this.engines = value;
             }
         }
@@ -231,7 +226,7 @@ namespace HydroTech.Autopilots
         {
             set
             {
-                if (value != this.engaged) { Panel.ResetHeight(); }
+                if (value != this.engaged) { FlightMainPanel.Instance.Landing.ResetHeight(); }
                 base.Engaged = value;
             }
         }
@@ -288,7 +283,7 @@ namespace HydroTech.Autopilots
             LandingCalculator stateCal = new LandingCalculator();
             stateCal.Calculate(this.vabPod, dir, Vector3d.zero, ActiveVessel);
             stateCal.SetCtrlStateRotation(ctrlState);
-            RcsActive.MakeRotation(ctrlState, stateCal.Steer(AutopilotConsts.translationReadyAngleSin) ? AutopilotConsts.maxAngularAccHold : AutopilotConsts.maxAngularAccSteer);
+            ActiveRCS.MakeRotation(ctrlState, stateCal.Steer(AutopilotConsts.translationReadyAngleSin) ? AutopilotConsts.maxAngularAccHold : AutopilotConsts.maxAngularAccSteer);
 
             // Kill rotation
             Vector3 angularVelocity = VectorTransform(ActiveVessel.GetComponent<Rigidbody>().angularVelocity, ActiveVessel.ReferenceTransform);
@@ -425,8 +420,8 @@ namespace HydroTech.Autopilots
 
         protected void DriveHorizontalDec(FlightCtrlState ctrlState)
         {
-            ctrlState.X = HTUtils.Clamp(HydroJebCore.activeVesselRcs.GetThrustRateFromAcc3(0, this.SurfXSpeed * AutopilotConsts.maxDeceleration), -1, 1);
-            SetTranslationY(ctrlState, HTUtils.Clamp(HydroJebCore.activeVesselRcs.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * AutopilotConsts.maxDeceleration), -1, 1));
+            ctrlState.X = HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(0, this.SurfXSpeed * AutopilotConsts.maxDeceleration), -1, 1);
+            SetTranslationY(ctrlState, HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * AutopilotConsts.maxDeceleration), -1, 1));
         }
 
         protected void DriveHorizontalBrake(FlightCtrlState ctrlState)
@@ -631,7 +626,7 @@ namespace HydroTech.Autopilots
             this.tad.OnUpdate(ActiveVessel, VesselHeight(), this.SlopeDetection);
 
             //Get vessel TWR
-            this.TwrRcs = this.vabPod ? HydroJebCore.activeVesselRcs.maxAcc.zn : HydroJebCore.activeVesselRcs.maxAcc.yp;
+            this.TwrRcs = this.vabPod ? HydroFlightManager.Instance.ActiveRCS.maxAcc.zn : HydroFlightManager.Instance.ActiveRCS.maxAcc.yp;
             EngineCalculator cet = new EngineCalculator();
             cet.OnUpdate(ActiveVessel, this.vabPod ? Vector3.down : Vector3.forward);
             this.TwrEng = cet.MaxAcc * this.maxThrottle;

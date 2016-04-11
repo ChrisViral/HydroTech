@@ -17,43 +17,6 @@ namespace HydroTech
         public static readonly FileName.Folder panelSaveFolder = new FileName.Folder(FileName.hydroTechFolder, "PluginData", "rcsautopilot", "panels");
         #endregion
 
-        #region Constructor
-        static HydroJebCore()
-        {
-            try
-            {
-                //Panels
-                panels.Add(CoreConsts.main, new PanelMain());
-                panels.Add(CoreConsts.mainThrottle, new PanelMainThrottle());
-                panels.Add(CoreConsts.rcsInfo, new PanelRCSThrustInfo());
-                panels.Add(CoreConsts.preciseControl, new PanelPreciseControl());
-                panels.Add(CoreConsts.pTranslation, new PanelTranslation());
-                panels.Add(CoreConsts.pLanding, new PanelLanding());
-                panels.Add(CoreConsts.pDock, new PanelDockAssist());
-#if DEBUG
-                panels.Add(CoreConsts.debug, new PanelDebug());
-#endif
-                //Editor
-                panelsEditor.Add(CoreConsts.rcsInfo, new PanelRCSThrustInfo());
-                panelsEditor.Add(CoreConsts.pDock, new PanelDockAssistEditor());
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(string.Format("[HydroJebCore]: An exception has been thrown:\n{0} at {1}", e.GetType().Name, e.StackTrace));
-            }
-        }
-        #endregion
-
-        #region Core #1: Autopilot (HydroJeb)
-        #region Fields
-        public static bool isReady = true;
-        public static bool electricity;
-        public static Dictionary<int, Panel> panels = new Dictionary<int, Panel>();
-        public static RCSCalculator activeVesselRcs = new RCSCalculator();
-        public static Dictionary<int, IPanelEditor> panelsEditor = new Dictionary<int, IPanelEditor>();
-        #endregion
-        #endregion
-
         #region Core #2: Docking Assistant (HydroDockAssistCam, HydroDockAssistTarget)
         #region Fields
         public static HydroPartModuleList dockCams = new HydroPartModuleList();

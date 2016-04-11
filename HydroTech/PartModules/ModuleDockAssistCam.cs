@@ -19,11 +19,6 @@ namespace HydroTech.PartModules
             get { return APDockAssist.DockingAP; }
         }
 
-        protected static PanelDockAssist Panel
-        {
-            get { return PanelDockAssist.ThePanel; }
-        }
-
         protected static ModuleDockAssistCam CurCam
         {
             get { return DA.Cam; }
@@ -86,7 +81,7 @@ namespace HydroTech.PartModules
                 {
                     if (this.isOnActiveVessel && CurCam == this)
                     {
-                        Panel.ResetHeight();
+                        FlightMainPanel.Instance.DockAssist.ResetHeight();
                         if (this.CamActivate) { this.CamActivate = false; }
                     }
                     this.isOnActiveVessel = false;
@@ -239,7 +234,7 @@ namespace HydroTech.PartModules
             if (this == CurCam)
             {
                 CurCam = null;
-                Panel.ResetHeight();
+                FlightMainPanel.Instance.DockAssist.ResetHeight();
                 if (this.CamActivate) { this.CamActivate = false; }
             }
         }

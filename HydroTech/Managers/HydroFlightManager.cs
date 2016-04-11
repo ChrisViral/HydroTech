@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using HydroTech.Autopilots;
+using HydroTech.Autopilots.Calculators;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -27,6 +28,8 @@ namespace HydroTech.Managers
 
         public List<Autopilot> Autopilots { get; private set; }
 
+        public RCSCalculator ActiveRCS { get; private set; }
+
         public HydroJebModule Active { get; private set; }
 
         public List<Part> Targets { get; private set; }
@@ -50,13 +53,14 @@ namespace HydroTech.Managers
             this.LandingAutopilot = new APLanding();
             this.PreciseControlAutopilot = new APPreciseControl();
             this.TranslationAutopilot = new APTranslation();
-            this.Autopilots = new List<Autopilot>()
+            this.Autopilots = new List<Autopilot>
             {
                 this.DockingAutopilot,
                 this.LandingAutopilot,
                 this.PreciseControlAutopilot,
                 this.TranslationAutopilot
             };
+            this.ActiveRCS = new RCSCalculator();
             this.Targets = new List<Part>();
         }
 
