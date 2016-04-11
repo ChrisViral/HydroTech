@@ -19,11 +19,6 @@ namespace HydroTech.Panels
             set { FlightInputHandler.state.mainThrottle = value / 100f; }
         }
 
-        protected override int PanelID
-        {
-            get { return CoreConsts.mainThrottle; }
-        }
-
         public override string PanelTitle
         {
             get { return PanelConsts.mainThrottleTitle; }

@@ -1,12 +1,8 @@
 ﻿
 namespace HydroTech.Constants
 {
-    public static class GeneralConsts
+    public static class UnitConsts
     {
-        #region PartModules
-        public const string name = "PartNewName";
-        #endregion
-
         #region Units
         public const string length = "m";
         public const string time = "s";

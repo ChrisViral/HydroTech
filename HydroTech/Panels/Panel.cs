@@ -49,8 +49,6 @@ namespace HydroTech.Panels
             }
         }
 
-        protected abstract int PanelID { get; }
-
         public abstract string PanelTitle { get; }
         #endregion
 

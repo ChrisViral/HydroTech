@@ -72,8 +72,7 @@
     <Compile Include="Autopilots\Calculators\EngineCalculator.cs" />
     <Compile Include="Autopilots\Calculators\VesselInfoCalculatorBase.cs" />
     <Compile Include="Constants\AutopilotConsts.cs" />
-    <Compile Include="Constants\CoreConsts.cs" />
-    <Compile Include="Constants\GeneralConsts.cs" />
+    <Compile Include="Constants\UnitConsts.cs" />
     <Compile Include="Constants\PanelConsts.cs" />
     <Compile Include="Data\AffiliationList.cs" />
     <Compile Include="Data\DictionaryFromList.cs" />

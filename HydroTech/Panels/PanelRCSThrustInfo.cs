@@ -31,11 +31,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected override int PanelID
-        {
-            get { return CoreConsts.rcsInfo; }
-        }
-
         public override string PanelTitle
         {
             get { return (this.editor && this.editorHide) ? PanelConsts.rcsInfoEditorHideTitle : PanelConsts.rcsInfoTitle; }
@@ -142,7 +137,7 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
             if (this.showRotation)
             {
-                GUILayout.Label(string.Format("Max torque ({0}) and\nangular acceleration ({1})", GeneralConsts.torque, GeneralConsts.angularAcc));
+                GUILayout.Label(string.Format("Max torque ({0}) and\nangular acceleration ({1})", UnitConsts.torque, UnitConsts.angularAcc));
                 GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.xp, ActiveRCS.maxAngularAcc.xp));
                 GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.xn, ActiveRCS.maxAngularAcc.xn));
                 GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.yp, ActiveRCS.maxAngularAcc.yp));
@@ -152,7 +147,7 @@ namespace HydroTech.Panels
             }
             else
             {
-                GUILayout.Label(string.Format("Max thrust ({0}) and\nacceleration ({1})", GeneralConsts.force, GeneralConsts.acceleration));
+                GUILayout.Label(string.Format("Max thrust ({0}) and\nacceleration ({1})", UnitConsts.force, UnitConsts.acceleration));
                 GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.xp, ActiveRCS.maxAcc.xp));
                 GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.xn, ActiveRCS.maxAcc.xn));
                 GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.yp, ActiveRCS.maxAcc.yp));

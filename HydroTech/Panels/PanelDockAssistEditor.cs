@@ -41,11 +41,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Propeties
-        protected override int PanelID
-        {
-            get { return CoreConsts.pDock; }
-        }
-
         public override string PanelTitle
         {
             get { return this.editorHide ? PanelConsts.dockAssistEditorAidHideTitle : PanelConsts.dockAssistEditorAidTitle; }

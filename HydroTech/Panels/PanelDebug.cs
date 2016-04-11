@@ -21,11 +21,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected override int PanelID
-        {
-            get { return CoreConsts.debug; }
-        }
-
         public override string PanelTitle
         {
             get { return PanelConsts.debugTitle; }

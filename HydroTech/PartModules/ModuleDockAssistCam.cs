@@ -213,7 +213,7 @@ namespace HydroTech.PartModules
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if (this.CamActivate) { this.part.RequestResource("ElectricCharge", CoreConsts.electricConsumptionCamera * TimeWarp.deltaTime); }
+            if (this.CamActivate) { this.part.RequestResource("ElectricCharge", 0.002 * TimeWarp.deltaTime); }
         }
 
         public override void OnFlightStart()

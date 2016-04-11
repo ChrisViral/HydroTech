@@ -57,11 +57,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected override int PanelID
-        {
-            get { return CoreConsts.pTranslation; }
-        }
-
         public override string PanelTitle
         {
             get { return PanelConsts.translationTitle; }

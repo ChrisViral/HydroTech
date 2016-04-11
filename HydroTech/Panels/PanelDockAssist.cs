@@ -268,12 +268,7 @@ namespace HydroTech.Panels
                 this.tempCamView = value;
             }
         }
-
-        protected override int PanelID
-        {
-            get { return CoreConsts.pDock; }
-        }
-
+        
         public override string PanelTitle
         {
             get { return PanelConsts.dockingTitle; }
@@ -349,7 +344,7 @@ namespace HydroTech.Panels
 
         protected void DoPreviewVessel()
         {
-            HydroFlightManager.Instance.CameraManager.FoV = CoreConsts.defaultFoVPreviewVessel;
+            HydroFlightManager.Instance.CameraManager.FoV = 60;
             HydroFlightManager.Instance.CameraManager.Target = this.PreviewVessel.transform;
         }
 
@@ -505,9 +500,9 @@ namespace HydroTech.Panels
 
         protected override void DrawSettingsUI()
         {
-            GUILayout.Label("Angular acceleration (" + GeneralConsts.angularAcc + ")");
+            GUILayout.Label("Angular acceleration (" + UnitConsts.angularAcc + ")");
             this.angularAccText = GUILayout.TextField(this.angularAccText);
-            GUILayout.Label("Acceleration (" + GeneralConsts.acceleration + ")");
+            GUILayout.Label("Acceleration (" + UnitConsts.acceleration + ")");
             this.accText = GUILayout.TextField(this.accText);
 
             if (!NullCamera)
@@ -526,7 +521,7 @@ namespace HydroTech.Panels
                         GUILayout.Label("Final approach speed");
                         GUILayout.BeginHorizontal();
                         this.fssText = GUILayout.TextField(this.fssText);
-                        GUILayout.Label(GeneralConsts.speedSimple);
+                        GUILayout.Label(UnitConsts.speedSimple);
                         GUILayout.EndHorizontal();
                         if (TargetHasJeb) { this.tempDriveTarget = GUILayout.Toggle(this.tempDriveTarget, "Rotate target"); }
                     }
