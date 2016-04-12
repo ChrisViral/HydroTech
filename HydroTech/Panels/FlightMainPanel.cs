@@ -73,7 +73,7 @@ namespace HydroTech.Panels
             this.LandingInfo = new PanelLandingInfo();
             this.MainThrottle = new PanelMainThrottle();
             this.PreciseControl = new PanelPreciseControl();
-            this.RCSInfo = new PanelRCSThrustInfo();
+            this.RCSInfo = new PanelRCSThrustInfo(false);
             this.Translation = new PanelTranslation();
             this.Panels = new List<Panel>(7)
             {

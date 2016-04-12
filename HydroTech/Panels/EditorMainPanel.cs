@@ -42,7 +42,7 @@ namespace HydroTech.Panels
 
             Instance = this;
             this.EditorDockAssist = new PanelDockAssistEditor();
-            this.RCSInfo = new PanelRCSThrustInfo();
+            this.RCSInfo = new PanelRCSThrustInfo(true);
             this.Panels = new List<Panel>(2)
             {
                 this.EditorDockAssist,

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace HydroTech.Panels
 {
-    public class PanelRCSThrustInfo : Panel, IPanelEditor
+    public class PanelRCSThrustInfo : Panel
     {
         #region Static Properties
         protected static RCSCalculator ActiveRCS
@@ -26,8 +26,8 @@ namespace HydroTech.Panels
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "WindowPos", cmd = CMD.RECT_TOP_LEFT)]
         public Rect windowRectEditor;
 
-        protected bool editor;
-        protected bool panelShownEditor;
+        private readonly bool editor;
+        private bool panelShownEditor;
         #endregion
 
         #region Properties
@@ -57,9 +57,10 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelRCSThrustInfo()
+        public PanelRCSThrustInfo(bool editor)
         {
             this.fileName = new FileName("rcsinfo", "cfg", FileName.panelSaveFolder);
+            this.editor = editor;
         }
         #endregion
 
@@ -67,7 +68,6 @@ namespace HydroTech.Panels
         public void ShowInEditor()
         {
             this.Active = true;
-            this.editor = true;
             Load();
             AddPanel();
         }
