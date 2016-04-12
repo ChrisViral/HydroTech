@@ -40,11 +40,12 @@ namespace HydroTech.Managers
             EditorMainPanel.Instance.DockAssist.OnEditorStart();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!this.active) { return; }
 
             this.ActiveRCS.OnEditorUpdate();
+            EditorMainPanel.Instance.DockAssist.OnEditorUpdate();
         }
 
         private void OnDestroy()

@@ -59,7 +59,7 @@ namespace HydroTech.Panels
                 this.DockAssist,
                 this.RCSInfo
             };
-            this.pos = new Rect(Screen.width * 0.8f, Screen.height * 0.2f, 250, 100);
+            this.pos = new Rect(Screen.width * 0.8f, Screen.height * 0.2f, 250, 50);
             this.drag = new Rect(0, 0, 200, 30);
             this.id = GuidProvider.GetGuid<EditorMainPanel>();
         }
@@ -75,7 +75,7 @@ namespace HydroTech.Panels
             {
                 GUI.skin = GUIUtils.Skin;
 
-                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "HydroTech Editor Panel"));
+                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "HydroTech Editor Panel", GUILayout.ExpandHeight(true)));
 
                 foreach (Panel p in this.Panels)
                 {

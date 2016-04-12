@@ -25,7 +25,7 @@ namespace HydroTech.Panels
             }
         }
 
-        #region Field
+        #region Fields
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
         public bool editorHide;
 
