@@ -48,5 +48,12 @@ namespace HydroTech
             }         
         }
         #endregion
+
+        #region Overrides
+        public override string GetModuleTitle()
+        {
+            return "Docking Target";
+        }
+        #endregion
     }
 }

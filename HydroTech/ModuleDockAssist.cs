@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace HydroTech
 {
-    public abstract class ModuleDockAssist : PartModule
+    public abstract class ModuleDockAssist : PartModule, IModuleInfo
     {
         #region Static fields
         private static readonly Color[] colours = { Color.blue, Color.green, Color.red };
@@ -195,6 +195,20 @@ namespace HydroTech
             camMngr.Position = this.previewPos;
             camMngr.SetLookRotation(this.previewFwd, this.previewUp);
         }
+
+        public Callback<Rect> GetDrawModulePanelCallback()
+        {
+            return null;
+        }
+
+        public string GetPrimaryField()
+        {
+            return string.Empty;
+        }
+        #endregion
+
+        #region Abstract methods
+        public abstract string GetModuleTitle();
         #endregion
 
         #region Functions
@@ -220,12 +234,12 @@ namespace HydroTech
         #region Overrides
         public override void OnStart(StartState state)
         {
-            this.Fields["partName"].guiName = this.ModuleShort + "Name";
+            if (HighLogic.LoadedScene != GameScenes.LOADING) { this.Fields["partName"].guiName = this.ModuleShort + "Name"; }
 
             if (HighLogic.LoadedSceneIsEditor)
             {
+                this.directions = new [] { this.assistFwd, this.assistUp, -Vector3.Cross(this.assistFwd, this.assistUp) };
                 CreateLineRenderers();
-                this.directions =  new [] { this.assistFwd, this.assistUp, -Vector3.Cross(this.assistFwd, this.assistUp) };
                 HideEditorAid();
             }
             else if (HighLogic.LoadedSceneIsFlight)

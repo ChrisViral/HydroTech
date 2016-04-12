@@ -62,18 +62,22 @@ namespace HydroTech
             get { return this.camActive; }
             set
             {
-                if (!this.camActive && value)
+                if (!this.camActive)
                 {
-                    if (ActiveCam == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
-                    HydroFlightManager.Instance.CameraManager.CamCallback = ShowCamera;
-                    ActiveCam = this;
+                    if (value)
+                    {
+                        if (ActiveCam == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                        HydroFlightManager.Instance.CameraManager.CamCallback = ShowCamera;
+                        ActiveCam = this;
+                    }
                 }
-                else if (this.camActive && !value)
+                else if (!value)
                 {
                     HydroFlightManager.Instance.CameraManager.RetrieveLast();
                     this.mag = 1;
                     ActiveCam = null;
                 }
+
                 this.camActive = value;
             }
         }
@@ -136,6 +140,13 @@ namespace HydroTech
                 FlightMainPanel.Instance.DockAssist.ResetHeight();
                 if (this.CamActive) { this.CamActive = false; }
             }
+        }
+        #endregion
+
+        #region Overrides
+        public override string GetModuleTitle()
+        {
+            return "Docking Camera";
         }
         #endregion
     }
