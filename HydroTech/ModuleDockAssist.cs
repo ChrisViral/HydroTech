@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using HydroTech.Managers;
+using HydroTech.Panels;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -205,12 +206,6 @@ namespace HydroTech
             }        
         }
 
-        private void OnDestroy()
-        {
-            GameEvents.onShowUI.Remove(ShowUI);
-            GameEvents.onHideUI.Remove(HideUI);
-        }
-
         private void OnGUI()
         {
             if (this.visible && !this.hid)
@@ -246,6 +241,12 @@ namespace HydroTech
         public override string ToString()
         {
             return this.renamed ? this.partName : this.RelPos.ToString("#0.00");
+        }
+
+        protected virtual void OnDestroy()
+        {
+            GameEvents.onShowUI.Remove(ShowUI);
+            GameEvents.onHideUI.Remove(HideUI);
         }
         #endregion
     }

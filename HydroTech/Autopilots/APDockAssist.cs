@@ -79,7 +79,7 @@ namespace HydroTech.Autopilots
             get { return !this.NullCamera && this.camView; }
             set
             {
-                if (!this.NullCamera && this.Engaged && !this.CameraPaused) { this.Cam.CamActivate = value; }
+                if (!this.NullCamera && this.Engaged && !this.CameraPaused) { this.Cam.CamActive = value; }
                 this.camView = value;
             }
         }
@@ -136,7 +136,7 @@ namespace HydroTech.Autopilots
             get { return this.cam; }
             set
             {
-                if (this.cam != null && value != this.cam) { this.cam.CamActivate = false; }
+                if (this.cam != null && value != this.cam) { this.cam.CamActive = false; }
                 this.cam = value;
             }
         }
@@ -154,11 +154,11 @@ namespace HydroTech.Autopilots
                         RemoveDriveTarget();
                     }
                 }
-                if (value) { if (this.CamView && !this.CameraPaused) { this.Cam.CamActivate = true; } }
+                if (value) { if (this.CamView && !this.CameraPaused) { this.Cam.CamActive = true; } }
                 else
                 {
                     FlightMainPanel.Instance.DockAssist.ResetHeight();
-                    if (!this.NullCamera) { this.Cam.CamActivate = false; }
+                    if (!this.NullCamera) { this.Cam.CamActive = false; }
                 }
                 base.Engaged = value;
             }
@@ -448,7 +448,7 @@ namespace HydroTech.Autopilots
         {
             SwitchTransformCalculator sCal = new SwitchTransformCalculator();
             sCal.GetRotation(ctrlState);
-            sCal.ChangeTransformRotation(mcam.Right, mcam.Down, mcam.Dir, mcam.VesselTransform);
+            sCal.ChangeTransformRotation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
             sCal.SetRotation(ctrlState);
         }
 
@@ -456,7 +456,7 @@ namespace HydroTech.Autopilots
         {
             SwitchTransformCalculator sCal = new SwitchTransformCalculator();
             sCal.GetTranslation(ctrlState);
-            sCal.ChangeTransformTranslation(mcam.Right, mcam.Down, mcam.Dir, mcam.VesselTransform);
+            sCal.ChangeTransformTranslation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
             sCal.SetTranslation(ctrlState);
         }
         #endregion

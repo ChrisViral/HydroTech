@@ -36,12 +36,16 @@ namespace HydroTech
         #endregion
 
         #region Functions
-        public void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (!HighLogic.LoadedSceneIsFlight || this != Current) { return; }
+            if (!HighLogic.LoadedSceneIsFlight) { return; }
 
-            Current = null;
-            FlightMainPanel.Instance.DockAssist.ResetHeight();
+            base.OnDestroy();
+            if (this == Current)
+            {
+                Current = null;
+                FlightMainPanel.Instance.DockAssist.ResetHeight();
+            }         
         }
         #endregion
     }

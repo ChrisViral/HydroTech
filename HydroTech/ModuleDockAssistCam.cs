@@ -42,7 +42,7 @@ namespace HydroTech
                     if (this.isOnActiveVessel && Current == this)
                     {
                         FlightMainPanel.Instance.DockAssist.ResetHeight();
-                        if (this.CamActivate) { this.CamActivate = false; }
+                        if (this.CamActive) { this.CamActive = false; }
                     }
                     this.isOnActiveVessel = false;
                 }
@@ -52,36 +52,31 @@ namespace HydroTech
             }
         }
 
-        protected bool camActivate;
-        public bool CamActivate
+        protected bool camActive;
+        public bool CamActive
         {
-            get { return this.camActivate; }
+            get { return this.camActive; }
             set
             {
-                if (!this.camActivate && value)
+                if (!this.camActive && value)
                 {
                     if (ActiveCam == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
                     HydroFlightManager.Instance.CameraManager.CamCallback = ShowCamera;
                     ActiveCam = this;
                 }
-                else if (this.camActivate && !value)
+                else if (this.camActive && !value)
                 {
                     HydroFlightManager.Instance.CameraManager.RetrieveLast();
                     this.mag = 1;
                     ActiveCam = null;
                 }
-                this.camActivate = value;
+                this.camActive = value;
             }
         }
 
         public Vector3 CrossPos
         {
             get { return this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.camCrossPos); }
-        }
-
-        public Transform VesselTransform
-        {
-            get { return this.vessel.ReferenceTransform; }
         }
 
         protected override string ModuleShort
@@ -116,20 +111,24 @@ namespace HydroTech
         #endregion
 
         #region Functions
-        public void FixedUpdate()
+        private void FixedUpdate()
         {
-            if (!FlightGlobals.ready || !this.CamActivate) { return;}
+            if (!FlightGlobals.ready || !this.CamActive) { return;}
 
             this.part.RequestResource("ElectricCharge", 0.002 * TimeWarp.deltaTime);
         }
 
-        public void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (!HighLogic.LoadedSceneIsFlight || this != Current) { return; }
+            if (!HighLogic.LoadedSceneIsFlight) { return; }
 
-            Current = null;
-            FlightMainPanel.Instance.DockAssist.ResetHeight();
-            if (this.CamActivate) { this.CamActivate = false; }
+            base.OnDestroy();
+            if (this == Current)
+            {
+                Current = null;
+                FlightMainPanel.Instance.DockAssist.ResetHeight();
+                if (this.CamActive) { this.CamActive = false; }
+            }
         }
         #endregion
     }
