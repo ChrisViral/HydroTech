@@ -2,7 +2,7 @@
 using HydroTech.Panels;
 using UnityEngine;
 
-namespace HydroTech.PartModules
+namespace HydroTech
 {
     public class ModuleDockAssistCam : ModuleDockAssist
     {

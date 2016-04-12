@@ -1,7 +1,7 @@
 ﻿using HydroTech.Managers;
 using HydroTech.Panels;
 
-namespace HydroTech.PartModules
+namespace HydroTech
 {
     public class ModuleDockAssistTarget : ModuleDockAssist
     {

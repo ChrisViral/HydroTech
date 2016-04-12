@@ -2,7 +2,6 @@
 using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Panels;
-using HydroTech.PartModules;
 using HydroTech.Utils;
 using UnityEngine;
 

@@ -4,7 +4,7 @@ using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 
-namespace HydroTech.PartModules
+namespace HydroTech
 {
     public abstract class ModuleDockAssist : PartModule
     {
