@@ -1,4 +1,5 @@
-﻿using HydroTech.Managers;
+﻿using System.Text;
+using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.Utils;
 using UnityEngine;
@@ -147,6 +148,15 @@ namespace HydroTech
         public override string GetModuleTitle()
         {
             return "Docking Camera";
+        }
+
+        public override string GetInfo()
+        {
+            StringBuilder sb = new StringBuilder("Active Docking Camera");
+            sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
+            sb.AppendLine("ElectricCharge");
+            sb.AppendFormat("Rate: {0:0.###}U/s", this.electricityConsumption);
+            return sb.ToString();
         }
         #endregion
     }

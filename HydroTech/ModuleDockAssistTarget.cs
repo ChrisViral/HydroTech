@@ -54,6 +54,11 @@ namespace HydroTech
         {
             return "Docking Target";
         }
+
+        public override string GetInfo()
+        {
+            return "Active Docking Target";
+        }
         #endregion
     }
 }

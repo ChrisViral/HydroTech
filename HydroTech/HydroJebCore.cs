@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
@@ -17,7 +16,7 @@ namespace HydroTech
 
         #region KSPFields
         [KSPField]
-        public float consumptionRate = 0.1f;
+        public float electricityConsumption = 0.1f;
 
         [KSPField(guiActive = true, guiName = "Status")]
         public string status = "Online";
@@ -73,7 +72,7 @@ namespace HydroTech
         {
             if (!HighLogic.LoadedSceneIsFlight || (!this.IsOnline && this != this.vessel.GetMasterJeb()) || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
-            if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(HTUtils.ElectricChargeID, this.consumptionRate * TimeWarp.fixedDeltaTime)) <= 0)
+            if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(HTUtils.ElectricChargeID, this.electricityConsumption * TimeWarp.fixedDeltaTime)) <= 0)
             {
                 if (this.IsOnline)
                 {
@@ -122,7 +121,7 @@ namespace HydroTech
             StringBuilder sb = new StringBuilder("HydroJeb Autopilot Unit");
             sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
             sb.AppendLine("ElectricCharge");
-            sb.Append(string.Format("Rate: {0:0.###}U/s", this.consumptionRate));
+            sb.AppendFormat("Rate: {0:0.###}U/s", this.electricityConsumption);
             return sb.ToString();
         }
         #endregion
