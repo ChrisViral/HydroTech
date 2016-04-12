@@ -1,4 +1,5 @@
 ﻿using HydroTech.Autopilots.Calculators;
+using HydroTech.Panels;
 using UnityEngine;
 
 namespace HydroTech.Managers
@@ -29,6 +30,11 @@ namespace HydroTech.Managers
 
             Instance = this;
             this.rcsCalculator = new RCSCalculator();
+        }
+
+        private void Start()
+        {
+            EditorMainPanel.Instance.DockAssist.OnEditorStart();
         }
 
         private void Update()

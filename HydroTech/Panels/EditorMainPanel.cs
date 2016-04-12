@@ -11,13 +11,13 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        private readonly Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
+        private Rect pos, drag;
         private bool visible;
         private int id;
         #endregion
 
         #region Properties
-        public PanelDockAssistEditor EditorDockAssist { get; private set; }
+        public PanelDockAssistEditor DockAssist { get; private set; }
 
         public PanelRCSThrustInfo RCSInfo { get; private set; }
 
@@ -34,6 +34,19 @@ namespace HydroTech.Panels
         {
             if (this.visible) { this.visible = false; }
         }
+
+        private void Window(int id)
+        {
+            GUI.DragWindow(this.drag);
+
+            GUILayout.BeginVertical();
+
+            this.DockAssist.Active = GUILayout.Toggle(this.DockAssist.Active, "Docking Assist Window", GUI.skin.button);
+
+            this.RCSInfo.Active = GUILayout.Toggle(this.RCSInfo.Active, "RCS Info Window", GUI.skin.button);
+
+            GUILayout.EndVertical();
+        }
         #endregion
 
         #region Functions
@@ -42,13 +55,15 @@ namespace HydroTech.Panels
             if (Instance != null) { Destroy(this); return; }
 
             Instance = this;
-            this.EditorDockAssist = new PanelDockAssistEditor();
+            this.DockAssist = new PanelDockAssistEditor();
             this.RCSInfo = new PanelRCSThrustInfo(true);
             this.Panels = new List<Panel>(2)
             {
-                this.EditorDockAssist,
+                this.DockAssist,
                 this.RCSInfo
             };
+            this.pos = new Rect(Screen.width * 0.8f, Screen.height * 0.2f, 250, 100);
+            this.drag = new Rect(0, 0, 200, 30);
             this.id = GuidProvider.GetGuid<EditorMainPanel>();
         }
 
@@ -61,7 +76,7 @@ namespace HydroTech.Panels
         {
             if (this.visible)
             {
-                GUI.Label(this.pos, ":D", GUIUtils.Skin.label);
+                this.pos = GUILayout.Window(this.id, this.pos, Window, "HydroTech Editor Panel");
             }
         }
         #endregion

@@ -51,6 +51,12 @@ namespace HydroTech.Panels
         public PanelDockAssistEditor()
         {
             this.fileName = new FileName("dockeditor", "cfg", FileName.panelSaveFolder);
+        }
+        #endregion
+
+        #region Method
+        public void OnEditorStart()
+        {
             this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, (AffiliationList<Part, ModuleDockAssistCam>.GetItemFunctionMulti)GetCam);
             this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunctionMulti)GetTgt);
             this.camSet = new DictionaryFromList<ModuleDockAssistCam, DAEditorSet>(this.cams, new DAEditorSet(false));
@@ -58,9 +64,7 @@ namespace HydroTech.Panels
             this.camUI = new UIMultiPageList<ModuleDockAssistCam>(this.cams, 2);
             this.tgtUI = new UIMultiPageList<ModuleDockAssistTarget>(this.targets, 2);
         }
-        #endregion
 
-        #region Method
         public void ShowInEditor()
         {
             this.Active = true;
