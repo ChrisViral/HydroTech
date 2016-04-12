@@ -5,26 +5,26 @@ namespace HydroTech.Utils
 {
     public static class GuidProvider
     {
-        #region Fields
+        #region Static fields
         private static readonly HashSet<int> ids = new HashSet<int>();
+        private static readonly Dictionary<Type, int> types = new Dictionary<Type, int>(10); 
         #endregion
 
         #region Static methods
-        public static int GetGuid()
+        public static int GetGuid<T>()
         {
+            Type t = typeof(T);
             int id;
-            do
+            if (!types.TryGetValue(t, out id))
             {
-                id = Guid.NewGuid().GetHashCode();
+                do
+                {
+                    id = Guid.NewGuid().GetHashCode();
+                }
+                while (!ids.Add(id));
+                types.Add(t, id);
             }
-            while (!ids.Add(id));
-
             return id;
-        }
-
-        public static void RemoveGuid(int id)
-        {
-            ids.Remove(id);
         }
         #endregion
     }

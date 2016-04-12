@@ -13,6 +13,7 @@ namespace HydroTech.Panels
         #region Fields
         private readonly Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
         private bool visible;
+        private int id;
         #endregion
 
         #region Properties
@@ -48,6 +49,7 @@ namespace HydroTech.Panels
                 this.EditorDockAssist,
                 this.RCSInfo
             };
+            this.id = GuidProvider.GetGuid<EditorMainPanel>();
         }
 
         private void OnDestroy()
