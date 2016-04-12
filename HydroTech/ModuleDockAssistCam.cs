@@ -76,7 +76,7 @@ namespace HydroTech
 
         public Vector3 CrossPos
         {
-            get { return this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform_PartConfig(this.camCrossPos); }
+            get { return this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.camCrossPos); }
         }
 
         public Transform VesselTransform
@@ -93,12 +93,13 @@ namespace HydroTech
         #region Methods
         public void ShowCamera()
         {
-            HydroFlightManager.Instance.CameraManager.Target = null;
-            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
-            HydroFlightManager.Instance.CameraManager.Position = this.assistPos;
-            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.assistFwd, this.assistUp);
-            HydroFlightManager.Instance.CameraManager.FoV = this.camDefFoV / this.mag;
-            HydroFlightManager.Instance.CameraManager.NearClipPlane = this.camClip;
+            HydroCameraManager camMngr = HydroFlightManager.Instance.CameraManager;
+            camMngr.Target = null;
+            camMngr.TransformParent = this.transform;
+            camMngr.Position = this.assistPos;
+            camMngr.SetLookRotation(this.assistFwd, this.assistUp);
+            camMngr.FoV = this.camDefFoV / this.mag;
+            camMngr.NearClipPlane = this.camClip;
         }
 
         public Vector3 VectorTransform(Vector3 vec)
@@ -129,21 +130,6 @@ namespace HydroTech
             Current = null;
             FlightMainPanel.Instance.DockAssist.ResetHeight();
             if (this.CamActivate) { this.CamActivate = false; }
-        }
-        #endregion
-
-        #region Overrides
-        public override void OnStart(StartState state)
-        {
-            if (HighLogic.LoadedSceneIsFlight)
-            {
-                if (this.part.name == "HydroTech.DA.1m") { this.camCrossPos.Set(0, 0.065f, -0.75f); }
-                if (this.part.name == "HydroTech.DA.2m")
-                {
-                    this.assistPos.Set(0, -0.025f, -1.375f);
-                    this.camCrossPos.Set(0, 0.065f, -1.375f);
-                }
-            }
         }
         #endregion
     }

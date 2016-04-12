@@ -44,15 +44,5 @@ namespace HydroTech
             FlightMainPanel.Instance.DockAssist.ResetHeight();
         }
         #endregion
-
-        #region Overrides
-        public override void OnStart(StartState state)
-        {
-            if (HighLogic.LoadedSceneIsFlight && this.part.name == "HydroTech.DA.2m")
-            {
-                this.assistPos.Set(0, 0.07f, 1.375f);
-            }
-        }
-        #endregion
     }
 }

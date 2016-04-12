@@ -8,6 +8,10 @@ namespace HydroTech
 {
     public abstract class ModuleDockAssist : PartModule
     {
+        #region Static fields
+        private static readonly Color[] colours = { Color.blue, Color.green, Color.red };
+        #endregion
+
         #region KSPFields
         [KSPField(isPersistant = true, guiName = "Name", guiActive = true, guiActiveEditor = true)]
         public string partName = string.Empty;
@@ -15,6 +19,7 @@ namespace HydroTech
         [KSPField(isPersistant = true)]
         public bool renamed;
 
+        //TODO: use transforms instead of manually typing camera/target positions
         [KSPField(isPersistant = true)]
         public Vector3 assistPos = Vector3.zero;
 
@@ -50,12 +55,12 @@ namespace HydroTech
         #region Properties
         public Vector3 Dir
         {
-            get { return ReverseTransform_PartConfig(this.assistFwd); }
+            get { return ReverseTransform(this.assistFwd); }
         }
 
         public Vector3 Down
         {
-            get { return ReverseTransform_PartConfig(-this.assistUp); }
+            get { return ReverseTransform(-this.assistUp); }
         }
 
         public Vector3 Right
@@ -65,7 +70,7 @@ namespace HydroTech
 
         public Vector3 Pos
         {
-            get { return this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform_PartConfig(this.assistPos); }
+            get { return this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.assistPos); }
         }
 
         public Vector3 RelPos
@@ -133,7 +138,7 @@ namespace HydroTech
             this.hid = true;
         }
 
-        protected Vector3 ReverseTransform_PartConfig(Vector3 vec)
+        protected Vector3 ReverseTransform(Vector3 vec)
         {
             return SwitchTransformCalculator.ReverseVectorTransform(vec, this.transform.right, this.transform.up, this.transform.forward);
         }
@@ -142,7 +147,6 @@ namespace HydroTech
         {
             Type t = typeof(LineRenderer);
             Shader shader = Shader.Find("Particles/Additive");
-            Color[] colours = { Color.blue, Color.green, Color.red };
             this.lines = new GameObject(this.ModuleShort + "Assist", t, t, t).GetComponents<LineRenderer>();
 
             for (int i = 0; i < 3; i++)
@@ -183,11 +187,12 @@ namespace HydroTech
 
         public void ShowPreview()
         {
-            HydroFlightManager.Instance.CameraManager.Target = null;
-            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
-            HydroFlightManager.Instance.CameraManager.FoV = this.previewFoV;
-            HydroFlightManager.Instance.CameraManager.Position = this.previewPos;
-            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.previewFwd, this.previewUp);
+            HydroCameraManager camMngr = HydroFlightManager.Instance.CameraManager;
+            camMngr.Target = null;
+            camMngr.TransformParent = this.transform;
+            camMngr.FoV = this.previewFoV;
+            camMngr.Position = this.previewPos;
+            camMngr.SetLookRotation(this.previewFwd, this.previewUp);
         }
         #endregion
 
