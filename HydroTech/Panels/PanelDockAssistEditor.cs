@@ -114,15 +114,15 @@ namespace HydroTech.Panels
             foreach (ModuleDockAssistCam mcam in this.cams)
             {
                 DAEditorSet set = this.camSet[mcam];
-                set.renamed = mcam.ModuleRename.renamed;
-                set.name = mcam.ModuleRename.partName;
+                set.renamed = mcam.renamed;
+                set.name = mcam.partName;
                 this.camSet[mcam] = set;
             }
             foreach (ModuleDockAssistTarget mtgt in this.targets)
             {
                 DAEditorSet set = this.tgtSet[mtgt];
-                set.renamed = mtgt.ModuleRename.renamed;
-                set.name = mtgt.ModuleRename.partName;
+                set.renamed = mtgt.renamed;
+                set.name = mtgt.partName;
                 this.tgtSet[mtgt] = set;
             }
         }
@@ -197,7 +197,7 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Update Name") && !string.IsNullOrEmpty(set.name))
             {
-                mcam.ModuleRename.SetName(set.name);
+                mcam.SetName(set.name);
                 UpdateAllRenames();
             }
             this.camSet[mcam] = set;
@@ -220,7 +220,7 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Update Name") && !string.IsNullOrEmpty(set.name))
             {
-                mtgt.ModuleRename.SetName(set.name);
+                mtgt.SetName(set.name);
                 UpdateAllRenames();
             }
             this.tgtSet[mtgt] = set;

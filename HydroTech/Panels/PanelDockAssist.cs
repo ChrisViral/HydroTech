@@ -5,7 +5,6 @@ using HydroTech.Data;
 using HydroTech.Managers;
 using HydroTech.Panels.UI;
 using HydroTech.PartModules;
-using HydroTech.PartModules.Base;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -136,8 +135,8 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected IPartPreview previewPart;
-        protected IPartPreview PreviewPart
+        protected ModuleDockAssist previewPart;
+        protected ModuleDockAssist PreviewPart
         {
             get { return this.previewPart; }
             set
@@ -148,7 +147,7 @@ namespace HydroTech.Panels
                     else
                     {
                         if (this.previewPart == null && this.PreviewVessel == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
-                        HydroFlightManager.Instance.CameraManager.CamCallback = value.DoPreview;
+                        HydroFlightManager.Instance.CameraManager.CamCallback = value.ShowPreview;
                     }
                     this.previewPart = value;
                 }
@@ -334,12 +333,12 @@ namespace HydroTech.Panels
         #endregion
 
         #region Methods
-        protected Vessel GetTargetVessel(HydroPartModule mtgt)
+        protected Vessel GetTargetVessel(ModuleDockAssistTarget mtgt)
         {
             return mtgt.vessel;
         }
 
-        protected bool IsOnTargetVessel(HydroPartModule pm)
+        protected bool IsOnTargetVessel(ModuleDockAssistTarget pm)
         {
             return pm.vessel == this.targetVessel;
         }
