@@ -105,12 +105,19 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelTranslation()
         {
             this.fileName = new FileName("translation", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelTranslation>();
         }
         #endregion
 

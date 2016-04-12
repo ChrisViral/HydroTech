@@ -23,12 +23,19 @@ namespace HydroTech.Panels
         {
             get { return PanelConsts.mainThrottleTitle; }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelMainThrottle()
         {
             this.fileName = new FileName("throttle", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelMainThrottle>();
         }
         #endregion
 

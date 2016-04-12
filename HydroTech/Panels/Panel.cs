@@ -10,8 +10,6 @@ namespace HydroTech.Panels
         #region Fields
         [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "WindowPos", cmd = CMD.RECT_TOP_LEFT)]
         public Rect windowRect;
-
-        protected readonly int id = Guid.NewGuid().GetHashCode();
         #endregion
 
         #region Properties
@@ -23,12 +21,7 @@ namespace HydroTech.Panels
             set
             {
                 if (!this.Active) { return; }
-                if (value != this.panelShown)
-                {
-                    if (value) { AddPanel(); }
-                    else { RemovePanel(); }
-                    this.needSave = true;
-                }
+                if (value != this.panelShown) { this.needSave = true; }
                 this.panelShown = value;
             }
         }
@@ -37,18 +30,12 @@ namespace HydroTech.Panels
         public virtual bool Active
         {
             get { return this.active; }
-            set
-            {
-                if (this.PanelShown && value != this.active)
-                {
-                    if (value) { AddPanel(); }
-                    else { RemovePanel(); }
-                }
-                this.active = value;
-            }
+            set { this.active = value; }
         }
 
         public abstract string PanelTitle { get; }
+
+        protected abstract int ID { get; }
         #endregion
 
         #region Destructor
@@ -65,17 +52,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Methods
-        //TODO: Make this work with the AppLauncher as well
-        protected void AddPanel()
-        {
-
-        }
-
-        protected void RemovePanel()
-        {
-
-        }
-
         public void ResetHeight()
         {
             this.windowRect.height = 0;
@@ -92,8 +68,7 @@ namespace HydroTech.Panels
 
         public virtual void DrawGUI()
         {
-            GUI.skin = HighLogic.Skin;
-            Rect newWindowRect = GUILayout.Window(this.id, this.windowRect, WindowGUI, this.PanelTitle);
+            Rect newWindowRect = GUILayout.Window(this.ID, this.windowRect, WindowGUI, this.PanelTitle);
             if (newWindowRect.xMin != this.windowRect.xMin || newWindowRect.yMin != this.windowRect.yMin) { this.needSave = true; }
             this.windowRect = newWindowRect;
         }
@@ -101,9 +76,7 @@ namespace HydroTech.Panels
         public virtual void OnFlightStart()
         {
             this.Active = true;
-            bool tempPanelShown = this.PanelShown;
             Load();
-            if (this.PanelShown && !tempPanelShown) { AddPanel(); }
         }
 
         public virtual void OnGamePause()

@@ -76,7 +76,14 @@ namespace HydroTech.Panels
         {
             if (this.visible)
             {
+                GUI.skin = GUIUtils.Skin;
+
                 this.pos = GUILayout.Window(this.id, this.pos, Window, "HydroTech Editor Panel");
+
+                foreach (Panel p in this.Panels)
+                {
+                    if (p.Active) { p.DrawGUI(); }
+                }
             }
         }
         #endregion

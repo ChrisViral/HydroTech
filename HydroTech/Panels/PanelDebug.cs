@@ -4,6 +4,7 @@ using HydroTech.Autopilots;
 using HydroTech.Constants;
 using HydroTech.Managers;
 using HydroTech.Storage;
+using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech.Panels
@@ -31,12 +32,19 @@ namespace HydroTech.Panels
             get { return this.cameraMgr && this.peektop; }
             set { if (this.cameraMgr) { this.peektop = value; } }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelDebug()
         {
             this.fileName = new FileName("debug", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelDebug>();
         }
         #endregion
 

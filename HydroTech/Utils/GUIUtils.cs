@@ -41,7 +41,6 @@ namespace HydroTech.Utils
 
             //TODO: when custom settings are implemented, set the right one to start with
             Skin = kspSkin;
-            GUI.skin = Skin;
 
             WrapButton = new GUIStyle(Skin.button) { wordWrap = true };
         }

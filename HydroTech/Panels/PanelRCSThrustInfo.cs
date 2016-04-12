@@ -44,15 +44,16 @@ namespace HydroTech.Panels
                 if (this.editor)
                 {
                     if (!this.Active) { return; }
-                    if (value != this.panelShownEditor)
-                    {
-                        if (value) { AddPanel(); }
-                        else { RemovePanel(); }
-                    }
                     this.panelShownEditor = value;
                 }
                 else { base.PanelShown = value; }
             }
+        }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
         }
         #endregion
 
@@ -60,6 +61,7 @@ namespace HydroTech.Panels
         public PanelRCSThrustInfo(bool editor)
         {
             this.fileName = new FileName("rcsinfo", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelRCSThrustInfo>();
             this.editor = editor;
         }
         #endregion
@@ -69,7 +71,6 @@ namespace HydroTech.Panels
         {
             this.Active = true;
             Load();
-            AddPanel();
         }
 
         public void HideInEditor()

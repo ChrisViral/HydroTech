@@ -317,12 +317,19 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelDockAssist()
         {
             this.fileName = new FileName("dock", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelDockAssist>();
         }
         #endregion
 

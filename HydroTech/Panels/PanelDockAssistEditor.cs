@@ -45,12 +45,19 @@ namespace HydroTech.Panels
         {
             get { return this.editorHide ? PanelConsts.dockAssistEditorAidHideTitle : PanelConsts.dockAssistEditorAidTitle; }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelDockAssistEditor()
         {
             this.fileName = new FileName("dockeditor", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelDockAssistEditor>();
         }
         #endregion
 
@@ -69,7 +76,6 @@ namespace HydroTech.Panels
         {
             this.Active = true;
             Load();
-            AddPanel();
             OnEditorUpdate();
             UpdateAllRenames();
         }
