@@ -145,13 +145,12 @@ namespace HydroTech
 
         private void CreateLineRenderers()
         {
-            Type t = typeof(LineRenderer);
             Shader shader = Shader.Find("Particles/Additive");
-            this.lines = new GameObject(this.ModuleShort + "Assist", t, t, t).GetComponents<LineRenderer>();
-
+            this.lines = new LineRenderer[3];
             for (int i = 0; i < 3; i++)
             {
-                LineRenderer lr = this.lines[i];
+                LineRenderer lr = new GameObject(this.ModuleShort + "Assist" + i, typeof(LineRenderer)).GetComponent<LineRenderer>();
+                this.lines[i] = lr;
                 Color colour = colours[i];
                 lr.transform.parent = this.transform;
                 lr.useWorldSpace = false;
@@ -237,7 +236,7 @@ namespace HydroTech
 
             if (HighLogic.LoadedSceneIsEditor)
             {
-                this.directions = new [] { this.assistFwd, this.assistUp, -Vector3.Cross(this.assistFwd, this.assistUp) };
+                this.directions = new Vector3[] { this.assistFwd, this.assistUp, -Vector3.Cross(this.assistFwd, this.assistUp) };
                 CreateLineRenderers();
                 HideEditorAid();
             }
