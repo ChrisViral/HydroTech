@@ -32,11 +32,14 @@ namespace HydroTech
         public float electricityConsumption = 0.01f;
         #endregion
 
-        #region Fields
-        public int mag = 1;
-        #endregion
-
         #region Properties
+        private int mag = 1;
+        public int Mag
+        {
+            get { return this.mag; }
+            set { this.mag = value; }
+        }
+
         protected bool isOnActiveVessel;
         public bool IsOnActiveVessel
         {
@@ -75,7 +78,7 @@ namespace HydroTech
                 else if (!value)
                 {
                     HydroFlightManager.Instance.CameraManager.RetrieveLast();
-                    this.mag = 1;
+                    this.Mag = 1;
                     ActiveCam = null;
                 }
 
@@ -102,7 +105,7 @@ namespace HydroTech
             camMngr.TransformParent = this.transform;
             camMngr.Position = this.assistPos;
             camMngr.SetLookRotation(this.assistFwd, this.assistUp);
-            camMngr.FoV = this.camDefFoV / this.mag;
+            camMngr.FoV = this.camDefFoV / this.Mag;
             camMngr.NearClipPlane = this.camClip;
         }
 

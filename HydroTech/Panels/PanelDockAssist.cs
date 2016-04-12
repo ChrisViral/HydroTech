@@ -65,12 +65,12 @@ namespace HydroTech.Panels
             get
             {
                 if (Cam == null) { throw new NullReferenceException("PanelDockAssist.CamMag<get> before a camera is selected"); }
-                return Cam.mag;
+                return Cam.Mag;
             }
             set
             {
                 if (Cam == null) { throw new NullReferenceException("PanelDockAssist.CamMag<set> before a camera is selected"); }
-                Cam.mag = value;
+                Cam.Mag = value;
             }
         }
 

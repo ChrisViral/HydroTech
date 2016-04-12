@@ -213,7 +213,7 @@ namespace HydroTech
         #region Functions
         private void Update()
         {
-            if (!FlightGlobals.ready && this.visible && !this.vessel.isActiveVessel)
+            if (FlightGlobals.ready && this.visible && !this.vessel.isActiveVessel)
             {
                 this.visible = false;
             }        
@@ -258,6 +258,7 @@ namespace HydroTech
 
         protected virtual void OnDestroy()
         {
+            this.visible = false;
             GameEvents.onShowUI.Remove(ShowUI);
             GameEvents.onHideUI.Remove(HideUI);
         }

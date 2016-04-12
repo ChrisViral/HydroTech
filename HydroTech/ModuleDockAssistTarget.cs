@@ -14,7 +14,7 @@ namespace HydroTech
         #endregion
 
         #region Properties
-        protected bool isNear;
+        private bool isNear;
         public bool IsNear
         {
             get
