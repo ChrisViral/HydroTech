@@ -68,7 +68,7 @@ namespace HydroTech.Panels
 
         public virtual void DrawGUI()
         {
-            Rect newWindowRect = GUILayout.Window(this.ID, this.windowRect, WindowGUI, this.PanelTitle);
+            Rect newWindowRect = KSPUtil.ClampRectToScreen(GUILayout.Window(this.ID, this.windowRect, WindowGUI, this.PanelTitle));
             if (newWindowRect.xMin != this.windowRect.xMin || newWindowRect.yMin != this.windowRect.yMin) { this.needSave = true; }
             this.windowRect = newWindowRect;
         }
