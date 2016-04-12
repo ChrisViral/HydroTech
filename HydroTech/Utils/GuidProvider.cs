@@ -7,7 +7,7 @@ namespace HydroTech.Utils
     {
         #region Static fields
         private static readonly HashSet<int> ids = new HashSet<int>();
-        private static readonly Dictionary<Type, int> types = new Dictionary<Type, int>(11); 
+        private static readonly Dictionary<Type, int> types = new Dictionary<Type, int>(12); 
         #endregion
 
         #region Static methods

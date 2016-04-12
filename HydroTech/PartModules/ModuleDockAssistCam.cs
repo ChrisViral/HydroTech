@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace HydroTech.PartModules
 {
-    public class ModuleDockAssistCam : HydroPartModule, IPartPreview, IDAPartEditorAid
+    public class ModuleDockAssistCam : PartModule, IPartPreview, IDAPartEditorAid
     {
         #region Static properties
-        protected static ModuleDockAssistCam Current
+        private static ModuleDockAssistCam Current
         {
             get { return HydroFlightManager.Instance.DockingAutopilot.Cam; }
             set { HydroFlightManager.Instance.DockingAutopilot.Cam = value; }
@@ -29,8 +29,7 @@ namespace HydroTech.PartModules
 
         [KSPField(isPersistant = true)]
         public Vector3 camForward = Vector3.forward;
-
-        // Camera settings learned from Fixed Camera
+        
         [KSPField(isPersistant = true)]
         public Vector3 camPos = Vector3.zero;
 
@@ -187,6 +186,11 @@ namespace HydroTech.PartModules
             HydroFlightManager.Instance.CameraManager.NearClipPlane = this.camClip;
         }
 
+        private Vector3 ReverseTransform_PartConfig(Vector3 vec)
+        {
+            return SwitchTransformCalculator.ReverseVectorTransform(vec, this.transform.right, this.transform.up, this.transform.forward);
+        }
+
         public Vector3 VectorTransform(Vector3 vec)
         {
             return SwitchTransformCalculator.VectorTransform(vec, this.Right, this.Down, this.Dir);
@@ -200,72 +204,75 @@ namespace HydroTech.PartModules
         }
         #endregion
 
+        #region Functions
+        public void FixedUpdate()
+        {
+            if (!FlightGlobals.ready || !this.CamActivate) { return;}
+
+            this.part.RequestResource("ElectricCharge", 0.002 * TimeWarp.deltaTime);
+        }
+
+        public void OnDestroy()
+        {
+            if (!HighLogic.LoadedSceneIsFlight || this != Current) { return; }
+
+            Current = null;
+            FlightMainPanel.Instance.DockAssist.ResetHeight();
+            if (this.CamActivate) { this.CamActivate = false; }
+        }
+        #endregion
+
         #region Overrides
-        public override void OnUpdate()
+        public override void OnStart(StartState state)
         {
-            base.OnUpdate();
-            if (this.CamActivate) { this.part.RequestResource("ElectricCharge", 0.002 * TimeWarp.deltaTime); }
-        }
-
-        public override void OnFlightStart()
-        {
-            base.OnFlightStart();
-            if (this.part.name == "HydroTech.DA.1m") { this.camCrossPos.Set(0, 0.065f, -0.75f); }
-            if (this.part.name == "HydroTech.DA.2m")
+            if (HighLogic.LoadedSceneIsFlight)
             {
-                this.camPos.Set(0, -0.025f, -1.375f);
-                this.camCrossPos.Set(0, 0.065f, -1.375f);
+                if (this.part.name == "HydroTech.DA.1m") { this.camCrossPos.Set(0, 0.065f, -0.75f); }
+                if (this.part.name == "HydroTech.DA.2m")
+                {
+                    this.camPos.Set(0, -0.025f, -1.375f);
+                    this.camCrossPos.Set(0, 0.065f, -1.375f);
+                }
             }
-        }
-
-        public override void OnDestroy()
-        {
-            if (!HighLogic.LoadedSceneIsFlight) { return; }
-            if (this == Current)
+            else if (HighLogic.LoadedSceneIsEditor)
             {
-                Current = null;
-                FlightMainPanel.Instance.DockAssist.ResetHeight();
-                if (this.CamActivate) { this.CamActivate = false; }
+                GameObject obj = new GameObject("DockCamLine", typeof(LineRenderer));
+                this.lineDir = obj.GetComponent<LineRenderer>();
+                this.lineDir.transform.parent = this.transform;
+                this.lineDir.useWorldSpace = false;
+                this.lineDir.transform.localPosition = this.camPos;
+                this.lineDir.transform.localEulerAngles = Vector3.zero;
+                this.lineDir.material = new Material(Shader.Find("Particles/Additive"));
+                this.lineDir.SetColors(Color.blue, Color.blue);
+                this.lineDir.SetVertexCount(2);
+
+                GameObject obj2 = new GameObject("DockCamLine2", typeof(LineRenderer));
+                this.lineUp = obj2.GetComponent<LineRenderer>();
+                this.lineUp.transform.parent = this.transform;
+                this.lineUp.useWorldSpace = false;
+                this.lineUp.transform.localPosition = this.camPos;
+                this.lineUp.transform.localEulerAngles = Vector3.zero;
+                this.lineUp.material = new Material(Shader.Find("Particles/Additive"));
+                this.lineUp.SetColors(Color.green, Color.green);
+                this.lineUp.SetVertexCount(2);
+
+                GameObject obj3 = new GameObject("DockCamLine3", typeof(LineRenderer));
+                this.lineRight = obj3.GetComponent<LineRenderer>();
+                this.lineRight.transform.parent = this.transform;
+                this.lineRight.useWorldSpace = false;
+                this.lineRight.transform.localPosition = this.camPos;
+                this.lineRight.transform.localEulerAngles = Vector3.zero;
+                this.lineRight.material = new Material(Shader.Find("Particles/Additive"));
+                this.lineRight.SetColors(Color.gray, Color.gray);
+                this.lineRight.SetVertexCount(2);
+
+                HideEditorAid();
             }
         }
 
         public override string ToString()
         {
             return this.ModuleRename.renamed ? this.ModuleRename.partName : this.RelPos.ToString("#0.00");
-        }
-
-        public override void OnStart(StartState state)
-        {
-            if (!HighLogic.LoadedSceneIsEditor) { return; }
-
-            GameObject obj = new GameObject("DockCamLine");
-            this.lineDir = obj.AddComponent<LineRenderer>();
-            this.lineDir.transform.parent = this.transform;
-            this.lineDir.useWorldSpace = false;
-            this.lineDir.transform.localPosition = this.camPos;
-            this.lineDir.transform.localEulerAngles = Vector3.zero;
-            this.lineDir.material = new Material(Shader.Find("Particles/Additive"));
-            this.lineDir.SetColors(Color.blue, Color.blue);
-            this.lineDir.SetVertexCount(2);
-            GameObject obj2 = new GameObject("DockCamLine2");
-            this.lineUp = obj2.AddComponent<LineRenderer>();
-            this.lineUp.transform.parent = this.transform;
-            this.lineUp.useWorldSpace = false;
-            this.lineUp.transform.localPosition = this.camPos;
-            this.lineUp.transform.localEulerAngles = Vector3.zero;
-            this.lineUp.material = new Material(Shader.Find("Particles/Additive"));
-            this.lineUp.SetColors(Color.green, Color.green);
-            this.lineUp.SetVertexCount(2);
-            GameObject obj3 = new GameObject("DockCamLine3");
-            this.lineRight = obj3.AddComponent<LineRenderer>();
-            this.lineRight.transform.parent = this.transform;
-            this.lineRight.useWorldSpace = false;
-            this.lineRight.transform.localPosition = this.camPos;
-            this.lineRight.transform.localEulerAngles = Vector3.zero;
-            this.lineRight.material = new Material(Shader.Find("Particles/Additive"));
-            this.lineRight.SetColors(Color.gray, Color.gray);
-            this.lineRight.SetVertexCount(2);
-            HideEditorAid();
         }
         #endregion
     }
