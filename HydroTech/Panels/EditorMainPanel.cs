@@ -11,7 +11,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        private Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
+        private readonly Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
         private bool visible;
         #endregion
 

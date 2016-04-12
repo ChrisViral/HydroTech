@@ -19,7 +19,7 @@ namespace HydroTech.Managers
             private ApplicationLauncherButton button;
             private GameObject go;
             private EditorMainPanel panel;
-            private bool added, visible;
+            private bool added;
             private int enablers;
             #endregion
 
@@ -54,7 +54,6 @@ namespace HydroTech.Managers
                     Destroy(this.button);
                     Destroy(this.go);
                     this.added = false;
-                    this.visible = false;
                 }
             }
 
@@ -64,7 +63,7 @@ namespace HydroTech.Managers
             {
                 if (evnt.from == GameScenes.EDITOR)
                 {
-                    if (this.visible) { this.button.SetFalse(); }
+                    this.button.SetFalse();
                     this.button.Disable();
                 }
                 else if (evnt.to == GameScenes.EDITOR) { this.enablers = 0; }
@@ -83,7 +82,7 @@ namespace HydroTech.Managers
             {
                 if (--this.enablers == 0)
                 {
-                    if (this.visible) { this.button.SetFalse(); }
+                    this.button.SetFalse();
                     this.button.VisibleInScenes = AppScenes.NEVER;
                     HydroEditorManager.Instance.SetActive(false);
                 }
@@ -106,7 +105,6 @@ namespace HydroTech.Managers
             {
                 GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
                 GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveButton);
-                GameEvents.onVesselSwitching.Add(SwitchingVessels);
                 GameEvents.onGameSceneSwitchRequested.Add(GameSceneChanging);
             }
             #endregion
@@ -176,11 +174,6 @@ namespace HydroTech.Managers
             public bool IsActive(HydroJebCore jeb)
             {
                 return this.core == jeb;
-            }
-
-            private void SwitchingVessels(Vessel from, Vessel to)
-            {
-                SetSubscription(to.GetMasterJeb());
             }
 
             private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)

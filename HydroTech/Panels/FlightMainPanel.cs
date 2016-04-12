@@ -11,7 +11,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        private Rect pos = new Rect(Screen.width / 2, Screen.height / 2, 20, 20);
+        private readonly Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
         private bool visible, active, hid;
         #endregion
 
@@ -85,12 +85,12 @@ namespace HydroTech.Panels
                 this.RCSInfo,
                 this.Translation
             };
-
 #if DEBUG
             this.Debug = new PanelDebug();
             this.Panels.Add(this.Debug);
 #endif
 
+            this.active = true;
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
         }
