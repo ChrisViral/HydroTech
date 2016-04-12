@@ -115,12 +115,19 @@ namespace HydroTech.Panels
         {
             get { return PanelConsts.landingInfoTitle; }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelLandingInfo()
         {
             this.fileName = new FileName("landinfo", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelLandingInfo>();
         }
         #endregion
 

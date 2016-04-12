@@ -214,10 +214,63 @@ namespace HydroTech.Managers
             #endregion
         }
 
+        public class SettingsToolbar
+        {
+            #region Fields
+            private ApplicationLauncherButton button;
+            private GameObject go;
+            private SettingsPanel panel;
+            private bool added;
+            #endregion
+
+            #region Constructors
+            public SettingsToolbar()
+            {
+                GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
+                GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveButton);
+            }
+            #endregion
+
+            #region Methods
+            private void AddButton()
+            {
+                if (!this.added)
+                {
+                    this.go = new GameObject("SettingsPanel", typeof(SettingsPanel));
+                    DontDestroyOnLoad(this.go);
+                    this.panel = this.go.GetComponent<SettingsPanel>();
+                    this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
+                                  Empty, Empty, Empty, Empty, AppScenes.SPACECENTER, HTUtils.LauncherIcon);
+                    this.added = true;
+                }
+            }
+
+            private void RemoveButton()
+            {
+                if (this.added)
+                {
+                    ApplicationLauncher.Instance.RemoveModApplication(this.button);
+                    Destroy(this.button);
+                    Destroy(this.go);
+                    this.added = false;
+                }
+            }
+
+            private void Empty() { }
+
+            public void SetFalse()
+            {
+                this.button.SetFalse();
+            }
+            #endregion
+        }
+
         #region Static properties
         public static EditorToolbar Editor { get; private set; }
 
         public static FlightToolbar Flight { get; private set; }
+
+        public static SettingsToolbar Settings { get; private set; }
         #endregion
 
         #region Functions
@@ -225,6 +278,7 @@ namespace HydroTech.Managers
         {
             Editor = new EditorToolbar();
             Flight = new FlightToolbar();
+            Settings = new SettingsToolbar();
         }
         #endregion
     }

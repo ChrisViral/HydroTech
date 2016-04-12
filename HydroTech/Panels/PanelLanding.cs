@@ -222,12 +222,19 @@ namespace HydroTech.Panels
             get { return LA.Engaged; }
             set { LA.Engaged = value; }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelLanding()
         {
             this.fileName = new FileName("landing", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelLanding>();
         }
         #endregion
 

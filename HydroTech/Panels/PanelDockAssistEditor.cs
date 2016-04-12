@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HydroTech.Panels
 {
-    public class PanelDockAssistEditor : Panel, IPanelEditor
+    public class PanelDockAssistEditor : Panel
     {
         protected struct DAEditorSet
         {
@@ -25,7 +25,7 @@ namespace HydroTech.Panels
             }
         }
 
-        #region Field
+        #region Fields
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
         public bool editorHide;
 
@@ -45,12 +45,25 @@ namespace HydroTech.Panels
         {
             get { return this.editorHide ? PanelConsts.dockAssistEditorAidHideTitle : PanelConsts.dockAssistEditorAidTitle; }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
         public PanelDockAssistEditor()
         {
             this.fileName = new FileName("dockeditor", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelDockAssistEditor>();
+        }
+        #endregion
+
+        #region Method
+        public void OnEditorStart()
+        {
             this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, (AffiliationList<Part, ModuleDockAssistCam>.GetItemFunctionMulti)GetCam);
             this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunctionMulti)GetTgt);
             this.camSet = new DictionaryFromList<ModuleDockAssistCam, DAEditorSet>(this.cams, new DAEditorSet(false));
@@ -58,14 +71,11 @@ namespace HydroTech.Panels
             this.camUI = new UIMultiPageList<ModuleDockAssistCam>(this.cams, 2);
             this.tgtUI = new UIMultiPageList<ModuleDockAssistTarget>(this.targets, 2);
         }
-        #endregion
 
-        #region Method
         public void ShowInEditor()
         {
             this.Active = true;
             Load();
-            AddPanel();
             OnEditorUpdate();
             UpdateAllRenames();
         }

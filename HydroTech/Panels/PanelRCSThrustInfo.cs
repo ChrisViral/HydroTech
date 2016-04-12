@@ -7,15 +7,8 @@ using UnityEngine;
 
 namespace HydroTech.Panels
 {
-    public class PanelRCSThrustInfo : Panel, IPanelEditor
+    public class PanelRCSThrustInfo : Panel
     {
-        #region Static Properties
-        protected static RCSCalculator ActiveRCS
-        {
-            get { return HydroFlightManager.Instance.ActiveRCS; }
-        }
-        #endregion
-
         #region Fields
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
         public bool editorHide;        
@@ -26,11 +19,16 @@ namespace HydroTech.Panels
         [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "WindowPos", cmd = CMD.RECT_TOP_LEFT)]
         public Rect windowRectEditor;
 
-        protected bool editor;
-        protected bool panelShownEditor;
+        private readonly bool editor;
+        private bool panelShownEditor;
         #endregion
 
         #region Properties
+        protected RCSCalculator ActiveRCS
+        {
+            get { return this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS; }
+        }
+
         public override string PanelTitle
         {
             get { return (this.editor && this.editorHide) ? PanelConsts.rcsInfoEditorHideTitle : PanelConsts.rcsInfoTitle; }
@@ -44,22 +42,25 @@ namespace HydroTech.Panels
                 if (this.editor)
                 {
                     if (!this.Active) { return; }
-                    if (value != this.panelShownEditor)
-                    {
-                        if (value) { AddPanel(); }
-                        else { RemovePanel(); }
-                    }
                     this.panelShownEditor = value;
                 }
                 else { base.PanelShown = value; }
             }
         }
+
+        private readonly int id;
+        protected override int ID
+        {
+            get { return this.id; }
+        }
         #endregion
 
         #region Constructor
-        public PanelRCSThrustInfo()
+        public PanelRCSThrustInfo(bool editor)
         {
             this.fileName = new FileName("rcsinfo", "cfg", FileName.panelSaveFolder);
+            this.id = GuidProvider.GetGuid<PanelRCSThrustInfo>();
+            this.editor = editor;
         }
         #endregion
 
@@ -67,9 +68,7 @@ namespace HydroTech.Panels
         public void ShowInEditor()
         {
             this.Active = true;
-            this.editor = true;
             Load();
-            AddPanel();
         }
 
         public void HideInEditor()
@@ -88,7 +87,7 @@ namespace HydroTech.Panels
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if (ActiveRCS.AllRcsEnabledChanged) { ResetHeight(); }
+            if (this.ActiveRCS.AllRcsEnabledChanged) { ResetHeight(); }
         }
 
         protected override void LoadDefault()
@@ -138,27 +137,27 @@ namespace HydroTech.Panels
             if (this.showRotation)
             {
                 GUILayout.Label(string.Format("Max torque ({0}) and\nangular acceleration ({1})", UnitConsts.torque, UnitConsts.angularAcc));
-                GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.xp, ActiveRCS.maxAngularAcc.xp));
-                GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.xn, ActiveRCS.maxAngularAcc.xn));
-                GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.yp, ActiveRCS.maxAngularAcc.yp));
-                GUILayout.Label(string.Format("yaw right : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.yn, ActiveRCS.maxAngularAcc.yn));
-                GUILayout.Label(string.Format("Roll left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.zp, ActiveRCS.maxAngularAcc.zp));
-                GUILayout.Label(string.Format("Roll right : {0:#0.00} , {1:#0.00}", ActiveRCS.maxTorque.zn, ActiveRCS.maxAngularAcc.zn));
+                GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xp, this.ActiveRCS.maxAngularAcc.xp));
+                GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xn, this.ActiveRCS.maxAngularAcc.xn));
+                GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.yp, this.ActiveRCS.maxAngularAcc.yp));
+                GUILayout.Label(string.Format("yaw right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.yn, this.ActiveRCS.maxAngularAcc.yn));
+                GUILayout.Label(string.Format("Roll left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.zp, this.ActiveRCS.maxAngularAcc.zp));
+                GUILayout.Label(string.Format("Roll right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.zn, this.ActiveRCS.maxAngularAcc.zn));
             }
             else
             {
                 GUILayout.Label(string.Format("Max thrust ({0}) and\nacceleration ({1})", UnitConsts.force, UnitConsts.acceleration));
-                GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.xp, ActiveRCS.maxAcc.xp));
-                GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.xn, ActiveRCS.maxAcc.xn));
-                GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.yp, ActiveRCS.maxAcc.yp));
-                GUILayout.Label(string.Format("Translate down : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.yn, ActiveRCS.maxAcc.yn));
-                GUILayout.Label(string.Format("Translate backward : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.zp, ActiveRCS.maxAcc.zp));
-                GUILayout.Label(string.Format("Translate forward : {0:#0.00} , {1:#0.00}", ActiveRCS.maxForce.zn, ActiveRCS.maxAcc.zn));
+                GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xp, this.ActiveRCS.maxAcc.xp));
+                GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xn, this.ActiveRCS.maxAcc.xn));
+                GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.yp, this.ActiveRCS.maxAcc.yp));
+                GUILayout.Label(string.Format("Translate down : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.yn, this.ActiveRCS.maxAcc.yn));
+                GUILayout.Label(string.Format("Translate backward : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.zp, this.ActiveRCS.maxAcc.zp));
+                GUILayout.Label(string.Format("Translate forward : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.zn, this.ActiveRCS.maxAcc.zn));
             }
-            if (!this.editor && !ActiveRCS.AllRcsEnabled)
+            if (!this.editor && !this.ActiveRCS.AllRcsEnabled)
             {
                 GUILayout.Label("Some RCS thrusters are not enabled.", GUIUtils.ColouredLabel(Color.red));
-                if (GUILayout.Button("Enable all")) { ActiveRCS.EnableAllRcs(); }
+                if (GUILayout.Button("Enable all")) { this.ActiveRCS.EnableAllRcs(); }
             }
             GUI.DragWindow();
         }

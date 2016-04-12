@@ -11,8 +11,9 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        private readonly Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
+        private Rect pos, drag;
         private bool visible, active, hid;
+        private int id;
         #endregion
 
         #region Properties
@@ -60,6 +61,23 @@ namespace HydroTech.Panels
         {
             this.active = active;
         }
+
+        private void Window(int id)
+        {
+            GUI.DragWindow(this.drag);
+
+            GUILayout.BeginVertical(GUI.skin.box);
+            this.DockAssist.Active = GUILayout.Toggle(this.DockAssist.Active, "Docking Autopilot");
+            this.Landing.Active = GUILayout.Toggle(this.Landing.Active, "Landing Autopilot");
+            this.MainThrottle.Active = GUILayout.Toggle(this.MainThrottle.Active, "Main Throttle Control");
+            this.PreciseControl.Active = GUILayout.Toggle(this.PreciseControl.Active, "RCS Precise Control");
+            this.RCSInfo.Active = GUILayout.Toggle(this.RCSInfo.Active, "RCS Info");
+            this.Translation.Active = GUILayout.Toggle(this.Translation.Active, "Translation Autopilot");
+#if DEBUG
+            this.Debug.Active = GUILayout.Toggle(this.Debug.Active, "Debug");
+#endif
+            GUILayout.EndVertical();
+        }
         #endregion
 
         #region Functions
@@ -73,7 +91,7 @@ namespace HydroTech.Panels
             this.LandingInfo = new PanelLandingInfo();
             this.MainThrottle = new PanelMainThrottle();
             this.PreciseControl = new PanelPreciseControl();
-            this.RCSInfo = new PanelRCSThrustInfo();
+            this.RCSInfo = new PanelRCSThrustInfo(false);
             this.Translation = new PanelTranslation();
             this.Panels = new List<Panel>(7)
             {
@@ -90,6 +108,9 @@ namespace HydroTech.Panels
             this.Panels.Add(this.Debug);
 #endif
 
+            this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 100);
+            this.drag = new Rect(0, 0, 250, 30);
+            this.id = GuidProvider.GetGuid<FlightMainPanel>();
             this.active = true;
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
@@ -109,7 +130,14 @@ namespace HydroTech.Panels
         {
             if (this.visible && !this.hid)
             {
-                GUI.Label(this.pos, ":D", GUIUtils.Skin.label);
+                GUI.skin = GUIUtils.Skin;
+
+                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "HydroTech Flight Window", GUILayout.ExpandHeight(true)));
+
+                foreach (Panel p in this.Panels)
+                {
+                    if (p.Active) { p.DrawGUI(); }
+                }
             }
         }
         #endregion

@@ -83,6 +83,7 @@
     <Compile Include="Managers\HydroToolbarManager.cs" />
     <Compile Include="Panels\EditorMainPanel.cs" />
     <Compile Include="Panels\FlightMainPanel.cs" />
+    <Compile Include="Panels\SettingsPanel.cs" />
     <Compile Include="Storage\FileName.cs" />
     <Compile Include="Storage\HydroSLAttributes.cs" />
     <Compile Include="Storage\LoadSaveFileBasic.cs" />
@@ -93,8 +94,8 @@
     <Compile Include="Managers\HydroInputManager.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\GuidProvider.cs" />
     <Compile Include="Utils\GUIUtils.cs" />
-    <Compile Include="Panels\IPanelEditor.cs" />
     <Compile Include="Panels\Panel.cs" />
     <Compile Include="Panels\PanelDebug.cs" />
     <Compile Include="Panels\PanelDockAssist.cs" />

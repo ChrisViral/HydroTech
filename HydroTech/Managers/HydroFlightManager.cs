@@ -133,6 +133,8 @@ namespace HydroTech.Managers
 
         private void FixedUpdate()
         {
+            if (!FlightGlobals.ready) { return; }
+
             if (this.Targets.Count != 0) { this.Targets.Clear(); }
             if (this.ActiveCams.Count != 0) { this.ActiveCams.Clear(); }
             if (this.NearbyCams.Count != 0) { this.NearbyCams.Clear(); }

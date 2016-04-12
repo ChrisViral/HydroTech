@@ -11,12 +11,13 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        private readonly Rect pos = new Rect(Screen.width / 2f, Screen.height / 2f, 20, 20);
+        private Rect pos, drag;
         private bool visible;
+        private int id;
         #endregion
 
         #region Properties
-        public PanelDockAssistEditor EditorDockAssist { get; private set; }
+        public PanelDockAssistEditor DockAssist { get; private set; }
 
         public PanelRCSThrustInfo RCSInfo { get; private set; }
 
@@ -33,6 +34,16 @@ namespace HydroTech.Panels
         {
             if (this.visible) { this.visible = false; }
         }
+
+        private void Window(int id)
+        {
+            GUI.DragWindow(this.drag);
+
+            GUILayout.BeginVertical(GUI.skin.box);
+            this.DockAssist.Active = GUILayout.Toggle(this.DockAssist.Active, "Docking Cameras/Targets");
+            this.RCSInfo.Active = GUILayout.Toggle(this.RCSInfo.Active, "RCS Info");
+            GUILayout.EndVertical();
+        }
         #endregion
 
         #region Functions
@@ -41,13 +52,16 @@ namespace HydroTech.Panels
             if (Instance != null) { Destroy(this); return; }
 
             Instance = this;
-            this.EditorDockAssist = new PanelDockAssistEditor();
-            this.RCSInfo = new PanelRCSThrustInfo();
+            this.DockAssist = new PanelDockAssistEditor();
+            this.RCSInfo = new PanelRCSThrustInfo(true);
             this.Panels = new List<Panel>(2)
             {
-                this.EditorDockAssist,
+                this.DockAssist,
                 this.RCSInfo
             };
+            this.pos = new Rect(Screen.width * 0.8f, Screen.height * 0.2f, 250, 50);
+            this.drag = new Rect(0, 0, 200, 30);
+            this.id = GuidProvider.GetGuid<EditorMainPanel>();
         }
 
         private void OnDestroy()
@@ -59,7 +73,14 @@ namespace HydroTech.Panels
         {
             if (this.visible)
             {
-                GUI.Label(this.pos, ":D", GUIUtils.Skin.label);
+                GUI.skin = GUIUtils.Skin;
+
+                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "HydroTech Editor Panel", GUILayout.ExpandHeight(true)));
+                
+                foreach (Panel p in this.Panels)
+                {
+                    if (p.Active) { p.DrawGUI(); }
+                }
             }
         }
         #endregion
