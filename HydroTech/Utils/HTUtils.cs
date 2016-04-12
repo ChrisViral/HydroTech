@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace HydroTech.Utils
@@ -37,6 +38,12 @@ namespace HydroTech.Utils
         {
             get { return inactiveIcon; }
         }
+
+        private static readonly int electricChargeID;
+        public static int ElectricChargeID
+        {
+            get { return electricChargeID; }
+        }
         #endregion
 
         #region Constructor
@@ -52,6 +59,8 @@ namespace HydroTech.Utils
 
             inactiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
             inactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localInactiveIconURL)));
+
+            electricChargeID = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge").id;
         }
         #endregion
 

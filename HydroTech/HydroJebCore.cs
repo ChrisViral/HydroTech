@@ -15,10 +15,6 @@ namespace HydroTech
             Idle
         }
 
-        #region Static fields
-        private static readonly int ecID = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge").id;
-        #endregion
-
         #region KSPFields
         [KSPField]
         public float consumptionRate = 0.1f;
@@ -77,7 +73,7 @@ namespace HydroTech
         {
             if (!HighLogic.LoadedSceneIsFlight || (!this.IsOnline && this != this.vessel.GetMasterJeb()) || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
-            if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(ecID, this.consumptionRate * TimeWarp.fixedDeltaTime)) <= 0)
+            if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(HTUtils.ElectricChargeID, this.consumptionRate * TimeWarp.fixedDeltaTime)) <= 0)
             {
                 if (this.IsOnline)
                 {

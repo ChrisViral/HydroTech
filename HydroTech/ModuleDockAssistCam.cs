@@ -1,5 +1,6 @@
 ﻿using HydroTech.Managers;
 using HydroTech.Panels;
+using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech
@@ -25,6 +26,9 @@ namespace HydroTech
 
         [KSPField]
         public float camDefFoV = 60;
+
+        [KSPField]
+        public float electricityConsumption = 0.01f;
         #endregion
 
         #region Fields
@@ -115,7 +119,10 @@ namespace HydroTech
         {
             if (!FlightGlobals.ready || !this.CamActive) { return;}
 
-            this.part.RequestResource("ElectricCharge", 0.002 * TimeWarp.deltaTime);
+            if (!CheatOptions.InfiniteElectricity && this.part.RequestResource(HTUtils.ElectricChargeID, this.electricityConsumption * TimeWarp.deltaTime) <= 0)
+            {
+                this.CamActive = false;
+            }
         }
 
         protected override void OnDestroy()
