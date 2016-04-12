@@ -110,10 +110,7 @@
     <Compile Include="Panels\UI\UIMultiPageList.cs" />
     <Compile Include="Panels\UI\UISingleSelectionList.cs" />
     <Compile Include="PartModules\Base\HydroPartModule.cs" />
-    <Compile Include="PartModules\Base\HydroPartModulePanel.cs" />
-    <Compile Include="PartModules\Base\ModuleActiveIndicator.cs" />
     <Compile Include="PartModules\Base\PartModuleInterfaces.cs" />
-    <Compile Include="PartModules\ModuleActiveHydroJebIndicator.cs" />
     <Compile Include="PartModules\ModuleDockAssistCam.cs" />
     <Compile Include="PartModules\ModuleDockAssistTarget.cs" />
     <Compile Include="PartModules\ModulePartRename.cs" />

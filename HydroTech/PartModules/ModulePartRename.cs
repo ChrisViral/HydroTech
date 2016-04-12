@@ -1,106 +1,118 @@
-﻿using HydroTech.PartModules.Base;
+﻿using System.Linq;
+using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech.PartModules
 {
-    public class ModulePartRename : HydroPartModulePanel
+    public class ModulePartRename : PartModule
     {
         #region KSPFields
-        [KSPField(guiActive = false, guiName = "Name")]
-        public string nameString = string.Empty;
+        [KSPField(isPersistant = true, guiName = "Name", guiActive = true, guiActiveEditor = true)]
+        public string partName = string.Empty;
+
+        [KSPField(isPersistant = true)]
+        public bool renamed;
         #endregion
 
         #region Fields
-        protected string tempName = string.Empty;
-        #endregion
-
-        #region Properties
-        protected bool renamed;
-        public bool Renamed
-        {
-            get { return this.renamed; }
-            set
-            {
-                this.Fields["nameString"].guiActive = value;
-                this.renamed = value;
-            }
-        }
-
-        private static bool registered;
-        protected override bool Registered
-        {
-            get { return registered; }
-            set { registered = value; }
-        }
-
-        protected override string PanelTitle
-        {
-            get { return "Rename part"; }
-        }
+        private string tempName;
+        private Rect pos, drag;
+        private int id;
+        private bool visible, hid;
         #endregion
 
         #region KSPEvents
-        [KSPEvent(guiActive = true, guiName = "Rename")]
-        protected void RenameEvent()
+        [KSPEvent(guiName = "Rename", active = true, guiActive = true)]
+        public void GUIRename()
         {
-            if (!this.PanelShown) { this.PanelShown = true; }
+            if (!this.visible)
+            {
+                ModulePartRename module = this.vessel.FindPartModulesImplementing<ModulePartRename>().FirstOrDefault(m => m.visible);
+                if (module != null) { module.visible = false; }
+                this.visible = true;
+            }
         }
         #endregion
 
         #region Methods
-        public void EditorRename(bool renamed, string name)
+        public void SetName(string name)
         {
-            this.renamed = renamed;
-            this.nameString = name;
-        }
-        #endregion
-
-        #region Overrides
-        public override void OnLoad(ConfigNode node)
-        {
-            if (node.HasValue("PartNewName"))
-            {
-                this.nameString = node.GetValue("PartNewName");
-                this.tempName = this.nameString;
-                this.Renamed = true;
-            }
-            else { this.Renamed = false; }
+            this.partName = name;
+            this.renamed = true;
         }
 
-        public override void OnSave(ConfigNode node)
+        private void Window(int id)
         {
-            if (this.Renamed) { node.AddValue("PartNewName", this.nameString); }
-        }
+            GUI.DragWindow(this.drag);
 
-        protected override void WindowGUI(int id)
-        {
             GUILayout.BeginVertical();
             this.tempName = GUILayout.TextField(this.tempName);
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("OK"))
+            if (GUILayout.Button("Ok") && !string.IsNullOrEmpty(this.tempName))
             {
-                if (this.tempName != string.Empty)
-                {
-                    this.nameString = this.tempName;
-                    this.Renamed = true;
-                    this.PanelShown = false;
-                }
+                this.partName = this.tempName;
+                this.renamed = true;
+                this.visible = false;
             }
             if (GUILayout.Button("Clear"))
             {
                 this.tempName = string.Empty;
-                this.nameString = string.Empty;
-                this.Renamed = false;
-                this.PanelShown = false;
             }
             if (GUILayout.Button("Cancel"))
             {
-                this.tempName = this.nameString;
-                this.PanelShown = false;
+                this.visible = false;
             }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
-            GUI.DragWindow();
+        }
+
+        private void ShowUI()
+        {
+            this.hid = false;
+        }
+
+        private void HideUI()
+        {
+            this.hid = true;
+        }
+        #endregion
+
+        #region Functions
+        private void Update()
+        {
+            if (!FlightGlobals.ready && this.visible && !this.vessel.isActiveVessel)
+            {
+                this.visible = false;
+            }        
+        }
+
+        private void OnDestroy()
+        {
+            GameEvents.onShowUI.Remove(ShowUI);
+            GameEvents.onHideUI.Remove(HideUI);
+        }
+
+        private void OnGUI()
+        {
+            if (this.visible && !this.hid)
+            {
+                GUI.skin = GUIUtils.Skin;
+
+                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "Rename Part"));
+            }
+        }
+        #endregion
+
+        #region Overrides
+        public override void OnStart(StartState state)
+        {
+            if (!HighLogic.LoadedSceneIsFlight) { return; }
+
+            this.id = GuidProvider.GetGuid<ModulePartRename>();
+            this.pos = new Rect(Screen.width * 0.5f, Screen.height * 0.45f, 250, 100);
+            this.drag = new Rect(0, 0, 250, 30);
+            GameEvents.onShowUI.Add(ShowUI);
+            GameEvents.onHideUI.Add(HideUI);
         }
         #endregion
     }

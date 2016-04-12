@@ -114,15 +114,15 @@ namespace HydroTech.Panels
             foreach (ModuleDockAssistCam mcam in this.cams)
             {
                 DAEditorSet set = this.camSet[mcam];
-                set.renamed = mcam.ModuleRename.Renamed;
-                set.name = mcam.ModuleRename.nameString;
+                set.renamed = mcam.ModuleRename.renamed;
+                set.name = mcam.ModuleRename.partName;
                 this.camSet[mcam] = set;
             }
             foreach (ModuleDockAssistTarget mtgt in this.targets)
             {
                 DAEditorSet set = this.tgtSet[mtgt];
-                set.renamed = mtgt.ModuleRename.Renamed;
-                set.name = mtgt.ModuleRename.nameString;
+                set.renamed = mtgt.ModuleRename.renamed;
+                set.name = mtgt.ModuleRename.partName;
                 this.tgtSet[mtgt] = set;
             }
         }
@@ -192,12 +192,12 @@ namespace HydroTech.Panels
                 else { mcam.HideEditorAid(); }
             }
             GUILayout.BeginHorizontal();
-            set.renamed = GUILayout.Toggle(set.renamed, set.renamed ? string.Empty : "Rename");
+            set.renamed = GUILayout.Toggle(set.renamed, "Rename");
             if (set.renamed) { set.name = GUILayout.TextField(set.name); }
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Update Name"))
+            if (GUILayout.Button("Update Name") && !string.IsNullOrEmpty(set.name))
             {
-                mcam.ModuleRename.EditorRename(set.renamed, set.name);
+                mcam.ModuleRename.SetName(set.name);
                 UpdateAllRenames();
             }
             this.camSet[mcam] = set;
@@ -215,12 +215,12 @@ namespace HydroTech.Panels
                 else { mtgt.HideEditorAid(); }
             }
             GUILayout.BeginHorizontal();
-            set.renamed = GUILayout.Toggle(set.renamed, set.renamed ? string.Empty : "Rename");
+            set.renamed = GUILayout.Toggle(set.renamed, "Rename");
             if (set.renamed) { set.name = GUILayout.TextField(set.name); }
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Update Name"))
+            if (GUILayout.Button("Update Name") && !string.IsNullOrEmpty(set.name))
             {
-                mtgt.ModuleRename.EditorRename(set.renamed, set.name);
+                mtgt.ModuleRename.SetName(set.name);
                 UpdateAllRenames();
             }
             this.tgtSet[mtgt] = set;

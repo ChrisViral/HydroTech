@@ -147,7 +147,7 @@ namespace HydroTech.PartModules
 
         public override string ToString()
         {
-            return this.ModuleRename.Renamed ? this.ModuleRename.nameString : this.RelPos.ToString("#0.00");
+            return this.ModuleRename.renamed ? this.ModuleRename.partName : this.RelPos.ToString("#0.00");
         }
 
         public override void OnStart(StartState state)
