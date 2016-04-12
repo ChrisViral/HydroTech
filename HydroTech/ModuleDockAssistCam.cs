@@ -17,13 +17,13 @@ namespace HydroTech
         #endregion
 
         #region KSPFields
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public float camClip = 0.01f;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public Vector3 camCrossPos = Vector3.zero;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public float camDefFoV = 60;
         #endregion
 

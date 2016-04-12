@@ -21,25 +21,25 @@ namespace HydroTech
         public bool renamed;
 
         //TODO: use transforms instead of manually typing camera/target positions
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public Vector3 assistPos = Vector3.zero;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public Vector3 assistUp = Vector3.up;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public Vector3 assistFwd = Vector3.forward;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public Vector3 previewPos = Vector3.back;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public Vector3 previewUp = Vector3.up;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public Vector3 previewFwd = Vector3.forward;
 
-        [KSPField(isPersistant = true)]
+        [KSPField]
         public float previewFoV = 90;
         #endregion
 
