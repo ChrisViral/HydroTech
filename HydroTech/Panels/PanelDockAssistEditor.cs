@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HydroTech.Panels
 {
-    public class PanelDockAssistEditor : Panel, IPanelEditor
+    public class PanelDockAssistEditor : Panel
     {
         protected struct DAEditorSet
         {
