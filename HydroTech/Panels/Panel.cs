@@ -74,7 +74,7 @@ namespace HydroTech.Panels
 
         public virtual void OnFlightStart()
         {
-            this.Active = true;
+            this.Active = false;
             Load();
         }
 

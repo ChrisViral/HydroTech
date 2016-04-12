@@ -40,8 +40,8 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginVertical(GUI.skin.box);
-            this.DockAssist.Active = GUILayout.Toggle(this.DockAssist.Active, "Docking Assist Window", GUI.skin.button);
-            this.RCSInfo.Active = GUILayout.Toggle(this.RCSInfo.Active, "RCS Info Window", GUI.skin.button);
+            this.DockAssist.Active = GUILayout.Toggle(this.DockAssist.Active, "Docking Cameras/Targets");
+            this.RCSInfo.Active = GUILayout.Toggle(this.RCSInfo.Active, "RCS Info");
             GUILayout.EndVertical();
         }
         #endregion
@@ -76,7 +76,7 @@ namespace HydroTech.Panels
                 GUI.skin = GUIUtils.Skin;
 
                 this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "HydroTech Editor Panel", GUILayout.ExpandHeight(true)));
-
+                
                 foreach (Panel p in this.Panels)
                 {
                     if (p.Active) { p.DrawGUI(); }
