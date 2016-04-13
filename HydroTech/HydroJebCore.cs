@@ -70,7 +70,7 @@ namespace HydroTech
 
         private void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight || (!this.IsOnline && this != this.vessel.GetMasterJeb()) || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
+            if (!HighLogic.LoadedSceneIsFlight || !this.IsOnline && this != this.vessel.GetMasterJeb() || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
             if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(HTUtils.ElectricChargeID, this.electricityConsumption * TimeWarp.fixedDeltaTime)) <= 0)
             {

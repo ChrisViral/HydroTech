@@ -1,5 +1,4 @@
 ﻿using HydroTech.Autopilots;
-using HydroTech.Constants;
 using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
@@ -57,7 +56,7 @@ namespace HydroTech.Panels
         #region Properties
         public override string PanelTitle
         {
-            get { return PanelConsts.preciseControlTitle; }
+            get { return "Precise Control"; }
         }
 
         protected override bool Engaged
@@ -117,7 +116,7 @@ namespace HydroTech.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = PanelConsts.preciseControl;
+            this.windowRect = new Rect(349, 60, 200, 122);
         }
 
         protected override void WindowGUI(int windowId)
@@ -132,8 +131,8 @@ namespace HydroTech.Panels
                 }
                 else
                 {
-                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}{1}", AngA, UnitConsts.angularAcc));
-                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}{1}", Acc, UnitConsts.acceleration));
+                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}{1}", AngA, Constants.angularAcc));
+                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}{1}", Acc, Constants.acceleration));
                 }
                 if (GUILayout.Button("Change settings"))
                 {
@@ -173,12 +172,12 @@ namespace HydroTech.Panels
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Angular Acc");
                 this.angAText = GUILayout.TextField(this.angAText);
-                GUILayout.Label(UnitConsts.angularAcc);
+                GUILayout.Label(Constants.angularAcc);
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Acceleration");
                 this.accText = GUILayout.TextField(this.accText);
-                GUILayout.Label(UnitConsts.acceleration);
+                GUILayout.Label(Constants.acceleration);
                 GUILayout.EndHorizontal();
             }
 

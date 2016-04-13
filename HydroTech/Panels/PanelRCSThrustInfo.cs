@@ -1,5 +1,4 @@
 ﻿using HydroTech.Autopilots.Calculators;
-using HydroTech.Constants;
 using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
@@ -31,7 +30,7 @@ namespace HydroTech.Panels
 
         public override string PanelTitle
         {
-            get { return (this.editor && this.editorHide) ? PanelConsts.rcsInfoEditorHideTitle : PanelConsts.rcsInfoTitle; }
+            get { return this.editor && this.editorHide ? "RCS" : "RCS Info"; }
         }
 
         public override bool PanelShown
@@ -100,8 +99,8 @@ namespace HydroTech.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = PanelConsts.rcsInfo;
-            this.windowRectEditor = PanelConsts.rcsInfoEditor;
+            this.windowRect = new Rect(747, 80, 250, 280);
+            this.windowRectEditor = new Rect((Screen.width * 0.95f) - 250, 80, 250, 0);
         }
 
         protected override void WindowGUI(int windowId)
@@ -136,7 +135,7 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
             if (this.showRotation)
             {
-                GUILayout.Label(string.Format("Max torque ({0}) and\nangular acceleration ({1})", UnitConsts.torque, UnitConsts.angularAcc));
+                GUILayout.Label(string.Format("Max torque (rad/s²) and\nangular acceleration ({0})", Constants.angularAcc));
                 GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xp, this.ActiveRCS.maxAngularAcc.xp));
                 GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xn, this.ActiveRCS.maxAngularAcc.xn));
                 GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.yp, this.ActiveRCS.maxAngularAcc.yp));
@@ -146,7 +145,7 @@ namespace HydroTech.Panels
             }
             else
             {
-                GUILayout.Label(string.Format("Max thrust ({0}) and\nacceleration ({1})", UnitConsts.force, UnitConsts.acceleration));
+                GUILayout.Label(string.Format("Max thrust (N) and\nacceleration ({0})", Constants.acceleration));
                 GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xp, this.ActiveRCS.maxAcc.xp));
                 GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xn, this.ActiveRCS.maxAcc.xn));
                 GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.yp, this.ActiveRCS.maxAcc.yp));
@@ -166,7 +165,6 @@ namespace HydroTech.Panels
         {
             if (this.editor)
             {
-                GUI.skin = HighLogic.Skin;
                 Rect newWindowRect = GUILayout.Window(this.id, this.windowRectEditor, WindowGUI, this.PanelTitle);
                 if (newWindowRect.yMin != this.windowRectEditor.yMin || newWindowRect.yMin != this.windowRectEditor.yMin) { this.needSave = true; }
                 this.windowRectEditor = newWindowRect;

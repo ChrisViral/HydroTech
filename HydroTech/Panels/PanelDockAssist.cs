@@ -1,6 +1,5 @@
 ﻿using System;
 using HydroTech.Autopilots;
-using HydroTech.Constants;
 using HydroTech.Data;
 using HydroTech.Managers;
 using HydroTech.Panels.UI;
@@ -269,7 +268,7 @@ namespace HydroTech.Panels
         
         public override string PanelTitle
         {
-            get { return PanelConsts.dockingTitle; }
+            get { return "Docking Assistant"; }
         }
 
         protected override bool Engaged
@@ -443,7 +442,7 @@ namespace HydroTech.Panels
         #region Overrides
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = PanelConsts.docking;
+            this.windowRect = new Rect(349, 215, 200, 252);
         }
 
         protected override void MakeAPSave()
@@ -505,9 +504,9 @@ namespace HydroTech.Panels
 
         protected override void DrawSettingsUI()
         {
-            GUILayout.Label("Angular acceleration (" + UnitConsts.angularAcc + ")");
+            GUILayout.Label("Angular acceleration (" + Constants.angularAcc + ")");
             this.angularAccText = GUILayout.TextField(this.angularAccText);
-            GUILayout.Label("Acceleration (" + UnitConsts.acceleration + ")");
+            GUILayout.Label("Acceleration (" + Constants.acceleration + ")");
             this.accText = GUILayout.TextField(this.accText);
 
             if (!NullCamera)
@@ -526,7 +525,7 @@ namespace HydroTech.Panels
                         GUILayout.Label("Final approach speed");
                         GUILayout.BeginHorizontal();
                         this.fssText = GUILayout.TextField(this.fssText);
-                        GUILayout.Label(UnitConsts.speedSimple);
+                        GUILayout.Label(Constants.speedSimple);
                         GUILayout.EndHorizontal();
                         if (TargetHasJeb) { this.tempDriveTarget = GUILayout.Toggle(this.tempDriveTarget, "Rotate target"); }
                     }

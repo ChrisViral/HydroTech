@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using HydroTech.Constants;
 using UnityEngine;
 
 namespace HydroTech.Autopilots.Calculators
@@ -16,9 +15,9 @@ namespace HydroTech.Autopilots.Calculators
         }
 
         #region Constants
-        private const float radiusAltASL = AutopilotConsts.radiusAltAsl;
-        private const float radiusMin = AutopilotConsts.radiusMin;
-        private const float physicsContactDistanceAdd = AutopilotConsts.physicsContactDistanceAdd;
+        private const float radiusAltASL = 0.01f;
+        private const float radiusMin = 1;
+        private const float physicsContactDistanceAdd = 1000;
         #endregion
 
         #region Fields

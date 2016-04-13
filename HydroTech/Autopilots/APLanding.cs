@@ -1,6 +1,5 @@
 ﻿using System;
 using HydroTech.Autopilots.Calculators;
-using HydroTech.Constants;
 using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.Storage;
@@ -41,7 +40,7 @@ namespace HydroTech.Autopilots
         #region Properties
         protected override string NameString
         {
-            get { return AutopilotConsts.landingName; }
+            get { return "LandingAP"; }
         }
 
         public bool Landed
@@ -51,7 +50,7 @@ namespace HydroTech.Autopilots
 
         public bool SlopeDetection
         {
-            get { return this.AltAsl <= AutopilotConsts.startSlopeDetectionHeight; }
+            get { return this.AltAsl <= 2E5f; }
         }
 
         public float AltAsl
@@ -71,7 +70,7 @@ namespace HydroTech.Autopilots
 
         public float AltKeepTrue
         {
-            get { return this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, AutopilotConsts.finalDescentHeight); }
+            get { return this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, Constants.finalDescentHeight); }
         }
 
         public float AltKeepAsl
@@ -131,7 +130,7 @@ namespace HydroTech.Autopilots
 
         public float SafeHorizontalSpeed
         {
-            get { return this.touchdown ? AutopilotConsts.safeHorizontalSpeed : AllowedHoriSpeed(this.AltTrue); }
+            get { return this.touchdown ? Constants.safeHorizontalSpeed : AllowedHoriSpeed(this.AltTrue); }
         }
 
         protected Vector3 Up
@@ -177,7 +176,7 @@ namespace HydroTech.Autopilots
 
         #region User input vars     
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "UseEngines")]
-        public bool engines = AutopilotConsts.engine;
+        public bool engines = Constants.engine;
         public bool Engines
         {
             get { return this.engines; }
@@ -189,25 +188,25 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "PointUp")]
-        public bool vabPod = AutopilotConsts.vabPod;
+        public bool vabPod = Constants.vabPod;
 
         [HydroSLNodeInfo(name = "SETTIINGS"), HydroSLField(saveName = "BurnRetro", isTesting = true)]
-        public bool burnRetro = AutopilotConsts.burnRetro;
+        public bool burnRetro = Constants.burnRetro;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Touchdown")]
-        public bool touchdown = AutopilotConsts.touchdown;
+        public bool touchdown = Constants.touchdown;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TrueAlt")]
-        public bool useTrueAlt = AutopilotConsts.useTrueAlt;
+        public bool useTrueAlt = Constants.useTrueAlt;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TouchdownSpeed")]
-        public float safeTouchDownSpeed = AutopilotConsts.safeTouchDownSpeed;
+        public float safeTouchDownSpeed = Constants.safeTouchDownSpeed;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MaxThrottle")]
-        public float maxThrottle = AutopilotConsts.maxThrottle;
+        public float maxThrottle = Constants.maxThrottle;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Altitude")]
-        public float altKeep = AutopilotConsts.altKeep;
+        public float altKeep = Constants.altKeep;
 
         public float MaxThrottle
         {
@@ -276,13 +275,13 @@ namespace HydroTech.Autopilots
             LandingCalculator stateCal = new LandingCalculator();
             stateCal.Calculate(this.vabPod, dir, Vector3d.zero, ActiveVessel);
             stateCal.SetCtrlStateRotation(ctrlState);
-            ActiveRCS.MakeRotation(ctrlState, stateCal.Steer(AutopilotConsts.translationReadyAngleSin) ? AutopilotConsts.maxAngularAccHold : AutopilotConsts.maxAngularAccSteer);
+            ActiveRCS.MakeRotation(ctrlState, stateCal.Steer(Constants.translationReadyAngleSin) ? 5 : 20);
 
             // Kill rotation
             Vector3 angularVelocity = VectorTransform(ActiveVessel.GetComponent<Rigidbody>().angularVelocity, ActiveVessel.ReferenceTransform);
-            SetRotationRoll(ctrlState, AutopilotConsts.killRotThrustRate * angularVelocity.z);
+            SetRotationRoll(ctrlState, angularVelocity.z);
 
-            return stateCal.Steer(AutopilotConsts.translationReadyAngleSin);
+            return stateCal.Steer(Constants.translationReadyAngleSin);
         }
 
         protected void DeployLandingGears()
@@ -292,7 +291,7 @@ namespace HydroTech.Autopilots
 
         protected void CheckAltitudeAndDeployLandingGears()
         {
-            if (this.HoriSpeed < AutopilotConsts.safeHorizontalSpeed && this.AltTrue <= AutopilotConsts.deployGearHeight) { DeployLandingGears(); }
+            if (this.HoriSpeed < Constants.safeHorizontalSpeed && this.AltTrue <= 200) { DeployLandingGears(); }
         }
 
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
@@ -413,8 +412,8 @@ namespace HydroTech.Autopilots
 
         protected void DriveHorizontalDec(FlightCtrlState ctrlState)
         {
-            ctrlState.X = HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(0, this.SurfXSpeed * AutopilotConsts.maxDeceleration), -1, 1);
-            SetTranslationY(ctrlState, HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * AutopilotConsts.maxDeceleration), -1, 1));
+            ctrlState.X = HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(0, this.SurfXSpeed * 5), -1, 1);
+            SetTranslationY(ctrlState, HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * 5), -1, 1));
         }
 
         protected void DriveHorizontalBrake(FlightCtrlState ctrlState)
@@ -483,25 +482,25 @@ namespace HydroTech.Autopilots
             switch (st)
             {
                 case Status.DISENGAGED:
-                    return AutopilotConsts.disengaged;
+                    return Constants.disengaged;
                 case Status.IDLE:
-                    return AutopilotConsts.idle;
+                    return Constants.idle;
                 case Status.DECELERATE:
-                    return AutopilotConsts.decelerate;
+                    return Constants.decelerate;
                 case Status.DESCEND:
-                    return AutopilotConsts.descend;
+                    return Constants.descend;
                 case Status.VERTICAL:
-                    return AutopilotConsts.vertical;
+                    return Constants.vertical;
                 case Status.HORIZONTAL:
-                    return AutopilotConsts.horizontal;
+                    return Constants.horizontal;
                 case Status.WARP:
-                    return AutopilotConsts.stsWarp;
+                    return Constants.stsWarp;
                 case Status.AVOID:
-                    return AutopilotConsts.avoid;
+                    return Constants.avoid;
                 case Status.LANDED:
-                    return AutopilotConsts.stsLanded;
+                    return Constants.stsLanded;
                 case Status.HOVER:
-                    return AutopilotConsts.stsFloat;
+                    return Constants.stsFloat;
                 default:
                     return "NULL";
             }
@@ -511,23 +510,23 @@ namespace HydroTech.Autopilots
             switch (i)
             {
                 case Indicator.LANDED:
-                    return AutopilotConsts.wrnLanded;
+                    return Constants.wrnLanded;
                 case Indicator.WARP:
-                    return AutopilotConsts.wrnWarp;
+                    return Constants.wrnWarp;
                 case Indicator.SAFE:
-                    return AutopilotConsts.safe;
+                    return Constants.safe;
                 case Indicator.OK:
-                    return AutopilotConsts.ok;
+                    return Constants.ok;
                 case Indicator.DANGER:
-                    return AutopilotConsts.danger;
+                    return Constants.danger;
                 case Indicator.LOWTWR:
-                    return AutopilotConsts.lowtwr;
+                    return Constants.lowtwr;
                 case Indicator.OUTSYNC:
-                    return AutopilotConsts.outsync;
+                    return Constants.outsync;
                 case Indicator.FINAL:
-                    return AutopilotConsts.final;
+                    return Constants.final;
                 case Indicator.HOVER:
-                    return AutopilotConsts.wrnFloat;
+                    return Constants.wrnFloat;
                 default:
                     return "NULL";
             }
@@ -637,10 +636,10 @@ namespace HydroTech.Autopilots
                 this.indicator = Indicator.OUTSYNC;
                 this.engaged = false;
             }
-            else if (this.AltDiff < AutopilotConsts.finalDescentHeight) { this.indicator = this.touchdown ? Indicator.FINAL : Indicator.HOVER; }
+            else if (this.AltDiff < Constants.finalDescentHeight) { this.indicator = this.touchdown ? Indicator.FINAL : Indicator.HOVER; }
             else //Ready for landing
             {
-                this.cd.OnUpdate(AutopilotConsts.finalDescentHeight, this.safeTouchDownSpeed, this.GAsl, this.Twr, -this.VertSpeed, this.AltDiff);
+                this.cd.OnUpdate(Constants.finalDescentHeight, this.safeTouchDownSpeed, this.GAsl, this.Twr, -this.VertSpeed, this.AltDiff);
                 this.indicator = GetIndicator(this.cd.Indicator);
             }
 
@@ -671,14 +670,14 @@ namespace HydroTech.Autopilots
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.vabPod = AutopilotConsts.vabPod;
-            this.engines = AutopilotConsts.engine;
-            this.burnRetro = AutopilotConsts.burnRetro;
-            this.touchdown = AutopilotConsts.touchdown;
-            this.useTrueAlt = AutopilotConsts.useTrueAlt;
-            this.safeTouchDownSpeed = AutopilotConsts.safeTouchDownSpeed;
-            this.maxThrottle = AutopilotConsts.maxThrottle;
-            this.altKeep = AutopilotConsts.altKeep;
+            this.vabPod = Constants.vabPod;
+            this.engines = Constants.engine;
+            this.burnRetro = Constants.burnRetro;
+            this.touchdown = Constants.touchdown;
+            this.useTrueAlt = Constants.useTrueAlt;
+            this.safeTouchDownSpeed = Constants.safeTouchDownSpeed;
+            this.maxThrottle = Constants.maxThrottle;
+            this.altKeep = Constants.altKeep;
         }
         #endregion
     }

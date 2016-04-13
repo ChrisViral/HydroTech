@@ -54,7 +54,6 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\..\..\Games\KSP Modding\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -71,9 +70,6 @@
     <Compile Include="Autopilots\Calculators\RCSCalculator.cs" />
     <Compile Include="Autopilots\Calculators\EngineCalculator.cs" />
     <Compile Include="Autopilots\Calculators\VesselInfoCalculatorBase.cs" />
-    <Compile Include="Constants\AutopilotConsts.cs" />
-    <Compile Include="Constants\UnitConsts.cs" />
-    <Compile Include="Constants\PanelConsts.cs" />
     <Compile Include="Data\AffiliationList.cs" />
     <Compile Include="Data\DictionaryFromList.cs" />
     <Compile Include="Data\SubList.cs" />
@@ -95,6 +91,7 @@
     <Compile Include="SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroActionGroupManager.cs" />
     <Compile Include="Managers\HydroInputManager.cs" />
+    <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GuidProvider.cs" />

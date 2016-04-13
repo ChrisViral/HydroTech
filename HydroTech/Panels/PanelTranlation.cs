@@ -1,5 +1,4 @@
 ﻿using HydroTech.Autopilots;
-using HydroTech.Constants;
 using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
@@ -60,7 +59,7 @@ namespace HydroTech.Panels
         #region Properties
         public override string PanelTitle
         {
-            get { return PanelConsts.translationTitle; }
+            get { return "Auto Translation"; }
         }
 
         protected override bool Engaged
@@ -124,7 +123,7 @@ namespace HydroTech.Panels
         #region Overrides
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = PanelConsts.translation;
+            this.windowRect = new Rect(142, 475, 200, 260);
         }
 
         protected override void MakeAPSave()

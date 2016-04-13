@@ -1,7 +1,6 @@
 ﻿#if DEBUG
 using System.Collections.Generic;
 using HydroTech.Autopilots;
-using HydroTech.Constants;
 using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
@@ -24,7 +23,7 @@ namespace HydroTech.Panels
         #region Properties
         public override string PanelTitle
         {
-            get { return PanelConsts.debugTitle; }
+            get { return "Debug"; }
         }
 
         protected bool Peektop

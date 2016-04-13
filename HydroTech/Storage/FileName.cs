@@ -48,7 +48,7 @@ namespace HydroTech.Storage
             #region Overrides
             public override string ToString()
             {
-                return string.Format("{0}\\{1}", this.name, (this.subfolder == null ? string.Empty : this.subfolder.ToString()));
+                return string.Format("{0}\\{1}", this.name, this.subfolder == null ? string.Empty : this.subfolder.ToString());
             }
             #endregion
         }
@@ -111,7 +111,7 @@ namespace HydroTech.Storage
         #region Overrides
         public override string ToString()
         {
-            return string.Format("{0}\\{1}{2}.{3}", KSPUtil.ApplicationRootPath, (this.folder == null ? string.Empty : this.folder.ToString()), this.name, this.ext);
+            return string.Format("{0}\\{1}{2}.{3}", KSPUtil.ApplicationRootPath, this.folder == null ? string.Empty : this.folder.ToString(), this.name, this.ext);
         }
         #endregion
     }

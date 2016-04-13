@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using HydroTech.Constants;
 using HydroTech.Data;
 using HydroTech.Panels.UI;
 using HydroTech.Storage;
@@ -42,7 +41,7 @@ namespace HydroTech.Panels
         #region Propeties
         public override string PanelTitle
         {
-            get { return this.editorHide ? PanelConsts.dockAssistEditorAidHideTitle : PanelConsts.dockAssistEditorAidTitle; }
+            get { return this.editorHide ? "DA" : "Docking Assistants"; }
         }
 
         private readonly int id;
@@ -130,7 +129,7 @@ namespace HydroTech.Panels
         #region Overrides
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = PanelConsts.dockAssistEditor;
+            this.windowRect = new Rect((Screen.width * 0.95f) - 250, 360, 250, 0);
         }
 
         protected override void LoadDefault()

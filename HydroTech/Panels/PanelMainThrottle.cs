@@ -1,5 +1,4 @@
-﻿using HydroTech.Constants;
-using HydroTech.Storage;
+﻿using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -21,7 +20,7 @@ namespace HydroTech.Panels
 
         public override string PanelTitle
         {
-            get { return PanelConsts.mainThrottleTitle; }
+            get { return "Main Throttle Control"; }
         }
 
         private readonly int id;
@@ -60,7 +59,7 @@ namespace HydroTech.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect = PanelConsts.mainThrottle;
+            this.windowRect = new Rect(100, 240, 250, 236);
         }
 
         protected override void WindowGUI(int windowId)
