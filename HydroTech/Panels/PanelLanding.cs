@@ -12,54 +12,6 @@ namespace HydroTech.Panels
         {
             get { return HydroFlightManager.Instance.LandingAutopilot; }
         }
-
-        protected static float SafeTouchDownSpeed
-        {
-            get { return LA.safeTouchDownSpeed; }
-            set { LA.safeTouchDownSpeed = value; }
-        }
-
-        protected static bool VabPod
-        {
-            get { return LA.vabPod; }
-            set { LA.vabPod = value; }
-        }
-
-        protected static bool Engines
-        {
-            get { return LA.engines; }
-            set { LA.engines = value; }
-        }
-
-        protected static bool BurnRetro
-        {
-            get { return LA.burnRetro; }
-            set { LA.burnRetro = value; }
-        }
-
-        protected static float MaxThrottle
-        {
-            get { return LA.MaxThrottle; }
-            set { LA.MaxThrottle = value; }
-        }
-
-        protected static bool Touchdown
-        {
-            get { return LA.touchdown; }
-            set { LA.touchdown = value; }
-        }
-
-        protected static bool UseTrueAlt
-        {
-            get { return LA.useTrueAlt; }
-            set { LA.useTrueAlt = value; }
-        }
-
-        protected static float AltKeep
-        {
-            get { return LA.altKeep; }
-            set { LA.altKeep = value; }
-        }
         #endregion
 
         #region Fields
@@ -97,41 +49,7 @@ namespace HydroTech.Panels
             }
         }
 
-        public override bool PanelShown
-        {
-            set
-            {
-                if (value != this.PanelShown) { this.PanelAdvInfoShown = value; }
-                base.PanelShown = value;
-            }
-        }
-
-        protected float AllowedHori
-        {
-            get { return LA.AllowedHori; }
-        }
-
-        protected float TerrainHeight
-        {
-            get { return LA.TerrainHeight; }
-        }
-
-        protected float AltKeepTrue
-        {
-            get { return LA.AltKeepTrue; }
-        }
-
-        protected float AltKeepAsl
-        {
-            get { return LA.AltKeepASL; }
-        }
-
-        protected string HoverAtString
-        {
-            get { return string.Format("Hover at {0:#0.00}m {1}", AltKeep, UseTrueAlt ? "AGL" : "ASL"); }
-        }
-
-        protected bool TempEngines
+        private bool TempEngines
         {
             get { return this.tempEngines; }
             set
@@ -141,13 +59,22 @@ namespace HydroTech.Panels
             }
         }
 
-        protected bool TempTouchdown
+        private bool TempTouchdown
         {
             get { return this.tempTouchdown; }
             set
             {
                 if (value != this.tempTouchdown) { ResetHeight(); }
                 this.tempTouchdown = value;
+            }
+        }
+
+        public override bool PanelShown
+        {
+            set
+            {
+                if (value != this.PanelShown) { this.PanelAdvInfoShown = value; }
+                base.PanelShown = value;
             }
         }
 
@@ -159,27 +86,27 @@ namespace HydroTech.Panels
                 {
                     if (value) //Start settings
                     {
-                        this.tempBurnRetro = BurnRetro;
-                        this.TempEngines = Engines;
-                        this.TempTouchdown = Touchdown;
-                        this.tempVabPod = VabPod;
-                        this.stdsText = SafeTouchDownSpeed.ToString("#0.0");
-                        this.maxThrText = MaxThrottle.ToString("#0.0");
-                        this.tempUseTrueAlt = UseTrueAlt;
-                        this.tempAltKeep = AltKeep;
+                        this.tempBurnRetro = LA.burnRetro;
+                        this.TempEngines = LA.Engines;
+                        this.TempTouchdown = LA.touchdown;
+                        this.tempVabPod = LA.vabPod;
+                        this.stdsText = LA.safeTouchDownSpeed.ToString("#0.0");
+                        this.maxThrText = (LA.maxThrottle * 100).ToString("#0.0");
+                        this.tempUseTrueAlt = LA.useTrueAlt;
+                        this.tempAltKeep = LA.altKeep;
                         this.altKeepText = this.tempAltKeep.ToString("#0.0");
                     }
                     else //Apply settings
                     {
-                        BurnRetro = this.tempBurnRetro;
-                        Engines = this.TempEngines;
-                        Touchdown = this.TempTouchdown;
-                        VabPod = this.tempVabPod;
-                        UseTrueAlt = this.tempUseTrueAlt;
-                        AltKeep = this.tempAltKeep;
+                        LA.burnRetro = this.tempBurnRetro;
+                        LA.Engines = this.TempEngines;
+                        LA.touchdown = this.TempTouchdown;
+                        LA.vabPod = this.tempVabPod;
+                        LA.useTrueAlt = this.tempUseTrueAlt;
+                        LA.altKeep = this.tempAltKeep;
                         float tryParse;
-                        if (float.TryParse(this.stdsText, out tryParse)) { SafeTouchDownSpeed = tryParse; }
-                        if (float.TryParse(this.maxThrText, out tryParse) && tryParse > 0 && tryParse <= 100) { MaxThrottle = tryParse; }
+                        if (float.TryParse(this.stdsText, out tryParse)) { LA.safeTouchDownSpeed = tryParse; }
+                        if (float.TryParse(this.maxThrText, out tryParse) && tryParse > 0 && tryParse <= 100) { LA.maxThrottle = tryParse / 100f; }
                     }
                 }
                 base.Settings = value;
@@ -244,41 +171,41 @@ namespace HydroTech.Panels
             if (this.Settings) { DrawSettingsUI(); }
             else
             {
-                GUILayout.Label(string.Format("Pod orientation: {0}", VabPod ? "Up" : "Horizon"));
-                GUILayout.Label(string.Format("Touchdown speed: {0:#0.0}m/s", SafeTouchDownSpeed));
-                GUILayout.Label(string.Format("Use engines: {0}", Engines ? "true" : "false"));
-                if (Engines)
+                GUILayout.Label(string.Format("Pod orientation: {0}", LA.vabPod ? "Up" : "Horizon"));
+                GUILayout.Label(string.Format("Touchdown speed: {0:#0.0}m/s", LA.safeTouchDownSpeed));
+                GUILayout.Label(string.Format("Use engines: {0}", LA.Engines ? "true" : "false"));
+                if (LA.Engines)
                 {
-                    GUILayout.Label(string.Format("Max throttle: {0:#0.0}", MaxThrottle));
+                    GUILayout.Label(string.Format("Max throttle: {0:#0.0}", LA.maxThrottle * 100));
                 }
-                if (Touchdown)
+                if (LA.touchdown)
                 {
                     GUILayout.Label("Perform touchdown");
-                    if (GUILayout.Button(this.HoverAtString))
+                    if (GUILayout.Button(string.Format("Hover at {0:#0.00}m {1}", LA.altKeep, LA.useTrueAlt ? "AGL" : "ASL")))
                     {
-                        Touchdown = false;
+                        LA.touchdown = false;
                     }
                 }
                 else
                 {
-                    GUILayout.Label(this.HoverAtString);
-                    GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", this.AllowedHori));
+                    GUILayout.Label(string.Format("Hover at {0:#0.00}m {1}", LA.altKeep, LA.useTrueAlt ? "AGL" : "ASL"));
+                    GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", LA.AltKeepTrue * 0.01f));
                     if (GUILayout.Button("Switch True/ASL"))
                     {
-                        if (UseTrueAlt)
+                        if (LA.useTrueAlt)
                         {
-                            AltKeep = this.AltKeepAsl;
-                            UseTrueAlt = false;
+                            LA.altKeep = LA.AltKeepASL;
+                            LA.useTrueAlt = false;
                         }
                         else
                         {
-                            AltKeep = this.AltKeepTrue;
-                            UseTrueAlt = true;
+                            LA.altKeep = LA.AltKeepTrue;
+                            LA.useTrueAlt = true;
                         }
                     }
                     if (GUILayout.Button("Land"))
                     {
-                        Touchdown = true;
+                        LA.touchdown = true;
                         ResetHeight();
                     }
                 }
@@ -325,7 +252,7 @@ namespace HydroTech.Panels
                 {
                     if (!this.tempUseTrueAlt)
                     {
-                        this.tempAltKeep -= this.TerrainHeight;
+                        this.tempAltKeep -= LA.TerrainHeight;
                         if (this.tempAltKeep < APLanding.finalDescentHeight) { this.tempAltKeep = APLanding.finalDescentHeight; }
                         this.altKeepText = this.tempAltKeep.ToString("#0.0");
                     }
@@ -335,7 +262,7 @@ namespace HydroTech.Panels
                 {
                     if (this.tempUseTrueAlt)
                     {
-                        this.tempAltKeep += this.TerrainHeight;
+                        this.tempAltKeep += LA.TerrainHeight;
                         this.altKeepText = this.tempAltKeep.ToString("#0.0");
                     }
                     this.tempUseTrueAlt = false;
@@ -351,7 +278,7 @@ namespace HydroTech.Panels
                     if (float.TryParse(this.altKeepText, out temp) && temp >= APLanding.finalDescentHeight)
                     {
                         this.tempAltKeep = temp;
-                        float tempAltKeepAsl = this.tempAltKeep + this.TerrainHeight;
+                        float tempAltKeepAsl = this.tempAltKeep + LA.TerrainHeight;
                         GUILayout.Label(string.Format("ASL alt: {0:#0.0}m", tempAltKeepAsl));
                         GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", 0.01f * this.tempAltKeep));
                     }
@@ -362,7 +289,7 @@ namespace HydroTech.Panels
                     if (float.TryParse(this.altKeepText, out temp))
                     {
                         this.tempAltKeep = temp;
-                        float tempAltKeepTrue = Mathf.Max(this.tempAltKeep - this.TerrainHeight, APLanding.finalDescentHeight);
+                        float tempAltKeepTrue = Mathf.Max(this.tempAltKeep - LA.TerrainHeight, APLanding.finalDescentHeight);
                         GUILayout.Label(string.Format("True alt: {0:#0.0}m", tempAltKeepTrue));
                         GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", 0.01f * tempAltKeepTrue));
                     }

@@ -25,7 +25,7 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Properties
-        public bool holdOrient = true;
+        private bool holdOrient = true;
         public bool HoldOrient
         {
             get { return this.holdOrient; }
@@ -40,7 +40,7 @@ namespace HydroTech.Autopilots
             }
         }
 
-        public TranslationDirection transMode;
+        private TranslationDirection transMode;
         public TranslationDirection TransMode
         {
             get { return this.transMode; }

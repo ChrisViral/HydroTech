@@ -16,22 +16,22 @@ namespace HydroTech.Panels
 
         private static float SlopeN
         {
-            get { return LA.Slope(Direction.NORTH) * HTUtils.radToDeg; }
+            get { return LA.groundCalc.Slope(Direction.NORTH) * HTUtils.radToDeg; }
         }
 
         private static float SlopeS
         {
-            get { return LA.Slope(Direction.SOUTH) * HTUtils.radToDeg; }
+            get { return LA.groundCalc.Slope(Direction.SOUTH) * HTUtils.radToDeg; }
         }
 
         private static float SlopeW
         {
-            get { return LA.Slope(Direction.WEST) * HTUtils.radToDeg; }
+            get { return LA.groundCalc.Slope(Direction.WEST) * HTUtils.radToDeg; }
         }
 
         private static float SlopeE
         {
-            get { return LA.Slope(Direction.EAST) * HTUtils.radToDeg; }
+            get { return LA.groundCalc.Slope(Direction.EAST) * HTUtils.radToDeg; }
         }
 
         private static string MainBodyName
@@ -60,10 +60,11 @@ namespace HydroTech.Panels
         {
             get
             {
-                if (LA.SlopeDetection != this.slopeDetection)
+                bool detect = LA.AltASL <= 2E5f;
+                if (detect != this.slopeDetection)
                 {
                     ResetHeight();
-                    this.slopeDetection = LA.SlopeDetection;
+                    this.slopeDetection = detect;
                 }
                 return this.slopeDetection;
             }
@@ -110,8 +111,8 @@ namespace HydroTech.Panels
             GUILayout.Label(string.Format("RCS TWR: {0:#0.00}m/s²", LA.TwrRCS), TwrLabelStyle);
             GUILayout.Label(string.Format("Engine TWR: {0:#0.00}m/s²", LA.TwrEng), TwrLabelStyle);
             GUILayout.Label(string.Format("Altitude (AGL): {0:#0.00}m", LA.AltTrue));
-            GUILayout.Label(string.Format("Vertical speed: {0:#0.00}m/s", LA.VertSpeed));
-            GUILayout.Label(string.Format("Horizontal speed: {0:#0.00}m/s", LA.HorSpeed));
+            GUILayout.Label(string.Format("Vertical speed: {0:#0.00}m/s", FlightGlobals.ActiveVessel.verticalSpeed));
+            GUILayout.Label(string.Format("Horizontal speed: {0:#0.00}m/s", FlightGlobals.ActiveVessel.horizontalSrfSpeed));
             if (!this.SlopeDetection)
             {
                 GUILayout.BeginHorizontal();
@@ -119,7 +120,7 @@ namespace HydroTech.Panels
                 GUILayout.Label("out of range", GUIUtils.ColouredLabel(Color.red));
                 GUILayout.EndHorizontal();
             }
-            else if (!LA.Terrain)
+            else if (!LA.groundCalc.terrain)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Slope detection: ");
@@ -136,7 +137,7 @@ namespace HydroTech.Panels
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 TripleLabel(string.Format("W {0:#0.0}°", SlopeW));
-                TripleLabel(string.Format("({0:#0}m)", LA.DetectRadius));
+                TripleLabel(string.Format("({0:#0}m)", LA.groundCalc.Radius));
                 TripleLabel(string.Format("E {0:#0.0}°", SlopeE));
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.Utils;
 using UnityEngine;
-using Direction = HydroTech.Autopilots.Calculators.GroundContactCalculator.Direction;
 
 namespace HydroTech.Autopilots
 {
@@ -124,7 +124,7 @@ namespace HydroTech.Autopilots
         private Vector3 surfUpNormal;
         private Status status = Status.DISENGAGED;
         private Indicator indicator = Indicator.SAFE;
-        private readonly GroundContactCalculator groundCalc = new GroundContactCalculator();
+        public readonly GroundContactCalculator groundCalc = new GroundContactCalculator();
         private readonly DescentCalculator desCalc = new DescentCalculator();
         #endregion
 
@@ -149,17 +149,6 @@ namespace HydroTech.Autopilots
         public float TWR
         {
             get { return this.engines ? this.TwrRCS + this.TwrEng : this.TwrRCS; }
-        }
-
-        public float MaxThrottle
-        {
-            get { return this.maxThrottle * 100; }
-            set { this.maxThrottle = value / 100; }
-        }
-
-        public bool SlopeDetection
-        {
-            get { return this.AltASL <= 2E5f; }
         }
 
         public float AltASL
@@ -187,59 +176,14 @@ namespace HydroTech.Autopilots
             get { return this.useTrueAlt ? this.altKeep + this.TerrainHeight : this.altKeep; }
         }
 
-        public float AltDiff
+        private float AltDiff
         {
             get { return this.touchdown ? this.AltTrue : this.AltTrue - this.AltKeepTrue; }
-        }
-
-        private float VesselHeight
-        {
-            get
-            {
-                float height = 0;
-                foreach (Part p in ActiveVessel.parts)
-                {
-                    Vector3 r = p.WCoM - ActiveVessel.CoM;
-                    float h = -Vector3.Dot(r, this.Up);
-                    height = Mathf.Max(height, h);
-                }
-                return height;
-            }
-        }
-
-        public bool Terrain
-        {
-            get { return this.groundCalc.terrain; }
-        }
-
-        public float DetectRadius
-        {
-            get { return this.groundCalc.Radius; }
-        }
-
-        public float Slope(Direction dir)
-        {
-            return this.groundCalc.Slope(dir);
-        }
-
-        public float VertSpeed
-        {
-            get { return (float)ActiveVessel.verticalSpeed; }
-        }
-
-        public float HorSpeed
-        {
-            get { return (float)ActiveVessel.horizontalSrfSpeed; }
         }
 
         private float SurfYSpeed
         {
             get { return this.vabPod ? SurfVelVessel.y : SurfVelVessel.z; }
-        }
-
-        public float AllowedHori
-        {
-            get { return 0.01f * this.AltKeepTrue; }
         }
 
         private float SafeHorizontalSpeed
@@ -300,7 +244,7 @@ namespace HydroTech.Autopilots
 
         private void CheckAltitudeAndDeployLandingGears()
         {
-            if (this.HorSpeed < 0.1f && this.AltTrue <= 200) { HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.Gear, true); }
+            if (ActiveVessel.horizontalSrfSpeed < 0.1 && this.AltTrue <= 200) { HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.Gear, true); }
         }
 
         private void DriveHorizontalDec(FlightCtrlState ctrlState)
@@ -318,12 +262,12 @@ namespace HydroTech.Autopilots
         private void DriveFinalDescent(FlightCtrlState ctrlState)
         {
             DriveHorizontalDec(ctrlState);
-            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + ((this.safeTouchDownSpeed + this.VertSpeed) / this.TWR), -1, 0));
+            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + ((this.safeTouchDownSpeed + (float)ActiveVessel.verticalSpeed) / this.TWR), -1, 0));
         }
 
         private void DriveAvoidContact(FlightCtrlState ctrlState)
         {
-            if (this.VertSpeed < 0) { SetTranslationZ(ctrlState, -1); }
+            if (ActiveVessel.verticalSpeed < 0) { SetTranslationZ(ctrlState, -1); }
             else
             {
                 SetTranslationZ(ctrlState, -this.hoverThrustRate);
@@ -333,9 +277,9 @@ namespace HydroTech.Autopilots
 
         private void DriveHoverManeuver(FlightCtrlState ctrlState)
         {
-            float modifier = Mathf.Max(this.AltDiff, -10) + this.VertSpeed;
+            float modifier = Mathf.Max(this.AltDiff, -10) + (float)ActiveVessel.verticalSpeed;
             SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + (modifier / this.TWR), -1, 0));
-            if (this.HorSpeed > this.SafeHorizontalSpeed) { DriveHorizontalDec(ctrlState); }
+            if ((float)ActiveVessel.horizontalSrfSpeed > this.SafeHorizontalSpeed) { DriveHorizontalDec(ctrlState); }
         }
 
         private void SetTranslationY(FlightCtrlState ctrlState, float y)
@@ -378,7 +322,7 @@ namespace HydroTech.Autopilots
             this.surfUpNormal = (coM - MainBody.position).normalized;
             this.g = (float)FlightGlobals.getGeeForceAtPosition(coM).magnitude;
             this.GeeASL = (float)FlightGlobals.getGeeForceAtPosition(MainBody.position + ((Vector3d)this.surfUpNormal * MainBody.Radius)).magnitude;
-            this.groundCalc.OnUpdate(ActiveVessel, this.VesselHeight, this.SlopeDetection);
+            this.groundCalc.OnUpdate(ActiveVessel, ActiveVessel.parts.Select(p => -Vector3.Dot(p.WCoM - ActiveVessel.CoM, this.Up)).Max(), this.AltASL <= 2E5f);
 
             //Get vessel TWR
             this.TwrRCS = this.vabPod ? HydroFlightManager.Instance.ActiveRCS.maxAcc.zn : HydroFlightManager.Instance.ActiveRCS.maxAcc.yp;
@@ -402,7 +346,7 @@ namespace HydroTech.Autopilots
             else if (this.AltDiff < finalDescentHeight) { this.indicator = this.touchdown ? Indicator.FINAL : Indicator.HOVER; }
             else //Ready for landing
             {
-                this.desCalc.OnUpdate(finalDescentHeight, this.safeTouchDownSpeed, this.GeeASL, this.TWR, -this.VertSpeed, this.AltDiff);
+                this.desCalc.OnUpdate(finalDescentHeight, this.safeTouchDownSpeed, this.GeeASL, this.TWR, -(float)ActiveVessel.verticalSpeed, this.AltDiff);
                 this.indicator = (Indicator)this.desCalc.Indicator;
             }
 
@@ -414,18 +358,18 @@ namespace HydroTech.Autopilots
                 else if (this.indicator == Indicator.HOVER) { this.status = Status.HOVER; }
                 else if (this.indicator == Indicator.FINAL)
                 {
-                    this.status = this.HorSpeed < this.SafeHorizontalSpeed ? Status.DESCEND : Status.AVOID;
+                    this.status = (float)ActiveVessel.horizontalSrfSpeed < this.SafeHorizontalSpeed ? Status.DESCEND : Status.AVOID;
                 }
                 else if (this.desCalc.Behaviour == DescentCalculator.DescentBehaviour.IDLE)
                 {
-                    if (this.HorSpeed > 0.05f * this.AltTrue) { this.status = Status.HORIZONTAL; }
-                    else if (this.HorSpeed < this.SafeHorizontalSpeed) { this.status = Status.IDLE; }
+                    if (ActiveVessel.horizontalSrfSpeed > 0.05 * this.AltTrue) { this.status = Status.HORIZONTAL; }
+                    else if ((float)ActiveVessel.horizontalSrfSpeed < this.SafeHorizontalSpeed) { this.status = Status.IDLE; }
                     else { this.status = Status.DECELERATE; }
                 }
                 else if (this.desCalc.Behaviour == DescentCalculator.DescentBehaviour.BRAKE) { this.status = Status.VERTICAL; }
                 else // CalculatorDescent.DescentBehaviour.NORMAL
                 {
-                    this.status = this.HorSpeed > 0.05f * this.AltTrue ? Status.HORIZONTAL : Status.DECELERATE;
+                    this.status = (float)ActiveVessel.horizontalSrfSpeed > 0.05 * this.AltTrue ? Status.HORIZONTAL : Status.DECELERATE;
                 }
             }
         }
