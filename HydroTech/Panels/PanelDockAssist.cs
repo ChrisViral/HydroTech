@@ -504,9 +504,9 @@ namespace HydroTech.Panels
 
         protected override void DrawSettingsUI()
         {
-            GUILayout.Label("Angular acceleration (" + Constants.angularAcc + ")");
+            GUILayout.Label("Angular acceleration (" + HTUtils.angularAcc + ")");
             this.angularAccText = GUILayout.TextField(this.angularAccText);
-            GUILayout.Label("Acceleration (" + Constants.acceleration + ")");
+            GUILayout.Label("Acceleration (" + HTUtils.acceleration + ")");
             this.accText = GUILayout.TextField(this.accText);
 
             if (!NullCamera)
@@ -525,7 +525,7 @@ namespace HydroTech.Panels
                         GUILayout.Label("Final approach speed");
                         GUILayout.BeginHorizontal();
                         this.fssText = GUILayout.TextField(this.fssText);
-                        GUILayout.Label(Constants.speedSimple);
+                        GUILayout.Label(HTUtils.speedSimple);
                         GUILayout.EndHorizontal();
                         if (TargetHasJeb) { this.tempDriveTarget = GUILayout.Toggle(this.tempDriveTarget, "Rotate target"); }
                     }

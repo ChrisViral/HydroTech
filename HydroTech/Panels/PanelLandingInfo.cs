@@ -148,12 +148,12 @@ namespace HydroTech.Panels
         protected override void WindowGUI(int windowId)
         {
             GUILayout.Label("Orbiting body: " + this.MainBodyName);
-            GUILayout.Label(string.Format("Surface g: {0:#0.00}{1}", this.GeeASL, Constants.acceleration));
-            GUILayout.Label(string.Format("RCS TWR: {0:#0.00}{1}", this.TwrRCS, Constants.acceleration), this.TwrLabelStyle);
-            GUILayout.Label(string.Format("Engine TWR: {0:#0.00}{1}", this.TwrEng, Constants.acceleration), this.TwrLabelStyle);
-            GUILayout.Label(string.Format("Altitude (AGL): {0:#0.00}{1}", this.AltTrue, Constants.length));
-            GUILayout.Label(string.Format("Vertical speed: {0:#0.00}{1}", this.VertSpeed, Constants.speedSimple));
-            GUILayout.Label(string.Format("Horizontal speed: {0:#0.00}{1}", this.HorSpeed, Constants.speedSimple));
+            GUILayout.Label(string.Format("Surface g: {0:#0.00}{1}", this.GeeASL, HTUtils.acceleration));
+            GUILayout.Label(string.Format("RCS TWR: {0:#0.00}{1}", this.TwrRCS, HTUtils.acceleration), this.TwrLabelStyle);
+            GUILayout.Label(string.Format("Engine TWR: {0:#0.00}{1}", this.TwrEng, HTUtils.acceleration), this.TwrLabelStyle);
+            GUILayout.Label(string.Format("Altitude (AGL): {0:#0.00}{1}", this.AltTrue, HTUtils.length));
+            GUILayout.Label(string.Format("Vertical speed: {0:#0.00}{1}", this.VertSpeed, HTUtils.speedSimple));
+            GUILayout.Label(string.Format("Horizontal speed: {0:#0.00}{1}", this.HorSpeed, HTUtils.speedSimple));
             if (!this.SlopeDetection)
             {
                 GUILayout.BeginHorizontal();
@@ -178,7 +178,7 @@ namespace HydroTech.Panels
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 TripleLabel(string.Format("W {0:#0.0}°", this.SlopeW));
-                TripleLabel(string.Format("({0:#0}{1})", this.DetectRadius, Constants.length));
+                TripleLabel(string.Format("({0:#0}{1})", this.DetectRadius, HTUtils.length));
                 TripleLabel(string.Format("E {0:#0.0}°", this.SlopeE));
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();

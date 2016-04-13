@@ -10,12 +10,12 @@ namespace HydroTech.Autopilots
     {
         public enum TransDir
         {
+            FORWARD,
+            BACKWARD,
             RIGHT,
             LEFT,
             DOWN,
             UP,
-            FORWARD,
-            BACKWARD,
             ADVANCED
         }
 
@@ -33,16 +33,16 @@ namespace HydroTech.Autopilots
 
         #region User input vars
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
-        public bool mainThrottleRespond = Constants.mainThrottleRespond;
+        public bool mainThrottleRespond = HTUtils.mainThrottleRespond;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
-        public float thrustRate = Constants.thrustRate;
+        public float thrustRate = HTUtils.thrustRate;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
-        public Vector3 thrustVector = Constants.thrustVector;
+        public Vector3 thrustVector = Vector3.up;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
-        public bool holdOrient = Constants.holdOrient;
+        public bool holdOrient = HTUtils.holdOrient;
         public bool HoldOrient
         {
             get { return this.holdOrient; }
@@ -58,7 +58,7 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TransMode")]
-        public TransDir transMode = Constants.transMode;
+        public TransDir transMode;
         public TransDir TransMode
         {
             get { return this.transMode; }
@@ -151,10 +151,10 @@ namespace HydroTech.Autopilots
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.HoldOrient = Constants.holdOrient;
-            this.mainThrottleRespond = Constants.mainThrottleRespond;
-            this.thrustRate = Constants.thrustRate;
-            this.TransMode = Constants.transMode;
+            this.HoldOrient = HTUtils.holdOrient;
+            this.mainThrottleRespond = HTUtils.mainThrottleRespond;
+            this.thrustRate = HTUtils.thrustRate;
+            this.TransMode = TransDir.FORWARD;
         }
         #endregion
     }

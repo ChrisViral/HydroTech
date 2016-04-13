@@ -91,7 +91,6 @@
     <Compile Include="SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroActionGroupManager.cs" />
     <Compile Include="Managers\HydroInputManager.cs" />
-    <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GuidProvider.cs" />

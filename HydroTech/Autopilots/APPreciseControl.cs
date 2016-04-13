@@ -14,19 +14,19 @@ namespace HydroTech.Autopilots
 
         #region User input vars     
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "byRate")]
-        public bool byRate = Constants.byRate;
+        public bool byRate = HTUtils.byRate;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "RotationRate")]
-        public float rotationRate = Constants.rotationRate;
+        public float rotationRate = HTUtils.rotationRate;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TranslationRate")]
-        public float translationRate = Constants.translationRate;
+        public float translationRate = HTUtils.translationRate;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AngularAcc")]
-        public float angularAcc = Constants.pcAngularAcc;
+        public float angularAcc = HTUtils.pcAngularAcc;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Acc")]
-        public float acc = Constants.pcAcc;
+        public float acc = HTUtils.pcAcc;
         #endregion
 
         #region Constructor
@@ -61,11 +61,11 @@ namespace HydroTech.Autopilots
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.byRate = Constants.byRate;
-            this.rotationRate = Constants.rotationRate;
-            this.translationRate = Constants.translationRate;
-            this.angularAcc = Constants.pcAngularAcc;
-            this.acc = Constants.pcAcc;
+            this.byRate = HTUtils.byRate;
+            this.rotationRate = HTUtils.rotationRate;
+            this.translationRate = HTUtils.translationRate;
+            this.angularAcc = HTUtils.pcAngularAcc;
+            this.acc = HTUtils.pcAcc;
         }
         #endregion
     }

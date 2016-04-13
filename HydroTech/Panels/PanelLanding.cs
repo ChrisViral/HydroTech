@@ -144,7 +144,7 @@ namespace HydroTech.Panels
 
         protected string HoverAtString
         {
-            get { return string.Format("Hover at {0:#0.00}{1} {2}", AltKeep, Constants.length, UseTrueAlt ? "AGL" : "ASL"); }
+            get { return string.Format("Hover at {0:#0.00}{1} {2}", AltKeep, HTUtils.length, UseTrueAlt ? "AGL" : "ASL"); }
         }
 
         protected bool TempEngines
@@ -267,7 +267,7 @@ namespace HydroTech.Panels
             else
             {
                 GUILayout.Label("Pod orientation: " + (VabPod ? "Up" : "Horizon"));
-                GUILayout.Label(string.Format("Touchdown speed: {0:#0.0}{1}", SafeTouchDownSpeed, Constants.speedSimple));
+                GUILayout.Label(string.Format("Touchdown speed: {0:#0.0}{1}", SafeTouchDownSpeed, HTUtils.speedSimple));
                 GUILayout.Label("Use engines: " + (Engines ? "true" : "false"));
                 if (Engines)
                 {
@@ -284,7 +284,7 @@ namespace HydroTech.Panels
                 else
                 {
                     GUILayout.Label(this.HoverAtString);
-                    GUILayout.Label("Max allowed horizontal speed: " + this.AllowedHori.ToString("#0.0") + Constants.speedSimple);
+                    GUILayout.Label("Max allowed horizontal speed: " + this.AllowedHori.ToString("#0.0") + HTUtils.speedSimple);
                     if (GUILayout.Button("Switch True/ASL"))
                     {
                         if (UseTrueAlt)
@@ -329,7 +329,7 @@ namespace HydroTech.Panels
             GUILayout.BeginHorizontal();
             GUILayout.Label("Touchdown speed");
             this.stdsText = GUILayout.TextField(this.stdsText);
-            GUILayout.Label(Constants.speedSimple);
+            GUILayout.Label(HTUtils.speedSimple);
             GUILayout.EndHorizontal();
             this.TempEngines = GUILayout.Toggle(this.TempEngines, "Use engines");
             if (this.TempEngines)
@@ -348,7 +348,7 @@ namespace HydroTech.Panels
                     if (!this.tempUseTrueAlt)
                     {
                         this.tempAltKeep -= this.TerrainHeight;
-                        if (this.tempAltKeep < Constants.finalDescentHeight) { this.tempAltKeep = Constants.finalDescentHeight; }
+                        if (this.tempAltKeep < HTUtils.finalDescentHeight) { this.tempAltKeep = HTUtils.finalDescentHeight; }
                         this.altKeepText = this.tempAltKeep.ToString("#0.0");
                     }
                     this.tempUseTrueAlt = true;
@@ -365,17 +365,17 @@ namespace HydroTech.Panels
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 this.altKeepText = GUILayout.TextField(this.altKeepText);
-                GUILayout.Label(Constants.length);
+                GUILayout.Label(HTUtils.length);
                 GUILayout.EndHorizontal();
                 float temp;
                 if (this.tempUseTrueAlt)
                 {
-                    if (float.TryParse(this.altKeepText, out temp) && temp >= Constants.finalDescentHeight)
+                    if (float.TryParse(this.altKeepText, out temp) && temp >= HTUtils.finalDescentHeight)
                     {
                         this.tempAltKeep = temp;
                         float tempAltKeepAsl = this.tempAltKeep + this.TerrainHeight;
-                        GUILayout.Label(string.Format("ASL alt: {0:#0.0}{1}", tempAltKeepAsl, Constants.length));
-                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}{1}", LA.AllowedHoriSpeed(this.tempAltKeep), Constants.speedSimple));
+                        GUILayout.Label(string.Format("ASL alt: {0:#0.0}{1}", tempAltKeepAsl, HTUtils.length));
+                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}{1}", LA.AllowedHoriSpeed(this.tempAltKeep), HTUtils.speedSimple));
                     }
                     else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }
@@ -384,9 +384,9 @@ namespace HydroTech.Panels
                     if (float.TryParse(this.altKeepText, out temp))
                     {
                         this.tempAltKeep = temp;
-                        float tempAltKeepTrue = Mathf.Max(this.tempAltKeep - this.TerrainHeight, Constants.finalDescentHeight);
-                        GUILayout.Label(string.Format("True alt: {0:#0.0}{1}", tempAltKeepTrue, Constants.length));
-                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}{1}", LA.AllowedHoriSpeed(tempAltKeepTrue), Constants.speedSimple));
+                        float tempAltKeepTrue = Mathf.Max(this.tempAltKeep - this.TerrainHeight, HTUtils.finalDescentHeight);
+                        GUILayout.Label(string.Format("True alt: {0:#0.0}{1}", tempAltKeepTrue, HTUtils.length));
+                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}{1}", LA.AllowedHoriSpeed(tempAltKeepTrue), HTUtils.speedSimple));
                     }
                     else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }

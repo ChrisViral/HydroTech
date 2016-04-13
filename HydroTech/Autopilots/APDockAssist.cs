@@ -49,7 +49,7 @@ namespace HydroTech.Autopilots
 
         #region User input vars
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ShowLine")]
-        public bool showLine = Constants.showLine;
+        public bool showLine = HTUtils.showLine;
         public bool ShowLine
         {
             get { return !this.NullCamera && !this.NullTarget && this.showLine; }
@@ -57,7 +57,7 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AutoOrient")]
-        public bool autoOrient = Constants.autoOrient;
+        public bool autoOrient = HTUtils.autoOrient;
         public bool AutoOrient
         {
             get { return !this.NullCamera && !this.NullTarget && this.autoOrient; }
@@ -65,7 +65,7 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "KillRelV")]
-        public bool killRelV = Constants.killRelV;
+        public bool killRelV = HTUtils.killRelV;
         public bool KillRelV
         {
             get { return !this.NullCamera && !this.NullTarget && this.killRelV; }
@@ -73,7 +73,7 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "CamView")]
-        public bool camView = Constants.camView;
+        public bool camView = HTUtils.camView;
         public bool CamView
         {
             get { return !this.NullCamera && this.camView; }
@@ -85,7 +85,7 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Manual")]
-        public bool manual = Constants.manual;
+        public bool manual = HTUtils.manual;
         public bool Manual
         {
             get { return this.NullCamera || this.NullTarget || this.manual; }
@@ -104,7 +104,7 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "DriveTarget")]
-        public bool driveTarget = Constants.driveTarget;
+        public bool driveTarget = HTUtils.driveTarget;
         public bool DriveTarget
         {
             get { return !this.Manual && this.TargetHasJeb && this.driveTarget; }
@@ -122,13 +122,13 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AngularAcc")]
-        public float angularAcc = Constants.dockingAngularAcc;
+        public float angularAcc = HTUtils.dockingAngularAcc;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Acc")]
-        public float acc = Constants.dockingAcc;
+        public float acc = HTUtils.dockingAcc;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "FinalSpeed")]
-        public float finalStageSpeed = Constants.finalStageSpeed;
+        public float finalStageSpeed = HTUtils.finalStageSpeed;
 
         protected ModuleDockAssistCam cam;
         public ModuleDockAssistCam Cam
@@ -243,9 +243,9 @@ namespace HydroTech.Autopilots
         protected virtual void DriveKillRelV(FlightCtrlState ctrlState)
         {
             Vector3 relVCam = this.RelV;
-            ctrlState.X = -relVCam.x / Constants.vel0;
-            ctrlState.Y = -relVCam.y / Constants.vel0;
-            ctrlState.Z = -relVCam.z / Constants.vel0;
+            ctrlState.X = -relVCam.x / HTUtils.vel0;
+            ctrlState.Y = -relVCam.y / HTUtils.vel0;
+            ctrlState.Z = -relVCam.z / HTUtils.vel0;
             Vector3 translationRate = new Vector3(ActiveRCS.GetThrustRateFromAcc6(ctrlState.X >= 0 ? 0 : 1, this.acc), ActiveRCS.GetThrustRateFromAcc6(ctrlState.Y >= 0 ? 2 : 3, this.acc), ActiveRCS.GetThrustRateFromAcc6(ctrlState.Z >= 0 ? 4 : 5, this.acc));
             ctrlState.X /= translationRate.x;
             ctrlState.Y /= translationRate.y;
@@ -257,11 +257,11 @@ namespace HydroTech.Autopilots
 
         protected virtual void DriveFinalStage(FlightCtrlState ctrlState, Vector3 relPTarget, Vector3 relVCam)
         {
-            if (relVCam.z > Constants.stopSpeed || relVCam.z < -this.finalStageSpeed * 1.1f) { DriveKillRelV(ctrlState); }
+            if (relVCam.z > HTUtils.stopSpeed || relVCam.z < -this.finalStageSpeed * 1.1f) { DriveKillRelV(ctrlState); }
             else
             {
-                ctrlState.X = -relPTarget.x / Constants.finalStageErr;
-                ctrlState.Y = -relPTarget.y / Constants.finalStageErr;
+                ctrlState.X = -relPTarget.x / HTUtils.finalStageErr;
+                ctrlState.Y = -relPTarget.y / HTUtils.finalStageErr;
                 if (relVCam.x * relPTarget.x < 0) { ctrlState.X /= 2; }
                 if (relVCam.y * relPTarget.y < 0) { ctrlState.Y /= 2; }
                 if (relVCam.z < -this.finalStageSpeed) { ctrlState.Z = 0; }
@@ -284,7 +284,7 @@ namespace HydroTech.Autopilots
                 Vector2 relPTargetXy = new Vector2(stateCal.x, stateCal.y);
                 Vector3 relVCam = this.RelV;
                 Vector2 relVCamXy = new Vector2(relVCam.x, relVCam.y);
-                if (relPTargetXy.magnitude < Constants.finalStageErr && stateCal.z < Constants.finalStagePos.z + Constants.finalStageErr && stateCal.z > 0) { DriveFinalStage(ctrlState, relPTarget, relVCam); }
+                if (relPTargetXy.magnitude < HTUtils.finalStageErr && stateCal.z < HTUtils.finalStagePos.z + HTUtils.finalStageErr && stateCal.z > 0) { DriveFinalStage(ctrlState, relPTarget, relVCam); }
                 else if (relVCam.magnitude > 0.7f) { DriveKillRelV(ctrlState); }
                 else //< MaxSpeed
                 {
@@ -292,17 +292,17 @@ namespace HydroTech.Autopilots
                     {
                         if (relPTargetXy.magnitude < 20)
                         {
-                            if (Mathf.Abs(relVCam.z) > Constants.stopSpeed) //Still moving in Z
+                            if (Mathf.Abs(relVCam.z) > HTUtils.stopSpeed) //Still moving in Z
                             {
                                 DriveKillRelV(ctrlState);
                             }
                             else
                             {
-                                if (Vector3.Dot(relPTargetXy.normalized, relVCamXy.normalized) < 0.95f /*18.19°*/ && relVCamXy.magnitude > Constants.stopSpeed) //Moving inwards
+                                if (Vector3.Dot(relPTargetXy.normalized, relVCamXy.normalized) < 0.95f /*18.19°*/ && relVCamXy.magnitude > HTUtils.stopSpeed) //Moving inwards
                                 {
                                     DriveKillRelV(ctrlState);
                                 }
-                                else if (relVCamXy.magnitude > Constants.safeSpeed)
+                                else if (relVCamXy.magnitude > HTUtils.safeSpeed)
                                 {
                                     ctrlState.X = 0;
                                     ctrlState.Y = 0;
@@ -318,7 +318,7 @@ namespace HydroTech.Autopilots
                         }
                         else //>= MinXY
                         {
-                            if (relVCamXy.magnitude > Constants.stopSpeed) //Moving in XY
+                            if (relVCamXy.magnitude > HTUtils.stopSpeed) //Moving in XY
                             {
                                 DriveKillRelV(ctrlState);
                             }
@@ -326,15 +326,15 @@ namespace HydroTech.Autopilots
                             {
                                 ctrlState.X = 0;
                                 ctrlState.Y = 0;
-                                ctrlState.Z = relVCam.z > Constants.safeSpeed ? 0 : 1;
+                                ctrlState.Z = relVCam.z > HTUtils.safeSpeed ? 0 : 1;
                             }
                         }
                     }
                     else // >= MinZ
                     {
-                        Vector3 diff = (Constants.finalStagePos - relPTarget).normalized;
-                        if (Vector3.Dot(relVCam.normalized, diff) < 0.95f /*18.19°*/ && relVCam.magnitude > Constants.stopSpeed) { DriveKillRelV(ctrlState); }
-                        else if (relVCam.magnitude > Constants.safeSpeed)
+                        Vector3 diff = (HTUtils.finalStagePos - relPTarget).normalized;
+                        if (Vector3.Dot(relVCam.normalized, diff) < 0.95f /*18.19°*/ && relVCam.magnitude > HTUtils.stopSpeed) { DriveKillRelV(ctrlState); }
+                        else if (relVCam.magnitude > HTUtils.safeSpeed)
                         {
                             ctrlState.X = 0;
                             ctrlState.Y = 0;
@@ -511,15 +511,15 @@ namespace HydroTech.Autopilots
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.AutoOrient = Constants.autoOrient;
-            this.CamView = Constants.camView;
-            this.driveTarget = Constants.driveTarget;
-            this.KillRelV = Constants.killRelV;
-            this.Manual = Constants.manual;
-            this.ShowLine = Constants.showLine;
-            this.finalStageSpeed = Constants.finalStageSpeed;
-            this.angularAcc = Constants.dockingAngularAcc;
-            this.acc = Constants.dockingAcc;
+            this.AutoOrient = HTUtils.autoOrient;
+            this.CamView = HTUtils.camView;
+            this.driveTarget = HTUtils.driveTarget;
+            this.KillRelV = HTUtils.killRelV;
+            this.Manual = HTUtils.manual;
+            this.ShowLine = HTUtils.showLine;
+            this.finalStageSpeed = HTUtils.finalStageSpeed;
+            this.angularAcc = HTUtils.dockingAngularAcc;
+            this.acc = HTUtils.dockingAcc;
             this.Cam = null;
             this.target = null;
         }
