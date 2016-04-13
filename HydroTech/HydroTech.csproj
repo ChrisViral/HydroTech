@@ -83,9 +83,9 @@
     <Compile Include="Panels\EditorMainPanel.cs" />
     <Compile Include="Panels\FlightMainPanel.cs" />
     <Compile Include="Panels\SettingsPanel.cs" />
-    <Compile Include="CtrlStateCalculator.cs" />
+    <Compile Include="Autopilots\Calculators\CtrlStateCalculator.cs" />
     <Compile Include="HydroJebCore.cs" />
-    <Compile Include="SwitchTransformCalculator.cs" />
+    <Compile Include="Autopilots\Calculators\SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroInputManager.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />

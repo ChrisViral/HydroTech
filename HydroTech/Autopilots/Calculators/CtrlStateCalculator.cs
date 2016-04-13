@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HydroTech
+namespace HydroTech.Autopilots.Calculators
 {
     public class CtrlStateCalculator
     {

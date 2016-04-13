@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.Utils;

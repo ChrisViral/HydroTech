@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace HydroTech
+namespace HydroTech.Autopilots.Calculators
 {
     public class SwitchTransformCalculator
     {
         #region Fields
-        protected Vector3 state;
+        private Vector3 state;
         #endregion
 
         #region Methods
