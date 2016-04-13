@@ -1,5 +1,4 @@
 ﻿using HydroTech.Autopilots.Calculators;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -7,10 +6,10 @@ namespace HydroTech.Autopilots
 {
     public class APTranslation : Autopilot
     {
-        public enum TransDir
+        public enum TranslationDirection
         {
             FORWARD,
-            BACKWARD,
+            BACK,
             RIGHT,
             LEFT,
             DOWN,
@@ -19,28 +18,13 @@ namespace HydroTech.Autopilots
         }
 
         #region Fields
-        protected Vector3 curOrient;
-        protected Vector3 curRoll;
+        public bool mainThrottleRespond = true;
+        public float thrustRate = 1;
+        public Vector3 thrustVector = Vector3.up;
+        private Vector3 curOrient, curRoll;
         #endregion
 
         #region Properties
-        protected override string NameString
-        {
-            get { return "TranslationAP"; }
-        }
-        #endregion
-
-        #region User input vars
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
-        public bool mainThrottleRespond = true;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
-        public float thrustRate = 1;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
-        public Vector3 thrustVector = Vector3.up;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
         public bool holdOrient = true;
         public bool HoldOrient
         {
@@ -56,9 +40,8 @@ namespace HydroTech.Autopilots
             }
         }
 
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TransMode")]
-        public TransDir transMode;
-        public TransDir TransMode
+        public TranslationDirection transMode;
+        public TranslationDirection TransMode
         {
             get { return this.transMode; }
             set
@@ -81,16 +64,21 @@ namespace HydroTech.Autopilots
                 base.Engaged = value;
             }
         }
-        #endregion
 
-        #region Constructor
-        public APTranslation()
+        protected override string NameString
         {
-            this.fileName = new FileName("translation", "cfg", FileName.autopilotSaveFolder);
+            get { return "TranslationAP"; }
         }
         #endregion
 
-        #region Autopilot
+        #region Methods
+        private Vector3 GetVector(TranslationDirection dir)
+        {
+            return dir != TranslationDirection.ADVANCED ? HTUtils.GetUnitVector(dir) : this.thrustVector;
+        }
+        #endregion
+
+        #region Overrides
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
         {
             base.DriveAutopilot(ctrlState);
@@ -107,53 +95,6 @@ namespace HydroTech.Autopilots
             ctrlState.X = -this.thrustVector.x * realThrustRate;
             ctrlState.Y = -this.thrustVector.y * realThrustRate;
             ctrlState.Z = -this.thrustVector.z * realThrustRate;
-        }
-        #endregion
-
-        #region Methods
-        protected Vector3 GetVector(TransDir dir)
-        {
-            return dir != TransDir.ADVANCED ? GetUnitVector(dir) : this.thrustVector;
-        }
-        #endregion
-
-        #region Static Methods
-        public static Vector3 GetUnitVector(TransDir dir)
-        {
-            Vector3 vec = new Vector3();
-            switch (dir)
-            {
-                case TransDir.RIGHT:
-                    vec.x = 1;
-                    break;
-                case TransDir.LEFT:
-                    vec.x = -1;
-                    break;
-                case TransDir.DOWN:
-                    vec.y = 1;
-                    break;
-                case TransDir.UP:
-                    vec.y = -1;
-                    break;
-                case TransDir.FORWARD:
-                    vec.z = 1;
-                    break;
-                case TransDir.BACKWARD:
-                    vec.z = -1;
-                    break;
-            }
-            return vec;
-        }
-        #endregion
-
-        #region Overrides
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            this.HoldOrient = true;
-            this.mainThrottleRespond = true;
-            this.thrustRate = 1;
-            this.TransMode = TransDir.FORWARD;
         }
         #endregion
     }

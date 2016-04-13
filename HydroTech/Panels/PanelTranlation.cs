@@ -1,9 +1,8 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
-using TransDir = HydroTech.Autopilots.APTranslation.TransDir;
+using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
 
 namespace HydroTech.Panels
 {
@@ -14,46 +13,13 @@ namespace HydroTech.Panels
         {
             get { return HydroFlightManager.Instance.TranslationAutopilot; }
         }
-
-        protected static TransDir TransMode
-        {
-            get { return TA.TransMode; }
-            set { TA.TransMode = value; }
-        }
-
-        protected static Vector3 ThrustVector
-        {
-            get { return TA.thrustVector; }
-            set { TA.thrustVector = value; }
-        }
-
-        protected static float ThrustRate
-        {
-            get { return TA.thrustRate; }
-            set { TA.thrustRate = value; }
-        }
-
-        protected static bool Respond
-        {
-            get { return TA.mainThrottleRespond; }
-            set { TA.mainThrottleRespond = value; }
-        }
-
-        protected static bool HoldOrient
-        {
-            get { return TA.HoldOrient; }
-            set { TA.HoldOrient = value; }
-        }
         #endregion
 
         #region Fields
-        protected string rateText;
-        protected bool tempHoldOrient;
-        protected bool tempRespond;
-        protected TransDir tempTransMode;
-        protected string xText;
-        protected string yText;
-        protected string zText;
+        private string rateText;
+        private bool tempHoldOrient, tempRespond;
+        private TranslationDirection tempTransMode;
+        private string xText, yText, zText;
         #endregion
 
         #region Properties
@@ -76,29 +42,29 @@ namespace HydroTech.Panels
                 {
                     if (value)
                     {
-                        this.tempTransMode = TransMode;
-                        this.tempRespond = Respond;
-                        this.tempHoldOrient = HoldOrient;
-                        this.xText = ThrustVector.x.ToString("#0.00");
-                        this.yText = ThrustVector.y.ToString("#0.00");
-                        this.zText = ThrustVector.z.ToString("#0.00");
-                        this.rateText = ThrustRate.ToString("#0.0");
+                        this.tempTransMode = TA.TransMode;
+                        this.tempRespond = TA.mainThrottleRespond;
+                        this.tempHoldOrient = TA.HoldOrient;
+                        this.xText = TA.thrustVector.x.ToString("#0.00");
+                        this.yText = TA.thrustVector.y.ToString("#0.00");
+                        this.zText = TA.thrustVector.z.ToString("#0.00");
+                        this.rateText = TA.thrustRate.ToString("#0.0");
                     }
                     else
                     {
-                        TransMode = this.tempTransMode;
-                        Respond = this.tempRespond;
-                        HoldOrient = this.tempHoldOrient;
-                        if (this.tempTransMode == TransDir.ADVANCED)
+                        TA.TransMode = this.tempTransMode;
+                        TA.mainThrottleRespond = this.tempRespond;
+                        TA.HoldOrient = this.tempHoldOrient;
+                        if (this.tempTransMode == TranslationDirection.ADVANCED)
                         {
                             float x, y, z;
                             if (float.TryParse(this.xText, out x) && float.TryParse(this.yText, out y) && float.TryParse(this.zText, out z) && (x != 0 || y != 0 || z != 0))
                             {
-                                ThrustVector = new Vector3(x, y, z).normalized;
+                                TA.thrustVector = new Vector3(x, y, z).normalized;
                             }
                         }
                         float temp;
-                        if (float.TryParse(this.rateText, out temp) && temp >= 0 && temp <= 1) { ThrustRate = temp; }
+                        if (float.TryParse(this.rateText, out temp) && temp >= 0 && temp <= 1) { TA.thrustRate = temp; }
                     }
                 }
                 base.Settings = value;
@@ -115,7 +81,6 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelTranslation()
         {
-            this.fileName = new FileName("translation", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelTranslation>();
         }
         #endregion
@@ -126,21 +91,16 @@ namespace HydroTech.Panels
             this.windowRect = new Rect(142, 475, 200, 260);
         }
 
-        protected override void MakeAPSave()
-        {
-            TA.MakeSaveAtNextUpdate();
-        }
-
         protected override void WindowGUI(int windowId)
         {
             if (this.Settings) { DrawSettingsUI(); }
             else
             {
                 GUILayout.Label("Translation direction");
-                GUILayout.TextArea(TransMode == TransDir.ADVANCED ? ThrustVector.ToString("#0.00") : TransMode.ToString());
-                GUILayout.Label("Thrust rate: " + ThrustRate.ToString("#0.00"));
-                GUILayout.Label("Respond to main throttle: " + Respond);
-                GUILayout.Label("Hold current orientation: " + HoldOrient);
+                GUILayout.TextArea(TA.TransMode == TranslationDirection.ADVANCED ? TA.thrustVector.ToString("#0.00") : EnumUtils.GetName(TA.TransMode));
+                GUILayout.Label(string.Format("Thrust rate: {0:#0.00}", TA.thrustRate));
+                GUILayout.Label("Respond to main throttle: " + TA.mainThrottleRespond);
+                GUILayout.Label("Hold current orientation: " + TA.HoldOrient);
 
                 if (GUILayout.Button("Change settings"))
                 {
@@ -157,7 +117,7 @@ namespace HydroTech.Panels
             GUILayout.BeginVertical();
             for (int i = 0; i <= 6; i++)
             {
-                TransDir x = (TransDir)i;
+                TranslationDirection x = (TranslationDirection)i;
                 if (GUILayout.Button(x.ToString(), this.tempTransMode == x ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
                 {
                     this.tempTransMode = x;
@@ -170,7 +130,7 @@ namespace HydroTech.Panels
                     else { GUILayout.EndHorizontal(); }
                 }
             }
-            if (this.tempTransMode == TransDir.ADVANCED)
+            if (this.tempTransMode == TranslationDirection.ADVANCED)
             {
                 GUILayout.BeginVertical();
                 GUILayout.Label("X(+RIGHT)=");

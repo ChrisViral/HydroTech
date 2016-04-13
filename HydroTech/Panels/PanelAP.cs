@@ -5,10 +5,6 @@ namespace HydroTech.Panels
 {
     public abstract class PanelAP : Panel
     {
-        #region Abstract properties
-        protected abstract bool Engaged { get; set; }
-        #endregion
-
         #region Properties
         protected bool settings;
         protected virtual bool Settings
@@ -16,18 +12,14 @@ namespace HydroTech.Panels
             get { return this.settings; }
             set
             {
-                if (value != this.settings)
-                {
-                    if (!value) { MakeAPSave(); }
-                    ResetHeight();
-                }
+                if (value != this.settings) { ResetHeight(); }
                 this.settings = value;
             }
         }
         #endregion
 
-        #region Abstract Methods
-        protected abstract void MakeAPSave();
+        #region Abstract properties
+        protected abstract bool Engaged { get; set; }
         #endregion
 
         #region Virtual methods

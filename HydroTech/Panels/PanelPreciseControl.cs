@@ -1,6 +1,5 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -13,44 +12,14 @@ namespace HydroTech.Panels
         {
             get { return HydroFlightManager.Instance.PreciseControlAutopilot; }
         }
-
-        protected static bool ByRate
-        {
-            get { return PC.byRate; }
-            set { PC.byRate = value; }
-        }
-
-        protected static float RRate
-        {
-            get { return PC.rotationRate; }
-            set { PC.rotationRate = value; }
-        }
-
-        protected static float Rate
-        {
-            get { return PC.translationRate; }
-            set { PC.translationRate = value; }
-        }
-
-        protected static float AngA
-        {
-            get { return PC.angularAcc; }
-            set { PC.angularAcc = value; }
-        }
-
-        protected static float Acc
-        {
-            get { return PC.acc; }
-            set { PC.acc = value; }
-        }
         #endregion
 
         #region Fields
-        protected string accText;
-        protected string angAText;
-        protected string rateText;
-        protected string rRateText;
-        protected bool tempByRate;
+        private string accText;
+        private string angAText;
+        private string rateText;
+        private string rRateText;
+        private bool tempByRate;
         #endregion
 
         #region Properties
@@ -73,20 +42,20 @@ namespace HydroTech.Panels
                 {
                     if (value)
                     {
-                        this.tempByRate = ByRate;
-                        this.rRateText = RRate.ToString("#0.000");
-                        this.rateText = Rate.ToString("#0.000");
-                        this.angAText = AngA.ToString("#0.000");
-                        this.accText = Acc.ToString("#0.000");
+                        this.tempByRate = PC.byRate;
+                        this.rRateText = PC.rotationRate.ToString("#0.000");
+                        this.rateText = PC.translationRate.ToString("#0.000");
+                        this.angAText = PC.angularAcc.ToString("#0.000");
+                        this.accText = PC.acc.ToString("#0.000");
                     }
                     else
                     {
-                        ByRate = this.tempByRate;
+                        PC.byRate = this.tempByRate;
                         float temp;
-                        if (float.TryParse(this.rRateText, out temp) && temp >= 0 && temp <= 1) { RRate = temp; }
-                        if (float.TryParse(this.rateText, out temp) && temp >= 0 && temp <= 1) { Rate = temp; }
-                        if (float.TryParse(this.angAText, out temp) && temp >= 0) { AngA = temp; }
-                        if (float.TryParse(this.accText, out temp) && temp >= 0) { Acc = temp; }
+                        if (float.TryParse(this.rRateText, out temp) && temp >= 0 && temp <= 1) { PC.rotationRate = temp; }
+                        if (float.TryParse(this.rateText, out temp) && temp >= 0 && temp <= 1) { PC.rotationRate = temp; }
+                        if (float.TryParse(this.angAText, out temp) && temp >= 0) { PC.angularAcc = temp; }
+                        if (float.TryParse(this.accText, out temp) && temp >= 0) { PC.acc = temp; }
                     }
                 }
                 base.Settings = value;
@@ -103,17 +72,11 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelPreciseControl()
         {
-            this.fileName = new FileName("precise", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelPreciseControl>();
         }
         #endregion
 
         #region Overrides
-        protected override void MakeAPSave()
-        {
-            PC.MakeSaveAtNextUpdate();
-        }
-
         protected override void SetDefaultWindowRect()
         {
             this.windowRect = new Rect(349, 60, 200, 122);
@@ -124,15 +87,15 @@ namespace HydroTech.Panels
             if (this.Settings) { DrawSettingsUI(); }
             else
             {
-                if (ByRate)
+                if (PC.byRate)
                 {
-                    GUILayout.Label(string.Format("Rotation thrust rate: {0:#0.000}", RRate));
-                    GUILayout.Label(string.Format("Translation thrust rate: {0:#0.000}", Rate));
+                    GUILayout.Label(string.Format("Rotation thrust rate: {0:#0.000}", PC.rotationRate));
+                    GUILayout.Label(string.Format("Translation thrust rate: {0:#0.000}", PC.translationRate));
                 }
                 else
                 {
-                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}rad/s²", AngA));
-                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}m/s²", Acc));
+                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}rad/s²", PC.angularAcc));
+                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}m/s²", PC.acc));
                 }
                 if (GUILayout.Button("Change settings"))
                 {

@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using HydroTech.Autopilots;
 using UnityEngine;
+using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
 
 namespace HydroTech.Utils
 {
@@ -71,6 +74,16 @@ namespace HydroTech.Utils
             return x <= min ? min : x;
         }
 
+        public static float Clamp0(float f)
+        {
+            return f > 0 ? f : 0;
+        }
+
+        public static float Clamp100(float f)
+        {
+            return f < 100 ? f : 100;
+        }
+
         public static bool GetState(Vessel vessel, KSPActionGroup action)
         {
             return vessel.ActionGroups[action];
@@ -79,6 +92,73 @@ namespace HydroTech.Utils
         public static void SetState(Vessel vessel, KSPActionGroup action, bool active)
         {
             vessel.ActionGroups.SetGroup(action, active);
+        }
+
+        public static float GetBodySyncAltitude(CelestialBody body)
+        {
+            return (float)Math.Pow((body.gravParameter * body.rotationPeriod * body.rotationPeriod) / (4 * Math.PI * Math.PI), 1d / 3);
+        }
+
+        public static void CamToVesselRot(FlightCtrlState ctrlState, ModuleDockAssist mcam)
+        {
+            SwitchTransformCalculator sCal = new SwitchTransformCalculator();
+            sCal.GetRotation(ctrlState);
+            sCal.ChangeTransformRotation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
+            sCal.SetRotation(ctrlState);
+        }
+
+        public static void CamToVesselTrans(FlightCtrlState ctrlState, ModuleDockAssist mcam)
+        {
+            SwitchTransformCalculator sCal = new SwitchTransformCalculator();
+            sCal.GetTranslation(ctrlState);
+            sCal.ChangeTransformTranslation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
+            sCal.SetTranslation(ctrlState);
+        }
+
+        public static Vector3 GetUnitVector(TranslationDirection dir)
+        {
+            switch (dir)
+            {
+                case TranslationDirection.RIGHT:
+                    return Vector3.right;
+
+                case TranslationDirection.LEFT:
+                    return Vector3.left;
+
+                case TranslationDirection.DOWN:
+                    return Vector3.up;
+
+                case TranslationDirection.UP:
+                    return Vector3.down;
+
+                case TranslationDirection.FORWARD:
+                    return Vector3.forward;
+
+                case TranslationDirection.BACK:
+                    return Vector3.back;
+            }
+
+            return Vector3.zero;
+        }
+
+        public static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
+        {
+            return SwitchTransformCalculator.VectorTransform(vec, x, y, z);
+        }
+
+        public static Vector3 VectorTransform(Vector3 vec, Transform trans)
+        {
+            return SwitchTransformCalculator.VectorTransform(vec, trans);
+        }
+
+        public static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
+        {
+            return SwitchTransformCalculator.ReverseVectorTransform(vec, x, y, z);
+        }
+
+        public static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
+        {
+            return SwitchTransformCalculator.ReverseVectorTransform(vec, trans);
         }
         #endregion
     }

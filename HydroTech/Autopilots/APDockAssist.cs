@@ -2,7 +2,6 @@
 using HydroTech.Data;
 using HydroTech.Managers;
 using HydroTech.Panels;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -11,77 +10,55 @@ namespace HydroTech.Autopilots
     public class APDockAssist : Autopilot
     {
         #region Constants
-        private const float finalStageErr = 0.05f;
         private static readonly Vector3 finalStagePos = new Vector3(0, 0, 15);
+        private const float finalStageErr = 0.05f;
         private const float vel0 = 1;
         private const float safeSpeed = 0.5f;
         private const float stopSpeed = 0.05f;
         #endregion
 
-        #region Fields
-        protected RCSCalculator rcsTarget = new RCSCalculator();
-        protected Vessel drivingTargetVessel;
-        #endregion
-
-        #region Properties
-        protected override string NameString
-        {
-            get { return "DockAP.Active"; }
-        }
-
-        protected virtual string NameStringTarget
+        #region Static properties
+        private static string NameStringTarget
         {
             get { return "DockAP.Target"; }
         }
-
-        public bool NullCamera
-        {
-            get { return this.Cam == null || !this.Cam.IsOnActiveVessel;}
-        }
-
-        public bool NullTarget
-        {
-            get { return this.target == null || !this.target.IsNear;}
-        }
-    
-        public bool TargetHasJeb
-        {
-            get { return this.jebsTargetVessel.Count != 0;}
-        }
-
-        public Vector3 RelV
-        {
-            get { return this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity); }
-        }
         #endregion
 
-        #region User input vars
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ShowLine")]
-        public bool showLine = true;
+        #region Fields
+        private RCSCalculator rcsTarget = new RCSCalculator();
+        private Vessel drivingTargetVessel;
+        public ModuleDockAssistTarget target;
+        private bool targetOrientReady = true;
+        private LineRenderer line;
+        public SubList<HydroJebCore> jebsTargetVessel;
+        public float angularAcc = 0.5f;
+        public float acc = 0.5f;
+        public float finalStageSpeed = 0.4f;
+        #endregion
+
+        #region Properties
+        private bool showLine = true;
         public bool ShowLine
         {
             get { return !this.NullCamera && !this.NullTarget && this.showLine; }
             set { this.showLine = value; }
         }
 
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AutoOrient")]
-        public bool autoOrient;
+        private bool autoOrient;
         public bool AutoOrient
         {
             get { return !this.NullCamera && !this.NullTarget && this.autoOrient; }
             set { this.autoOrient = value; }
         }
 
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "KillRelV")]
-        public bool killRelV;
+        private bool killRelV;
         public bool KillRelV
         {
             get { return !this.NullCamera && !this.NullTarget && this.killRelV; }
             set { this.killRelV = value; }
         }
 
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "CamView")]
-        public bool camView;
+        private bool camView;
         public bool CamView
         {
             get { return !this.NullCamera && this.camView; }
@@ -92,8 +69,7 @@ namespace HydroTech.Autopilots
             }
         }
 
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Manual")]
-        public bool manual = true;
+        private bool manual = true;
         public bool Manual
         {
             get { return this.NullCamera || this.NullTarget || this.manual; }
@@ -102,81 +78,13 @@ namespace HydroTech.Autopilots
                 if (this.manual != value && this.Engaged && this.DriveTarget)
                 {
                     if (value) { RemoveDriveTarget(); }
-                    else
-                    {
-                        AddDriveTarget();
-                    }
+                    else { AddDriveTarget(); }
                 }
                 this.manual = value;
             }
         }
 
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "DriveTarget")]
-        public bool driveTarget;
-        public bool DriveTarget
-        {
-            get { return !this.Manual && this.TargetHasJeb && this.driveTarget; }
-            set
-            {
-                if (!this.Active || this.Manual || !this.TargetHasJeb) { return; }
-                if (value && !this.driveTarget) { this.drivingTargetVessel = this.target.vessel; }
-                if (this.Engaged)
-                {
-                    if (value && !this.driveTarget) { AddDriveTarget(); }
-                    else if (!value && this.driveTarget) { RemoveDriveTarget(); }
-                }
-                this.driveTarget = value;
-            }
-        }
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "AngularAcc")]
-        public float angularAcc = 0.5f;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Acc")]
-        public float acc = 0.5f;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "FinalSpeed")]
-        public float finalStageSpeed = 0.4f;
-
-        protected ModuleDockAssistCam cam;
-        public ModuleDockAssistCam Cam
-        {
-            get { return this.cam; }
-            set
-            {
-                if (this.cam != null && value != this.cam) { this.cam.CamActive = false; }
-                this.cam = value;
-            }
-        }
-
-        public override bool Engaged
-        {
-            set
-            {
-                if (!this.Active) { return; }
-                if (this.DriveTarget)
-                {
-                    if (value) { AddDriveTarget(); }
-                    else
-                    {
-                        RemoveDriveTarget();
-                    }
-                }
-                if (value) { if (this.CamView && !this.CameraPaused) { this.Cam.CamActive = true; } }
-                else
-                {
-                    FlightMainPanel.Instance.DockAssist.ResetHeight();
-                    if (!this.NullCamera) { this.Cam.CamActive = false; }
-                }
-                base.Engaged = value;
-            }
-        }
-
-        public ModuleDockAssistTarget target;
-        #endregion
-
-        #region Autopilot vars
-        protected bool cameraPaused;
+        private bool cameraPaused;
         public bool CameraPaused
         {
             get { return this.Engaged && this.CamView && this.cameraPaused; }
@@ -189,12 +97,88 @@ namespace HydroTech.Autopilots
                         HydroFlightManager.Instance.CameraManager.SaveCurrent();
                         HydroFlightManager.Instance.CameraManager.ResetToActiveVessel();
                     }
-                    else
-                    {
-                        HydroFlightManager.Instance.CameraManager.RetrieveLast();
-                    }
+                    else { HydroFlightManager.Instance.CameraManager.RetrieveLast(); }
                 }
                 this.cameraPaused = value;
+            }
+        }
+
+        public bool driveTarget;
+        public bool DriveTarget
+        {
+            get { return !this.Manual && this.TargetHasJeb && this.driveTarget; }
+            set
+            {
+                if (!this.Active || this.Manual || !this.TargetHasJeb) { return; }
+                if (value && !this.driveTarget) { this.drivingTargetVessel = this.target.vessel; }
+                if (this.Engaged)
+                {
+                    if (value)
+                    {
+                        if (!this.driveTarget) { AddDriveTarget(); }
+                    }
+                    else if (this.driveTarget) { RemoveDriveTarget(); }
+                }
+                this.driveTarget = value;
+            }
+        }
+
+        private ModuleDockAssistCam cam;
+        public ModuleDockAssistCam Cam
+        {
+            get { return this.cam; }
+            set
+            {
+                if (this.cam != null && value != this.cam) { this.cam.CamActive = false; }
+                this.cam = value;
+            }
+        }
+
+        public bool NullCamera
+        {
+            get { return this.Cam == null || !this.Cam.IsOnActiveVessel; }
+        }
+
+        public bool NullTarget
+        {
+            get { return this.target == null || !this.target.IsNear; }
+        }
+
+        public bool TargetHasJeb
+        {
+            get { return this.jebsTargetVessel.Count != 0; }
+        }
+
+        public Vector3 RelV
+        {
+            get { return this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity); }
+        }
+
+        protected override string NameString
+        {
+            get { return "DockAP.Active"; }
+        }
+
+        public override bool Engaged
+        {
+            set
+            {
+                if (!this.Active) { return; }
+                if (this.DriveTarget)
+                {
+                    if (value) { AddDriveTarget(); }
+                    else { RemoveDriveTarget(); }
+                }
+                if (value)
+                {
+                    if (this.CamView && !this.CameraPaused) { this.Cam.CamActive = true; }
+                }
+                else
+                {
+                    FlightMainPanel.Instance.DockAssist.ResetHeight();
+                    if (!this.NullCamera) { this.Cam.CamActive = false; }
+                }
+                base.Engaged = value;
             }
         }
 
@@ -205,37 +189,29 @@ namespace HydroTech.Autopilots
                 if (value != base.Active && this.Engaged && !this.Manual && this.driveTarget) //TargetHasJeb() may return false
                 {
                     if (value) { AddDriveTarget(); }
-                    else
-                    {
-                        RemoveDriveTarget();
-                    }
+                    else { RemoveDriveTarget(); }
                 }
                 base.Active = value;
             }
         }
-
-        protected bool targetOrientReady = true;
-        protected LineRenderer line;
-        public SubList<HydroJebCore> jebsTargetVessel;
         #endregion
 
         #region Constructor
         public APDockAssist()
         {
-            this.fileName = new FileName("dock", "cfg", FileName.autopilotSaveFolder);
             this.jebsTargetVessel = new SubList<HydroJebCore>(HydroFlightManager.Instance.Targets, IsJebTargetVessel);
         }
         #endregion
 
-        #region Autopilot
-        protected virtual void DriveAutoOrient(FlightCtrlState ctrlState)
+        #region Methods
+        private void DriveAutoOrient(FlightCtrlState ctrlState)
         {
             DockingAssistCalculator stateCal = new DockingAssistCalculator();
             stateCal.Calculate(this.Cam, this.target);
             stateCal.SetCtrlStateRotation(ctrlState);
         }
 
-        protected virtual void DriveTargetAutopilot(FlightCtrlState ctrlState)
+        private void DriveTargetAutopilot(FlightCtrlState ctrlState)
         {
             HTUtils.SetState(this.target.vessel, KSPActionGroup.RCS, true);
             HTUtils.SetState(this.target.vessel, KSPActionGroup.SAS, false);
@@ -248,7 +224,7 @@ namespace HydroTech.Autopilots
             this.rcsTarget.MakeRotation(ctrlState, this.angularAcc);
         }
 
-        protected virtual void DriveKillRelV(FlightCtrlState ctrlState)
+        private void DriveKillRelV(FlightCtrlState ctrlState)
         {
             Vector3 relVCam = this.RelV;
             ctrlState.X = -relVCam.x / vel0;
@@ -263,7 +239,7 @@ namespace HydroTech.Autopilots
             if (Mathf.Abs(ctrlState.Z) > 1) { ctrlState.Z = ctrlState.Z > 0 ? 1 : -1; }
         }
 
-        protected virtual void DriveFinalStage(FlightCtrlState ctrlState, Vector3 relPTarget, Vector3 relVCam)
+        private void DriveFinalStage(FlightCtrlState ctrlState, Vector3 relPTarget, Vector3 relVCam)
         {
             if (relVCam.z > stopSpeed || relVCam.z < -this.finalStageSpeed * 1.1f) { DriveKillRelV(ctrlState); }
             else
@@ -280,7 +256,7 @@ namespace HydroTech.Autopilots
             }
         }
 
-        protected virtual void DriveAutoDocking(FlightCtrlState ctrlState)
+        private void DriveAutoDocking(FlightCtrlState ctrlState)
         {
             DockingAssistCalculator stateCal = new DockingAssistCalculator();
             stateCal.Calculate(this.Cam, this.target);
@@ -357,115 +333,31 @@ namespace HydroTech.Autopilots
                     }
                 }
             }
-            CamToVessel_Trans(ctrlState, this.Cam);
+            HTUtils.CamToVesselTrans(ctrlState, this.Cam);
         }
 
-        protected override void DriveAutopilot(FlightCtrlState ctrlState)
-        {
-            base.DriveAutopilot(ctrlState);
-            if (this.Manual)
-            {
-                if (this.AutoOrient)
-                {
-                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
-                    DriveAutoOrient(ctrlState);
-                }
-                if (this.CamView && !this.AutoOrient)
-                {
-                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
-                    CamToVessel_Rot(ctrlState, this.Cam);
-                }
-                bool killingRelV = this.KillRelV && ctrlState.X == 0 && ctrlState.Y == 0 && ctrlState.Z == 0;
-                if (killingRelV)
-                {
-                    DriveKillRelV(ctrlState);
-                    CamToVessel_Trans(ctrlState, this.Cam);
-                }
-                else if (this.CamView) { CamToVessel_Trans(ctrlState, this.Cam); }
-            }
-            else //!Manual
-            {
-                HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
-                if (this.DriveTarget)
-                {
-                    if (this.targetOrientReady)
-                    {
-                        Vector3 r = this.target.Pos - this.Cam.Pos;
-                        HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
-                        stateCal.Calculate(r.normalized, this.target.Right, this.Cam.Dir, this.Cam.Right, ActiveVessel);
-                        stateCal.SetCtrlStateRotation(ctrlState);
-                        bool orientReady = stateCal.Steer(0.05f); //2.87°
-                        if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < 0.01f)
-                        {
-                            DriveFinalStage(ctrlState, VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), this.RelV);
-                            CamToVessel_Trans(ctrlState, this.Cam);
-                        }
-                        else
-                        {
-                            DriveKillRelV(ctrlState);
-                            CamToVessel_Trans(ctrlState, this.Cam);
-                        }
-                    }
-                    else
-                    {
-                        DriveKillRelV(ctrlState);
-                        CamToVessel_Trans(ctrlState, this.Cam);
-                        ctrlState.yaw = 0;
-                        ctrlState.roll = 0;
-                        ctrlState.pitch = 0;
-                    }
-                }
-                else
-                {
-                    DriveAutoDocking(ctrlState);
-                }
-            }
-            ActiveRCS.MakeRotation(ctrlState, this.angularAcc);
-            ActiveRCS.MakeTranslation(ctrlState, this.acc);
-        }
-        #endregion
-
-        #region Methods
-        protected bool IsJebTargetVessel(HydroJebCore jeb)
+        private bool IsJebTargetVessel(HydroJebCore jeb)
         {
             return !this.NullTarget && jeb.vessel == this.target.vessel;
         }
 
-        protected void AddDriveTarget()
+        private void AddDriveTarget()
         {
-            HydroFlightManager.Instance.InputManager.AddOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
+            HydroFlightManager.Instance.InputManager.AddOnFlyByWire(this.target.vessel, NameStringTarget, DriveTargetAutopilot);
             this.drivingTargetVessel = this.target.vessel;
         }
 
-        protected void RemoveDriveTarget()
+        private void RemoveDriveTarget()
         {
-            HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.target.vessel, this.NameStringTarget, DriveTargetAutopilot);
+            HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.target.vessel, NameStringTarget, DriveTargetAutopilot);
             this.drivingTargetVessel = null;
         }
 
-        protected void ClearDockAssistLine()
+        private void ClearDockAssistLine()
         {
             this.line.SetWidth(0, 0);
             this.line.SetPosition(0, Vector3.zero);
             this.line.SetPosition(1, Vector3.zero);
-        }
-        #endregion
-
-        #region Static Methods
-        public static void CamToVessel_Rot(FlightCtrlState ctrlState, ModuleDockAssistCam mcam)
-        {
-            SwitchTransformCalculator sCal = new SwitchTransformCalculator();
-            sCal.GetRotation(ctrlState);
-            sCal.ChangeTransformRotation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
-            sCal.SetRotation(ctrlState);
-        }
-
-        public static void CamToVessel_Trans(FlightCtrlState ctrlState, ModuleDockAssistCam mcam)
-        {
-            SwitchTransformCalculator sCal = new SwitchTransformCalculator();
-            sCal.GetTranslation(ctrlState);
-            sCal.ChangeTransformTranslation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
-            sCal.SetTranslation(ctrlState);
         }
         #endregion
 
@@ -503,7 +395,7 @@ namespace HydroTech.Autopilots
                 {
                     if (this.drivingTargetVessel != this.target.vessel) //Vessel change detected
                     {
-                        if (this.drivingTargetVessel != null) { HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.drivingTargetVessel, this.NameStringTarget, DriveTargetAutopilot); }
+                        if (this.drivingTargetVessel != null) { HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.drivingTargetVessel, NameStringTarget, DriveTargetAutopilot); }
                         AddDriveTarget();
                     }
                 }
@@ -516,20 +408,68 @@ namespace HydroTech.Autopilots
             if (!this.NullTarget) { this.jebsTargetVessel.OnUpdate(); }
         }
 
-        protected override void LoadDefault()
+        protected override void DriveAutopilot(FlightCtrlState ctrlState)
         {
-            base.LoadDefault();
-            this.AutoOrient = false;
-            this.CamView = false;
-            this.driveTarget = false;
-            this.KillRelV = false;
-            this.Manual = true;
-            this.ShowLine = true;
-            this.finalStageSpeed = 0.4f;
-            this.angularAcc = 0.5f;
-            this.acc = 0.5f;
-            this.Cam = null;
-            this.target = null;
+            base.DriveAutopilot(ctrlState);
+            if (this.Manual)
+            {
+                if (this.AutoOrient)
+                {
+                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+                    DriveAutoOrient(ctrlState);
+                }
+                if (this.CamView && !this.AutoOrient)
+                {
+                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+                    HTUtils.CamToVesselRot(ctrlState, this.Cam);
+                }
+                bool killingRelV = this.KillRelV && ctrlState.X == 0 && ctrlState.Y == 0 && ctrlState.Z == 0;
+                if (killingRelV)
+                {
+                    DriveKillRelV(ctrlState);
+                    HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                }
+                else if (this.CamView) { HTUtils.CamToVesselTrans(ctrlState, this.Cam); }
+            }
+            else //!Manual
+            {
+                HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+                if (this.DriveTarget)
+                {
+                    if (this.targetOrientReady)
+                    {
+                        Vector3 r = this.target.Pos - this.Cam.Pos;
+                        HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
+                        stateCal.Calculate(r.normalized, this.target.Right, this.Cam.Dir, this.Cam.Right, ActiveVessel);
+                        stateCal.SetCtrlStateRotation(ctrlState);
+                        bool orientReady = stateCal.Steer(0.05f); //2.87°
+                        if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < 0.01f)
+                        {
+                            DriveFinalStage(ctrlState, HTUtils.VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), this.RelV);
+                            HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                        }
+                        else
+                        {
+                            DriveKillRelV(ctrlState);
+                            HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                        }
+                    }
+                    else
+                    {
+                        DriveKillRelV(ctrlState);
+                        HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                        ctrlState.yaw = 0;
+                        ctrlState.roll = 0;
+                        ctrlState.pitch = 0;
+                    }
+                }
+                else
+                {
+                    DriveAutoDocking(ctrlState);
+                }
+            }
+            ActiveRCS.MakeRotation(ctrlState, this.angularAcc);
+            ActiveRCS.MakeTranslation(ctrlState, this.acc);
         }
         #endregion
     }

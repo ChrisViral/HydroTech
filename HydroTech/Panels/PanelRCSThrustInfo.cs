@@ -1,6 +1,5 @@
 ﻿using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -9,15 +8,9 @@ namespace HydroTech.Panels
     public class PanelRCSThrustInfo : Panel
     {
         #region Fields
-        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
-        public bool editorHide;        
-
-        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLNodeInfo(i = 1, name = "SETTINGS"), HydroSLField(saveName = "ShowRotation")]
-        public bool showRotation = true;
-
-        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "WindowPos", cmd = CMD.RECT_TOP_LEFT)]
+        public bool editorHide;              
+        public bool showRotation = true;        
         public Rect windowRectEditor;
-
         private readonly bool editor;
         private bool panelShownEditor;
         #endregion
@@ -57,7 +50,6 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelRCSThrustInfo(bool editor)
         {
-            this.fileName = new FileName("rcsinfo", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelRCSThrustInfo>();
             this.editor = editor;
         }
@@ -67,7 +59,6 @@ namespace HydroTech.Panels
         public void ShowInEditor()
         {
             this.Active = true;
-            Load();
         }
 
         public void HideInEditor()
@@ -75,26 +66,13 @@ namespace HydroTech.Panels
             this.PanelShown = false;
             this.Active = false;
         }
-
-        public void OnEditorUpdate()
-        {
-            if (this.needSave) { Save(); }
-        }
         #endregion
 
         #region Overrides
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if (this.ActiveRCS.AllRcsEnabledChanged) { ResetHeight(); }
-        }
-
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            this.panelShownEditor = true;
-            this.editorHide = false;
-            this.showRotation = true;
+            if (this.ActiveRCS.AllRCSEnabledChanged) { ResetHeight(); }
         }
 
         protected override void SetDefaultWindowRect()
@@ -111,7 +89,6 @@ namespace HydroTech.Panels
                 if (GUILayout.Button(this.editorHide ? "Maximize" : "Minimize"))
                 {
                     this.editorHide = !this.editorHide;
-                    this.needSave = true;
                     this.windowRectEditor.width = this.editorHide ? 100 : 250;
                     this.windowRectEditor.height = 0;
                 }
@@ -125,12 +102,10 @@ namespace HydroTech.Panels
             if (GUILayout.Button("Rotation", this.showRotation ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
             {
                 this.showRotation = true;
-                this.needSave = true;
             }
             if (GUILayout.Button("Translation", this.showRotation ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
             {
                 this.showRotation = false;
-                this.needSave = true;
             }
             GUILayout.EndHorizontal();
             if (this.showRotation)
@@ -153,7 +128,7 @@ namespace HydroTech.Panels
                 GUILayout.Label(string.Format("Translate backward : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.zp, this.ActiveRCS.maxAcc.zp));
                 GUILayout.Label(string.Format("Translate forward : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.zn, this.ActiveRCS.maxAcc.zn));
             }
-            if (!this.editor && !this.ActiveRCS.AllRcsEnabled)
+            if (!this.editor && !this.ActiveRCS.AllRCSEnabled)
             {
                 GUILayout.Label("Some RCS thrusters are not enabled.", GUIUtils.ColouredLabel(Color.red));
                 if (GUILayout.Button("Enable all")) { this.ActiveRCS.EnableAllRcs(); }
@@ -165,9 +140,7 @@ namespace HydroTech.Panels
         {
             if (this.editor)
             {
-                Rect newWindowRect = GUILayout.Window(this.id, this.windowRectEditor, WindowGUI, this.PanelTitle);
-                if (newWindowRect.yMin != this.windowRectEditor.yMin || newWindowRect.yMin != this.windowRectEditor.yMin) { this.needSave = true; }
-                this.windowRectEditor = newWindowRect;
+                this.windowRectEditor = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.windowRectEditor, WindowGUI, this.PanelTitle));
             }
             else { base.DrawGUI(); }
         }

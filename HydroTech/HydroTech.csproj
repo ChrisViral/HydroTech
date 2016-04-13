@@ -83,9 +83,6 @@
     <Compile Include="Panels\EditorMainPanel.cs" />
     <Compile Include="Panels\FlightMainPanel.cs" />
     <Compile Include="Panels\SettingsPanel.cs" />
-    <Compile Include="Storage\FileName.cs" />
-    <Compile Include="Storage\HydroSLAttributes.cs" />
-    <Compile Include="Storage\LoadSaveFileBasic.cs" />
     <Compile Include="CtrlStateCalculator.cs" />
     <Compile Include="HydroJebCore.cs" />
     <Compile Include="SwitchTransformCalculator.cs" />

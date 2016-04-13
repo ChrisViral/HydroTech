@@ -13,22 +13,22 @@ namespace HydroTech.Autopilots.Calculators
         #endregion
 
         #region Properties
-        protected bool allRcsEnabled = true;
-        public bool AllRcsEnabled
+        protected bool allRCSEnabled = true;
+        public bool AllRCSEnabled
         {
-            get { return this.allRcsEnabled; }
+            get { return this.allRCSEnabled; }
             protected set
             {
-                this.AllRcsEnabledChanged = value != this.allRcsEnabled;
-                this.allRcsEnabled = value;
+                this.AllRCSEnabledChanged = value != this.allRCSEnabled;
+                this.allRCSEnabled = value;
             }
         }
 
-        protected bool allRcsEnabledChanged;
-        public bool AllRcsEnabledChanged
+        protected bool allRCSEnabledChanged;
+        public bool AllRCSEnabledChanged
         {
-            get { return this.allRcsEnabledChanged; }
-            protected set { this.allRcsEnabledChanged = value; }
+            get { return this.allRCSEnabledChanged; }
+            protected set { this.allRCSEnabledChanged = value; }
         }
         #endregion
 
@@ -157,7 +157,7 @@ namespace HydroTech.Autopilots.Calculators
                     }
                 }
             }
-            this.AllRcsEnabled = tempAllRcsEnabled;
+            this.AllRCSEnabled = tempAllRcsEnabled;
             this.maxAcc = this.maxForce / this.Mass;
             this.maxAngularAcc = this.maxTorque / this.moI.Diagonal;
         }

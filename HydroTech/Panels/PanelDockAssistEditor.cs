@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using HydroTech.Data;
 using HydroTech.Panels.UI;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -9,33 +8,29 @@ namespace HydroTech.Panels
 {
     public class PanelDockAssistEditor : Panel
     {
-        protected struct DAEditorSet
+        private struct DAEditorSet
         {
             public bool drawn;
             public bool renamed;
             public string name;
 
-            public DAEditorSet(bool dr = false, bool rn = false, string n = "")
+            public DAEditorSet(bool drawn, bool renamed = false, string name = "")
             {
-                this.drawn = dr;
-                this.renamed = rn;
-                this.name = n;
+                this.drawn = drawn;
+                this.renamed = renamed;
+                this.name = name;
             }
         }
 
         #region Fields
-        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLField(saveName = "Minimized")]
-        public bool editorHide;
-
-        [HydroSLNodeInfo(name = "PANELEDITOR"), HydroSLNodeInfo(i = 1, name = "SETTINGS"), HydroSLField(saveName = "ShowCams")]
+        public bool editorHide;    
         public bool showCams = true;
-
-        protected AffiliationList<Part, ModuleDockAssistCam> cams;
-        protected AffiliationList<Part, ModuleDockAssistTarget> targets;
-        protected DictionaryFromList<ModuleDockAssistCam, DAEditorSet> camSet;
-        protected DictionaryFromList<ModuleDockAssistTarget, DAEditorSet> tgtSet;
-        protected UIMultiPageList<ModuleDockAssistCam> camUI;
-        protected UIMultiPageList<ModuleDockAssistTarget> tgtUI;
+        private AffiliationList<Part, ModuleDockAssistCam> cams;
+        private AffiliationList<Part, ModuleDockAssistTarget> targets;
+        private DictionaryFromList<ModuleDockAssistCam, DAEditorSet> camSet;
+        private DictionaryFromList<ModuleDockAssistTarget, DAEditorSet> tgtSet;
+        private UIMultiPageList<ModuleDockAssistCam> camUI;
+        private UIMultiPageList<ModuleDockAssistTarget> tgtUI;
         #endregion
 
         #region Propeties
@@ -54,7 +49,6 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelDockAssistEditor()
         {
-            this.fileName = new FileName("dockeditor", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelDockAssistEditor>();
         }
         #endregion
@@ -73,7 +67,6 @@ namespace HydroTech.Panels
         public void ShowInEditor()
         {
             this.Active = true;
-            Load();
             OnEditorUpdate();
             UpdateAllRenames();
         }
@@ -94,7 +87,6 @@ namespace HydroTech.Panels
             this.tgtSet.Update();
             this.camUI.OnUpdate();
             this.tgtUI.OnUpdate();
-            if (this.needSave) { Save(); }
         }
 
         protected List<ModuleDockAssistCam> GetCam(Part p)
@@ -132,21 +124,12 @@ namespace HydroTech.Panels
             this.windowRect = new Rect((Screen.width * 0.95f) - 250, 360, 250, 0);
         }
 
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            this.panelShown = true;
-            this.editorHide = false;
-            this.showCams = true;
-        }
-
         protected override void WindowGUI(int windowId)
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(this.editorHide ? "Maximize" : "Minimize"))
             {
                 this.editorHide = !this.editorHide;
-                this.needSave = true;
                 this.windowRect.width = this.editorHide ? 100 : 250;
                 ResetHeight();
             }
@@ -159,13 +142,11 @@ namespace HydroTech.Panels
             if (GUILayout.Button("Cameras", this.showCams ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
             {
                 this.showCams = true;
-                this.needSave = true;
                 ResetHeight();
             }
             if (GUILayout.Button("Targets", this.showCams ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
             {
                 this.showCams = false;
-                this.needSave = true;
                 ResetHeight();
             }
             GUILayout.EndHorizontal();

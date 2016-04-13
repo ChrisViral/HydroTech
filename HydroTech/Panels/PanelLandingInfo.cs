@@ -1,9 +1,8 @@
 ﻿using HydroTech.Autopilots;
-using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
+using Direction = HydroTech.Autopilots.Calculators.GroundContactCalculator.Direction;
 
 namespace HydroTech.Panels
 {
@@ -14,11 +13,50 @@ namespace HydroTech.Panels
         {
             get { return HydroFlightManager.Instance.LandingAutopilot; }
         }
+
+        private static float SlopeN
+        {
+            get { return LA.Slope(Direction.NORTH) * HTUtils.radToDeg; }
+        }
+
+        private static float SlopeS
+        {
+            get { return LA.Slope(Direction.SOUTH) * HTUtils.radToDeg; }
+        }
+
+        private static float SlopeW
+        {
+            get { return LA.Slope(Direction.WEST) * HTUtils.radToDeg; }
+        }
+
+        private static float SlopeE
+        {
+            get { return LA.Slope(Direction.EAST) * HTUtils.radToDeg; }
+        }
+
+        private static string MainBodyName
+        {
+            get { return FlightGlobals.currentMainBody.bodyName; }
+        }
+
+        private static float TwrTotal
+        {
+            get { return LA.TwrRCS + LA.TwrEng; }
+        }
+
+        private static GUIStyle TwrLabelStyle
+        {
+            get
+            {
+                if (TwrTotal < LA.GeeASL) { return GUIUtils.ColouredLabel(Color.red); }
+                return TwrTotal < LA.GeeASL * 1.5f ? GUIUtils.ColouredLabel(Color.yellow) : GUI.skin.label;
+            }
+        }
         #endregion
 
         #region Properties
-        protected bool slopeDetection;
-        protected bool SlopeDetection
+        private bool slopeDetection;
+        private bool SlopeDetection
         {
             get
             {
@@ -28,85 +66,6 @@ namespace HydroTech.Panels
                     this.slopeDetection = LA.SlopeDetection;
                 }
                 return this.slopeDetection;
-            }
-        }
-
-        protected float AltTrue
-        {
-            get { return LA.AltTrue; }
-        }
-
-        protected bool Terrain
-        {
-            get { return LA.Terrain; }
-        }
-
-        protected float DetectRadius
-        {
-            get { return LA.DetectRadius; }
-        }
-
-        protected float SlopeN
-        {
-            get { return LA.Slope(GroundContactCalculator.Direction.NORTH) * HTUtils.radToDeg; }
-        }
-
-        protected float SlopeS
-        {
-            get { return LA.Slope(GroundContactCalculator.Direction.SOUTH) * HTUtils.radToDeg; }
-        }
-
-        protected float SlopeW
-        {
-            get { return LA.Slope(GroundContactCalculator.Direction.WEST) * HTUtils.radToDeg; }
-        }
-
-        protected float SlopeE
-        {
-            get { return LA.Slope(GroundContactCalculator.Direction.EAST) * HTUtils.radToDeg; }
-        }
-
-        protected float VertSpeed
-        {
-            get { return LA.VertSpeed; }
-        }
-
-        protected float HorSpeed
-        {
-            get { return LA.HoriSpeed; }
-        }
-
-        protected string MainBodyName
-        {
-            get { return LA.MainBodyName; }
-        }
-
-        protected float GeeASL
-        {
-            get { return LA.GAsl; }
-        }
-
-        protected float TwrRCS
-        {
-            get { return LA.TwrRcs; }
-        }
-
-        protected float TwrEng
-        {
-            get { return LA.TwrEng; }
-        }
-
-        protected float TwrTotal
-        {
-            get { return this.TwrRCS + this.TwrEng; }
-        }
-
-        protected GUIStyle TwrLabelStyle
-        {
-            get
-            {
-                if (this.TwrTotal < this.GeeASL) { return GUIUtils.ColouredLabel(Color.red); }
-                return this.TwrTotal < this.GeeASL * 1.5f ? GUIUtils.ColouredLabel(Color.yellow) : GUIUtils.Skin.label;
             }
         }
 
@@ -125,13 +84,12 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelLandingInfo()
         {
-            this.fileName = new FileName("landinfo", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelLandingInfo>();
         }
         #endregion
 
         #region Methods
-        protected void TripleLabel(string text = "")
+        private void TripleLabel(string text = "")
         {
             GUIStyle tripleLabel = new GUIStyle(GUI.skin.label);
             tripleLabel.fixedWidth = (this.windowRect.width / 3) - tripleLabel.margin.horizontal;
@@ -147,13 +105,13 @@ namespace HydroTech.Panels
 
         protected override void WindowGUI(int windowId)
         {
-            GUILayout.Label("Orbiting body: " + this.MainBodyName);
-            GUILayout.Label(string.Format("Surface g: {0:#0.00}m/s²", this.GeeASL));
-            GUILayout.Label(string.Format("RCS TWR: {0:#0.00}m/s²", this.TwrRCS), this.TwrLabelStyle);
-            GUILayout.Label(string.Format("Engine TWR: {0:#0.00}m/s²", this.TwrEng), this.TwrLabelStyle);
-            GUILayout.Label(string.Format("Altitude (AGL): {0:#0.00}m", this.AltTrue));
-            GUILayout.Label(string.Format("Vertical speed: {0:#0.00}m/s", this.VertSpeed));
-            GUILayout.Label(string.Format("Horizontal speed: {0:#0.00}m/s", this.HorSpeed));
+            GUILayout.Label("Orbiting body: " + MainBodyName);
+            GUILayout.Label(string.Format("Surface g: {0:#0.00}m/s²", LA.GeeASL));
+            GUILayout.Label(string.Format("RCS TWR: {0:#0.00}m/s²", LA.TwrRCS), TwrLabelStyle);
+            GUILayout.Label(string.Format("Engine TWR: {0:#0.00}m/s²", LA.TwrEng), TwrLabelStyle);
+            GUILayout.Label(string.Format("Altitude (AGL): {0:#0.00}m", LA.AltTrue));
+            GUILayout.Label(string.Format("Vertical speed: {0:#0.00}m/s", LA.VertSpeed));
+            GUILayout.Label(string.Format("Horizontal speed: {0:#0.00}m/s", LA.HorSpeed));
             if (!this.SlopeDetection)
             {
                 GUILayout.BeginHorizontal();
@@ -161,7 +119,7 @@ namespace HydroTech.Panels
                 GUILayout.Label("out of range", GUIUtils.ColouredLabel(Color.red));
                 GUILayout.EndHorizontal();
             }
-            else if (!this.Terrain)
+            else if (!LA.Terrain)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Slope detection: ");
@@ -173,17 +131,17 @@ namespace HydroTech.Panels
                 GUILayout.Label("Slope detection:");
                 GUILayout.BeginHorizontal();
                 TripleLabel();
-                TripleLabel(string.Format("N {0:#0.0}°", this.SlopeN));
+                TripleLabel(string.Format("N {0:#0.0}°", SlopeN));
                 TripleLabel();
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
-                TripleLabel(string.Format("W {0:#0.0}°", this.SlopeW));
-                TripleLabel(string.Format("({0:#0}m)", this.DetectRadius));
-                TripleLabel(string.Format("E {0:#0.0}°", this.SlopeE));
+                TripleLabel(string.Format("W {0:#0.0}°", SlopeW));
+                TripleLabel(string.Format("({0:#0}m)", LA.DetectRadius));
+                TripleLabel(string.Format("E {0:#0.0}°", SlopeE));
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 TripleLabel();
-                TripleLabel(string.Format("S {0:#0.0}°", this.SlopeS));
+                TripleLabel(string.Format("S {0:#0.0}°", SlopeS));
                 TripleLabel();
                 GUILayout.EndHorizontal();
             }

@@ -3,7 +3,6 @@ using HydroTech.Autopilots;
 using HydroTech.Data;
 using HydroTech.Managers;
 using HydroTech.Panels.UI;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -17,99 +16,18 @@ namespace HydroTech.Panels
             get { return HydroFlightManager.Instance.DockingAutopilot; }
         }
 
-        private static ModuleDockAssistCam Cam
-        {
-            get { return DA.Cam; }
-            set { DA.Cam = value; }
-        }
-
-        private static ModuleDockAssistTarget Target
-        {
-            get { return DA.target; }
-            set { DA.target = value; }
-        }
-
-        protected static bool Manual
-        {
-            get { return DA.Manual; }
-            set { DA.Manual = value; }
-        }
-
-        protected static bool ShowLine
-        {
-            get { return DA.ShowLine; }
-            set { DA.ShowLine = value; }
-        }
-
-        protected static bool AutoOrient
-        {
-            get { return DA.AutoOrient; }
-            set { DA.AutoOrient = value; }
-        }
-
-        protected static bool KillRelV
-        {
-            get { return DA.KillRelV; }
-            set { DA.KillRelV = value; }
-        }
-
-        protected static bool CamView
-        {
-            get { return DA.CamView; }
-            set { DA.CamView = value; }
-        }
-
-        protected static int CamMag
+        private static int CamMag
         {
             get
             {
-                if (Cam == null) { throw new NullReferenceException("PanelDockAssist.CamMag<get> before a camera is selected"); }
-                return Cam.Mag;
+                if (DA.Cam == null) { throw new NullReferenceException("PanelDockAssist.CamMag<get> before a camera is selected"); }
+                return DA.Cam.Mag;
             }
             set
             {
-                if (Cam == null) { throw new NullReferenceException("PanelDockAssist.CamMag<set> before a camera is selected"); }
-                Cam.Mag = value;
+                if (DA.Cam == null) { throw new NullReferenceException("PanelDockAssist.CamMag<set> before a camera is selected"); }
+                DA.Cam.Mag = value;
             }
-        }
-
-        protected static float AngularAcc
-        {
-            get { return DA.angularAcc; }
-            set { DA.angularAcc = value; }
-        }
-
-        protected static float Acc
-        {
-            get { return DA.acc; }
-            set { DA.acc = value; }
-        }
-
-        protected static float FSpeed
-        {
-            get { return DA.finalStageSpeed; }
-            set { DA.finalStageSpeed = value; }
-        }
-
-        protected static bool DriveTarget
-        {
-            get { return DA.DriveTarget; }
-            set { DA.DriveTarget = value; }
-        }
-
-        protected static bool NullCamera
-        {
-            get { return DA.NullCamera; }
-        }
-
-        protected static bool NullTarget
-        {
-            get { return DA.NullTarget;}
-        }
-
-        protected static bool TargetHasJeb
-        {
-            get { return DA.TargetHasJeb;}
         }
         #endregion
 
@@ -133,8 +51,8 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected ModuleDockAssist previewPart;
-        protected ModuleDockAssist PreviewPart
+        private ModuleDockAssist previewPart;
+        private ModuleDockAssist PreviewPart
         {
             get { return this.previewPart; }
             set
@@ -152,8 +70,8 @@ namespace HydroTech.Panels
             }
         }
 
-        protected bool choosingCamera;
-        protected bool ChoosingCamera
+        private bool choosingCamera;
+        private bool ChoosingCamera
         {
             get { return this.choosingCamera; }
             set
@@ -164,7 +82,7 @@ namespace HydroTech.Panels
                     if (value)
                     {
                         DA.CameraPaused = true;
-                        this.camListUI.SetSelectionToItem(Cam);
+                        this.camListUI.SetSelectionToItem(DA.Cam);
                         this.camListUI.SetToCurSelPage();
                         this.camListUI.SetSelectionToItem(null);
                     }
@@ -179,8 +97,8 @@ namespace HydroTech.Panels
             }
         }
 
-        protected Vessel previewVessel;
-        protected Vessel PreviewVessel
+        private Vessel previewVessel;
+        private Vessel PreviewVessel
         {
             get { return this.previewVessel; }
             set
@@ -198,8 +116,8 @@ namespace HydroTech.Panels
             }
         }
 
-        protected bool choosingVessel;
-        protected bool ChoosingVessel
+        private bool choosingVessel;
+        private bool ChoosingVessel
         {
             get { return this.choosingVessel; }
             set
@@ -217,8 +135,8 @@ namespace HydroTech.Panels
             }
         }
 
-        protected bool choosingTarget;
-        protected bool ChoosingTarget
+        private bool choosingTarget;
+        private bool ChoosingTarget
         {
             get { return this.choosingTarget; }
             set
@@ -231,7 +149,7 @@ namespace HydroTech.Panels
                         DA.CameraPaused = true;
                         if (this.targetVessel == null) { this.ChoosingVessel = true; }
                         else { this.PreviewVessel = this.targetVessel; }
-                        this.targetListUI.SetSelectionToItem(Target);
+                        this.targetListUI.SetSelectionToItem(DA.target);
                         this.targetListUI.SetToCurSelPage();
                         this.targetListUI.SetSelectionToItem(null);
                     }
@@ -246,7 +164,7 @@ namespace HydroTech.Panels
             }
         }
 
-        protected bool TempManual
+        private bool TempManual
         {
             get { return this.tempManual; }
             set
@@ -285,30 +203,30 @@ namespace HydroTech.Panels
                 {
                     if (value) //Starting settings
                     {
-                        this.tempAutoOrient = AutoOrient;
-                        if (Cam != null) { this.tempCamMag = CamMag; }
-                        this.TempCamView = CamView;
-                        this.tempDriveTarget = DriveTarget;
-                        this.tempKillRelV = KillRelV;
-                        this.TempManual = Manual;
-                        this.tempShowLine = ShowLine;
-                        this.angularAccText = AngularAcc.ToString("#0.000");
-                        this.accText = Acc.ToString("#0.000");
-                        this.fssText = FSpeed.ToString("#0.000");
+                        this.tempAutoOrient = DA.AutoOrient;
+                        if (DA.Cam != null) { this.tempCamMag = CamMag; }
+                        this.TempCamView = DA.CamView;
+                        this.tempDriveTarget = DA.DriveTarget;
+                        this.tempKillRelV = DA.KillRelV;
+                        this.TempManual = DA.Manual;
+                        this.tempShowLine = DA.ShowLine;
+                        this.angularAccText = DA.angularAcc.ToString("#0.000");
+                        this.accText = DA.acc.ToString("#0.000");
+                        this.fssText = DA.finalStageSpeed.ToString("#0.000");
                     }
                     else //Applying settings
                     {
-                        AutoOrient = this.tempAutoOrient;
-                        if (Cam != null) { CamMag = this.tempCamMag; }
-                        CamView = this.TempCamView;
-                        DriveTarget = this.tempDriveTarget;
-                        KillRelV = this.tempKillRelV;
-                        Manual = this.TempManual;
-                        ShowLine = this.tempShowLine;
+                        DA.AutoOrient = this.tempAutoOrient;
+                        if (DA.Cam != null) { CamMag = this.tempCamMag; }
+                        DA.CamView = this.TempCamView;
+                        DA.DriveTarget = this.tempDriveTarget;
+                        DA.KillRelV = this.tempKillRelV;
+                        DA.Manual = this.TempManual;
+                        DA.ShowLine = this.tempShowLine;
                         float tryParse;
-                        if (float.TryParse(this.angularAccText, out tryParse) && tryParse >= 0) { AngularAcc = tryParse; }
-                        if (float.TryParse(this.accText, out tryParse) && tryParse >= 0) { Acc = tryParse; }
-                        if (float.TryParse(this.fssText, out tryParse) && tryParse > 0) { FSpeed = tryParse; }
+                        if (float.TryParse(this.angularAccText, out tryParse) && tryParse >= 0) { DA.angularAcc = tryParse; }
+                        if (float.TryParse(this.accText, out tryParse) && tryParse >= 0) { DA.acc = tryParse; }
+                        if (float.TryParse(this.fssText, out tryParse) && tryParse > 0) { DA.finalStageSpeed = tryParse; }
                     }
                 }
                 base.Settings = value;
@@ -325,29 +243,28 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelDockAssist()
         {
-            this.fileName = new FileName("dock", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelDockAssist>();
         }
         #endregion
 
         #region Methods
-        protected Vessel GetTargetVessel(ModuleDockAssistTarget mtgt)
+        private Vessel GetTargetVessel(ModuleDockAssistTarget mtgt)
         {
             return mtgt.vessel;
         }
 
-        protected bool IsOnTargetVessel(ModuleDockAssistTarget pm)
+        private bool IsOnTargetVessel(ModuleDockAssistTarget pm)
         {
             return pm.vessel == this.targetVessel;
         }
 
-        protected void DoPreviewVessel()
+        private void DoPreviewVessel()
         {
             HydroFlightManager.Instance.CameraManager.FoV = 60;
             HydroFlightManager.Instance.CameraManager.Target = this.PreviewVessel.transform;
         }
 
-        protected void DrawChoosingCameraUI()
+        private void DrawChoosingCameraUI()
         {
             bool pageChanged, noCam;
             GUILayout.Label("Camera:");
@@ -359,20 +276,20 @@ namespace HydroTech.Panels
             if (this.PreviewPart == null) { GUILayout.Button("OK", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("OK"))
             {
-                Cam = (ModuleDockAssistCam)this.PreviewPart;
+                DA.Cam = (ModuleDockAssistCam)this.PreviewPart;
                 this.ChoosingCamera = false;
             }
             if (GUILayout.Button("Cancel")) { this.ChoosingCamera = false; }
-            if (Cam == null) { GUILayout.Button("Clear choice", GUIUtils.ButtonStyle(Color.red)); }
+            if (DA.Cam == null) { GUILayout.Button("Clear choice", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("Clear choice"))
             {
-                Cam = null;
+                DA.Cam = null;
                 this.ChoosingCamera = false;
             }
             GUILayout.EndHorizontal();
         }
 
-        protected void DrawChoosingVesselUI()
+        private void DrawChoosingVesselUI()
         {
             GUILayout.Label("Vessel:");
             bool pageChanged;
@@ -400,7 +317,7 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
         }
 
-        protected void DrawChoosingTargetUI()
+        private void DrawChoosingTargetUI()
         {
             GUILayout.Label("Vessel");
             if (GUILayout.Button(this.targetVessel.vesselName, this.targetVesselList.Contains(this.targetVessel) ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
@@ -419,7 +336,7 @@ namespace HydroTech.Panels
             if (this.PreviewPart == null) { GUILayout.Button("OK", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("OK"))
             {
-                Target = (ModuleDockAssistTarget)this.PreviewPart;
+                DA.target = (ModuleDockAssistTarget)this.PreviewPart;
                 this.ChoosingTarget = false;
             }
             if (GUILayout.Button("Cancel"))
@@ -427,11 +344,11 @@ namespace HydroTech.Panels
                 this.ChoosingTarget = false;
                 this.PreviewVessel = null;
             }
-            if (Target == null) { GUILayout.Button("Clear choice", GUIUtils.ButtonStyle(Color.red)); }
+            if (DA.target == null) { GUILayout.Button("Clear choice", GUIUtils.ButtonStyle(Color.red)); }
             else if (GUILayout.Button("Clear choice"))
             {
                 this.targetVessel = null;
-                Target = null;
+                DA.target = null;
                 this.ChoosingTarget = false;
                 this.PreviewVessel = null;
             }
@@ -443,11 +360,6 @@ namespace HydroTech.Panels
         protected override void SetDefaultWindowRect()
         {
             this.windowRect = new Rect(349, 215, 200, 252);
-        }
-
-        protected override void MakeAPSave()
-        {
-            DA.MakeSaveAtNextUpdate();
         }
 
         public override void OnFlightStart()
@@ -482,17 +394,17 @@ namespace HydroTech.Panels
             else
             {
                 GUILayout.Label("Camera:");
-                if (Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(Cam.ToString(), Cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
+                if (DA.Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(DA.Cam.ToString(), DA.Cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
                 {
                     this.ChoosingCamera = true;
                 }
                 GUILayout.Label("Target:");
-                if (Target == null ? GUILayout.Button("Choose target") : GUILayout.Button(Target.vessel.vesselName + "\n" + Target, Target.IsNear ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
+                if (DA.target == null ? GUILayout.Button("Choose target") : GUILayout.Button(DA.target.vessel.vesselName + "\n" + DA.target, DA.target.IsNear ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
                 {
                     this.ChoosingTarget = true;
                 }
                 GUILayout.Label("Settings:");
-                if (GUILayout.Button(Manual ? "Manual docking" : "Automated docking"))
+                if (GUILayout.Button(DA.Manual ? "Manual docking" : "Automated docking"))
                 {
                     this.Settings = true;
                 }
@@ -509,9 +421,9 @@ namespace HydroTech.Panels
             GUILayout.Label("Acceleration (m/s²)");
             this.accText = GUILayout.TextField(this.accText);
 
-            if (!NullCamera)
+            if (!DA.NullCamera)
             {
-                if (!NullTarget)
+                if (!DA.NullTarget)
                 {
                     this.tempShowLine = GUILayout.Toggle(this.tempShowLine, "Guidance line");
                     this.TempManual = !GUILayout.Toggle(!this.TempManual, "Automated docking");
@@ -527,7 +439,7 @@ namespace HydroTech.Panels
                         this.fssText = GUILayout.TextField(this.fssText);
                         GUILayout.Label("m/s");
                         GUILayout.EndHorizontal();
-                        if (TargetHasJeb) { this.tempDriveTarget = GUILayout.Toggle(this.tempDriveTarget, "Rotate target"); }
+                        if (DA.TargetHasJeb) { this.tempDriveTarget = GUILayout.Toggle(this.tempDriveTarget, "Rotate target"); }
                     }
                 }
 
@@ -535,8 +447,7 @@ namespace HydroTech.Panels
                 if (this.TempCamView)
                 {
                     GUILayout.BeginHorizontal();
-                    GUIStyle lblStyle = new GUIStyle(GUI.skin.label);
-                    lblStyle.fixedWidth = this.windowRect.width / 2;
+                    GUIStyle lblStyle = new GUIStyle(GUI.skin.label) { fixedWidth = this.windowRect.width / 2 };
                     GUILayout.Label("Mag: ×" + this.tempCamMag, lblStyle);
                     if (GUILayout.Button("-")) { if (this.tempCamMag > 1) { this.tempCamMag /= 2; } }
                     if (GUILayout.Button("+")) { if (this.tempCamMag < 32) { this.tempCamMag *= 2; } }
@@ -552,7 +463,7 @@ namespace HydroTech.Panels
             if (mcam == null) { GUILayout.Button(string.Empty); }
             else
             {
-                if (GUILayout.Button(mcam.ToString(), mcam == Cam ? ReferenceEquals(mcam, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : ReferenceEquals(mcam, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
+                if (GUILayout.Button(mcam.ToString(), mcam == DA.Cam ? ReferenceEquals(mcam, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : ReferenceEquals(mcam, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
                 {
                     this.camListUI.SetSelectionToItem(mcam);
                 }
@@ -576,7 +487,7 @@ namespace HydroTech.Panels
             if (mtgt == null) { GUILayout.Button(""); }
             else
             {
-                if (GUILayout.Button(mtgt.ToString(), mtgt == Target ? ReferenceEquals(mtgt, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : ReferenceEquals(mtgt, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
+                if (GUILayout.Button(mtgt.ToString(), mtgt == DA.target ? ReferenceEquals(mtgt, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.blue, true) : GUIUtils.ButtonStyle(Color.green, true) : ReferenceEquals(mtgt, this.PreviewPart) ? GUIUtils.ButtonStyle(Color.yellow, true) : GUIUtils.WrapButton))
                 {
                     this.targetListUI.SetSelectionToItem(mtgt);
                 }

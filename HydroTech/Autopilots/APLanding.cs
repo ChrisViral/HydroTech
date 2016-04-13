@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using HydroTech.Panels;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 using Direction = HydroTech.Autopilots.Calculators.GroundContactCalculator.Direction;
@@ -91,35 +89,92 @@ namespace HydroTech.Autopilots
         #endregion
         #endregion
 
-        #region Properties
-        protected override string NameString
+        #region Static properties
+        private static Vector3 SurfVel
         {
-            get { return "LandingAP"; }
+            get { return ActiveVessel.srf_velocity; }
         }
 
-        public bool Landed
+        private static Vector3 SurfVelVessel
         {
-            get { return ActiveVessel.LandedOrSplashed; }
+            get { return HTUtils.VectorTransform(SurfVel, ActiveVessel.ReferenceTransform); }
+        }
+
+        private static float SurfXSpeed
+        {
+            get { return SurfVelVessel.x; }
+        }
+
+        private static CelestialBody MainBody
+        {
+            get { return FlightGlobals.currentMainBody; }
+        }
+        #endregion
+
+        #region Fields
+        public bool burnRetro;
+        public bool vabPod = true;
+        public bool touchdown = true;
+        public bool useTrueAlt = true;
+        public float safeTouchDownSpeed = 0.5f;
+        public float maxThrottle = 1;
+        public float altKeep = 10;
+        private float hoverThrustRate;
+        private float g;
+        private Vector3 surfUpNormal;
+        private Status status = Status.DISENGAGED;
+        private Indicator indicator = Indicator.SAFE;
+        private readonly GroundContactCalculator groundCalc = new GroundContactCalculator();
+        private readonly DescentCalculator desCalc = new DescentCalculator();
+        #endregion
+
+        #region Properties
+        public bool engines;
+        public bool Engines
+        {
+            get { return this.engines; }
+            set
+            {
+                if (value != this.engines) { FlightMainPanel.Instance.Landing.ResetHeight(); }
+                this.engines = value;
+            }
+        }
+
+        public float GeeASL { get; private set; }
+
+        public float TwrRCS { get; private set; }
+
+        public float TwrEng { get; private set; }
+
+        public float TWR
+        {
+            get { return this.engines ? this.TwrRCS + this.TwrEng : this.TwrRCS; }
+        }
+
+        public float MaxThrottle
+        {
+            get { return this.maxThrottle * 100; }
+            set { this.maxThrottle = value / 100; }
         }
 
         public bool SlopeDetection
         {
-            get { return this.AltAsl <= 2E5f; }
+            get { return this.AltASL <= 2E5f; }
         }
 
-        public float AltAsl
+        public float AltASL
         {
-            get { return (float)this.MainBody.GetAltitude(ActiveVessel.CoM); }
+            get { return (float)MainBody.GetAltitude(ActiveVessel.CoM); }
         }
 
         public float AltTrue
         {
-            get { return this.tad.DistCenter; }
+            get { return this.groundCalc.DistCenter; }
         }
 
         public float TerrainHeight
         {
-            get { return this.AltAsl - this.AltTrue; }
+            get { return this.AltASL - this.AltTrue; }
         }
 
         public float AltKeepTrue
@@ -127,7 +182,7 @@ namespace HydroTech.Autopilots
             get { return this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, finalDescentHeight); }
         }
 
-        public float AltKeepAsl
+        public float AltKeepASL
         {
             get { return this.useTrueAlt ? this.altKeep + this.TerrainHeight : this.altKeep; }
         }
@@ -137,19 +192,34 @@ namespace HydroTech.Autopilots
             get { return this.touchdown ? this.AltTrue : this.AltTrue - this.AltKeepTrue; }
         }
 
+        private float VesselHeight
+        {
+            get
+            {
+                float height = 0;
+                foreach (Part p in ActiveVessel.parts)
+                {
+                    Vector3 r = p.WCoM - ActiveVessel.CoM;
+                    float h = -Vector3.Dot(r, this.Up);
+                    height = Mathf.Max(height, h);
+                }
+                return height;
+            }
+        }
+
         public bool Terrain
         {
-            get { return this.tad.terrain; }
+            get { return this.groundCalc.terrain; }
         }
 
         public float DetectRadius
         {
-            get { return this.tad.Radius; }
+            get { return this.groundCalc.Radius; }
         }
 
         public float Slope(Direction dir)
         {
-            return this.tad.Slope(dir);
+            return this.groundCalc.Slope(dir);
         }
 
         public float VertSpeed
@@ -157,59 +227,29 @@ namespace HydroTech.Autopilots
             get { return (float)ActiveVessel.verticalSpeed; }
         }
 
-        public float HoriSpeed
+        public float HorSpeed
         {
             get { return (float)ActiveVessel.horizontalSrfSpeed; }
         }
 
-        protected float SurfXSpeed
+        private float SurfYSpeed
         {
-            get { return this.SurfVelVessel.x; }
-        }
-
-        protected float SurfYSpeed
-        {
-            get { return this.vabPod ? this.SurfVelVessel.y : this.SurfVelVessel.z; }
-        }
-
-        public float MainBodySyncAlt
-        {
-            get { return GetBodySyncAltitude(this.MainBody); }
+            get { return this.vabPod ? SurfVelVessel.y : SurfVelVessel.z; }
         }
 
         public float AllowedHori
         {
-            get { return AllowedHoriSpeed(this.AltKeepTrue); }
+            get { return 0.01f * this.AltKeepTrue; }
         }
 
-        public float SafeHorizontalSpeed
+        private float SafeHorizontalSpeed
         {
-            get { return this.touchdown ? 0.1f : AllowedHoriSpeed(this.AltTrue); }
+            get { return this.touchdown ? 0.1f : 0.01f * this.AltTrue; }
         }
 
-        protected Vector3 Up
+        private Vector3 Up
         {
             get { return this.vabPod ? ActiveVessel.ReferenceTransform.up : -ActiveVessel.ReferenceTransform.forward; }
-        }
-
-        protected Vector3 SurfVel
-        {
-            get { return ActiveVessel.srf_velocity; }
-        }
-
-        protected Vector3 SurfVelVessel
-        {
-            get { return VectorTransform(this.SurfVel, ActiveVessel.ReferenceTransform); }
-        }
-
-        protected CelestialBody MainBody
-        {
-            get { return ActiveVessel.mainBody; }
-        }
-
-        public string MainBodyName
-        {
-            get { return this.MainBody.name; }
         }
 
         public string StatusString
@@ -226,46 +266,10 @@ namespace HydroTech.Autopilots
         {
             get { return colorDict[this.indicator]; }
         }
-        #endregion
 
-        #region User input vars     
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "UseEngines")]
-        public bool engines;
-        public bool Engines
+        protected override string NameString
         {
-            get { return this.engines; }
-            set
-            {
-                if (value != this.engines) { FlightMainPanel.Instance.Landing.ResetHeight(); }
-                this.engines = value;
-            }
-        }
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "PointUp")]
-        public bool vabPod = true;
-
-        [HydroSLNodeInfo(name = "SETTIINGS"), HydroSLField(saveName = "BurnRetro", isTesting = true)]
-        public bool burnRetro;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Touchdown")]
-        public bool touchdown = true;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TrueAlt")]
-        public bool useTrueAlt = true;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TouchdownSpeed")]
-        public float safeTouchDownSpeed = 0.5f;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MaxThrottle")]
-        public float maxThrottle = 1;
-
-        [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Altitude")]
-        public float altKeep = 10;
-
-        public float MaxThrottle
-        {
-            get { return this.maxThrottle * 100; }
-            set { this.maxThrottle = value / 100; }
+            get { return "LandingAP"; }
         }
 
         public override bool Engaged
@@ -278,52 +282,8 @@ namespace HydroTech.Autopilots
         }
         #endregion
 
-        #region Autopilot vars 
-        protected float hoverThrustRate;
-        protected float vertThrustRate;
-        protected float g;
-        protected Vector3 surfUpNormal;
-        protected Status status = Status.DISENGAGED;
-        protected Indicator indicator = Indicator.SAFE;
-        protected GroundContactCalculator tad = new GroundContactCalculator();
-        protected DescentCalculator cd = new DescentCalculator();
-
-        protected float twrRcs;
-        public float TwrRcs
-        {
-            get { return this.twrRcs; }
-            protected set { this.twrRcs = value; }
-        }
-
-        protected float twrEng;
-        public float TwrEng
-        {
-            get { return this.twrEng; }
-            protected set { this.twrEng = value; }
-        }
-
-        public float Twr
-        {
-            get { return this.engines ? this.TwrRcs + this.TwrEng : this.TwrRcs; }
-        }
-
-        protected float gAsl;
-        public float GAsl
-        {
-            get { return this.gAsl; }
-            protected set { this.gAsl = value; }
-        }
-        #endregion
-
-        #region Constructor
-        public APLanding()
-        {
-            this.fileName = new FileName("landing", "cfg", FileName.autopilotSaveFolder);
-        }
-        #endregion
-
-        #region Autopilot
-        protected bool DriveHoldDir(FlightCtrlState ctrlState, Vector3 dir)
+        #region Methods
+        private bool DriveHoldDir(FlightCtrlState ctrlState, Vector3 dir)
         {
             // Point up
             LandingCalculator stateCal = new LandingCalculator();
@@ -332,20 +292,142 @@ namespace HydroTech.Autopilots
             ActiveRCS.MakeRotation(ctrlState, stateCal.Steer(0.05f /*2.87°*/) ? 5 : 20);
 
             // Kill rotation
-            Vector3 angularVelocity = VectorTransform(ActiveVessel.GetComponent<Rigidbody>().angularVelocity, ActiveVessel.ReferenceTransform);
+            Vector3 angularVelocity = HTUtils.VectorTransform(ActiveVessel.GetComponent<Rigidbody>().angularVelocity, ActiveVessel.ReferenceTransform);
             SetRotationRoll(ctrlState, angularVelocity.z);
 
             return stateCal.Steer(0.05f); //2.87°
         }
 
-        protected void DeployLandingGears()
+        private void CheckAltitudeAndDeployLandingGears()
         {
-            HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.Gear, true);
+            if (this.HorSpeed < 0.1f && this.AltTrue <= 200) { HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.Gear, true); }
         }
 
-        protected void CheckAltitudeAndDeployLandingGears()
+        private void DriveHorizontalDec(FlightCtrlState ctrlState)
         {
-            if (this.HoriSpeed < 0.1f && this.AltTrue <= 200) { DeployLandingGears(); }
+            ctrlState.X = HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(0, SurfXSpeed * 5), -1, 1);
+            SetTranslationY(ctrlState, HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * 5), -1, 1));
+        }
+
+        private void DriveHorizontalBrake(FlightCtrlState ctrlState)
+        {
+            ctrlState.X = Mathf.Sign(SurfXSpeed);
+            SetTranslationY(ctrlState, Mathf.Sign(this.SurfYSpeed));
+        }
+
+        private void DriveFinalDescent(FlightCtrlState ctrlState)
+        {
+            DriveHorizontalDec(ctrlState);
+            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + ((this.safeTouchDownSpeed + this.VertSpeed) / this.TWR), -1, 0));
+        }
+
+        private void DriveAvoidContact(FlightCtrlState ctrlState)
+        {
+            if (this.VertSpeed < 0) { SetTranslationZ(ctrlState, -1); }
+            else
+            {
+                SetTranslationZ(ctrlState, -this.hoverThrustRate);
+                DriveHorizontalDec(ctrlState);
+            }
+        }
+
+        private void DriveHoverManeuver(FlightCtrlState ctrlState)
+        {
+            float modifier = Mathf.Max(this.AltDiff, -10) + this.VertSpeed;
+            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + (modifier / this.TWR), -1, 0));
+            if (this.HorSpeed > this.SafeHorizontalSpeed) { DriveHorizontalDec(ctrlState); }
+        }
+
+        private void SetTranslationY(FlightCtrlState ctrlState, float y)
+        {
+            if (this.vabPod) { ctrlState.Y = y; }
+            else
+            {
+                ctrlState.Z = y;
+            }
+        }
+
+        private void SetTranslationZ(FlightCtrlState ctrlState, float z)
+        {
+            if (this.vabPod) { ctrlState.Z = z; }
+            else
+            {
+                ctrlState.Y = -z;
+            }
+            if (this.engines)
+            {
+                ctrlState.mainThrottle = -z * this.maxThrottle;
+                FlightInputHandler.state.mainThrottle = ctrlState.mainThrottle;
+            }
+        }
+
+        private void SetRotationRoll(FlightCtrlState ctrlState, float roll)
+        {
+            if (this.vabPod) { ctrlState.roll = roll; }
+            else { ctrlState.yaw = roll; }
+        }
+        #endregion
+
+        #region Overrides
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+
+            //Calculate vessel states
+            Vector3 coM = ActiveVessel.CoM;
+            this.surfUpNormal = (coM - MainBody.position).normalized;
+            this.g = (float)FlightGlobals.getGeeForceAtPosition(coM).magnitude;
+            this.GeeASL = (float)FlightGlobals.getGeeForceAtPosition(MainBody.position + ((Vector3d)this.surfUpNormal * MainBody.Radius)).magnitude;
+            this.groundCalc.OnUpdate(ActiveVessel, this.VesselHeight, this.SlopeDetection);
+
+            //Get vessel TWR
+            this.TwrRCS = this.vabPod ? HydroFlightManager.Instance.ActiveRCS.maxAcc.zn : HydroFlightManager.Instance.ActiveRCS.maxAcc.yp;
+            EngineCalculator cet = new EngineCalculator();
+            cet.OnUpdate(ActiveVessel, this.vabPod ? Vector3.down : Vector3.forward);
+            this.TwrEng = cet.MaxAcc * this.maxThrottle;
+            this.hoverThrustRate = this.g / this.TWR;
+
+            //Get vessel CurrentDescentBehaviour
+            if (ActiveVessel.LandedOrSplashed && this.touchdown) { this.indicator = Indicator.LANDED; }
+            else if (this.hoverThrustRate > 1.0F || this.GeeASL > this.TWR)
+            {
+                this.indicator = Indicator.LOWTWR;
+                this.engaged = false;
+            }
+            else if (this.AltASL > HTUtils.GetBodySyncAltitude(MainBody))
+            {
+                this.indicator = Indicator.OUTSYNC;
+                this.engaged = false;
+            }
+            else if (this.AltDiff < finalDescentHeight) { this.indicator = this.touchdown ? Indicator.FINAL : Indicator.HOVER; }
+            else //Ready for landing
+            {
+                this.desCalc.OnUpdate(finalDescentHeight, this.safeTouchDownSpeed, this.GeeASL, this.TWR, -this.VertSpeed, this.AltDiff);
+                this.indicator = (Indicator)this.desCalc.Indicator;
+            }
+
+            if (!this.engaged) { this.status = Status.DISENGAGED; }
+            else if (TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRateIndex != 0) { this.status = Status.WARP; }
+            else
+            {
+                if (this.indicator == Indicator.LANDED) { this.status = Status.LANDED; }
+                else if (this.indicator == Indicator.HOVER) { this.status = Status.HOVER; }
+                else if (this.indicator == Indicator.FINAL)
+                {
+                    this.status = this.HorSpeed < this.SafeHorizontalSpeed ? Status.DESCEND : Status.AVOID;
+                }
+                else if (this.desCalc.Behaviour == DescentCalculator.DescentBehaviour.IDLE)
+                {
+                    if (this.HorSpeed > 0.05f * this.AltTrue) { this.status = Status.HORIZONTAL; }
+                    else if (this.HorSpeed < this.SafeHorizontalSpeed) { this.status = Status.IDLE; }
+                    else { this.status = Status.DECELERATE; }
+                }
+                else if (this.desCalc.Behaviour == DescentCalculator.DescentBehaviour.BRAKE) { this.status = Status.VERTICAL; }
+                else // CalculatorDescent.DescentBehaviour.NORMAL
+                {
+                    this.status = this.HorSpeed > 0.05f * this.AltTrue ? Status.HORIZONTAL : Status.DECELERATE;
+                }
+            }
         }
 
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
@@ -362,7 +444,7 @@ namespace HydroTech.Autopilots
                 switch (this.status)
                 {
                     case Status.IDLE:
-                        decVector = this.SurfVel.normalized;
+                        decVector = SurfVel.normalized;
                         break;
                     case Status.LANDED:
                         decVector = -this.surfUpNormal;
@@ -377,13 +459,13 @@ namespace HydroTech.Autopilots
                         decVector = -this.surfUpNormal;
                         break;
                     case Status.HORIZONTAL:
-                        decVector = new Vector3(this.SurfVel.x, this.SurfVel.y, 0).normalized;
+                        decVector = new Vector3(SurfVel.x, SurfVel.y, 0).normalized;
                         break;
                     case Status.VERTICAL:
                         decVector = -this.surfUpNormal;
                         break;
                     case Status.DECELERATE:
-                        decVector = this.SurfVel.normalized;
+                        decVector = SurfVel.normalized;
                         break;
                     default:
                         decVector = Vector3.zero;
@@ -419,7 +501,7 @@ namespace HydroTech.Autopilots
                         SetTranslationZ(ctrlState, -1);
                         return;
                     case Status.DECELERATE:
-                        SetTranslationZ(ctrlState, (this.cd.ThrRate / this.SurfVel.z) * this.SurfVel.magnitude);
+                        SetTranslationZ(ctrlState, (this.desCalc.ThrRate / SurfVel.z) * SurfVel.magnitude);
                         return;
                     default:
                         return;
@@ -457,180 +539,11 @@ namespace HydroTech.Autopilots
                     return;
                 case Status.DECELERATE:
                     DriveHorizontalDec(ctrlState);
-                    SetTranslationZ(ctrlState, -this.cd.ThrRate);
+                    SetTranslationZ(ctrlState, -this.desCalc.ThrRate);
                     return;
                 default:
                     return;
             }
-        }
-
-        protected void DriveHorizontalDec(FlightCtrlState ctrlState)
-        {
-            ctrlState.X = HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(0, this.SurfXSpeed * 5), -1, 1);
-            SetTranslationY(ctrlState, HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * 5), -1, 1));
-        }
-
-        protected void DriveHorizontalBrake(FlightCtrlState ctrlState)
-        {
-            ctrlState.X = Mathf.Sign(this.SurfXSpeed);
-            SetTranslationY(ctrlState, Mathf.Sign(this.SurfYSpeed));
-        }
-
-        protected void DriveFinalDescent(FlightCtrlState ctrlState)
-        {
-            DriveHorizontalDec(ctrlState);
-            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + ((this.safeTouchDownSpeed + this.VertSpeed) / this.Twr), -1, 0));
-        }
-
-        protected void DriveAvoidContact(FlightCtrlState ctrlState)
-        {
-            if (this.VertSpeed < 0) { SetTranslationZ(ctrlState, -1); }
-            else
-            {
-                SetTranslationZ(ctrlState, -this.hoverThrustRate);
-                DriveHorizontalDec(ctrlState);
-            }
-        }
-
-        protected void DriveHoverManeuver(FlightCtrlState ctrlState)
-        {
-            float modifier = Mathf.Max(this.AltDiff, -10) + this.VertSpeed;
-            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + (modifier / this.Twr), -1, 0));
-            if (this.HoriSpeed > this.SafeHorizontalSpeed) { DriveHorizontalDec(ctrlState); }
-        }
-
-        protected void SetTranslationY(FlightCtrlState ctrlState, float y)
-        {
-            if (this.vabPod) { ctrlState.Y = y; }
-            else
-            {
-                ctrlState.Z = y;
-            }
-        }
-
-        protected void SetTranslationZ(FlightCtrlState ctrlState, float z)
-        {
-            if (this.vabPod) { ctrlState.Z = z; }
-            else
-            {
-                ctrlState.Y = -z;
-            }
-            if (this.engines)
-            {
-                ctrlState.mainThrottle = -z * this.maxThrottle;
-                FlightInputHandler.state.mainThrottle = ctrlState.mainThrottle;
-            }
-        }
-
-        protected void SetRotationRoll(FlightCtrlState ctrlState, float roll)
-        {
-            if (this.vabPod) { ctrlState.roll = roll; }
-            else { ctrlState.yaw = roll; }
-        }
-        #endregion
-
-        #region Methods
-        protected float GetBodySyncAltitude(CelestialBody body)
-        {
-            return (float)Math.Pow((body.gravParameter * body.rotationPeriod * body.rotationPeriod) / (4 * Math.PI * Math.PI), 1d / 3);
-        }
-
-        protected float HoriBrakeSpeed(float alt)
-        {
-            return 0.05f * alt;
-        }
-
-        public float AllowedHoriSpeed(float alt)
-        {
-            return 0.1f * alt;
-        }
-
-        protected float VesselHeight()
-        {
-            float height = 0;
-            foreach (Part p in ActiveVessel.parts)
-            {
-                Vector3 r = p.Rigidbody.worldCenterOfMass - ActiveVessel.CoM;
-                float h = -Vector3.Dot(r, this.Up);
-                height = Mathf.Max(height, h);
-            }
-            return height;
-        }
-        #endregion
-
-        #region Overrides
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-
-            //Calculate vessel states
-            Vector3 coM = ActiveVessel.CoM;
-            this.surfUpNormal = (coM - this.MainBody.position).normalized;
-            this.g = (float)FlightGlobals.getGeeForceAtPosition(coM).magnitude;
-            this.GAsl = (float)FlightGlobals.getGeeForceAtPosition(this.MainBody.position + ((Vector3d)this.surfUpNormal * this.MainBody.Radius)).magnitude;
-            this.tad.OnUpdate(ActiveVessel, VesselHeight(), this.SlopeDetection);
-
-            //Get vessel TWR
-            this.TwrRcs = this.vabPod ? HydroFlightManager.Instance.ActiveRCS.maxAcc.zn : HydroFlightManager.Instance.ActiveRCS.maxAcc.yp;
-            EngineCalculator cet = new EngineCalculator();
-            cet.OnUpdate(ActiveVessel, this.vabPod ? Vector3.down : Vector3.forward);
-            this.TwrEng = cet.MaxAcc * this.maxThrottle;
-            this.hoverThrustRate = this.g / this.Twr;
-
-            //Get vessel CurrentDescentBehaviour
-            if (this.Landed && this.touchdown) { this.indicator = Indicator.LANDED; }
-            else if (this.hoverThrustRate > 1.0F || this.GAsl > this.Twr)
-            {
-                this.indicator = Indicator.LOWTWR;
-                this.engaged = false;
-            }
-            else if (this.AltAsl > this.MainBodySyncAlt)
-            {
-                this.indicator = Indicator.OUTSYNC;
-                this.engaged = false;
-            }
-            else if (this.AltDiff < finalDescentHeight) { this.indicator = this.touchdown ? Indicator.FINAL : Indicator.HOVER; }
-            else //Ready for landing
-            {
-                this.cd.OnUpdate(finalDescentHeight, this.safeTouchDownSpeed, this.GAsl, this.Twr, -this.VertSpeed, this.AltDiff);
-                this.indicator = (Indicator)this.cd.Indicator;
-            }
-
-            if (!this.engaged) { this.status = Status.DISENGAGED; }
-            else if (TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRateIndex != 0) { this.status = Status.WARP; }
-            else
-            {
-                if (this.indicator == Indicator.LANDED) { this.status = Status.LANDED; }
-                else if (this.indicator == Indicator.HOVER) { this.status = Status.HOVER; }
-                else if (this.indicator == Indicator.FINAL)
-                {
-                    this.status = this.HoriSpeed < this.SafeHorizontalSpeed ? Status.DESCEND : Status.AVOID;
-                }
-                else if (this.cd.Behaviour == DescentCalculator.DescentBehaviour.IDLE)
-                {
-                    if (this.HoriSpeed > HoriBrakeSpeed(this.AltTrue)) { this.status = Status.HORIZONTAL; }
-                    else if (this.HoriSpeed < this.SafeHorizontalSpeed) { this.status = Status.IDLE; }
-                    else { this.status = Status.DECELERATE; }
-                }
-                else if (this.cd.Behaviour == DescentCalculator.DescentBehaviour.BRAKE) { this.status = Status.VERTICAL; }
-                else // CalculatorDescent.DescentBehaviour.NORMAL
-                {
-                    this.status = this.HoriSpeed > HoriBrakeSpeed(this.AltTrue) ? Status.HORIZONTAL : Status.DECELERATE;
-                }
-            }
-        }
-
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            this.vabPod = true;
-            this.engines = false;
-            this.burnRetro = false;
-            this.touchdown = true;
-            this.useTrueAlt = true;
-            this.safeTouchDownSpeed = 0.5f;   //Default vertical speed for final touchdown
-            this.maxThrottle = 1;
-            this.altKeep = 10;
         }
         #endregion
     }

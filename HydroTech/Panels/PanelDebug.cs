@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -42,7 +41,6 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelDebug()
         {
-            this.fileName = new FileName("debug", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelDebug>();
         }
         #endregion
@@ -105,7 +103,7 @@ namespace HydroTech.Panels
 
             foreach (string name in this.watchList.Keys)
             {
-                GUILayout.Label(name + " = " + this.watchList[name]);
+                GUILayout.Label(string.Format("{0} = {1}", name, this.watchList[name]));
             }
 
             GUI.DragWindow();
@@ -113,7 +111,7 @@ namespace HydroTech.Panels
 
         protected override void SetDefaultWindowRect()
         {
-            this.windowRect.Set(Screen.width - 200, 0, 200, 0);
+            this.windowRect = new Rect(Screen.width - 200, 0, 200, 0);
         }
         #endregion
     }

@@ -1,37 +1,29 @@
-﻿using HydroTech.Storage;
-using HydroTech.Utils;
+﻿using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech.Panels
 {
-    public abstract class Panel : LoadSaveFileBasic
+    public abstract class Panel
     {
         #region Fields
-        [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "WindowPos", cmd = CMD.RECT_TOP_LEFT)]
-        public Rect windowRect;
+        protected Rect windowRect;
         #endregion
 
         #region Properties
-        [HydroSLNodeInfo(name = "PANEL"), HydroSLField(saveName = "PanelShown")]
-        public bool panelShown;
+        protected bool panelShown;
         public virtual bool PanelShown
         {
             get { return this.panelShown; }
             set
             {
-                if (!this.Active) { return; }
-                if (value != this.panelShown) { this.needSave = true; }
-                this.panelShown = value;
+                if (this.Active) { this.panelShown = value; }
             }
         }
 
-        protected bool active;
-        public virtual bool Active
-        {
-            get { return this.active; }
-            set { this.active = value; }
-        }
+        public virtual bool Active { get; set; }
+        #endregion
 
+        #region Abstract properties
         public abstract string PanelTitle { get; }
 
         protected abstract int ID { get; }
@@ -58,24 +50,21 @@ namespace HydroTech.Panels
         #endregion
 
         #region Virtual methods
-        protected virtual bool LayoutEngageBtn(bool en)
+        protected virtual bool LayoutEngageBtn(bool engaged)
         {
-            GUIStyle engageBtnStyle = GUIUtils.ButtonStyle(en ? Color.red : Color.blue);
-            string engageBtnText = en ? "DISENGAGE" : "ENGAGE";
+            GUIStyle engageBtnStyle = GUIUtils.ButtonStyle(engaged ? Color.red : Color.green);
+            string engageBtnText = engaged ? "DISENGAGE" : "ENGAGE";
             return GUILayout.Button(engageBtnText, engageBtnStyle);
         }
 
         public virtual void DrawGUI()
         {
-            Rect newWindowRect = KSPUtil.ClampRectToScreen(GUILayout.Window(this.ID, this.windowRect, WindowGUI, this.PanelTitle));
-            if (newWindowRect.xMin != this.windowRect.xMin || newWindowRect.yMin != this.windowRect.yMin) { this.needSave = true; }
-            this.windowRect = newWindowRect;
+            this.windowRect = KSPUtil.ClampRectToScreen(GUILayout.Window(this.ID, this.windowRect, WindowGUI, this.PanelTitle));
         }
 
         public virtual void OnFlightStart()
         {
             this.Active = false;
-            Load();
         }
 
         public virtual void OnGamePause()
@@ -98,17 +87,7 @@ namespace HydroTech.Panels
             this.Active = true;
         }
 
-        public virtual void OnUpdate()
-        {
-            if (this.needSave) { Save(); }
-        }
-
-        protected override void LoadDefault()
-        {
-            base.LoadDefault();
-            this.panelShown = false;
-            SetDefaultWindowRect();
-        }
+        public virtual void OnUpdate() { }
         #endregion
     }
 }

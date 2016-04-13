@@ -1,6 +1,5 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -107,21 +106,6 @@ namespace HydroTech.Panels
             }
         }
 
-        protected string StatusString
-        {
-            get { return LA.StatusString; }
-        }
-
-        protected string WarningString
-        {
-            get { return LA.WarningString; }
-        }
-
-        protected Color WarningColor
-        {
-            get { return LA.WarningColor; }
-        }
-
         protected float AllowedHori
         {
             get { return LA.AllowedHori; }
@@ -139,7 +123,7 @@ namespace HydroTech.Panels
 
         protected float AltKeepAsl
         {
-            get { return LA.AltKeepAsl; }
+            get { return LA.AltKeepASL; }
         }
 
         protected string HoverAtString
@@ -232,17 +216,11 @@ namespace HydroTech.Panels
         #region Constructor
         public PanelLanding()
         {
-            this.fileName = new FileName("landing", "cfg", FileName.panelSaveFolder);
             this.id = GuidProvider.GetGuid<PanelLanding>();
         }
         #endregion
 
         #region Overrides
-        protected override void MakeAPSave()
-        {
-            LA.MakeSaveAtNextUpdate();
-        }
-
         public override void OnFlightStart()
         {
             base.OnFlightStart();
@@ -310,8 +288,8 @@ namespace HydroTech.Panels
                 }
                 this.panelInfo.PanelShown = GUILayout.Toggle(this.panelInfo.PanelShown, "Advanced info");
                 if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
-                GUILayout.Label("Status: " + this.StatusString);
-                GUILayout.Label(this.WarningString, GUIUtils.ColouredLabel(this.WarningColor));
+                GUILayout.Label("Status: " + LA.StatusString);
+                GUILayout.Label(LA.WarningString, GUIUtils.ColouredLabel(LA.WarningColor));
             }
 
             GUI.DragWindow();
@@ -375,7 +353,7 @@ namespace HydroTech.Panels
                         this.tempAltKeep = temp;
                         float tempAltKeepAsl = this.tempAltKeep + this.TerrainHeight;
                         GUILayout.Label(string.Format("ASL alt: {0:#0.0}m", tempAltKeepAsl));
-                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", LA.AllowedHoriSpeed(this.tempAltKeep)));
+                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", 0.01f * this.tempAltKeep));
                     }
                     else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }
@@ -386,7 +364,7 @@ namespace HydroTech.Panels
                         this.tempAltKeep = temp;
                         float tempAltKeepTrue = Mathf.Max(this.tempAltKeep - this.TerrainHeight, APLanding.finalDescentHeight);
                         GUILayout.Label(string.Format("True alt: {0:#0.0}m", tempAltKeepTrue));
-                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", LA.AllowedHoriSpeed(tempAltKeepTrue)));
+                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", 0.01f * tempAltKeepTrue));
                     }
                     else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }

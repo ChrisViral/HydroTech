@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
-using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech.Autopilots
 {
-    public abstract class Autopilot : LoadSaveFileBasic
+    public abstract class Autopilot
     {
         #region Fields
         protected Vessel drivingVessel;
@@ -96,11 +95,6 @@ namespace HydroTech.Autopilots
             this.drivingVessel = null;
         }
 
-        public void MakeSaveAtNextUpdate()
-        {
-            this.needSave = true;
-        }
-
         protected void RemoveUserInput(FlightCtrlState ctrlState)
         {
             ctrlState.yaw = 0;
@@ -119,28 +113,6 @@ namespace HydroTech.Autopilots
             }
         }
         #endregion
-       
-        #region Static Methods
-        protected static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return SwitchTransformCalculator.VectorTransform(vec, x, y, z);
-        }
-
-        protected static Vector3 VectorTransform(Vector3 vec, Transform trans)
-        {
-            return SwitchTransformCalculator.VectorTransform(vec, trans);
-        }
-
-        protected static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return SwitchTransformCalculator.ReverseVectorTransform(vec, x, y, z);
-        }
-
-        protected static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
-        {
-            return SwitchTransformCalculator.ReverseVectorTransform(vec, trans);
-        }
-        #endregion
 
         #region Virtual methods
         protected virtual void DriveAutopilot(FlightCtrlState ctrlState)
@@ -150,7 +122,6 @@ namespace HydroTech.Autopilots
 
         public virtual void OnFlightStart()
         {
-            Load();
             this.Active = true;
             if (this.Engaged && this.drivingVessel != ActiveVessel)
             {
@@ -177,15 +148,11 @@ namespace HydroTech.Autopilots
 
         public virtual void OnUpdate()
         {
-            if (this.Engaged)
+            if (this.Engaged && this.drivingVessel != ActiveVessel)
             {
-                if (this.drivingVessel != ActiveVessel)
-                {
-                    if (this.drivingVessel != null) { HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.drivingVessel, this.NameString, DriveAutopilot); }
-                    AddDrive();
-                }
+                if (this.drivingVessel != null) { HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.drivingVessel, this.NameString, DriveAutopilot); }
+                AddDrive();
             }
-            if (this.needSave) { Save(); }
         }
         #endregion
 
