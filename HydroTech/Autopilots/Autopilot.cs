@@ -2,6 +2,7 @@
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using HydroTech.Storage;
+using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech.Autopilots
@@ -120,16 +121,6 @@ namespace HydroTech.Autopilots
         #endregion
        
         #region Static Methods
-        protected static void TurnOnRcs(Vessel vessel)
-        {
-            HydroActionGroupManager.SetState(vessel, KSPActionGroup.RCS, true);
-        }
-
-        protected static void TurnOffSas(Vessel vessel)
-        {
-            HydroActionGroupManager.SetState(vessel, KSPActionGroup.SAS, false);
-        }
-
         protected static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
         {
             return SwitchTransformCalculator.VectorTransform(vec, x, y, z);
@@ -154,7 +145,7 @@ namespace HydroTech.Autopilots
         #region Virtual methods
         protected virtual void DriveAutopilot(FlightCtrlState ctrlState)
         {
-            HydroActionGroupManager.ActiveVessel.RCS = true;
+            HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.RCS, true);
         }
 
         public virtual void OnFlightStart()

@@ -70,6 +70,16 @@ namespace HydroTech.Utils
             if (x >= max) { return max; }
             return x <= min ? min : x;
         }
+
+        public static bool GetState(Vessel vessel, KSPActionGroup action)
+        {
+            return vessel.ActionGroups[action];
+        }
+
+        public static void SetState(Vessel vessel, KSPActionGroup action, bool active)
+        {
+            vessel.ActionGroups.SetGroup(action, active);
+        }
         #endregion
     }
 }

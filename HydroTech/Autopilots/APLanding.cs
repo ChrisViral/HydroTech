@@ -340,7 +340,7 @@ namespace HydroTech.Autopilots
 
         protected void DeployLandingGears()
         {
-            HydroActionGroupManager.ActiveVessel.Gear = true;
+            HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.Gear, true);
         }
 
         protected void CheckAltitudeAndDeployLandingGears()
@@ -352,7 +352,7 @@ namespace HydroTech.Autopilots
         {
             base.DriveAutopilot(ctrlState);
 
-            HydroActionGroupManager.ActiveVessel.SAS = false;
+            HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
 
             if (this.touchdown || this.status != Status.HOVER) { RemoveUserInput(ctrlState); }
 

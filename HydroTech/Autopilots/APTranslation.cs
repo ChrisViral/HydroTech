@@ -1,5 +1,4 @@
 ﻿using HydroTech.Autopilots.Calculators;
-using HydroTech.Managers;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
@@ -98,7 +97,7 @@ namespace HydroTech.Autopilots
 
             if (this.HoldOrient)
             {
-                HydroActionGroupManager.ActiveVessel.SAS = false;
+                HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
                 HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
                 stateCal.Calculate(this.curOrient, this.curRoll, ActiveVessel);
                 stateCal.SetCtrlStateRotation(ctrlState);

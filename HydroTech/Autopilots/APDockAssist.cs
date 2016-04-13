@@ -237,8 +237,8 @@ namespace HydroTech.Autopilots
 
         protected virtual void DriveTargetAutopilot(FlightCtrlState ctrlState)
         {
-            TurnOnRcs(this.target.vessel);
-            TurnOffSas(this.target.vessel);
+            HTUtils.SetState(this.target.vessel, KSPActionGroup.RCS, true);
+            HTUtils.SetState(this.target.vessel, KSPActionGroup.SAS, false);
             Vector3 dir = (this.target.Pos - this.Cam.Pos).normalized;
             HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
             stateCal.Calculate(dir, Vector3.zero, this.target.Dir, this.target.Right, this.target.vessel);
@@ -367,12 +367,12 @@ namespace HydroTech.Autopilots
             {
                 if (this.AutoOrient)
                 {
-                    HydroActionGroupManager.ActiveVessel.SAS = false;
+                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
                     DriveAutoOrient(ctrlState);
                 }
                 if (this.CamView && !this.AutoOrient)
                 {
-                    HydroActionGroupManager.ActiveVessel.SAS = false;
+                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
                     CamToVessel_Rot(ctrlState, this.Cam);
                 }
                 bool killingRelV = this.KillRelV && ctrlState.X == 0 && ctrlState.Y == 0 && ctrlState.Z == 0;
@@ -385,7 +385,7 @@ namespace HydroTech.Autopilots
             }
             else //!Manual
             {
-                HydroActionGroupManager.ActiveVessel.SAS = false;
+                HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
                 if (this.DriveTarget)
                 {
                     if (this.targetOrientReady)
