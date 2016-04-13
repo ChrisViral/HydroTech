@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace HydroTech.Managers
 {
-
     public class HydroCameraManager
     {
         private class Settings
