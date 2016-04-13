@@ -131,8 +131,8 @@ namespace HydroTech.Panels
                 }
                 else
                 {
-                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}{1}", AngA, HTUtils.angularAcc));
-                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}{1}", Acc, HTUtils.acceleration));
+                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}rad/s²", AngA));
+                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}m/s²", Acc));
                 }
                 if (GUILayout.Button("Change settings"))
                 {
@@ -172,12 +172,12 @@ namespace HydroTech.Panels
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Angular Acc");
                 this.angAText = GUILayout.TextField(this.angAText);
-                GUILayout.Label(HTUtils.angularAcc);
+                GUILayout.Label("rad/s²");
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Acceleration");
                 this.accText = GUILayout.TextField(this.accText);
-                GUILayout.Label(HTUtils.acceleration);
+                GUILayout.Label("m/s²");
                 GUILayout.EndHorizontal();
             }
 

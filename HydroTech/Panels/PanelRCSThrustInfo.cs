@@ -135,7 +135,7 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
             if (this.showRotation)
             {
-                GUILayout.Label(string.Format("Max torque (rad/s²) and\nangular acceleration ({0})", HTUtils.angularAcc));
+                GUILayout.Label("Max torque (rad/s²) and\nangular acceleration (rad/s²)");
                 GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xp, this.ActiveRCS.maxAngularAcc.xp));
                 GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xn, this.ActiveRCS.maxAngularAcc.xn));
                 GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.yp, this.ActiveRCS.maxAngularAcc.yp));
@@ -145,7 +145,7 @@ namespace HydroTech.Panels
             }
             else
             {
-                GUILayout.Label(string.Format("Max thrust (N) and\nacceleration ({0})", HTUtils.acceleration));
+                GUILayout.Label("Max thrust (N) and\nacceleration (m/s²)");
                 GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xp, this.ActiveRCS.maxAcc.xp));
                 GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xn, this.ActiveRCS.maxAcc.xn));
                 GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.yp, this.ActiveRCS.maxAcc.yp));

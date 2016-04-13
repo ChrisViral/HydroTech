@@ -33,16 +33,16 @@ namespace HydroTech.Autopilots
 
         #region User input vars
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MainThr")]
-        public bool mainThrottleRespond = HTUtils.mainThrottleRespond;
+        public bool mainThrottleRespond = true;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "ThrustRate")]
-        public float thrustRate = HTUtils.thrustRate;
+        public float thrustRate = 1;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Vector")]
         public Vector3 thrustVector = Vector3.up;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "HoldDir")]
-        public bool holdOrient = HTUtils.holdOrient;
+        public bool holdOrient = true;
         public bool HoldOrient
         {
             get { return this.holdOrient; }
@@ -151,9 +151,9 @@ namespace HydroTech.Autopilots
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.HoldOrient = HTUtils.holdOrient;
-            this.mainThrottleRespond = HTUtils.mainThrottleRespond;
-            this.thrustRate = HTUtils.thrustRate;
+            this.HoldOrient = true;
+            this.mainThrottleRespond = true;
+            this.thrustRate = 1;
             this.TransMode = TransDir.FORWARD;
         }
         #endregion

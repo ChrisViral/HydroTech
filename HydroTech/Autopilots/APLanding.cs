@@ -39,6 +39,10 @@ namespace HydroTech.Autopilots
             HOVER
         }
 
+        #region Constants
+        public const float finalDescentHeight = 10;
+        #endregion
+
         #region Static fields
         private static readonly Dictionary<Indicator, Color> colorDict = new Dictionary<Indicator, Color>(9)
         #region Values
@@ -120,7 +124,7 @@ namespace HydroTech.Autopilots
 
         public float AltKeepTrue
         {
-            get { return this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, HTUtils.finalDescentHeight); }
+            get { return this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, finalDescentHeight); }
         }
 
         public float AltKeepAsl
@@ -180,7 +184,7 @@ namespace HydroTech.Autopilots
 
         public float SafeHorizontalSpeed
         {
-            get { return this.touchdown ? HTUtils.safeHorizontalSpeed : AllowedHoriSpeed(this.AltTrue); }
+            get { return this.touchdown ? 0.1f : AllowedHoriSpeed(this.AltTrue); }
         }
 
         protected Vector3 Up
@@ -226,7 +230,7 @@ namespace HydroTech.Autopilots
 
         #region User input vars     
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "UseEngines")]
-        public bool engines = HTUtils.engine;
+        public bool engines;
         public bool Engines
         {
             get { return this.engines; }
@@ -238,25 +242,25 @@ namespace HydroTech.Autopilots
         }
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "PointUp")]
-        public bool vabPod = HTUtils.vabPod;
+        public bool vabPod = true;
 
         [HydroSLNodeInfo(name = "SETTIINGS"), HydroSLField(saveName = "BurnRetro", isTesting = true)]
-        public bool burnRetro = HTUtils.burnRetro;
+        public bool burnRetro;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Touchdown")]
-        public bool touchdown = HTUtils.touchdown;
+        public bool touchdown = true;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TrueAlt")]
-        public bool useTrueAlt = HTUtils.useTrueAlt;
+        public bool useTrueAlt = true;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "TouchdownSpeed")]
-        public float safeTouchDownSpeed = HTUtils.safeTouchDownSpeed;
+        public float safeTouchDownSpeed = 0.5f;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "MaxThrottle")]
-        public float maxThrottle = HTUtils.maxThrottle;
+        public float maxThrottle = 1;
 
         [HydroSLNodeInfo(name = "SETTINGS"), HydroSLField(saveName = "Altitude")]
-        public float altKeep = HTUtils.altKeep;
+        public float altKeep = 10;
 
         public float MaxThrottle
         {
@@ -341,7 +345,7 @@ namespace HydroTech.Autopilots
 
         protected void CheckAltitudeAndDeployLandingGears()
         {
-            if (this.HoriSpeed < HTUtils.safeHorizontalSpeed && this.AltTrue <= 200) { DeployLandingGears(); }
+            if (this.HoriSpeed < 0.1f && this.AltTrue <= 200) { DeployLandingGears(); }
         }
 
         protected override void DriveAutopilot(FlightCtrlState ctrlState)
@@ -585,10 +589,10 @@ namespace HydroTech.Autopilots
                 this.indicator = Indicator.OUTSYNC;
                 this.engaged = false;
             }
-            else if (this.AltDiff < HTUtils.finalDescentHeight) { this.indicator = this.touchdown ? Indicator.FINAL : Indicator.HOVER; }
+            else if (this.AltDiff < finalDescentHeight) { this.indicator = this.touchdown ? Indicator.FINAL : Indicator.HOVER; }
             else //Ready for landing
             {
-                this.cd.OnUpdate(HTUtils.finalDescentHeight, this.safeTouchDownSpeed, this.GAsl, this.Twr, -this.VertSpeed, this.AltDiff);
+                this.cd.OnUpdate(finalDescentHeight, this.safeTouchDownSpeed, this.GAsl, this.Twr, -this.VertSpeed, this.AltDiff);
                 this.indicator = (Indicator)this.cd.Indicator;
             }
 
@@ -619,14 +623,14 @@ namespace HydroTech.Autopilots
         protected override void LoadDefault()
         {
             base.LoadDefault();
-            this.vabPod = HTUtils.vabPod;
-            this.engines = HTUtils.engine;
-            this.burnRetro = HTUtils.burnRetro;
-            this.touchdown = HTUtils.touchdown;
-            this.useTrueAlt = HTUtils.useTrueAlt;
-            this.safeTouchDownSpeed = HTUtils.safeTouchDownSpeed;
-            this.maxThrottle = HTUtils.maxThrottle;
-            this.altKeep = HTUtils.altKeep;
+            this.vabPod = true;
+            this.engines = false;
+            this.burnRetro = false;
+            this.touchdown = true;
+            this.useTrueAlt = true;
+            this.safeTouchDownSpeed = 0.5f;   //Default vertical speed for final touchdown
+            this.maxThrottle = 1;
+            this.altKeep = 10;
         }
         #endregion
     }
