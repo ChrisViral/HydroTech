@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.Storage;
 using HydroTech.Utils;
 using UnityEngine;
+using Direction = HydroTech.Autopilots.Calculators.GroundContactCalculator.Direction;
 
 namespace HydroTech.Autopilots
 {
@@ -12,11 +14,11 @@ namespace HydroTech.Autopilots
     {
         public enum Indicator
         {
-            LANDED,
-            SAFE,
             WARP,
+            SAFE,
             OK,
             DANGER,
+            LANDED,
             LOWTWR,
             OUTSYNC,
             FINAL,
@@ -36,6 +38,54 @@ namespace HydroTech.Autopilots
             LANDED,
             HOVER
         }
+
+        #region Static fields
+        private static readonly Dictionary<Indicator, Color> colorDict = new Dictionary<Indicator, Color>(9)
+        #region Values
+        {
+            { Indicator.WARP,    Color.cyan   },
+            { Indicator.SAFE,    Color.green  },
+            { Indicator.OK,      Color.yellow },
+            { Indicator.DANGER,  Color.red    },
+            { Indicator.LANDED,  Color.blue   },
+            { Indicator.LOWTWR,  Color.red    },
+            { Indicator.OUTSYNC, Color.red    },
+            { Indicator.FINAL,   Color.yellow },
+            { Indicator.HOVER,   Color.yellow }
+        };
+        #endregion
+
+        private static readonly Dictionary<Indicator, string> indicatorDict = new Dictionary<Indicator, string>(9)
+        #region Values
+        {
+            { Indicator.WARP,    "Safe to warp"    },
+            { Indicator.SAFE,    "Safe to land"    },
+            { Indicator.OK,      "Ready to land"   },
+            { Indicator.DANGER,  "Unsafe to land"  },
+            { Indicator.LANDED,  "Landed"          },
+            { Indicator.LOWTWR,  "TWR too low"     },
+            { Indicator.OUTSYNC, "Past synch. alt" },
+            { Indicator.FINAL,   "Close to ground" },
+            { Indicator.HOVER,   "Close to ground" }
+        };
+        #endregion
+
+        private static readonly Dictionary<Status, string> statusDict = new Dictionary<Status, string>(10)
+        #region Values
+        {
+            { Status.DISENGAGED, "Disengaged"         },
+            { Status.IDLE,       "Idle"               },
+            { Status.HORIZONTAL, "Hor. decceleration" },
+            { Status.VERTICAL,   "Ver. decceleration" },
+            { Status.DECELERATE, "Decelerating"       },
+            { Status.DESCEND,    "Descending"         },
+            { Status.AVOID,      "Avoiding contact"   },
+            { Status.WARP,       "Warping"            },
+            { Status.LANDED,     "Holding"            },
+            { Status.HOVER,      "Hovering"           }
+        };
+        #endregion
+        #endregion
 
         #region Properties
         protected override string NameString
@@ -93,7 +143,7 @@ namespace HydroTech.Autopilots
             get { return this.tad.Radius; }
         }
 
-        public float Slope(GroundContactCalculator.Direction dir)
+        public float Slope(Direction dir)
         {
             return this.tad.Slope(dir);
         }
@@ -160,17 +210,17 @@ namespace HydroTech.Autopilots
 
         public string StatusString
         {
-            get { return GetStatusString(this.status); }
+            get { return statusDict[this.status]; }
         }
 
         public string WarningString
         {
-            get { return GetWarningString(this.indicator); }
+            get { return indicatorDict[this.indicator]; }
         }
 
         public Color WarningColor
         {
-            get { return GetWarningStringColor(this.indicator); }
+            get { return colorDict[this.indicator]; }
         }
         #endregion
 
@@ -275,13 +325,13 @@ namespace HydroTech.Autopilots
             LandingCalculator stateCal = new LandingCalculator();
             stateCal.Calculate(this.vabPod, dir, Vector3d.zero, ActiveVessel);
             stateCal.SetCtrlStateRotation(ctrlState);
-            ActiveRCS.MakeRotation(ctrlState, stateCal.Steer(Constants.translationReadyAngleSin) ? 5 : 20);
+            ActiveRCS.MakeRotation(ctrlState, stateCal.Steer(0.05f /*2.87°*/) ? 5 : 20);
 
             // Kill rotation
             Vector3 angularVelocity = VectorTransform(ActiveVessel.GetComponent<Rigidbody>().angularVelocity, ActiveVessel.ReferenceTransform);
             SetRotationRoll(ctrlState, angularVelocity.z);
 
-            return stateCal.Steer(Constants.translationReadyAngleSin);
+            return stateCal.Steer(0.05f); //2.87°
         }
 
         protected void DeployLandingGears()
@@ -476,107 +526,6 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Methods
-        //TODO: those are essentially enum parsers, should implement my autoparsing class from RealChute
-        protected string GetStatusString(Status st)
-        {
-            switch (st)
-            {
-                case Status.DISENGAGED:
-                    return Constants.disengaged;
-                case Status.IDLE:
-                    return Constants.idle;
-                case Status.DECELERATE:
-                    return Constants.decelerate;
-                case Status.DESCEND:
-                    return Constants.descend;
-                case Status.VERTICAL:
-                    return Constants.vertical;
-                case Status.HORIZONTAL:
-                    return Constants.horizontal;
-                case Status.WARP:
-                    return Constants.stsWarp;
-                case Status.AVOID:
-                    return Constants.avoid;
-                case Status.LANDED:
-                    return Constants.stsLanded;
-                case Status.HOVER:
-                    return Constants.stsFloat;
-                default:
-                    return "NULL";
-            }
-        }
-        protected string GetWarningString(Indicator i)
-        {
-            switch (i)
-            {
-                case Indicator.LANDED:
-                    return Constants.wrnLanded;
-                case Indicator.WARP:
-                    return Constants.wrnWarp;
-                case Indicator.SAFE:
-                    return Constants.safe;
-                case Indicator.OK:
-                    return Constants.ok;
-                case Indicator.DANGER:
-                    return Constants.danger;
-                case Indicator.LOWTWR:
-                    return Constants.lowtwr;
-                case Indicator.OUTSYNC:
-                    return Constants.outsync;
-                case Indicator.FINAL:
-                    return Constants.final;
-                case Indicator.HOVER:
-                    return Constants.wrnFloat;
-                default:
-                    return "NULL";
-            }
-        }
-
-        protected Color GetWarningStringColor(Indicator i)
-        {
-            switch (i)
-            {
-                case Indicator.LANDED:
-                    return Color.blue;
-                case Indicator.WARP:
-                    return Color.cyan;
-                case Indicator.SAFE:
-                    return Color.green;
-                case Indicator.OK:
-                    return Color.yellow;
-                case Indicator.DANGER:
-                    return Color.red;
-                case Indicator.LOWTWR:
-                    return Color.red;
-                case Indicator.OUTSYNC:
-                    return Color.red;
-                case Indicator.FINAL:
-                    return Color.yellow;
-                case Indicator.HOVER:
-                    return Color.yellow;
-                default:
-                    return Color.white;
-            }
-        }
-
-        //Could set both to similar numbers and just cast?
-        protected Indicator GetIndicator(DescentCalculator.DescentIndicator i)
-        {
-            switch (i)
-            {
-                case DescentCalculator.DescentIndicator.WARP:
-                    return Indicator.WARP;
-                case DescentCalculator.DescentIndicator.SAFE:
-                    return Indicator.SAFE;
-                case DescentCalculator.DescentIndicator.OK:
-                    return Indicator.OK;
-                case DescentCalculator.DescentIndicator.DANGER:
-                    return Indicator.DANGER;
-                default:
-                    return Indicator.LANDED;
-            }
-        }
-
         protected float GetBodySyncAltitude(CelestialBody body)
         {
             return (float)Math.Pow((body.gravParameter * body.rotationPeriod * body.rotationPeriod) / (4 * Math.PI * Math.PI), 1d / 3);
@@ -640,7 +589,7 @@ namespace HydroTech.Autopilots
             else //Ready for landing
             {
                 this.cd.OnUpdate(Constants.finalDescentHeight, this.safeTouchDownSpeed, this.GAsl, this.Twr, -this.VertSpeed, this.AltDiff);
-                this.indicator = GetIndicator(this.cd.Indicator);
+                this.indicator = (Indicator)this.cd.Indicator;
             }
 
             if (!this.engaged) { this.status = Status.DISENGAGED; }

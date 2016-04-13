@@ -33,9 +33,9 @@ namespace HydroTech.Autopilots.Calculators
                 this.yaw = d.x;
                 this.pitch = -d.y;
                 this.roll = r.y;
-                if (av.y * this.yaw > 0) { this.yaw *= Constants.rotationHoldRate; }
-                if (av.z * this.roll > 0) { this.roll *= Constants.rotationHoldRate; }
-                if (av.x * this.pitch > 0) { this.pitch *= Constants.rotationHoldRate; }
+                if (av.y * this.yaw > 0) { this.yaw *= 10; }
+                if (av.z * this.roll > 0) { this.roll *= 10; }
+                if (av.x * this.pitch > 0) { this.pitch *= 10; }
             }
 
             ChangeTransformRotation(transformRight, transformDown, transformDir, vesselTransform);

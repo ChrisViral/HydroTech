@@ -235,7 +235,7 @@ namespace HydroTech.Autopilots
             HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
             stateCal.Calculate(dir, Vector3.zero, this.target.Dir, this.target.Right, this.target.vessel);
             stateCal.SetCtrlStateRotation(ctrlState);
-            this.targetOrientReady = stateCal.Steer(Constants.translationReadyAngleSin);
+            this.targetOrientReady = stateCal.Steer(0.05f); //2.87°
             this.rcsTarget.OnUpdate(this.target.vessel);
             this.rcsTarget.MakeRotation(ctrlState, this.angularAcc);
         }
@@ -277,7 +277,7 @@ namespace HydroTech.Autopilots
             DockingAssistCalculator stateCal = new DockingAssistCalculator();
             stateCal.Calculate(this.Cam, this.target);
             DriveAutoOrient(ctrlState);
-            if (!stateCal.Steer(Constants.translationReadyAngleSin)) { DriveKillRelV(ctrlState); }
+            if (!stateCal.Steer(0.05f /*2.87°*/)) { DriveKillRelV(ctrlState); }
             else //HoldErr
             {
                 Vector3 relPTarget = new Vector3(stateCal.x, stateCal.y, stateCal.z);
@@ -386,7 +386,7 @@ namespace HydroTech.Autopilots
                         HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
                         stateCal.Calculate(r.normalized, this.target.Right, this.Cam.Dir, this.Cam.Right, ActiveVessel);
                         stateCal.SetCtrlStateRotation(ctrlState);
-                        bool orientReady = stateCal.Steer(Constants.translationReadyAngleSin);
+                        bool orientReady = stateCal.Steer(0.05f); //2.87°
                         if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < 0.01f)
                         {
                             DriveFinalStage(ctrlState, VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), this.RelV);

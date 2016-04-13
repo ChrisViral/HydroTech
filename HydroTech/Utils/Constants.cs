@@ -50,29 +50,6 @@ namespace HydroTech.Utils
 
         //Position
         public const float finalDescentHeight = 10;
-
-        //Status
-        public const string disengaged = "Disengaged";
-        public const string idle = "Idle";
-        public const string decelerate = "Decelerating";
-        public const string descend = "Final Descent";
-        public const string vertical = "Vertical braking";
-        public const string horizontal = "Horizontal braking";
-        public const string stsWarp = "Warping";
-        public const string avoid = "Avoiding contact";
-        public const string stsLanded = "Holding orientation";
-        public const string stsFloat = "Holding altitude";
-
-        //Warning
-        public const string wrnLanded = "Landed";
-        public const string wrnWarp = "Safe to warp";
-        public const string safe = "Safe to land";
-        public const string ok = "Ready to land";
-        public const string danger = "Dangerous to land";
-        public const string lowtwr = "TWR too low";
-        public const string outsync = "Outside of synchronous altitude";
-        public const string final = "Close to ground";
-        public const string wrnFloat = "Close to ground";
         #endregion
 
         #region Precise controls
