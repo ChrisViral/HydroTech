@@ -69,42 +69,23 @@ namespace HydroTech.Panels
                 return this.slopeDetection;
             }
         }
-
-        public override string PanelTitle
-        {
-            get { return "Surface Information"; }
-        }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
-        }
         #endregion
 
         #region Constructor
-        public PanelLandingInfo()
-        {
-            this.id = GuidProvider.GetGuid<PanelLandingInfo>();
-        }
+        public PanelLandingInfo() : base(new Rect(548, 300, 200, 0), GuidProvider.GetGuid<PanelLandingInfo>(), "Surface Information") { }
         #endregion
 
         #region Methods
         private void TripleLabel(string text = "")
         {
             GUIStyle tripleLabel = new GUIStyle(GUI.skin.label);
-            tripleLabel.fixedWidth = (this.windowRect.width / 3) - tripleLabel.margin.horizontal;
+            tripleLabel.fixedWidth = (this.window.width / 3) - tripleLabel.margin.horizontal;
             GUILayout.Label(text, tripleLabel);
         }
         #endregion
 
         #region Overrides
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(548, 300, 200, 0);
-        }
-
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             GUILayout.Label("Orbiting body: " + MainBodyName);
             GUILayout.Label(string.Format("Surface g: {0:#0.00}m/s²", LA.GeeASL));

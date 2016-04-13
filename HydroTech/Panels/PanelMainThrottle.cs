@@ -18,24 +18,8 @@ namespace HydroTech.Panels
         private string editText;
         #endregion
 
-        #region Properties
-        public override string PanelTitle
-        {
-            get { return "Main Throttle Control"; }
-        }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
-        }
-        #endregion
-
         #region Constructor
-        public PanelMainThrottle()
-        {
-            this.id = GuidProvider.GetGuid<PanelMainThrottle>();
-        }
+        public PanelMainThrottle() : base(new Rect(100, 240, 250, 236), GuidProvider.GetGuid<PanelMainThrottle>(), "Main Throttle Control") { }
         #endregion
 
         #region Overrides
@@ -45,12 +29,7 @@ namespace HydroTech.Panels
             this.editing = false;
         }
 
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(100, 240, 250, 236);
-        }
-
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             GUIStyle curThrStyle = GUIUtils.Skin.button;
             GUIStyle editBtnStyle = GUIUtils.ButtonStyle(Color.yellow);

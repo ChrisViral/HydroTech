@@ -22,8 +22,7 @@ namespace HydroTech.Panels
             }
         }
 
-        #region Fields
-        public bool editorHide;    
+        #region Fields    
         public bool showCams = true;
         private AffiliationList<Part, ModuleDockAssistCam> cams;
         private AffiliationList<Part, ModuleDockAssistTarget> targets;
@@ -33,24 +32,21 @@ namespace HydroTech.Panels
         private UIMultiPageList<ModuleDockAssistTarget> tgtUI;
         #endregion
 
-        #region Propeties
-        public override string PanelTitle
+        #region Properties
+        protected override string MinimizedTitle
         {
-            get { return this.editorHide ? "DA" : "Docking Assistants"; }
+            get { return "DA"; }
         }
 
-        private readonly int id;
-        protected override int ID
+        private bool minimized;
+        protected override bool Minimized
         {
-            get { return this.id; }
+            get { return this.minimized; }
         }
         #endregion
 
         #region Constructor
-        public PanelDockAssistEditor()
-        {
-            this.id = GuidProvider.GetGuid<PanelDockAssistEditor>();
-        }
+        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 250, 360, 250, 0), GuidProvider.GetGuid<PanelDockAssistEditor>(), "Docking Assistants") { }
         #endregion
 
         #region Method
@@ -66,15 +62,14 @@ namespace HydroTech.Panels
 
         public void ShowInEditor()
         {
-            this.Active = true;
+            this.Visible = true;
             OnEditorUpdate();
             UpdateAllRenames();
         }
 
         public void HideInEditor()
         {
-            this.PanelShown = false;
-            this.Active = false;
+            this.Visible = false;
         }
 
         public void OnEditorUpdate()
@@ -119,21 +114,16 @@ namespace HydroTech.Panels
         #endregion
 
         #region Overrides
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect((Screen.width * 0.95f) - 250, 360, 250, 0);
-        }
-
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(this.editorHide ? "Maximize" : "Minimize"))
+            if (GUILayout.Button(this.minimized ? "Maximize" : "Minimize"))
             {
-                this.editorHide = !this.editorHide;
-                this.windowRect.width = this.editorHide ? 100 : 250;
+                this.minimized = !this.minimized;
+                this.window.width = this.minimized ? 100 : 250;
                 ResetHeight();
             }
-            if (this.editorHide)
+            if (this.minimized)
             {
                 GUILayout.EndHorizontal();
                 GUI.DragWindow();

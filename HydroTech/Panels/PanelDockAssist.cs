@@ -183,11 +183,6 @@ namespace HydroTech.Panels
                 this.tempCamView = value;
             }
         }
-        
-        public override string PanelTitle
-        {
-            get { return "Docking Assistant"; }
-        }
 
         protected override bool Engaged
         {
@@ -232,19 +227,10 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
-        }
         #endregion
 
         #region Constructor
-        public PanelDockAssist()
-        {
-            this.id = GuidProvider.GetGuid<PanelDockAssist>();
-        }
+        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), GuidProvider.GetGuid<PanelDockAssist>(), "Docking Assistant") { }
         #endregion
 
         #region Methods
@@ -357,11 +343,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Overrides
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(349, 215, 200, 252);
-        }
-
         public override void OnFlightStart()
         {
             base.OnFlightStart();
@@ -384,7 +365,7 @@ namespace HydroTech.Panels
             this.targetListUI.OnUpdate();
         }
 
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             GUILayout.BeginVertical();
             if (this.ChoosingCamera) { DrawChoosingCameraUI(); }
@@ -447,7 +428,7 @@ namespace HydroTech.Panels
                 if (this.TempCamView)
                 {
                     GUILayout.BeginHorizontal();
-                    GUIStyle lblStyle = new GUIStyle(GUI.skin.label) { fixedWidth = this.windowRect.width / 2 };
+                    GUIStyle lblStyle = new GUIStyle(GUI.skin.label) { fixedWidth = this.window.width / 2 };
                     GUILayout.Label("Mag: ×" + this.tempCamMag, lblStyle);
                     if (GUILayout.Button("-")) { if (this.tempCamMag > 1) { this.tempCamMag /= 2; } }
                     if (GUILayout.Button("+")) { if (this.tempCamMag < 32) { this.tempCamMag *= 2; } }

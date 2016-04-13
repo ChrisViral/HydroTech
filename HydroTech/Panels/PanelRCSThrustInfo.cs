@@ -7,12 +7,9 @@ namespace HydroTech.Panels
 {
     public class PanelRCSThrustInfo : Panel
     {
-        #region Fields
-        public bool editorHide;              
-        public bool showRotation = true;        
-        public Rect windowRectEditor;
+        #region Fields         
+        public bool showRotation = true;
         private readonly bool editor;
-        private bool panelShownEditor;
         #endregion
 
         #region Properties
@@ -21,36 +18,21 @@ namespace HydroTech.Panels
             get { return this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS; }
         }
 
-        public override string PanelTitle
+        protected override string MinimizedTitle
         {
-            get { return this.editor && this.editorHide ? "RCS" : "RCS Info"; }
+            get { return "RCS"; }
         }
 
-        public override bool PanelShown
+        private bool minimized;
+        protected override bool Minimized
         {
-            get { return this.editor ? this.panelShownEditor : base.PanelShown; }
-            set
-            {
-                if (this.editor)
-                {
-                    if (!this.Active) { return; }
-                    this.panelShownEditor = value;
-                }
-                else { base.PanelShown = value; }
-            }
-        }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
+            get { return this.minimized; }
         }
         #endregion
 
         #region Constructor
-        public PanelRCSThrustInfo(bool editor)
+        public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), GuidProvider.GetGuid<PanelRCSThrustInfo>(), "RCS Info")
         {
-            this.id = GuidProvider.GetGuid<PanelRCSThrustInfo>();
             this.editor = editor;
         }
         #endregion
@@ -58,13 +40,12 @@ namespace HydroTech.Panels
         #region Methods
         public void ShowInEditor()
         {
-            this.Active = true;
+            this.Visible = true;
         }
 
         public void HideInEditor()
         {
-            this.PanelShown = false;
-            this.Active = false;
+            this.Visible = false;
         }
         #endregion
 
@@ -75,24 +56,18 @@ namespace HydroTech.Panels
             if (this.ActiveRCS.AllRCSEnabledChanged) { ResetHeight(); }
         }
 
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(747, 80, 250, 280);
-            this.windowRectEditor = new Rect((Screen.width * 0.95f) - 250, 80, 250, 0);
-        }
-
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             GUILayout.BeginHorizontal();
             if (this.editor)
             {
-                if (GUILayout.Button(this.editorHide ? "Maximize" : "Minimize"))
+                if (GUILayout.Button(this.minimized ? "Maximize" : "Minimize"))
                 {
-                    this.editorHide = !this.editorHide;
-                    this.windowRectEditor.width = this.editorHide ? 100 : 250;
-                    this.windowRectEditor.height = 0;
+                    this.minimized = !this.minimized;
+                    this.window.width = this.minimized ? 100 : 250;
+                    this.window.height = 0;
                 }
-                if (this.editorHide)
+                if (this.minimized)
                 {
                     GUILayout.EndHorizontal();
                     GUI.DragWindow();
@@ -134,15 +109,6 @@ namespace HydroTech.Panels
                 if (GUILayout.Button("Enable all")) { this.ActiveRCS.EnableAllRcs(); }
             }
             GUI.DragWindow();
-        }
-
-        public override void DrawGUI()
-        {
-            if (this.editor)
-            {
-                this.windowRectEditor = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.windowRectEditor, WindowGUI, this.PanelTitle));
-            }
-            else { base.DrawGUI(); }
         }
         #endregion
     }

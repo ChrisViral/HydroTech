@@ -23,11 +23,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        public override string PanelTitle
-        {
-            get { return "Auto Translation"; }
-        }
-
         protected override bool Engaged
         {
             get { return TA.Engaged; }
@@ -70,28 +65,14 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
-        }
         #endregion
 
         #region Constructor
-        public PanelTranslation()
-        {
-            this.id = GuidProvider.GetGuid<PanelTranslation>();
-        }
+        public PanelTranslation() : base(new Rect(142, 475, 200, 260), GuidProvider.GetGuid<PanelTranslation>(), "Auto Translation") { }
         #endregion
 
         #region Overrides
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(142, 475, 200, 260);
-        }
-
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             if (this.Settings) { DrawSettingsUI(); }
             else

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
 using UnityEngine;
 using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;

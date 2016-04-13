@@ -40,8 +40,8 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginVertical(GUI.skin.box);
-            this.DockAssist.Active = GUILayout.Toggle(this.DockAssist.Active, "Docking Cameras/Targets");
-            this.RCSInfo.Active = GUILayout.Toggle(this.RCSInfo.Active, "RCS Info");
+            this.DockAssist.Visible = GUILayout.Toggle(this.DockAssist.Visible, "Docking Cameras/Targets");
+            this.RCSInfo.Visible = GUILayout.Toggle(this.RCSInfo.Visible, "RCS Info");
             GUILayout.EndVertical();
         }
         #endregion
@@ -79,7 +79,7 @@ namespace HydroTech.Panels
                 
                 foreach (Panel p in this.Panels)
                 {
-                    if (p.Active) { p.DrawGUI(); }
+                    if (p.Visible) { p.DrawGUI(); }
                 }
             }
         }

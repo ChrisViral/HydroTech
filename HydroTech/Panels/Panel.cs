@@ -1,90 +1,58 @@
-﻿using HydroTech.Utils;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HydroTech.Panels
 {
     public abstract class Panel
     {
         #region Fields
-        protected Rect windowRect;
+        protected Rect window;
+        private readonly int id;
+        private readonly string title;
         #endregion
 
         #region Properties
-        protected bool panelShown;
-        public virtual bool PanelShown
+        protected virtual string MinimizedTitle
         {
-            get { return this.panelShown; }
-            set
-            {
-                if (this.Active) { this.panelShown = value; }
-            }
+            get { return string.Empty; }
         }
 
-        public virtual bool Active { get; set; }
-        #endregion
-
-        #region Abstract properties
-        public abstract string PanelTitle { get; }
-
-        protected abstract int ID { get; }
-        #endregion
-
-        #region Destructor
-        ~Panel()
+        protected virtual bool Minimized
         {
-            this.PanelShown = false;
+            get { return false; }
         }
+
+        public virtual bool Visible { get; set; }
         #endregion
 
-        #region Abstract Methods
-        protected abstract void SetDefaultWindowRect();
-
-        protected abstract void WindowGUI(int windowId);
+        #region Constructors
+        protected Panel(Rect window, int id, string title)
+        {
+            this.window = window;
+            this.id = id;
+            this.title = title;
+        }
         #endregion
 
         #region Methods
         public void ResetHeight()
         {
-            this.windowRect.height = 0;
+            this.window.height = 0;
+        }
+
+        internal void DrawGUI()
+        {
+            this.window = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.window, Window, this.Minimized ? this.MinimizedTitle : this.title));
         }
         #endregion
 
+        #region Abstract Methods
+        protected abstract void Window(int id);
+        #endregion
+
         #region Virtual methods
-        protected virtual bool LayoutEngageBtn(bool engaged)
-        {
-            GUIStyle engageBtnStyle = GUIUtils.ButtonStyle(engaged ? Color.red : Color.green);
-            string engageBtnText = engaged ? "DISENGAGE" : "ENGAGE";
-            return GUILayout.Button(engageBtnText, engageBtnStyle);
-        }
-
-        public virtual void DrawGUI()
-        {
-            this.windowRect = KSPUtil.ClampRectToScreen(GUILayout.Window(this.ID, this.windowRect, WindowGUI, this.PanelTitle));
-        }
-
         public virtual void OnFlightStart()
         {
-            this.Active = false;
-        }
-
-        public virtual void OnGamePause()
-        {
-            this.Active = false;
-        }
-
-        public virtual void OnGameResume()
-        {
-            this.Active = true;
-        }
-
-        public virtual void OnDeactivate()
-        {
-            this.Active = false;
-        }
-
-        public virtual void OnActivate()
-        {
-            this.Active = true;
+            this.Visible = false;
         }
 
         public virtual void OnUpdate() { }

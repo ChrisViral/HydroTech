@@ -28,27 +28,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected bool panelAdvInfoShown;
-        protected bool PanelAdvInfoShown
-        {
-            set
-            {
-                if (value && this.panelAdvInfoShown)
-                {
-                    if (this.panelAdvInfoShown)
-                    {
-                        this.panelAdvInfoShown = false;
-                        this.panelInfo.PanelShown = true;
-                    }
-                }
-                else
-                {
-                    this.panelAdvInfoShown = this.panelInfo.PanelShown;
-                    this.panelInfo.PanelShown = false;
-                }
-            }
-        }
-
         private bool TempEngines
         {
             get { return this.tempEngines; }
@@ -66,15 +45,6 @@ namespace HydroTech.Panels
             {
                 if (value != this.tempTouchdown) { ResetHeight(); }
                 this.tempTouchdown = value;
-            }
-        }
-
-        public override bool PanelShown
-        {
-            set
-            {
-                if (value != this.PanelShown) { this.PanelAdvInfoShown = value; }
-                base.PanelShown = value;
             }
         }
 
@@ -113,18 +83,13 @@ namespace HydroTech.Panels
             }
         }
 
-        public override bool Active
+        public override bool Visible
         {
             set
             {
-                base.Active = value;
-                this.panelInfo.Active = value;
+                base.Visible = value;
+                this.panelInfo.Visible = value;
             }
-        }
-
-        public override string PanelTitle
-        {
-            get { return "Landing Autopilot"; }
         }
 
         protected override bool Engaged
@@ -132,19 +97,10 @@ namespace HydroTech.Panels
             get { return LA.Engaged; }
             set { LA.Engaged = value; }
         }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
-        }
         #endregion
 
         #region Constructor
-        public PanelLanding()
-        {
-            this.id = GuidProvider.GetGuid<PanelLanding>();
-        }
+        public PanelLanding() : base(new Rect(548, 80, 200, 184), GuidProvider.GetGuid<PanelLanding>(), "Landing Autopilot") { }
         #endregion
 
         #region Overrides
@@ -152,7 +108,6 @@ namespace HydroTech.Panels
         {
             base.OnFlightStart();
             this.panelInfo.OnFlightStart();
-            this.panelAdvInfoShown = false;
         }
 
         public override void OnUpdate()
@@ -161,12 +116,7 @@ namespace HydroTech.Panels
             this.panelInfo.OnUpdate();
         }
 
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(548, 80, 200, 184);
-        }
-
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             if (this.Settings) { DrawSettingsUI(); }
             else
@@ -213,7 +163,7 @@ namespace HydroTech.Panels
                 {
                     this.Settings = true;
                 }
-                this.panelInfo.PanelShown = GUILayout.Toggle(this.panelInfo.PanelShown, "Advanced info");
+                this.panelInfo.Visible = GUILayout.Toggle(this.panelInfo.Visible, "Advanced info");
                 if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
                 GUILayout.Label("Status: " + LA.StatusString);
                 GUILayout.Label(LA.WarningString, GUIUtils.ColouredLabel(LA.WarningColor));

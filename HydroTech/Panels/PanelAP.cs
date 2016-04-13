@@ -18,6 +18,19 @@ namespace HydroTech.Panels
         }
         #endregion
 
+        #region Methods
+        protected bool LayoutEngageBtn(bool engaged)
+        {
+            GUIStyle engageBtnStyle = GUIUtils.ButtonStyle(engaged ? Color.red : Color.green);
+            string engageBtnText = engaged ? "DISENGAGE" : "ENGAGE";
+            return GUILayout.Button(engageBtnText, engageBtnStyle);
+        }
+        #endregion
+
+        #region Constructor
+        protected PanelAP(Rect window, int id, string title) : base(window, id, title) { }
+        #endregion
+
         #region Abstract properties
         protected abstract bool Engaged { get; set; }
         #endregion

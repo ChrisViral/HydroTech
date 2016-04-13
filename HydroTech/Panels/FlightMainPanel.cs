@@ -67,14 +67,14 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginVertical(GUI.skin.box);
-            this.DockAssist.Active = GUILayout.Toggle(this.DockAssist.Active, "Docking Autopilot");
-            this.Landing.Active = GUILayout.Toggle(this.Landing.Active, "Landing Autopilot");
-            this.MainThrottle.Active = GUILayout.Toggle(this.MainThrottle.Active, "Main Throttle Control");
-            this.PreciseControl.Active = GUILayout.Toggle(this.PreciseControl.Active, "RCS Precise Control");
-            this.RCSInfo.Active = GUILayout.Toggle(this.RCSInfo.Active, "RCS Info");
-            this.Translation.Active = GUILayout.Toggle(this.Translation.Active, "Translation Autopilot");
+            this.DockAssist.Visible = GUILayout.Toggle(this.DockAssist.Visible, "Docking Autopilot");
+            this.Landing.Visible = GUILayout.Toggle(this.Landing.Visible, "Landing Autopilot");
+            this.MainThrottle.Visible = GUILayout.Toggle(this.MainThrottle.Visible, "Main Throttle Control");
+            this.PreciseControl.Visible = GUILayout.Toggle(this.PreciseControl.Visible, "RCS Precise Control");
+            this.RCSInfo.Visible = GUILayout.Toggle(this.RCSInfo.Visible, "RCS Info");
+            this.Translation.Visible = GUILayout.Toggle(this.Translation.Visible, "Translation Autopilot");
 #if DEBUG
-            this.Debug.Active = GUILayout.Toggle(this.Debug.Active, "Debug");
+            this.Debug.Visible = GUILayout.Toggle(this.Debug.Visible, "Debug");
 #endif
             GUILayout.EndVertical();
         }
@@ -136,7 +136,7 @@ namespace HydroTech.Panels
 
                 foreach (Panel p in this.Panels)
                 {
-                    if (p.Active) { p.DrawGUI(); }
+                    if (p.Visible) { p.DrawGUI(); }
                 }
             }
         }

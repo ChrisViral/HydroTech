@@ -20,29 +20,15 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        public override string PanelTitle
-        {
-            get { return "Debug"; }
-        }
-
         protected bool Peektop
         {
             get { return this.cameraMgr && this.peektop; }
             set { if (this.cameraMgr) { this.peektop = value; } }
         }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
-        }
         #endregion
 
         #region Constructor
-        public PanelDebug()
-        {
-            this.id = GuidProvider.GetGuid<PanelDebug>();
-        }
+        public PanelDebug() : base(new Rect(Screen.width - 200, 0, 200, 0), GuidProvider.GetGuid<PanelDebug>(), "Debug") { }
         #endregion
 
         #region Methods
@@ -59,7 +45,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Overrides
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             if (GUILayout.Button("Control State"))
             {
@@ -107,11 +93,6 @@ namespace HydroTech.Panels
             }
 
             GUI.DragWindow();
-        }
-
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(Screen.width - 200, 0, 200, 0);
         }
         #endregion
     }

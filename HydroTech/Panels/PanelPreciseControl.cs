@@ -23,11 +23,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        public override string PanelTitle
-        {
-            get { return "Precise Control"; }
-        }
-
         protected override bool Engaged
         {
             get { return PC.Engaged; }
@@ -61,28 +56,14 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
-
-        private readonly int id;
-        protected override int ID
-        {
-            get { return this.id; }
-        }
         #endregion
 
         #region Constructor
-        public PanelPreciseControl()
-        {
-            this.id = GuidProvider.GetGuid<PanelPreciseControl>();
-        }
+        public PanelPreciseControl() : base(new Rect(349, 60, 200, 122), GuidProvider.GetGuid<PanelPreciseControl>(), "Precise Control") { }
         #endregion
 
         #region Overrides
-        protected override void SetDefaultWindowRect()
-        {
-            this.windowRect = new Rect(349, 60, 200, 122);
-        }
-
-        protected override void WindowGUI(int windowId)
+        protected override void Window(int id)
         {
             if (this.Settings) { DrawSettingsUI(); }
             else
