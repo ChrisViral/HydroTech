@@ -18,6 +18,14 @@ namespace HydroTech.Panels
         }
         #endregion
 
+        #region Abstract properties
+        protected abstract bool Engaged { get; set; }
+        #endregion
+
+        #region Constructor
+        protected PanelAP(Rect window, int id, string title) : base(window, id, title) { }
+        #endregion
+
         #region Methods
         protected bool LayoutEngageBtn(bool engaged)
         {
@@ -27,19 +35,11 @@ namespace HydroTech.Panels
         }
         #endregion
 
-        #region Constructor
-        protected PanelAP(Rect window, int id, string title) : base(window, id, title) { }
-        #endregion
-
-        #region Abstract properties
-        protected abstract bool Engaged { get; set; }
-        #endregion
-
         #region Virtual methods
         protected virtual void DrawSettingsUI()
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("OK")) { this.Settings = false; }
+            if (GUILayout.Button("Ok")) { this.Settings = false; }
             if (this.Engaged && GUILayout.Button("Apply"))
             {
                 this.Settings = false;

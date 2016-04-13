@@ -6,6 +6,7 @@ namespace HydroTech.Panels
     {
         #region Fields
         protected Rect window;
+        protected readonly Rect drag;
         private readonly int id;
         private readonly string title;
         #endregion
@@ -28,6 +29,7 @@ namespace HydroTech.Panels
         protected Panel(Rect window, int id, string title)
         {
             this.window = window;
+            this.drag = new Rect(0, 0, this.window.width, 30);
             this.id = id;
             this.title = title;
         }
