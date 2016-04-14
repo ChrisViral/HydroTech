@@ -15,6 +15,7 @@ namespace HydroTech.Utils
         public const string localIconURL = "GameData/HydroTech/Plugins/PluginData/HydroTech_icon.png";
         public const string localActiveIconURL = "GameData/HydroTech/Plugins/PluginData/HydroTech_active_icon.png";
         public const string localInactiveIconURL = "GameData/HydroTech/Plugins/PluginData/HydroTech_inactive_icon.png";
+        public static readonly Vector2 anchor = new Vector2(0.5f, 0.5f);
         #endregion
 
         #region Properties
@@ -89,6 +90,11 @@ namespace HydroTech.Utils
         public static float Clamp100(float f)
         {
             return f < 100 ? f : 100;
+        }
+
+        public static void SpawnPopupDialog(string title, string message, string button)
+        {
+            PopupDialog.SpawnPopupDialog(anchor, anchor, title, message, button, false, HighLogic.UISkin);
         }
 
         public static bool GetState(Vessel vessel, KSPActionGroup action)

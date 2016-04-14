@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using HydroTech.Data;
-using HydroTech.Panels.UI;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -8,99 +6,57 @@ namespace HydroTech.Panels
 {
     public class PanelDockAssistEditor : Panel
     {
-        private struct DAEditorSet
-        {
-            #region Fields
-            public bool drawn;
-            public bool renamed;
-            public string name;
-            #endregion
-
-            #region Constructors
-            public DAEditorSet(bool drawn, bool renamed = false, string name = "")
-            {
-                this.drawn = drawn;
-                this.renamed = renamed;
-                this.name = name;
-            }
-            #endregion
-        }
-
         #region Fields    
-        public bool showCams = true;
+        private bool showCams = true, showTargets = true;
         private Vector2 scroll;
-        private AffiliationList<Part, ModuleDockAssistCam> cams;
-        private AffiliationList<Part, ModuleDockAssistTarget> targets;
-        private DictionaryFromList<ModuleDockAssistCam, DAEditorSet> camSet;
-        private DictionaryFromList<ModuleDockAssistTarget, DAEditorSet> tgtSet;
-        private UIMultiPageList<ModuleDockAssistCam> camUI;
-        private UIMultiPageList<ModuleDockAssistTarget> tgtUI;
+        private readonly List<ModuleDockAssist> assists = new List<ModuleDockAssist>(); 
         #endregion
 
         #region Constructor
-        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 250, 360, 250, 0), GuidProvider.GetGuid<PanelDockAssistEditor>(), "Docking Assistants") { }
+        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 300, 360, 300, 400), GuidProvider.GetGuid<PanelDockAssistEditor>(), "Docking Assistants") { }
         #endregion
 
-        #region Method
-        public void OnEditorStart()
+        #region Methods
+        public void FixedUpdate()
         {
-            this.cams = new AffiliationList<Part, ModuleDockAssistCam>(null, (AffiliationList<Part, ModuleDockAssistCam>.GetItemFunctionMulti)GetCam);
-            this.targets = new AffiliationList<Part, ModuleDockAssistTarget>(null, (AffiliationList<Part, ModuleDockAssistTarget>.GetItemFunctionMulti)GetTgt);
-            this.camSet = new DictionaryFromList<ModuleDockAssistCam, DAEditorSet>(this.cams, new DAEditorSet(false));
-            this.tgtSet = new DictionaryFromList<ModuleDockAssistTarget, DAEditorSet>(this.targets, new DAEditorSet(false));
-            this.camUI = new UIMultiPageList<ModuleDockAssistCam>(this.cams, 2);
-            this.tgtUI = new UIMultiPageList<ModuleDockAssistTarget>(this.targets, 2);
-        }
-
-        public void ShowInEditor()
-        {
-            this.Visible = true;
-            OnEditorUpdate();
-            UpdateAllRenames();
-        }
-
-        public void HideInEditor()
-        {
-            this.Visible = false;
-        }
-
-        public void OnEditorUpdate()
-        {
-            this.cams.SetParent(EditorLogic.SortedShipList);
-            this.targets.SetParent(EditorLogic.SortedShipList);
-            this.cams.Update();
-            this.targets.Update();
-            this.camSet.Update();
-            this.tgtSet.Update();
-            this.camUI.OnUpdate();
-            this.tgtUI.OnUpdate();
-        }
-
-        protected List<ModuleDockAssistCam> GetCam(Part p)
-        {
-            return p.FindModulesImplementing<ModuleDockAssistCam>();
-        }
-
-        protected List<ModuleDockAssistTarget> GetTgt(Part p)
-        {
-            return p.FindModulesImplementing<ModuleDockAssistTarget>();
-        }
-
-        protected void UpdateAllRenames()
-        {
-            foreach (ModuleDockAssistCam mcam in this.cams)
+            if (this.assists.Count != 0) { this.assists.Clear(); }
+            foreach (Part p in EditorLogic.SortedShipList)
             {
-                DAEditorSet set = this.camSet[mcam];
-                set.renamed = mcam.renamed;
-                set.name = mcam.partName;
-                this.camSet[mcam] = set;
+                foreach (PartModule pm in p.Modules)
+                {
+                    if (pm is ModuleDockAssist)
+                    {
+                        this.assists.Add((ModuleDockAssist)pm);
+                    }
+                }
             }
-            foreach (ModuleDockAssistTarget mtgt in this.targets)
+        }
+        #endregion
+
+        #region Static methods
+        private void DrawAssistUI(ModuleDockAssist assist)
+        {
+            assist.InfoShown = GUILayout.Toggle(assist.InfoShown, assist.assistName, GUI.skin.button);
+
+
+            if (assist.InfoShown)
             {
-                DAEditorSet set = this.tgtSet[mtgt];
-                set.renamed = mtgt.renamed;
-                set.name = mtgt.partName;
-                this.tgtSet[mtgt] = set;
+                string type = assist is ModuleDockAssistCam ? "Camera" : "Target";
+
+                GUILayout.Label("Docking " + type);
+                assist.AidShown = GUILayout.Toggle(assist.AidShown, "Show aid");
+                
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(string.Format("Rename {0}:", type), GUILayout.MaxWidth(70));
+                assist.TempName = GUILayout.TextField(assist.TempName, 20);
+                GUILayout.EndHorizontal();
+
+                bool empty = string.IsNullOrEmpty(assist.TempName);
+                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(70)) && !empty)
+                {
+                    assist.SetName();
+                    ScreenMessages.PostScreenMessage("Rename applied", 3, ScreenMessageStyle.UPPER_LEFT);
+                }
             }
         }
         #endregion
@@ -111,58 +67,34 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginHorizontal();
-            this.showCams = GUIUtils.TwinToggle(this.showCams, "Cameras", "Targets", GUI.skin.button);
+            this.showCams = GUILayout.Toggle(this.showCams, "Cameras", GUI.skin.button);
+            this.showTargets = GUILayout.Toggle(this.showTargets, "Targets", GUI.skin.button);
             GUILayout.EndHorizontal();
 
             this.scroll = GUILayout.BeginScrollView(this.scroll, false, true, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.box);
+            if (this.assists.Count == 0)
+            {
+                string lbl = "---";
+                if (this.showCams)
+                {
+                    lbl = this.showTargets ? "No docking assists on the vessel" : "No docking cameras on the vessel";
+                }
+                else if (this.showTargets) { lbl = "No docking targets on the vessel"; }
 
+                GUILayout.Label(lbl);
+            }
+            else
+            {
+                foreach (ModuleDockAssist a in this.assists)
+                {
+                    if (a is ModuleDockAssistCam)
+                    {
+                        if (this.showCams) { DrawAssistUI(a); }
+                    }
+                    else if (this.showTargets) { DrawAssistUI(a); }
+                }
+            }
             GUILayout.EndScrollView();
-        }
-
-        protected virtual void CamUI(ModuleDockAssistCam mcam)
-        {
-            if (mcam == null) { return; }
-            GUILayout.Label(mcam.part.partInfo.title);
-            DAEditorSet set = this.camSet[mcam];
-            set.drawn = GUILayout.Toggle(set.drawn, "Visual Aid");
-            if (set.drawn != this.camSet[mcam].drawn)
-            {
-                if (set.drawn) { mcam.ShowEditorAid(); }
-                else { mcam.HideEditorAid(); }
-            }
-            GUILayout.BeginHorizontal();
-            set.renamed = GUILayout.Toggle(set.renamed, "Rename");
-            if (set.renamed) { set.name = GUILayout.TextField(set.name); }
-            GUILayout.EndHorizontal();
-            if (GUILayout.Button("Update Name") && !string.IsNullOrEmpty(set.name))
-            {
-                mcam.SetName(set.name);
-                UpdateAllRenames();
-            }
-            this.camSet[mcam] = set;
-        }
-
-        protected virtual void TgtUI(ModuleDockAssistTarget mtgt)
-        {
-            if (mtgt == null) { return; }
-            GUILayout.Label(mtgt.part.partInfo.title);
-            DAEditorSet set = this.tgtSet[mtgt];
-            set.drawn = GUILayout.Toggle(set.drawn, "Visual Aid");
-            if (set.drawn != this.tgtSet[mtgt].drawn)
-            {
-                if (set.drawn) { mtgt.ShowEditorAid(); }
-                else { mtgt.HideEditorAid(); }
-            }
-            GUILayout.BeginHorizontal();
-            set.renamed = GUILayout.Toggle(set.renamed, "Rename");
-            if (set.renamed) { set.name = GUILayout.TextField(set.name); }
-            GUILayout.EndHorizontal();
-            if (GUILayout.Button("Update Name") && !string.IsNullOrEmpty(set.name))
-            {
-                mtgt.SetName(set.name);
-                UpdateAllRenames();
-            }
-            this.tgtSet[mtgt] = set;
         }
         #endregion
     }

@@ -14,10 +14,7 @@ namespace HydroTech
 
         #region KSPFields
         [KSPField(isPersistant = true, guiName = "Name", guiActive = true, guiActiveEditor = true)]
-        public string partName;
-
-        [KSPField(isPersistant = true)]
-        public bool renamed;
+        public string assistName;
 
         //TODO: use transforms instead of manually typing camera/target positions
         [KSPField]
@@ -43,7 +40,6 @@ namespace HydroTech
         #endregion
 
         #region Fields
-        private string tempName = string.Empty;
         private Rect pos, drag;
         private int id;
         private bool visible, hid;
@@ -77,6 +73,25 @@ namespace HydroTech
         {
             get { return SwitchTransformCalculator.VectorTransform(this.Pos - this.vessel.findWorldCenterOfMass(), this.vessel.ReferenceTransform); }
         }
+
+        internal string TempName { get; set; }
+
+        public bool InfoShown { get; set; }
+
+        private bool aidShown;
+        public bool AidShown
+        {
+            get { return this.aidShown; }
+            set
+            {
+                if (value != this.aidShown)
+                {
+                    if (value) { ShowEditorAid(); }
+                    else { HideEditorAid(); }
+                    this.aidShown = value;
+                }
+            }
+        }
         #endregion
 
         #region Abstract properties
@@ -97,10 +112,9 @@ namespace HydroTech
         #endregion
 
         #region Methods
-        public void SetName(string name)
+        public void SetName()
         {
-            this.partName = name;
-            this.renamed = true;
+            this.assistName = this.TempName;
         }
 
         private void Window(int id)
@@ -108,17 +122,16 @@ namespace HydroTech
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginVertical();
-            this.tempName = GUILayout.TextField(this.tempName);
+            this.TempName = GUILayout.TextField(this.TempName);
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Ok") && !string.IsNullOrEmpty(this.tempName))
+            if (GUILayout.Button("Ok") && !string.IsNullOrEmpty(this.TempName))
             {
-                this.partName = this.tempName;
-                this.renamed = true;
+                this.assistName = this.TempName;
                 this.visible = false;
             }
             if (GUILayout.Button("Clear"))
             {
-                this.tempName = string.Empty;
+                this.TempName = string.Empty;
             }
             if (GUILayout.Button("Cancel"))
             {
@@ -234,8 +247,9 @@ namespace HydroTech
         {
             if (HighLogic.LoadedScene != GameScenes.LOADING)
             {
-                this.Fields["partName"].guiName = this.ModuleShort + " name";
-                if (string.IsNullOrEmpty(this.partName)) { this.partName = this.part.name.Replace('.', ' '); }
+                this.Fields["assistName"].guiName = this.ModuleShort + " name";
+                if (string.IsNullOrEmpty(this.assistName)) { this.assistName = this.part.name.Replace('.', ' '); }
+                this.TempName = this.assistName;
             }
 
             if (HighLogic.LoadedSceneIsEditor)
@@ -256,7 +270,7 @@ namespace HydroTech
 
         public override string ToString()
         {
-            return this.renamed ? this.partName : this.RelPos.ToString("#0.00");
+            return this.assistName;
         }
 
         protected virtual void OnDestroy()

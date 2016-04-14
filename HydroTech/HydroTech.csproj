@@ -71,7 +71,6 @@
     <Compile Include="Autopilots\Calculators\EngineCalculator.cs" />
     <Compile Include="Autopilots\Calculators\VesselInfoCalculatorBase.cs" />
     <Compile Include="Data\AffiliationList.cs" />
-    <Compile Include="Data\DictionaryFromList.cs" />
     <Compile Include="Data\SubList.cs" />
     <Compile Include="Managers\HydroEditorManager.cs" />
     <Compile Include="Managers\HydroCameraManager.cs" />
