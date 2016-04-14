@@ -28,6 +28,7 @@ namespace HydroTech.Autopilots.Calculators
                     if (rcs != null && !rcs.rcsEnabled) { rcs.Enable(); }
                 }
             }
+            this.AllRCSEnabled = true;
         }
 
         public float GetThrustRateFromAngularAcc6(int dir, float aA)

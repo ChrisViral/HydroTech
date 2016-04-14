@@ -28,6 +28,7 @@ namespace HydroTech.Panels
 
         #region Fields    
         public bool showCams = true;
+        private Vector2 scroll;
         private AffiliationList<Part, ModuleDockAssistCam> cams;
         private AffiliationList<Part, ModuleDockAssistTarget> targets;
         private DictionaryFromList<ModuleDockAssistCam, DAEditorSet> camSet;
@@ -110,22 +111,12 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Cameras", this.showCams ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
-            {
-                this.showCams = true;
-                ResetHeight();
-            }
-            if (GUILayout.Button("Targets", this.showCams ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
-            {
-                this.showCams = false;
-                ResetHeight();
-            }
+            this.showCams = GUIUtils.TwinToggle(this.showCams, "Cameras", "Targets", GUI.skin.button);
             GUILayout.EndHorizontal();
-            bool pageChanged, noItem;
-            if (this.showCams) { this.camUI.OnDrawUI(CamUI, out pageChanged, out noItem); }
-            else { this.tgtUI.OnDrawUI(TgtUI, out pageChanged, out noItem); }
-            if (pageChanged) { ResetHeight(); }
-            if (noItem) { GUILayout.Label("Not installed"); }
+
+            this.scroll = GUILayout.BeginScrollView(this.scroll, false, true, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.box);
+
+            GUILayout.EndScrollView();
         }
 
         protected virtual void CamUI(ModuleDockAssistCam mcam)

@@ -162,6 +162,7 @@ namespace HydroTech.Managers
                 }
             }
 
+            this.ActiveRCS.OnUpdate(FlightGlobals.ActiveVessel);
             foreach (Autopilot ap in this.Autopilots)
             {
                 ap.OnUpdate();
