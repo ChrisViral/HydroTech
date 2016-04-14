@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -34,14 +35,22 @@ namespace HydroTech.Panels
         #endregion
 
         #region Static methods
-        private void DrawAssistUI(ModuleDockAssist assist)
+        private static void DrawAssistUI(ModuleDockAssist assist)
         {
-            assist.InfoShown = GUILayout.Toggle(assist.InfoShown, assist.assistName, GUI.skin.button);
+            string type = assist is ModuleDockAssistCam ? "Camera" : "Target";
+            assist.InfoShown = GUILayout.Toggle(assist.InfoShown, string.Format("{0}: {1}", type, assist.assistName), GUI.skin.button);
 
-
-            if (assist.InfoShown)
+            if (!assist.InfoShown)
             {
-                string type = assist is ModuleDockAssistCam ? "Camera" : "Target";
+                if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition)) //Hovering button
+                {
+                    HydroEditorManager.Instance.SetHighlight(assist.part, true);
+                }
+                else { HydroEditorManager.Instance.SetHighlight(assist.part, false); }
+            }
+            else
+            {
+                HydroEditorManager.Instance.SetHighlight(assist.part, true);
 
                 GUILayout.Label("Docking " + type);
                 assist.AidShown = GUILayout.Toggle(assist.AidShown, "Show aid");
@@ -52,10 +61,10 @@ namespace HydroTech.Panels
                 GUILayout.EndHorizontal();
 
                 bool empty = string.IsNullOrEmpty(assist.TempName);
-                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(70)) && !empty)
+                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(100)) && !empty)
                 {
                     assist.SetName();
-                    ScreenMessages.PostScreenMessage("Rename applied", 3, ScreenMessageStyle.UPPER_LEFT);
+                    ScreenMessages.PostScreenMessage("Docking assist renamed", 3, ScreenMessageStyle.UPPER_LEFT);
                 }
             }
         }
@@ -71,10 +80,10 @@ namespace HydroTech.Panels
             this.showTargets = GUILayout.Toggle(this.showTargets, "Targets", GUI.skin.button);
             GUILayout.EndHorizontal();
 
-            this.scroll = GUILayout.BeginScrollView(this.scroll, false, true, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.box);
+            this.scroll = GUILayout.BeginScrollView(this.scroll, false, false, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.box);
             if (this.assists.Count == 0)
             {
-                string lbl = "---";
+                string lbl = "No docking assist type selected";
                 if (this.showCams)
                 {
                     lbl = this.showTargets ? "No docking assists on the vessel" : "No docking cameras on the vessel";

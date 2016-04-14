@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using HighlightingSystem;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Panels;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace HydroTech.Managers
 
         #region Fields
         private bool active;
+        private readonly Dictionary<Part, Highlighter> parts = new Dictionary<Part, Highlighter>();
         #endregion
 
         #region Properties
@@ -25,6 +27,37 @@ namespace HydroTech.Managers
         {
             this.active = state;
         }
+
+        public void SetHighlight(Part part, bool set)
+        {
+            Highlighter highlighter;
+            if (set)
+            {
+                if (!this.parts.TryGetValue(part, out highlighter))
+                {
+                    GameObject go = part.transform.GetChild(0).gameObject;
+                    highlighter = go.GetComponent<Highlighter>() ?? go.AddComponent<Highlighter>();
+                    this.parts.Add(part, highlighter);
+                    highlighter.ConstantOn(XKCDColors.LightSeaGreen);
+                    part.SetHighlightColor(XKCDColors.LightSeaGreen);
+                    part.SetHighlight(true, false);
+                }
+            }
+            else
+            {
+                if (this.parts.TryGetValue(part, out highlighter))
+                {
+                    highlighter.Off();
+                    part.SetHighlightDefault();
+                    this.parts.Remove(part);
+                }
+            }
+        }
+
+        public void Restart()
+        {
+            this.parts.Clear();
+        }
         #endregion
 
         #region Functions
@@ -34,6 +67,7 @@ namespace HydroTech.Managers
 
             Instance = this;
             this.ActiveRCS = new RCSCalculator();
+            GameEvents.onEditorRestart.Add(Restart);
         }
 
         private void FixedUpdate()
@@ -46,7 +80,11 @@ namespace HydroTech.Managers
 
         private void OnDestroy()
         {
-            if (Instance == this) { Instance = null; }
+            if (Instance == this)
+            {
+                Instance = null;
+                GameEvents.onEditorRestart.Remove(Restart);
+            }
         }
         #endregion
     }

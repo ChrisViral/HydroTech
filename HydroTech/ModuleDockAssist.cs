@@ -114,7 +114,11 @@ namespace HydroTech
         #region Methods
         public void SetName()
         {
-            this.assistName = this.TempName;
+            if (this.assistName != this.TempName)
+            {
+                this.assistName = this.TempName;
+                ScreenMessages.PostScreenMessage("Docking assist renamed", 3, ScreenMessageStyle.UPPER_LEFT);
+            }
         }
 
         private void Window(int id)
