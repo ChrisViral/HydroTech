@@ -44,39 +44,44 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Rotation", this.showRotation ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
-            {
-                this.showRotation = true;
-            }
-            if (GUILayout.Button("Translation", this.showRotation ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
-            {
-                this.showRotation = false;
-            }
+            this.showRotation = GUILayout.Toggle(this.showRotation, "Rotation", GUI.skin.button);
+            this.showRotation = !GUILayout.Toggle(!this.showRotation, "Translation", GUI.skin.button);
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginVertical(GUI.skin.box);
             if (this.showRotation)
             {
-                GUILayout.Label("Max torque (rad/s²) and\nangular acceleration (rad/s²)");
-                GUILayout.Label(string.Format("Pitch down : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xp, this.ActiveRCS.maxAngularAcc.xp));
-                GUILayout.Label(string.Format("Pitch up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.xn, this.ActiveRCS.maxAngularAcc.xn));
-                GUILayout.Label(string.Format("yaw left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.yp, this.ActiveRCS.maxAngularAcc.yp));
-                GUILayout.Label(string.Format("yaw right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.yn, this.ActiveRCS.maxAngularAcc.yn));
-                GUILayout.Label(string.Format("Roll left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.zp, this.ActiveRCS.maxAngularAcc.zp));
-                GUILayout.Label(string.Format("Roll right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxTorque.zn, this.ActiveRCS.maxAngularAcc.zn));
+                Vector6 torque = this.ActiveRCS.maxTorque;
+                Vector6 angular = this.ActiveRCS.maxAngularAcc;
+                GUILayout.Label("Torque(N·m), angular acc(rad/s²)");
+                GUILayout.Label(string.Format("Pitch down: {0:#0.00}, {1:#0.00}", torque.xp, angular.xp));
+                GUILayout.Label(string.Format("Pitch up: {0:#0.00}, {1:#0.00}",   torque.xn, angular.xn));
+                GUILayout.Label(string.Format("Yaw left: {0:#0.00}, {1:#0.00}",   torque.yp, angular.yp));
+                GUILayout.Label(string.Format("Yaw right: {0:#0.00}, {1:#0.00}",  torque.yn, angular.yn));
+                GUILayout.Label(string.Format("Roll left: {0:#0.00}, {1:#0.00}",  torque.zp, angular.zp));
+                GUILayout.Label(string.Format("Roll right: {0:#0.00}, {1:#0.00}", torque.zn, angular.zn));
             }
             else
             {
-                GUILayout.Label("Max thrust (N) and\nacceleration (m/s²)");
-                GUILayout.Label(string.Format("Translate left : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xp, this.ActiveRCS.maxAcc.xp));
-                GUILayout.Label(string.Format("Translate right : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.xn, this.ActiveRCS.maxAcc.xn));
-                GUILayout.Label(string.Format("Translate up : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.yp, this.ActiveRCS.maxAcc.yp));
-                GUILayout.Label(string.Format("Translate down : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.yn, this.ActiveRCS.maxAcc.yn));
-                GUILayout.Label(string.Format("Translate backward : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.zp, this.ActiveRCS.maxAcc.zp));
-                GUILayout.Label(string.Format("Translate forward : {0:#0.00} , {1:#0.00}", this.ActiveRCS.maxForce.zn, this.ActiveRCS.maxAcc.zn));
+                Vector6 thrust = this.ActiveRCS.maxForce;
+                Vector6 acc = this.ActiveRCS.maxAcc;
+                GUILayout.Label("Thrust(N), acceleration(m/s²)");
+                GUILayout.Label(string.Format("Translate left: {0:#0.00}, {1:#0.00}",  thrust.xp, acc.xp));
+                GUILayout.Label(string.Format("Translate right: {0:#0.00}, {1:#0.00}", thrust.xn, acc.xn));
+                GUILayout.Label(string.Format("Translate up: {0:#0.00}, {1:#0.00}",    thrust.yp, acc.yp));
+                GUILayout.Label(string.Format("Translate down: {0:#0.00}, {1:#0.00}",  thrust.yn, acc.yn));
+                GUILayout.Label(string.Format("Translate back: {0:#0.00}, {1:#0.00}",  thrust.zp, acc.zp));
+                GUILayout.Label(string.Format("Translate fwd: {0:#0.00}, {1:#0.00}",   thrust.zn, acc.zn));
             }
+            GUILayout.EndVertical();
+
             if (!this.editor && !this.ActiveRCS.AllRCSEnabled)
             {
-                GUILayout.Label("Some RCS thrusters are not enabled.", GUIUtils.ColouredLabel(Color.red));
-                if (GUILayout.Button("Enable all")) { this.ActiveRCS.EnableAllRcs(); }
+                GUILayout.Label("Some RCS thrusters are disabled.", GUIUtils.ColouredLabel(Color.red));
+                if (GUILayout.Button("Enable all"))
+                {
+                    this.ActiveRCS.EnableAllRcs();
+                }
             }
         }
         #endregion

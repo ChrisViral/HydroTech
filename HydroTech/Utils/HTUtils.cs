@@ -47,6 +47,12 @@ namespace HydroTech.Utils
         {
             get { return electricChargeID; }
         }
+
+        private static readonly PartResourceDefinition electricity;
+        public static PartResourceDefinition Electricity
+        {
+            get { return electricity; }
+        }  
         #endregion
 
         #region Constructor
@@ -63,7 +69,8 @@ namespace HydroTech.Utils
             inactiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
             inactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localInactiveIconURL)));
 
-            electricChargeID = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge").id;
+            electricity = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge");
+            electricChargeID = electricity.id;
         }
         #endregion
 
