@@ -367,6 +367,8 @@ namespace HydroTech.Panels
 
         protected override void Window(int id)
         {
+            GUI.DragWindow(this.drag);
+
             GUILayout.BeginVertical();
             if (this.ChoosingCamera) { DrawChoosingCameraUI(); }
             else if (this.ChoosingVessel) { DrawChoosingVesselUI(); }
@@ -392,7 +394,6 @@ namespace HydroTech.Panels
                 if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
             }
             GUILayout.EndVertical();
-            GUI.DragWindow();
         }
 
         protected override void DrawSettingsUI()

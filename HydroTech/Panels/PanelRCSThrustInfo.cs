@@ -47,6 +47,8 @@ namespace HydroTech.Panels
 
         protected override void Window(int id)
         {
+            GUI.DragWindow(this.drag);
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Rotation", this.showRotation ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
             {

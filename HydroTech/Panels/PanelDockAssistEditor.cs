@@ -10,16 +10,20 @@ namespace HydroTech.Panels
     {
         private struct DAEditorSet
         {
+            #region Fields
             public bool drawn;
             public bool renamed;
             public string name;
+            #endregion
 
+            #region Constructors
             public DAEditorSet(bool drawn, bool renamed = false, string name = "")
             {
                 this.drawn = drawn;
                 this.renamed = renamed;
                 this.name = name;
             }
+            #endregion
         }
 
         #region Fields    
@@ -103,6 +107,8 @@ namespace HydroTech.Panels
         #region Overrides
         protected override void Window(int id)
         {
+            GUI.DragWindow(this.drag);
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Cameras", this.showCams ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
             {

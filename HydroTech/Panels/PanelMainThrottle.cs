@@ -31,6 +31,8 @@ namespace HydroTech.Panels
 
         protected override void Window(int id)
         {
+            GUI.DragWindow(this.drag);
+
             GUIStyle curThrStyle = GUIUtils.Skin.button;
             GUIStyle editBtnStyle = GUIUtils.ButtonStyle(Color.yellow);
             GUILayout.BeginVertical();
@@ -91,8 +93,6 @@ namespace HydroTech.Panels
             }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
-
-            GUI.DragWindow();
         }
         #endregion
     }

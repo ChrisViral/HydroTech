@@ -34,11 +34,6 @@ namespace HydroTech.Panels
             get { return LA.groundCalc.Slope(Direction.EAST) * HTUtils.radToDeg; }
         }
 
-        private static string MainBodyName
-        {
-            get { return FlightGlobals.currentMainBody.bodyName; }
-        }
-
         private static float TwrTotal
         {
             get { return LA.TwrRCS + LA.TwrEng; }
@@ -87,7 +82,9 @@ namespace HydroTech.Panels
         #region Overrides
         protected override void Window(int id)
         {
-            GUILayout.Label("Orbiting body: " + MainBodyName);
+            GUI.DragWindow(this.drag);
+
+            GUILayout.Label("Orbiting body: " + FlightGlobals.currentMainBody.bodyName);
             GUILayout.Label(string.Format("Surface g: {0:#0.00}m/s²", LA.GeeASL));
             GUILayout.Label(string.Format("RCS TWR: {0:#0.00}m/s²", LA.TwrRCS), TwrLabelStyle);
             GUILayout.Label(string.Format("Engine TWR: {0:#0.00}m/s²", LA.TwrEng), TwrLabelStyle);
@@ -127,8 +124,6 @@ namespace HydroTech.Panels
                 TripleLabel();
                 GUILayout.EndHorizontal();
             }
-
-            GUI.DragWindow();
         }
         #endregion
     }

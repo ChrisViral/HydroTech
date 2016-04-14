@@ -65,6 +65,8 @@ namespace HydroTech.Panels
         #region Overrides
         protected override void Window(int id)
         {
+            GUI.DragWindow(this.drag);
+
             if (this.Settings) { DrawSettingsUI(); }
             else
             {
@@ -84,8 +86,6 @@ namespace HydroTech.Panels
                 }
                 if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
             }
-
-            GUI.DragWindow();
         }
 
         protected override void DrawSettingsUI()

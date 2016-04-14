@@ -118,6 +118,8 @@ namespace HydroTech.Panels
 
         protected override void Window(int id)
         {
+            GUI.DragWindow(this.drag);
+
             if (this.Settings) { DrawSettingsUI(); }
             else
             {
@@ -168,8 +170,6 @@ namespace HydroTech.Panels
                 GUILayout.Label("Status: " + LA.StatusString);
                 GUILayout.Label(LA.WarningString, GUIUtils.ColouredLabel(LA.WarningColor));
             }
-
-            GUI.DragWindow();
         }
 
         protected override void DrawSettingsUI()
