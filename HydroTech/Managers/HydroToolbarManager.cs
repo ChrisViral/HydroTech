@@ -143,7 +143,6 @@ namespace HydroTech.Managers
                 if (!this.enabled)
                 {
                     this.enabled = true;
-                    this.panel.SetActive(true);
                     this.button.SetTexture(HTUtils.LauncherIcon);
                 }
             }
@@ -154,21 +153,8 @@ namespace HydroTech.Managers
                 {
                     this.button.SetFalse();
                     this.enabled = false;
-                    this.panel.SetActive(false);
                     this.button.SetTexture(HTUtils.InactiveIcon);
                 }
-            }
-
-            private void SetSubscription(HydroJebCore jeb)
-            {
-                this.core = jeb;
-                if (this.core == null)
-                {
-                    this.button.VisibleInScenes = AppScenes.NEVER;
-                    this.button.Enable();
-                    this.button.SetFalse();
-                }
-                else { this.button.VisibleInScenes = AppScenes.FLIGHT; }
             }
 
             public bool IsActive(HydroJebCore jeb)
@@ -183,15 +169,20 @@ namespace HydroTech.Managers
                     this.core = null;
                     this.button.VisibleInScenes = AppScenes.NEVER;
                 }
-            }    
-            #endregion
+            }
 
-            #region Functions
             internal void Update(HydroJebCore jeb)
             {
-                if (jeb != this.core)
+                if (this.core != jeb)
                 {
-                    SetSubscription(jeb);
+                    this.core = jeb;
+                    if (this.core == null)
+                    {
+                        this.button.VisibleInScenes = AppScenes.NEVER;
+                        this.button.Enable();
+                        this.button.SetFalse();
+                    }
+                    else { this.button.VisibleInScenes = AppScenes.FLIGHT; }
                 }
                 if (this.core != null)
                 {

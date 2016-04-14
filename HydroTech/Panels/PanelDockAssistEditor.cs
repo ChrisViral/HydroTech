@@ -32,19 +32,6 @@ namespace HydroTech.Panels
         private UIMultiPageList<ModuleDockAssistTarget> tgtUI;
         #endregion
 
-        #region Properties
-        protected override string MinimizedTitle
-        {
-            get { return "DA"; }
-        }
-
-        private bool minimized;
-        protected override bool Minimized
-        {
-            get { return this.minimized; }
-        }
-        #endregion
-
         #region Constructor
         public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 250, 360, 250, 0), GuidProvider.GetGuid<PanelDockAssistEditor>(), "Docking Assistants") { }
         #endregion
@@ -117,18 +104,6 @@ namespace HydroTech.Panels
         protected override void Window(int id)
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(this.minimized ? "Maximize" : "Minimize"))
-            {
-                this.minimized = !this.minimized;
-                this.window.width = this.minimized ? 100 : 250;
-                ResetHeight();
-            }
-            if (this.minimized)
-            {
-                GUILayout.EndHorizontal();
-                GUI.DragWindow();
-                return;
-            }
             if (GUILayout.Button("Cameras", this.showCams ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
             {
                 this.showCams = true;
@@ -145,8 +120,6 @@ namespace HydroTech.Panels
             else { this.tgtUI.OnDrawUI(TgtUI, out pageChanged, out noItem); }
             if (pageChanged) { ResetHeight(); }
             if (noItem) { GUILayout.Label("Not installed"); }
-
-            GUI.DragWindow();
         }
 
         protected virtual void CamUI(ModuleDockAssistCam mcam)

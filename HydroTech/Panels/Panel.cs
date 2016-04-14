@@ -12,16 +12,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected virtual string MinimizedTitle
-        {
-            get { return string.Empty; }
-        }
-
-        protected virtual bool Minimized
-        {
-            get { return false; }
-        }
-
         public virtual bool Visible { get; set; }
         #endregion
 
@@ -43,7 +33,7 @@ namespace HydroTech.Panels
 
         internal void DrawGUI()
         {
-            this.window = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.window, Window, this.Minimized ? this.MinimizedTitle : this.title));
+            this.window = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.window, Window, this.title));
         }
         #endregion
 

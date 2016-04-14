@@ -12,7 +12,7 @@ namespace HydroTech.Panels
 
         #region Fields
         private Rect pos, drag;
-        private bool visible, active, hid;
+        private bool visible, hid;
         private int id;
         #endregion
 
@@ -39,7 +39,7 @@ namespace HydroTech.Panels
         #region Methods
         internal void ShowPanel()
         {
-            if (this.active && !this.visible) { this.visible = true; }
+            if (!this.visible) { this.visible = true; }
         }
 
         internal void HidePanel()
@@ -55,11 +55,6 @@ namespace HydroTech.Panels
         private void HideUI()
         {
             this.hid = true;
-        }
-
-        internal void SetActive(bool active)
-        {
-            this.active = active;
         }
 
         private void Window(int id)
@@ -111,7 +106,6 @@ namespace HydroTech.Panels
             this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 100);
             this.drag = new Rect(0, 0, 250, 30);
             this.id = GuidProvider.GetGuid<FlightMainPanel>();
-            this.active = true;
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
         }

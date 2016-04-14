@@ -17,17 +17,6 @@ namespace HydroTech.Panels
         {
             get { return this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS; }
         }
-
-        protected override string MinimizedTitle
-        {
-            get { return "RCS"; }
-        }
-
-        private bool minimized;
-        protected override bool Minimized
-        {
-            get { return this.minimized; }
-        }
         #endregion
 
         #region Constructor
@@ -59,21 +48,6 @@ namespace HydroTech.Panels
         protected override void Window(int id)
         {
             GUILayout.BeginHorizontal();
-            if (this.editor)
-            {
-                if (GUILayout.Button(this.minimized ? "Maximize" : "Minimize"))
-                {
-                    this.minimized = !this.minimized;
-                    this.window.width = this.minimized ? 100 : 250;
-                    this.window.height = 0;
-                }
-                if (this.minimized)
-                {
-                    GUILayout.EndHorizontal();
-                    GUI.DragWindow();
-                    return;
-                }
-            }
             if (GUILayout.Button("Rotation", this.showRotation ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
             {
                 this.showRotation = true;
@@ -108,7 +82,6 @@ namespace HydroTech.Panels
                 GUILayout.Label("Some RCS thrusters are not enabled.", GUIUtils.ColouredLabel(Color.red));
                 if (GUILayout.Button("Enable all")) { this.ActiveRCS.EnableAllRcs(); }
             }
-            GUI.DragWindow();
         }
         #endregion
     }
