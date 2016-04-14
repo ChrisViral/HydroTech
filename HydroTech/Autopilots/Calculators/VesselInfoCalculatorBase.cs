@@ -83,13 +83,13 @@ namespace HydroTech.Autopilots.Calculators
                 if (p.physicalSignificance != Part.PhysicalSignificance.NONE)
                 {
                     this.Mass += PartMass(p);
-                    massPos += p.Rigidbody.worldCenterOfMass * PartMass(p);
+                    massPos += p.WCoM * PartMass(p);
                 }
             }
             this.CoM = massPos / this.Mass;
             foreach (Part p in this.partList)
             {
-                Vector3 r = SwitchTransformCalculator.VectorTransform(p.Rigidbody.worldCenterOfMass - this.CoM, this.transformRight, this.transformDown, this.transformForward);
+                Vector3 r = SwitchTransformCalculator.VectorTransform(p.WCoM - this.CoM, this.transformRight, this.transformDown, this.transformForward);
                 if (p.physicalSignificance != Part.PhysicalSignificance.NONE)
                 {
                     this.moI.m00 += ((r.y * r.y) + (r.z * r.z)) * PartMass(p);

@@ -66,7 +66,7 @@ namespace HydroTech.Autopilots.Calculators
                     if (pm is ModuleEngines)
                     {
                         ModuleEngines eng = (ModuleEngines)pm;
-                        if (eng.isEnabled)
+                        if (eng.EngineIgnited)
                         {
                             int transforms = eng.thrustTransforms.Count;
                             this.MinThrust += transforms * eng.minThrust;

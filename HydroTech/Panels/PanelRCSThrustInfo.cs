@@ -39,12 +39,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Overrides
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-            if (this.ActiveRCS.AllRCSEnabledChanged) { ResetHeight(); }
-        }
-
         protected override void Window(int id)
         {
             GUI.DragWindow(this.drag);

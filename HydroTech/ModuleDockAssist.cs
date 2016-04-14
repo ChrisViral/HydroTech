@@ -14,7 +14,7 @@ namespace HydroTech
 
         #region KSPFields
         [KSPField(isPersistant = true, guiName = "Name", guiActive = true, guiActiveEditor = true)]
-        public string partName = string.Empty;
+        public string partName;
 
         [KSPField(isPersistant = true)]
         public bool renamed;
@@ -43,7 +43,7 @@ namespace HydroTech
         #endregion
 
         #region Fields
-        private string tempName;
+        private string tempName = string.Empty;
         private Rect pos, drag;
         private int id;
         private bool visible, hid;
@@ -232,7 +232,11 @@ namespace HydroTech
         #region Overrides
         public override void OnStart(StartState state)
         {
-            if (HighLogic.LoadedScene != GameScenes.LOADING) { this.Fields["partName"].guiName = this.ModuleShort + "Name"; }
+            if (HighLogic.LoadedScene != GameScenes.LOADING)
+            {
+                this.Fields["partName"].guiName = this.ModuleShort + " name";
+                if (string.IsNullOrEmpty(this.partName)) { this.partName = this.part.name.Replace('.', ' '); }
+            }
 
             if (HighLogic.LoadedSceneIsEditor)
             {

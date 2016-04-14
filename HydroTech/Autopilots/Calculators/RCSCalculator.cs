@@ -13,23 +13,7 @@ namespace HydroTech.Autopilots.Calculators
         #endregion
 
         #region Properties
-        protected bool allRCSEnabled = true;
-        public bool AllRCSEnabled
-        {
-            get { return this.allRCSEnabled; }
-            protected set
-            {
-                this.AllRCSEnabledChanged = value != this.allRCSEnabled;
-                this.allRCSEnabled = value;
-            }
-        }
-
-        protected bool allRCSEnabledChanged;
-        public bool AllRCSEnabledChanged
-        {
-            get { return this.allRCSEnabledChanged; }
-            protected set { this.allRCSEnabledChanged = value; }
-        }
+        public bool AllRCSEnabled { get; private set; }
         #endregion
 
         #region Methods
@@ -40,63 +24,63 @@ namespace HydroTech.Autopilots.Calculators
                 foreach (PartModule pm in p.Modules)
                 {
                     ModuleRCS rcs = pm as ModuleRCS;
-                    if (rcs != null && !rcs.isEnabled) { rcs.Enable(); }
+                    if (rcs != null && !rcs.rcsEnabled) { rcs.Enable(); }
                 }
             }
         }
 
         public float GetThrustRateFromAngularAcc6(int dir, float aA)
         {
-            float maxAa = 0;
             switch (dir)
             {
                 case 0: //xp = pitch-
-                    maxAa = this.maxAngularAcc.xp;
-                    break;
+                    return aA / this.maxAngularAcc.xp;
+
                 case 1: //xn = pitch+
-                    maxAa = this.maxAngularAcc.xn;
-                    break;
+                    return aA / this.maxAngularAcc.xn;
+
                 case 2: //yp = yaw-
-                    maxAa = this.maxAngularAcc.yp;
-                    break;
+                    return aA / this.maxAngularAcc.yp;
+
                 case 3: //yn = yaw+
-                    maxAa = this.maxAngularAcc.yn;
-                    break;
+                    return aA / this.maxAngularAcc.yn;
+
                 case 4: //zp = roll-
-                    maxAa = this.maxAngularAcc.zp;
-                    break;
+                    return aA / this.maxAngularAcc.zp;
+
                 case 5: //zn = roll+
-                    maxAa = this.maxAngularAcc.zn;
-                    break;
+                    return aA / this.maxAngularAcc.zn;
+
+                default:
+                    return 1;
             }
-            return maxAa == 0 ? 1:  aA / maxAa;
         }
 
         public float GetThrustRateFromAcc6(int dir, float a)
         {
-            float maxA = 0;
             switch (dir)
             {
                 case 0: //xp = right
-                    maxA = this.maxAcc.xp;
-                    break;
+                    return a / this.maxAcc.xp;
+
                 case 1: //xn = right
-                    maxA = this.maxAcc.xn;
-                    break;
+                    return a / this.maxAcc.xn;
+
                 case 2: //yp = down-
-                    maxA = this.maxAcc.yp;
-                    break;
+                    return a / this.maxAcc.yp;
+
                 case 3: //yn = down+
-                    maxA = this.maxAcc.yn;
-                    break;
+                    return a / this.maxAcc.yn;
+
                 case 4: //zp = forward-
-                    maxA = this.maxAcc.zp;
-                    break;
+                    return a / this.maxAcc.zp;
+
                 case 5: //zn = forward+
-                    maxA = this.maxAcc.zn;
-                    break;
+                    return a / this.maxAcc.zn;
+
+                default:
+                    return 1;
             }
-            return maxA == 0 ? 1 : a / maxA;
         }
 
         public void MakeRotation(FlightCtrlState ctrlState, float angularAcc)
@@ -128,7 +112,7 @@ namespace HydroTech.Autopilots.Calculators
         protected override void Calculate()
         {
             base.Calculate();
-            bool tempAllRcsEnabled = true;
+            bool tmp = true;
             this.maxTorque.Reset();
             this.maxForce.Reset();
             foreach (Part p in this.partList)
@@ -139,7 +123,7 @@ namespace HydroTech.Autopilots.Calculators
                     if (pm is ModuleRCS)
                     {
                         ModuleRCS rcs = (ModuleRCS)pm;
-                        if (rcs.isEnabled)
+                        if (rcs.rcsEnabled)
                         {
                             foreach (Transform trans in rcs.thrusterTransforms)
                             {
@@ -153,11 +137,11 @@ namespace HydroTech.Autopilots.Calculators
                                 this.maxTorque.AddZ(thrustTorque.z);
                             }
                         }
-                        else { tempAllRcsEnabled = false; }
+                        else { tmp = false; }
                     }
                 }
             }
-            this.AllRCSEnabled = tempAllRcsEnabled;
+            this.AllRCSEnabled = tmp;
             this.maxAcc = this.maxForce / this.Mass;
             this.maxAngularAcc = this.maxTorque / this.moI.Diagonal;
         }
@@ -167,7 +151,7 @@ namespace HydroTech.Autopilots.Calculators
             return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass, this.maxForce, this.maxAcc, this.moI, this.maxTorque, this.maxAngularAcc);
         }
 
-        public virtual string ToString(string format)
+        public string ToString(string format)
         {
             return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass.ToString(format), this.maxForce.ToString(format), this.maxAcc.ToString(format), this.moI.ToString(format), this.maxTorque.ToString(format), this.maxAngularAcc.ToString(format));
         }
