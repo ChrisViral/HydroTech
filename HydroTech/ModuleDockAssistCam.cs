@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using HydroTech.Panels;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace HydroTech
 {
-    public class ModuleDockAssistCam : ModuleDockAssist
+    public class ModuleDockAssistCam : ModuleDockAssist, IResourceConsumer
     {
         #region Static properties
         private static ModuleDockAssistCam Current
@@ -113,6 +114,11 @@ namespace HydroTech
         public Vector3 VectorTransform(Vector3 vec)
         {
             return SwitchTransformCalculator.VectorTransform(vec, this.Right, this.Down, this.Dir);
+        }
+
+        public List<PartResourceDefinition> GetConsumedResources()
+        {
+            return new List<PartResourceDefinition>(1) { HTUtils.Electricity };
         }
         #endregion
 

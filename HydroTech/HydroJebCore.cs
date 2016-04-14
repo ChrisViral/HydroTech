@@ -1,11 +1,12 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech
 {
-    public class HydroJebCore : PartModule, IModuleInfo
+    public class HydroJebCore : PartModule, IModuleInfo, IResourceConsumer
     {
         public enum AutopilotStatus
         {
@@ -54,6 +55,11 @@ namespace HydroTech
         public string GetPrimaryField()
         {
             return string.Empty;
+        }
+
+        public List<PartResourceDefinition> GetConsumedResources()
+        {
+            return new List<PartResourceDefinition>(1) { HTUtils.Electricity };
         }
         #endregion
 
