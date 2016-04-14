@@ -1,4 +1,5 @@
-﻿using HydroTech.Utils;
+﻿using HydroTech.Panels;
+using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech.Autopilots.Calculators
@@ -141,7 +142,11 @@ namespace HydroTech.Autopilots.Calculators
                     }
                 }
             }
-            this.AllRCSEnabled = tmp;
+            if (this.AllRCSEnabled != tmp)
+            {
+                if (HighLogic.LoadedSceneIsFlight) { FlightMainPanel.Instance.RCSInfo.ResetHeight(); }
+                this.AllRCSEnabled = tmp;
+            }
             this.maxAcc = this.maxForce / this.Mass;
             this.maxAngularAcc = this.maxTorque / this.moI.Diagonal;
         }
