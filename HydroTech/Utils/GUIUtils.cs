@@ -3,10 +3,15 @@ using UnityEngine;
 
 namespace HydroTech.Utils
 {
-    //TODO: add some caching on coloured GUI styles to prevent creating the same styles over again
     public static class GUIUtils
     {
-        #region Skins
+        #region Fields
+        private static readonly Dictionary<Color, GUIStyle> buttonStyles = new Dictionary<Color, GUIStyle>();
+        private static readonly Dictionary<Color, GUIStyle> wrapButtonStyles = new Dictionary<Color, GUIStyle>();
+        private static readonly Dictionary<Color, GUIStyle> labelStyles = new Dictionary<Color, GUIStyle>();
+        #endregion
+
+        #region Properties
         private static bool usingDefaultSkin;
         public static bool UsingDefaultSkin
         {
@@ -31,6 +36,8 @@ namespace HydroTech.Utils
         private static readonly GUISkin kspSkin;
         private static readonly GUISkin unitySkin;
         public static GUISkin Skin { get; private set; }
+
+        public static GUIStyle WrapButton { get; private set; }
         #endregion
 
         #region Constructor
@@ -46,11 +53,7 @@ namespace HydroTech.Utils
         }
         #endregion
 
-        #region Buttons
-        public static GUIStyle WrapButton { get; private set; }
-
-        private static readonly Dictionary<Color, GUIStyle> buttonStyles = new Dictionary<Color, GUIStyle>();
-        private static readonly Dictionary<Color, GUIStyle> wrapButtonStyles = new Dictionary<Color, GUIStyle>();
+        #region Methods
         public static GUIStyle ButtonStyle(Color colour, bool wrap = false)
         {
             Dictionary<Color, GUIStyle> styles = wrap ? wrapButtonStyles : buttonStyles;
@@ -67,10 +70,7 @@ namespace HydroTech.Utils
             }
             return style;
         }
-        #endregion
-
-        #region Labels
-        private static readonly Dictionary<Color, GUIStyle> labelStyles = new Dictionary<Color, GUIStyle>();
+        
         public static GUIStyle ColouredLabel(Color colour)
         {
             GUIStyle style;
@@ -83,6 +83,13 @@ namespace HydroTech.Utils
                 labelStyles.Add(colour, style);
             }
             return style;
+        }
+
+        public static bool TwinToggle(bool state, string labelA, string labelB, GUIStyle style)
+        {
+            if (GUILayout.Toggle(state, labelA, style)) { state = true; }
+            if (GUILayout.Toggle(!state, labelB, style)) { state = false; }
+            return state;
         }
         #endregion
     }

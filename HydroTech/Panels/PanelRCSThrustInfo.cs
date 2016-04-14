@@ -44,8 +44,7 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginHorizontal();
-            this.showRotation = GUILayout.Toggle(this.showRotation, "Rotation", GUI.skin.button);
-            this.showRotation = !GUILayout.Toggle(!this.showRotation, "Translation", GUI.skin.button);
+            this.showRotation = GUIUtils.TwinToggle(this.showRotation, "Rotation", "Translation", GUI.skin.button);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginVertical(GUI.skin.box);
