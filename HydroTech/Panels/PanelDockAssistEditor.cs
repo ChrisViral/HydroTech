@@ -62,7 +62,7 @@ namespace HydroTech.Panels
                 GUILayout.BeginHorizontal();
                 bool empty = string.IsNullOrEmpty(assist.TempName);
                 GUILayout.FlexibleSpace();
-                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(100), GUILayout.MaxHeight(30)) && !empty)
+                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25)) && !empty)
                 {
                     assist.SetName();
                 }
@@ -83,26 +83,38 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
 
             this.scroll = GUILayout.BeginScrollView(this.scroll, false, false, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.box);
-            if (this.assists.Count == 0)
+            if (this.assists.Count == 0 || (!this.showCams && !this.showTargets))
             {
-                string lbl = "No docking assist type selected";
+                string lbl;
                 if (this.showCams)
                 {
                     lbl = this.showTargets ? "No docking assists on the vessel" : "No docking cameras on the vessel";
                 }
                 else if (this.showTargets) { lbl = "No docking targets on the vessel"; }
+                else { lbl = "No docking assist type selected"; }
 
                 GUILayout.Label(lbl);
             }
             else
             {
+                bool any = false;
                 foreach (ModuleDockAssist a in this.assists)
                 {
                     if (a is ModuleDockAssistCam)
                     {
-                        if (this.showCams) { DrawAssistUI(a); }
+                        if (this.showCams) { DrawAssistUI(a); any = true; }
                     }
-                    else if (this.showTargets) { DrawAssistUI(a); }
+                    else if (this.showTargets) { DrawAssistUI(a); any = true; }
+                }
+                if (!any)
+                {
+                    string lbl;
+                    if (this.showCams)
+                    {
+                        lbl = this.showTargets ? "No docking assists on the vessel" : "No docking cameras on the vessel";
+                    }
+                    else { lbl = "No docking targets on the vessel"; }
+                    GUILayout.Label(lbl);
                 }
             }
             GUILayout.EndScrollView();
