@@ -1,5 +1,4 @@
-﻿using HighlightingSystem;
-using HydroTech.Autopilots.Calculators;
+﻿using HydroTech.Autopilots.Calculators;
 using HydroTech.Panels;
 using UnityEngine;
 
@@ -51,21 +50,15 @@ namespace HydroTech.Managers
         {
             foreach (Part p in EditorLogic.SortedShipList)
             {
-                Highlighter h = p.highlighter;
                 if (MustHighlight(p))
                 {
-                    if (!h.highlighted)
+                    if (!p.highlighter.highlighted)
                     {
                         p.highlighter.SeeThroughOn();
                         p.highlighter.ConstantOn(XKCDColors.ElectricLime);
-                        print("highlighting");
                     }
                 }
-                else if (h.highlighted)
-                {
-                    p.highlighter.Off();
-                    print("removing highlight");
-                }
+                else if (p.highlighter.highlighted) { p.highlighter.Off(); }
             }
         }
 
