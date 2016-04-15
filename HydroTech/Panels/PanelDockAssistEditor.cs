@@ -69,8 +69,8 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Toggle(this.showCams, "Cameras", GUI.skin.button) && this.showTargets) { this.showCams = !this.showCams; }
-            if (GUILayout.Toggle(this.showTargets, "Targets", GUI.skin.button) && this.showCams) { this.showTargets = !this.showTargets; }
+            this.showCams = GUILayout.Toggle(this.showCams, "Cameras", GUI.skin.button) || !this.showTargets;
+            this.showTargets = GUILayout.Toggle(this.showTargets, "Targets", GUI.skin.button) || !this.showCams;           
             GUILayout.EndHorizontal();
 
             this.scroll = GUILayout.BeginScrollView(this.scroll, false, false, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.box);

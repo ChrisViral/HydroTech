@@ -74,7 +74,7 @@ namespace HydroTech.Panels
 #endif
             GUILayout.EndVertical();
             
-            GUIUtils.CenteredButton("Close", HydroToolbarManager.CloseFlight, GUILayout.MaxWidth(80), GUILayout.MaxHeight(30));
+            GUIUtils.CenteredButton("Close", HydroToolbarManager.CloseFlight, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
         }
         #endregion
 

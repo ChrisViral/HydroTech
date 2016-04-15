@@ -45,7 +45,7 @@ namespace HydroTech.Panels
             this.RCSInfo.Visible = GUILayout.Toggle(this.RCSInfo.Visible, "RCS Info");
             GUILayout.EndVertical();
 
-            GUIUtils.CenteredButton("Close", HydroToolbarManager.CloseEditor, GUILayout.MaxWidth(80), GUILayout.MaxHeight(30));
+            GUIUtils.CenteredButton("Close", HydroToolbarManager.CloseEditor, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
         }
         #endregion
 
