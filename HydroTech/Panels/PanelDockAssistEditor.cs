@@ -58,15 +58,7 @@ namespace HydroTech.Panels
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
 
-                GUILayout.BeginHorizontal();
-                bool empty = string.IsNullOrEmpty(assist.TempName);
-                GUILayout.FlexibleSpace();
-                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25)) && !empty)
-                {
-                    assist.SetName();
-                }
-                GUILayout.FlexibleSpace();
-                GUILayout.EndHorizontal();
+                GUIUtils.CenteredButton("Apply", assist.SetName, string.IsNullOrEmpty(assist.TempName) ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
             }
         }
         #endregion

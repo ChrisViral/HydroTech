@@ -85,6 +85,23 @@ namespace HydroTech.Utils
             return style;
         }
 
+        public static void CenteredButton(string text, Callback callback, params GUILayoutOption[] options)
+        {
+            CenteredButton(text, callback, GUI.skin.button, options);
+        }
+
+        public static void CenteredButton(string text, Callback callback, GUIStyle style, params GUILayoutOption[] options)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(text, style, options))
+            {
+                callback();
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+        }
+
         public static bool TwinToggle(bool state, string labelA, string labelB, GUIStyle style)
         {
             if (GUILayout.Toggle(state, labelA, style)) { state = true; }

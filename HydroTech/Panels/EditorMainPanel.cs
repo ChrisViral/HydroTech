@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -43,6 +44,8 @@ namespace HydroTech.Panels
             this.DockAssist.Visible = GUILayout.Toggle(this.DockAssist.Visible, "Docking Cameras/Targets");
             this.RCSInfo.Visible = GUILayout.Toggle(this.RCSInfo.Visible, "RCS Info");
             GUILayout.EndVertical();
+
+            GUIUtils.CenteredButton("Close", HydroToolbarManager.CloseEditor, GUILayout.MaxWidth(80), GUILayout.MaxHeight(30));
         }
         #endregion
 

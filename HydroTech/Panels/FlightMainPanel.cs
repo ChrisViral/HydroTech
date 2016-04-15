@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -72,6 +73,8 @@ namespace HydroTech.Panels
             this.Debug.Visible = GUILayout.Toggle(this.Debug.Visible, "Debug");
 #endif
             GUILayout.EndVertical();
+            
+            GUIUtils.CenteredButton("Close", HydroToolbarManager.CloseFlight, GUILayout.MaxWidth(80), GUILayout.MaxHeight(30));
         }
         #endregion
 

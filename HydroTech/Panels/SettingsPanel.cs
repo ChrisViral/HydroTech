@@ -42,7 +42,7 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
             
             GUILayout.BeginVertical(GUI.skin.box);
-
+            //Insert settings
             GUILayout.EndVertical();
 
             GUILayout.BeginHorizontal();

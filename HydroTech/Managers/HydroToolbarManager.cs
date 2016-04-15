@@ -16,7 +16,7 @@ namespace HydroTech.Managers
             #endregion
 
             #region Fields
-            private ApplicationLauncherButton button;
+            internal ApplicationLauncherButton button;
             private GameObject go;
             private EditorMainPanel panel;
             private bool added;
@@ -93,7 +93,7 @@ namespace HydroTech.Managers
         public class FlightToolbar
         {
             #region Fields
-            private ApplicationLauncherButton button;
+            internal ApplicationLauncherButton button;
             private HydroJebCore core;
             private GameObject go;
             private FlightMainPanel panel;
@@ -262,6 +262,18 @@ namespace HydroTech.Managers
         public static FlightToolbar Flight { get; private set; }
 
         public static SettingsToolbar Settings { get; private set; }
+        #endregion
+
+        #region Static methods
+        public static void CloseEditor()
+        {
+            Editor.button.SetFalse();
+        }
+
+        public static void CloseFlight()
+        {
+            Flight.button.SetFalse();
+        }
         #endregion
 
         #region Functions
