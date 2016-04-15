@@ -46,6 +46,7 @@ namespace HydroTech
         private LineRenderer[] lines;
         private Vector3[] directions;
         protected Rigidbody rigidbody;
+        internal bool highlight;
         #endregion
 
         #region Properties

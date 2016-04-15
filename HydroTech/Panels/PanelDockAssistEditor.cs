@@ -42,30 +42,32 @@ namespace HydroTech.Panels
 
             if (!assist.InfoShown)
             {
-                if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition)) //Hovering button
-                {
-                    HydroEditorManager.Instance.SetHighlight(assist.part, true);
-                }
-                else { HydroEditorManager.Instance.SetHighlight(assist.part, false); }
+                if (Event.current.type == EventType.Repaint) { assist.highlight = GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition); } //Hovering button
             }
             else
             {
-                HydroEditorManager.Instance.SetHighlight(assist.part, true);
-
-                GUILayout.Label("Docking " + type);
-                assist.AidShown = GUILayout.Toggle(assist.AidShown, "Show aid");
-                
+                assist.highlight = true;              
+                assist.AidShown = GUILayout.Toggle(assist.AidShown, "Show visual aid");               
+                GUILayout.BeginVertical(GUILayout.MaxHeight(40));
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(string.Format("Rename {0}:", type), GUILayout.MaxWidth(70));
+                GUILayout.BeginVertical();
+                GUILayout.FlexibleSpace();
                 assist.TempName = GUILayout.TextField(assist.TempName, 20);
+                GUILayout.FlexibleSpace();
+                GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
 
+                GUILayout.BeginHorizontal();
                 bool empty = string.IsNullOrEmpty(assist.TempName);
-                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(100)) && !empty)
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Apply", empty ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(100), GUILayout.MaxHeight(30)) && !empty)
                 {
                     assist.SetName();
-                    ScreenMessages.PostScreenMessage("Docking assist renamed", 3, ScreenMessageStyle.UPPER_LEFT);
                 }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
             }
         }
         #endregion

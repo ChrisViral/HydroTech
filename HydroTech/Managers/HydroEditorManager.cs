@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using HighlightingSystem;
+﻿using HighlightingSystem;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Panels;
 using UnityEngine;
@@ -15,7 +14,6 @@ namespace HydroTech.Managers
 
         #region Fields
         private bool active;
-        private readonly Dictionary<Part, Highlighter> parts = new Dictionary<Part, Highlighter>();
         #endregion
 
         #region Properties
@@ -27,36 +25,16 @@ namespace HydroTech.Managers
         {
             this.active = state;
         }
+        #endregion
 
-        public void SetHighlight(Part part, bool set)
+        #region Static methods
+        private static bool MustHighlight(Part part)
         {
-            Highlighter highlighter;
-            if (set)
+            foreach (PartModule pm in part.Modules)
             {
-                if (!this.parts.TryGetValue(part, out highlighter))
-                {
-                    GameObject go = part.transform.GetChild(0).gameObject;
-                    highlighter = go.GetComponent<Highlighter>() ?? go.AddComponent<Highlighter>();
-                    this.parts.Add(part, highlighter);
-                    highlighter.ConstantOn(XKCDColors.LightSeaGreen);
-                    part.SetHighlightColor(XKCDColors.LightSeaGreen);
-                    part.SetHighlight(true, false);
-                }
+                if (pm is ModuleDockAssist && ((ModuleDockAssist)pm).highlight) { return true; }
             }
-            else
-            {
-                if (this.parts.TryGetValue(part, out highlighter))
-                {
-                    highlighter.Off();
-                    part.SetHighlightDefault();
-                    this.parts.Remove(part);
-                }
-            }
-        }
-
-        public void Restart()
-        {
-            this.parts.Clear();
+            return false;
         }
         #endregion
 
@@ -67,7 +45,28 @@ namespace HydroTech.Managers
 
             Instance = this;
             this.ActiveRCS = new RCSCalculator();
-            GameEvents.onEditorRestart.Add(Restart);
+        }
+
+        private void Update()
+        {
+            foreach (Part p in EditorLogic.SortedShipList)
+            {
+                Highlighter h = p.highlighter;
+                if (MustHighlight(p))
+                {
+                    if (!h.highlighted)
+                    {
+                        p.highlighter.SeeThroughOn();
+                        p.highlighter.ConstantOn(XKCDColors.ElectricLime);
+                        print("highlighting");
+                    }
+                }
+                else if (h.highlighted)
+                {
+                    p.highlighter.Off();
+                    print("removing highlight");
+                }
+            }
         }
 
         private void FixedUpdate()
@@ -80,11 +79,7 @@ namespace HydroTech.Managers
 
         private void OnDestroy()
         {
-            if (Instance == this)
-            {
-                Instance = null;
-                GameEvents.onEditorRestart.Remove(Restart);
-            }
+            if (Instance == this) { Instance = null; }
         }
         #endregion
     }
