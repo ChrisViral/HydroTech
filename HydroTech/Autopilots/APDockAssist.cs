@@ -25,7 +25,7 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Fields
-        private RCSCalculator rcsTarget = new RCSCalculator();
+        private readonly RCSCalculator rcsTarget = new RCSCalculator();
         private Vessel drivingTargetVessel;
         public ModuleDockAssistTarget target;
         private bool targetOrientReady = true;

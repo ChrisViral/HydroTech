@@ -29,9 +29,7 @@ namespace HydroTech.Panels
         #region Methods
         protected bool LayoutEngageBtn(bool engaged)
         {
-            GUIStyle engageBtnStyle = GUIUtils.ButtonStyle(engaged ? Color.red : Color.green);
-            string engageBtnText = engaged ? "DISENGAGE" : "ENGAGE";
-            return GUILayout.Button(engageBtnText, engageBtnStyle);
+            return GUILayout.Button(engaged ? "DISENGAGE" : "ENGAGE", GUIUtils.ButtonStyle(engaged ? XKCDColors.DeepRed : XKCDColors.Green));
         }
         #endregion
 
@@ -48,11 +46,10 @@ namespace HydroTech.Panels
             if (GUILayout.Button("Cancel"))
             {
                 this.settings = false;
-                ResetHeight();
             }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button(this.Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE", GUIUtils.ButtonStyle(this.Engaged ? Color.red : Color.green)))
+            if (GUILayout.Button(this.Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE", GUIUtils.ButtonStyle(this.Engaged ? XKCDColors.DeepRed : XKCDColors.Green)))
             {
                 if (!this.Engaged)
                 {
@@ -61,12 +58,6 @@ namespace HydroTech.Panels
                 }
                 this.Engaged = !this.Engaged;
             }
-        }
-
-        public override void OnFlightStart()
-        {
-            base.OnFlightStart();
-            this.settings = false;
         }
         #endregion
     }
