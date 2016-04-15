@@ -37,7 +37,7 @@ namespace HydroTech.Panels
         private static void DrawAssistUI(ModuleDockAssist assist)
         {
             string type = assist is ModuleDockAssistCam ? "Camera" : "Target";
-            assist.InfoShown = GUILayout.Toggle(assist.InfoShown, string.Format("{0}: {1}", type, assist.assistName), GUI.skin.button);
+            assist.InfoShown = GUILayout.Toggle(assist.InfoShown, type + ": " + assist.assistName, GUI.skin.button);
 
             if (!assist.InfoShown)
             {

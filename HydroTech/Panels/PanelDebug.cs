@@ -49,55 +49,35 @@ namespace HydroTech.Panels
         {
             GUI.DragWindow(this.drag);
 
-            if (GUILayout.Button("Control State"))
-            {
-                this.ctrlState = !this.ctrlState;
-                ResetHeight();
-            }
+            this.ctrlState = GUILayout.Toggle(this.ctrlState, "Control state", GUI.skin.button);
             if (this.ctrlState) { GUILayout.Label(Autopilot.StringCtrlState(FlightGlobals.ActiveVessel.ctrlState)); }
 
-            if (GUILayout.Button("AP Status"))
-            {
-                this.apStatus = !this.apStatus;
-                ResetHeight();
-            }
+            this.apStatus = GUILayout.Toggle(this.apStatus, "AP Status", GUI.skin.button);
             if (this.apStatus) { GUILayout.Label(Autopilot.StringAllAPStatus()); }
 
-            if (GUILayout.Button("Flight Input"))
-            {
-                this.flightInput = !this.flightInput;
-                ResetHeight();
-            }
+            this.flightInput = GUILayout.Toggle(this.flightInput, "Flight Input", GUI.skin.button);
             if (this.flightInput) { GUILayout.Label(HydroFlightManager.Instance.InputManager.StringList()); }
 
-            if (GUILayout.Button("Camera State"))
-            {
-                this.cameraState = !this.cameraState;
-                ResetHeight();
-            }
+            this.cameraState = GUILayout.Toggle(this.cameraState, "Camera State", GUI.skin.button);
             if (this.cameraState) { GUILayout.Label(HydroFlightManager.Instance.CameraManager.StringCameraState()); }
 
-            if (GUILayout.Button("Camera Manager"))
-            {
-                this.cameraMgr = !this.cameraMgr;
-                ResetHeight();
-            }
+            this.cameraMgr = GUILayout.Toggle(this.cameraMgr, "Camera Manager", GUI.skin.button);
+
             if (this.cameraMgr)
             {
                 GUILayout.Label(HydroFlightManager.Instance.CameraManager.StringCameraStack());
 
-                if (GUILayout.Button("Peek top"))
-                {
-                    this.Peektop = !this.Peektop;
-                    ResetHeight();
-                }
+                this.Peektop = GUILayout.Toggle(this.Peektop, "Peek Top", GUI.skin.button);
                 if (this.Peektop) { GUILayout.Label(HydroFlightManager.Instance.CameraManager.StringTopState()); }
             }
 
-            GUILayout.Label("Watch list:");
-            foreach (KeyValuePair<string, object> pair in this.watchList)
+            if (this.watchList.Count != 0)
             {
-                GUILayout.Label(string.Format("{0} = {1}", pair.Key, pair.Value));
+                GUILayout.Label("Watch list:");
+                foreach (KeyValuePair<string, object> pair in this.watchList)
+                {
+                    GUILayout.Label(pair.Key + " = " + pair.Value);
+                }
             }
         }
         #endregion
