@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <LangVersion>5</LangVersion>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -85,6 +85,7 @@
     <Compile Include="HydroJebCore.cs" />
     <Compile Include="Autopilots\Calculators\SwitchTransformCalculator.cs" />
     <Compile Include="Managers\HydroInputManager.cs" />
+    <Compile Include="UI\UILinkedToggles.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GuidProvider.cs" />
