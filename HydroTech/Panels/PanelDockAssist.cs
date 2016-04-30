@@ -1,6 +1,7 @@
 ﻿using System;
 using HydroTech.Autopilots;
 using HydroTech.Managers;
+using HydroTech.UI;
 using HydroTech.Utils;
 using UnityEngine;
 
@@ -30,6 +31,9 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
+        private UILinkedToggles<Vessel> vessels;
+        private UILinkedToggles<ModuleDockAssistCam> cams;
+        private UILinkedToggles<ModuleDockAssistTarget> targets;
         protected Vessel targetVessel;
         protected string accText;
         protected string angularAccText;
