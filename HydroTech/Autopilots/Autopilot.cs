@@ -48,30 +48,18 @@ namespace HydroTech.Autopilots
             }
         }
 
-        protected static Vessel ActiveVessel
-        {
-            get { return FlightGlobals.ActiveVessel; }
-        }
+        protected static Vessel ActiveVessel => FlightGlobals.ActiveVessel;
 
-        protected static RCSCalculator ActiveRCS
-        {
-            get { return HydroFlightManager.Instance.ActiveRCS; }
-        }
+        protected static RCSCalculator ActiveRCS => HydroFlightManager.Instance.ActiveRCS;
 
-        protected virtual string NameString
-        {
-            get { return "Autopilot"; }
-        }
+        protected virtual string NameString => "Autopilot";
 
         public static Autopilot EngagedAutopilot
         {
             get { return HydroFlightManager.Instance.Autopilots.SingleOrDefault(ap => ap.Engaged); }
         }
 
-        public static bool AutopilotEngaged
-        {
-            get { return EngagedAutopilot != null; }
-        }
+        public static bool AutopilotEngaged => EngagedAutopilot != null;
         #endregion
 
         #region Destructor
@@ -160,9 +148,7 @@ namespace HydroTech.Autopilots
 #if DEBUG
         public static string StringCtrlState(FlightCtrlState ctrlState)
         {
-            return string.Format("yaw = {0}, roll = {1}, pitch = {2}\nX = {3}, Y = {4}, Z = {5}",
-                ctrlState.yaw.ToString("#0.000"), ctrlState.roll.ToString("#0.000"), ctrlState.pitch.ToString("#0.000"),
-                ctrlState.X.ToString("#0.000"), ctrlState.Y.ToString("#0.000"), ctrlState.Z.ToString("#0.000"));
+            return $"yaw = {ctrlState.yaw.ToString("#0.000")}, roll = {ctrlState.roll.ToString("#0.000")}, pitch = {ctrlState.pitch.ToString("#0.000")}\nX = {ctrlState.X.ToString("#0.000")}, Y = {ctrlState.Y.ToString("#0.000")}, Z = {ctrlState.Z.ToString("#0.000")}";
         }
 
         public static void PrintCtrlState(FlightCtrlState ctrlState)
@@ -175,7 +161,7 @@ namespace HydroTech.Autopilots
             string msg = AutopilotEngaged ? "Autopilot engaged" : "No autopilot engaged";
             foreach (Autopilot ap in HydroFlightManager.Instance.Autopilots)
             {
-                msg += string.Format("\n{0} {1}", ap.NameString, ap.Engaged);
+                msg += $"\n{ap.NameString} {ap.Engaged}";
             }
             return msg;
         }

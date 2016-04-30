@@ -58,65 +58,29 @@ namespace HydroTech.Autopilots.Calculators
             protected set { this.distance[Direction.EAST] = value; }
         }
 
-        public float SlopeNorth
-        {
-            get { return Mathf.Atan((this.DistCenter - this.DistNorth) / this.Radius); }
-        }
+        public float SlopeNorth => Mathf.Atan((this.DistCenter - this.DistNorth) / this.Radius);
 
-        public float SlopeSouth
-        {
-            get { return Mathf.Atan((this.DistCenter - this.DistSouth) / this.Radius); }
-        }
+        public float SlopeSouth => Mathf.Atan((this.DistCenter - this.DistSouth) / this.Radius);
 
-        public float SlopeWest
-        {
-            get { return Mathf.Atan((this.DistCenter - this.DistWest) / this.Radius); }
-        }
+        public float SlopeWest => Mathf.Atan((this.DistCenter - this.DistWest) / this.Radius);
 
-        public float SlopeEast
-        {
-            get { return Mathf.Atan((this.DistCenter - this.DistEast) / this.Radius); }
-        }
+        public float SlopeEast => Mathf.Atan((this.DistCenter - this.DistEast) / this.Radius);
 
-        private CelestialBody MainBody
-        {
-            get { return this.vessel.mainBody; }
-        }
+        private CelestialBody MainBody => this.vessel.mainBody;
 
-        private Vector3 CoM
-        {
-            get { return this.vessel.CoM; }
-        }
+        private Vector3 CoM => this.vessel.CoM;
 
-        public float Radius
-        {
-            get { return Mathf.Max(this.altASL * radiusAltASL, radiusMin); }
-        }
+        public float Radius => Mathf.Max(this.altASL * radiusAltASL, radiusMin);
 
-        private Vector3 Up
-        {
-            get { return (this.CoM - this.MainBody.position).normalized; }
-        }
+        private Vector3 Up => (this.CoM - this.MainBody.position).normalized;
 
-        private Vector3 North
-        {
-            get { return this.MainBody.transform.up; }
-        }
+        private Vector3 North => this.MainBody.transform.up;
 
-        private Vector3 South
-        {
-            get { return -this.North; }
-        }
+        private Vector3 South => -this.North;
 
-        private Vector3 West
-        {
-            get { return -this.East; }
-        }
+        private Vector3 West => -this.East;
 
-        private Vector3 East
-        {
-            get { return Vector3.Cross(this.Up, this.North); }
-        }
+        private Vector3 East => Vector3.Cross(this.Up, this.North);
         #endregion
 
         #region Constructors

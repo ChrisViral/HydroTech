@@ -35,10 +35,7 @@ namespace HydroTech
             }
         }
 
-        public bool IsOnline
-        {
-            get { return this.state == AutopilotStatus.Online; }
-        }
+        public bool IsOnline => this.state == AutopilotStatus.Online;
         #endregion
 
         #region Methods

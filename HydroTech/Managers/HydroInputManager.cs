@@ -185,7 +185,7 @@ namespace HydroTech.Managers
                     apActive += handler.flightInputList.Count;
                 }
             }
-            Debug.Log(string.Format("Total {0} vessels, {1} autopilots\nActive: {2} vessels, {3} autopilots\nInactive: {4} vessels, {5} autopilots", vesselActive + vesselDestroyed, apActive + apInactive, vesselActive, apActive, vesselDestroyed, apInactive));
+            Debug.Log($"Total {vesselActive + vesselDestroyed} vessels, {apActive + apInactive} autopilots\nActive: {vesselActive} vessels, {apActive} autopilots\nInactive: {vesselDestroyed} vessels, {apInactive} autopilots");
         }
 
         public string StringList()
@@ -196,11 +196,11 @@ namespace HydroTech.Managers
             {
                 if (handler.isDestroyed)
                 {
-                    msgStr += string.Format("\nVessel {0} destroyed, count: {1}", count++, handler.flightInputList.Count);
+                    msgStr += $"\nVessel {count++} destroyed, count: {handler.flightInputList.Count}";
                 }
                 else
                 {
-                    msgStr += string.Format("\nVessel {0} isActiveVessel = {1}, count = {2}", count++, handler.vessel.isActiveVessel, handler.flightInputList.Count);
+                    msgStr += $"\nVessel {count++} isActiveVessel = {handler.vessel.isActiveVessel}, count = {handler.flightInputList.Count}";
                 }
                 msgStr = handler.flightInputList.Keys.Aggregate(msgStr, (current, str) => current + "\n\t" + str);
             }

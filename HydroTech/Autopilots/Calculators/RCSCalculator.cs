@@ -154,12 +154,12 @@ namespace HydroTech.Autopilots.Calculators
 
         public override string ToString()
         {
-            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass, this.maxForce, this.maxAcc, this.moI, this.maxTorque, this.maxAngularAcc);
+            return $"Mass: {this.Mass}\nForces: {this.maxForce}\nAcc: {this.maxAcc}\nMoI: {this.moI}\nTorque: {this.maxTorque}\nAAcc: {this.maxAngularAcc}";
         }
 
         public string ToString(string format)
         {
-            return string.Format("Mass: {0}\nForces: {1}\nAcc: {2}\nMoI: {3}\nTorque: {4}\nAAcc: {5}", this.Mass.ToString(format), this.maxForce.ToString(format), this.maxAcc.ToString(format), this.moI.ToString(format), this.maxTorque.ToString(format), this.maxAngularAcc.ToString(format));
+            return $"Mass: {this.Mass.ToString(format)}\nForces: {this.maxForce.ToString(format)}\nAcc: {this.maxAcc.ToString(format)}\nMoI: {this.moI.ToString(format)}\nTorque: {this.maxTorque.ToString(format)}\nAAcc: {this.maxAngularAcc.ToString(format)}";
         }
         #endregion
     }

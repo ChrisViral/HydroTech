@@ -30,10 +30,7 @@ namespace HydroTech
             }
         }
 
-        protected override string ModuleShort
-        {
-            get { return "Tgt"; }
-        }
+        protected override string ModuleShort => "Tgt";
         #endregion
 
         #region Methods

@@ -6,11 +6,7 @@ namespace HydroTech.Utils
     public class Matrix3x3
     {
         #region Static properties
-        private static readonly Matrix3x3 i = new Matrix3x3 { m00 = 1, m11 = 1, m22 = 1 };
-        public static Matrix3x3 I
-        {
-            get { return i; }
-        }
+        public static Matrix3x3 I { get; } = new Matrix3x3 { m00 = 1, m11 = 1, m22 = 1 };
         #endregion
 
         #region Fields
@@ -205,12 +201,12 @@ namespace HydroTech.Utils
         #region Overrides
         public override string ToString()
         {
-            return string.Format("{{({0}, {1}, {2}), ({3}, {4}, {5}), ({6}, {7}, {8})}}", this.m00, this.m01, this.m02, this.m10, this.m11, this.m12, this.m20, this.m21, this.m22);
+            return $"{{({this.m00}, {this.m01}, {this.m02}), ({this.m10}, {this.m11}, {this.m12}), ({this.m20}, {this.m21}, {this.m22})}}";
         }
 
         public virtual string ToString(string format)
         {
-            return string.Format("{{({0}, {1}, {2}), ({3}, {4}, {5}), ({6}, {7}, {8})}}", this.m00.ToString(format), this.m01.ToString(format), this.m02.ToString(format), this.m10.ToString(format), this.m11.ToString(format), this.m12.ToString(format), this.m20.ToString(format), this.m21.ToString(format), this.m22.ToString(format));
+            return $"{{({this.m00.ToString(format)}, {this.m01.ToString(format)}, {this.m02.ToString(format)}), ({this.m10.ToString(format)}, {this.m11.ToString(format)}, {this.m12.ToString(format)}), ({this.m20.ToString(format)}, {this.m21.ToString(format)}, {this.m22.ToString(format)})}}";
         }
 
         public override bool Equals(object obj)
@@ -269,9 +265,9 @@ namespace HydroTech.Utils
         {
             if ((object)m1 == null) { return (object)m2 != null; }
             if ((object)m2 == null) { return true; }
-            return !(m1.m00 == m2.m00) || !(m1.m01 == m2.m01) || !(m1.m02 == m2.m02)
-                || !(m1.m10 == m2.m10) || !(m1.m11 == m2.m11) || !(m1.m12 == m2.m12)
-                || !(m1.m20 == m2.m20) || !(m1.m21 == m2.m21) || !(m1.m22 == m2.m22);
+            return m1.m00 != m2.m00 || m1.m01 != m2.m01 || m1.m02 != m2.m02
+                || m1.m10 != m2.m10 || m1.m11 != m2.m11 || m1.m12 != m2.m12
+                || m1.m20 != m2.m20 || m1.m21 != m2.m21 || m1.m22 != m2.m22;
         }
         #endregion
     }

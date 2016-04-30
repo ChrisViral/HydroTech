@@ -23,15 +23,9 @@ namespace HydroTech.Autopilots.Calculators
             protected set { this.maxThrust = value; }
         }
 
-        public float MinAcc
-        {
-            get { return this.MinThrust / this.Mass; }
-        }
+        public float MinAcc => this.MinThrust / this.Mass;
 
-        public float MaxAcc
-        {
-            get { return this.MaxThrust / this.Mass; }
-        }
+        public float MaxAcc => this.MaxThrust / this.Mass;
         #endregion
 
         #region Methods

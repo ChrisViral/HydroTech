@@ -90,25 +90,13 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Static properties
-        private static Vector3 SurfVel
-        {
-            get { return ActiveVessel.srf_velocity; }
-        }
+        private static Vector3 SurfVel => ActiveVessel.srf_velocity;
 
-        private static Vector3 SurfVelVessel
-        {
-            get { return HTUtils.VectorTransform(SurfVel, ActiveVessel.ReferenceTransform); }
-        }
+        private static Vector3 SurfVelVessel => HTUtils.VectorTransform(SurfVel, ActiveVessel.ReferenceTransform);
 
-        private static float SurfXSpeed
-        {
-            get { return SurfVelVessel.x; }
-        }
+        private static float SurfXSpeed => SurfVelVessel.x;
 
-        private static CelestialBody MainBody
-        {
-            get { return FlightGlobals.currentMainBody; }
-        }
+        private static CelestialBody MainBody => FlightGlobals.currentMainBody;
         #endregion
 
         #region Fields
@@ -146,75 +134,33 @@ namespace HydroTech.Autopilots
 
         public float TwrEng { get; private set; }
 
-        public float TWR
-        {
-            get { return this.engines ? this.TwrRCS + this.TwrEng : this.TwrRCS; }
-        }
+        public float TWR => this.engines ? this.TwrRCS + this.TwrEng : this.TwrRCS;
 
-        public float AltASL
-        {
-            get { return (float)MainBody.GetAltitude(ActiveVessel.CoM); }
-        }
+        public float AltASL => (float)MainBody.GetAltitude(ActiveVessel.CoM);
 
-        public float AltTrue
-        {
-            get { return this.groundCalc.DistCenter; }
-        }
+        public float AltTrue => this.groundCalc.DistCenter;
 
-        public float TerrainHeight
-        {
-            get { return this.AltASL - this.AltTrue; }
-        }
+        public float TerrainHeight => this.AltASL - this.AltTrue;
 
-        public float AltKeepTrue
-        {
-            get { return this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, finalDescentHeight); }
-        }
+        public float AltKeepTrue => this.useTrueAlt ? this.altKeep : Mathf.Max(this.altKeep - this.TerrainHeight, finalDescentHeight);
 
-        public float AltKeepASL
-        {
-            get { return this.useTrueAlt ? this.altKeep + this.TerrainHeight : this.altKeep; }
-        }
+        public float AltKeepASL => this.useTrueAlt ? this.altKeep + this.TerrainHeight : this.altKeep;
 
-        private float AltDiff
-        {
-            get { return this.touchdown ? this.AltTrue : this.AltTrue - this.AltKeepTrue; }
-        }
+        private float AltDiff => this.touchdown ? this.AltTrue : this.AltTrue - this.AltKeepTrue;
 
-        private float SurfYSpeed
-        {
-            get { return this.vabPod ? SurfVelVessel.y : SurfVelVessel.z; }
-        }
+        private float SurfYSpeed => this.vabPod ? SurfVelVessel.y : SurfVelVessel.z;
 
-        private float SafeHorizontalSpeed
-        {
-            get { return this.touchdown ? 0.1f : 0.01f * this.AltTrue; }
-        }
+        private float SafeHorizontalSpeed => this.touchdown ? 0.1f : 0.01f * this.AltTrue;
 
-        private Vector3 Up
-        {
-            get { return this.vabPod ? ActiveVessel.ReferenceTransform.up : -ActiveVessel.ReferenceTransform.forward; }
-        }
+        private Vector3 Up => this.vabPod ? ActiveVessel.ReferenceTransform.up : -ActiveVessel.ReferenceTransform.forward;
 
-        public string StatusString
-        {
-            get { return statusDict[this.status]; }
-        }
+        public string StatusString => statusDict[this.status];
 
-        public string WarningString
-        {
-            get { return indicatorDict[this.indicator]; }
-        }
+        public string WarningString => indicatorDict[this.indicator];
 
-        public Color WarningColor
-        {
-            get { return colorDict[this.indicator]; }
-        }
+        public Color WarningColor => colorDict[this.indicator];
 
-        protected override string NameString
-        {
-            get { return "LandingAP"; }
-        }
+        protected override string NameString => "LandingAP";
 
         public override bool Engaged
         {

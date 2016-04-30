@@ -12,10 +12,7 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Properties
-        protected override string NameString
-        {
-            get { return "PreciseControlAP"; }
-        }
+        protected override string NameString => "PreciseControlAP";
         #endregion
 
         #region Overrides

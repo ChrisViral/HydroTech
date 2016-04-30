@@ -31,15 +31,9 @@ namespace HydroTech.Autopilots.Calculators
         #endregion
 
         #region Properties
-        protected float AMax
-        {
-            get { return this.twr - this.g; }
-        }
+        protected float AMax => this.twr - this.g;
 
-        protected float Alpha
-        {
-            get { return this.AMax / t1; }
-        }
+        protected float Alpha => this.AMax / t1;
 
         protected float thrRate = 1;
         public float ThrRate
@@ -51,15 +45,9 @@ namespace HydroTech.Autopilots.Calculators
             }
         }
 
-        public DescentBehaviour Behaviour
-        {
-            get { return GetBehaviour(this.thrRate); }
-        }
+        public DescentBehaviour Behaviour => GetBehaviour(this.thrRate);
 
-        public DescentIndicator Indicator
-        {
-            get { return GetIndicator(this.thrRate); }
-        }
+        public DescentIndicator Indicator => GetIndicator(this.thrRate);
         #endregion
 
         #region Methods

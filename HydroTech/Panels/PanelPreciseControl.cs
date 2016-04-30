@@ -8,10 +8,7 @@ namespace HydroTech.Panels
     public class PanelPreciseControl : PanelAP
     {
         #region Static properties
-        private static APPreciseControl PC
-        {
-            get { return HydroFlightManager.Instance.PreciseControlAutopilot; }
-        }
+        private static APPreciseControl PC => HydroFlightManager.Instance.PreciseControlAutopilot;
         #endregion
 
         #region Fields
@@ -72,13 +69,13 @@ namespace HydroTech.Panels
             {
                 if (PC.byRate)
                 {
-                    GUILayout.Label(string.Format("Rotation thrust rate: {0:#0.000}", PC.rotationRate));
-                    GUILayout.Label(string.Format("Translation thrust rate: {0:#0.000}", PC.translationRate));
+                    GUILayout.Label($"Rotation thrust rate: {PC.rotationRate:#0.000}");
+                    GUILayout.Label($"Translation thrust rate: {PC.translationRate:#0.000}");
                 }
                 else
                 {
-                    GUILayout.Label(string.Format("Angular Acc: {0:#0.000}rad/s²", PC.angularAcc));
-                    GUILayout.Label(string.Format("Acceleration: {0:#0.000}m/s²", PC.acc));
+                    GUILayout.Label($"Angular Acc: {PC.angularAcc:#0.000}rad/s²");
+                    GUILayout.Label($"Acceleration: {PC.acc:#0.000}m/s²");
                 }
                 if (GUILayout.Button("Change settings"))
                 {

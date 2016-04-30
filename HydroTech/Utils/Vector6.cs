@@ -84,12 +84,12 @@ namespace HydroTech.Utils
         #region Overrides
         public override string ToString()
         {
-            return string.Format("({0}, -{1}; {2}, -{3}; {4}, -{5})", this.xp, this.xn, this.yp, this.yn, this.zp, this.zn);
+            return $"({this.xp}, -{this.xn}; {this.yp}, -{this.yn}; {this.zp}, -{this.zn})";
         }
 
         public virtual string ToString(string format)
         {
-            return string.Format("({0}, -{1}; {2}, -{3}; {4}, -{5})", this.xp.ToString(format), this.xn.ToString(format), this.yp.ToString(format), this.yn.ToString(format), this.zp.ToString(format), this.zn.ToString(format));
+            return $"({this.xp.ToString(format)}, -{this.xn.ToString(format)}; {this.yp.ToString(format)}, -{this.yn.ToString(format)}; {this.zp.ToString(format)}, -{this.zn.ToString(format)})";
         }
         #endregion
 

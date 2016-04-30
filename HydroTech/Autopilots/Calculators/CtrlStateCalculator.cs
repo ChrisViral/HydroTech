@@ -59,17 +59,17 @@ namespace HydroTech.Autopilots.Calculators
 #if DEBUG
         public string PrintRot()
         {
-            return string.Format("ptich: {0:#0.000}, yaw: {1:#0.000}, roll: {2:#0.000}", this.pitch, this.yaw, this.roll);
+            return $"ptich: {this.pitch:#0.000}, yaw: {this.yaw:#0.000}, roll: {this.roll:#0.000}";
         }
 
         public string PrintTrans()
         {
-            return string.Format("X: {0:#0.000}, Y: {1:#0.000}, Z: {2:#0.000}", this.x, this.y, this.z);
+            return $"X: {this.x:#0.000}, Y: {this.y:#0.000}, Z: {this.z:#0.000}";
         }
 
         public override string ToString()
         {
-            return string.Format("ptich: {0:#0.000}, yaw: {1:#0.000}, roll: {2:#0.000}\nX: {3:#0.000}, Y: {4:#0.000}, Z: {5:#0.000}", this.pitch, this.yaw, this.roll, this.x, this.y, this.z);
+            return $"ptich: {this.pitch:#0.000}, yaw: {this.yaw:#0.000}, roll: {this.roll:#0.000}\nX: {this.x:#0.000}, Y: {this.y:#0.000}, Z: {this.z:#0.000}";
         }
 #endif
         #endregion

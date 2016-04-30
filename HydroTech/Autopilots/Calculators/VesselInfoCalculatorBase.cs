@@ -40,7 +40,7 @@ namespace HydroTech.Autopilots.Calculators
             set
             {
                 if (this.Editor) { return; }
-                this.partList = value != null ? value.Parts : null;
+                this.partList = value?.Parts;
                 this.targetVessel = value;
             }
         }

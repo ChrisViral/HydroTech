@@ -19,59 +19,35 @@ namespace HydroTech.Utils
         #endregion
 
         #region Properties
-        private static readonly string pluginDataURL;
-        public static string PluginDataURL
-        {
-            get { return pluginDataURL; }
-        }
+        public static string PluginDataURL { get; }
 
-        private static readonly Texture2D launcherIcon;
-        public static Texture2D LauncherIcon
-        {
-            get { return launcherIcon; }
-        }
+        public static Texture2D LauncherIcon { get; }
 
-        private static readonly Texture2D activeIcon;
-        public static Texture2D ActiveIcon
-        {
-            get { return activeIcon; }
-        }
+        public static Texture2D ActiveIcon { get; }
 
-        private static readonly Texture2D inactiveIcon;
-        public static Texture2D InactiveIcon
-        {
-            get { return inactiveIcon; }
-        }
+        public static Texture2D InactiveIcon { get; }
 
-        private static readonly int electricChargeID;
-        public static int ElectricChargeID
-        {
-            get { return electricChargeID; }
-        }
+        public static int ElectricChargeID { get; }
 
-        private static readonly PartResourceDefinition electricity;
-        public static PartResourceDefinition Electricity
-        {
-            get { return electricity; }
-        }  
+        public static PartResourceDefinition Electricity { get; }
         #endregion
 
         #region Constructor
         static HTUtils()
         {
-            pluginDataURL = Path.Combine(KSPUtil.ApplicationRootPath, localPluginDataURL);
+            PluginDataURL = Path.Combine(KSPUtil.ApplicationRootPath, localPluginDataURL);
 
-            launcherIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
-            launcherIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localIconURL)));
+            LauncherIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
+            LauncherIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localIconURL)));
 
-            activeIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
-            activeIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localActiveIconURL)));
+            ActiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
+            ActiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localActiveIconURL)));
 
-            inactiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
-            inactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localInactiveIconURL)));
+            InactiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
+            InactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localInactiveIconURL)));
 
-            electricity = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge");
-            electricChargeID = electricity.id;
+            Electricity = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge");
+            ElectricChargeID = Electricity.id;
         }
         #endregion
 

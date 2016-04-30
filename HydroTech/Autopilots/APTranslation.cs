@@ -65,10 +65,7 @@ namespace HydroTech.Autopilots
             }
         }
 
-        protected override string NameString
-        {
-            get { return "TranslationAP"; }
-        }
+        protected override string NameString => "TranslationAP";
         #endregion
 
         #region Methods

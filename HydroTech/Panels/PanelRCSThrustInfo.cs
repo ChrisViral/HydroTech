@@ -13,10 +13,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        protected RCSCalculator ActiveRCS
-        {
-            get { return this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS; }
-        }
+        protected RCSCalculator ActiveRCS => this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS;
         #endregion
 
         #region Constructor
@@ -53,24 +50,24 @@ namespace HydroTech.Panels
                 Vector6 torque = this.ActiveRCS.maxTorque;
                 Vector6 angular = this.ActiveRCS.maxAngularAcc;
                 GUILayout.Label("Torque(N·m), angular acc(rad/s²)");
-                GUILayout.Label(string.Format("Pitch down: {0:#0.00}, {1:#0.00}", torque.xp, angular.xp));
-                GUILayout.Label(string.Format("Pitch up: {0:#0.00}, {1:#0.00}",   torque.xn, angular.xn));
-                GUILayout.Label(string.Format("Yaw left: {0:#0.00}, {1:#0.00}",   torque.yp, angular.yp));
-                GUILayout.Label(string.Format("Yaw right: {0:#0.00}, {1:#0.00}",  torque.yn, angular.yn));
-                GUILayout.Label(string.Format("Roll left: {0:#0.00}, {1:#0.00}",  torque.zp, angular.zp));
-                GUILayout.Label(string.Format("Roll right: {0:#0.00}, {1:#0.00}", torque.zn, angular.zn));
+                GUILayout.Label($"Pitch down: {torque.xp:#0.00}, {angular.xp:#0.00}");
+                GUILayout.Label($"Pitch up: {torque.xn:#0.00}, {angular.xn:#0.00}");
+                GUILayout.Label($"Yaw left: {torque.yp:#0.00}, {angular.yp:#0.00}");
+                GUILayout.Label($"Yaw right: {torque.yn:#0.00}, {angular.yn:#0.00}");
+                GUILayout.Label($"Roll left: {torque.zp:#0.00}, {angular.zp:#0.00}");
+                GUILayout.Label($"Roll right: {torque.zn:#0.00}, {angular.zn:#0.00}");
             }
             else
             {
                 Vector6 thrust = this.ActiveRCS.maxForce;
                 Vector6 acc = this.ActiveRCS.maxAcc;
                 GUILayout.Label("Thrust(N), acceleration(m/s²)");
-                GUILayout.Label(string.Format("Translate left: {0:#0.00}, {1:#0.00}",  thrust.xp, acc.xp));
-                GUILayout.Label(string.Format("Translate right: {0:#0.00}, {1:#0.00}", thrust.xn, acc.xn));
-                GUILayout.Label(string.Format("Translate up: {0:#0.00}, {1:#0.00}",    thrust.yp, acc.yp));
-                GUILayout.Label(string.Format("Translate down: {0:#0.00}, {1:#0.00}",  thrust.yn, acc.yn));
-                GUILayout.Label(string.Format("Translate back: {0:#0.00}, {1:#0.00}",  thrust.zp, acc.zp));
-                GUILayout.Label(string.Format("Translate fwd: {0:#0.00}, {1:#0.00}",   thrust.zn, acc.zn));
+                GUILayout.Label($"Translate left: {thrust.xp:#0.00}, {acc.xp:#0.00}");
+                GUILayout.Label($"Translate right: {thrust.xn:#0.00}, {acc.xn:#0.00}");
+                GUILayout.Label($"Translate up: {thrust.yp:#0.00}, {acc.yp:#0.00}");
+                GUILayout.Label($"Translate down: {thrust.yn:#0.00}, {acc.yn:#0.00}");
+                GUILayout.Label($"Translate back: {thrust.zp:#0.00}, {acc.zp:#0.00}");
+                GUILayout.Label($"Translate fwd: {thrust.zn:#0.00}, {acc.zn:#0.00}");
             }
             GUILayout.EndVertical();
 

@@ -35,12 +35,7 @@ namespace HydroTech
         #endregion
 
         #region Properties
-        private int mag = 1;
-        public int Mag
-        {
-            get { return this.mag; }
-            set { this.mag = value; }
-        }
+        public int Mag { get; set; } = 1;
 
         protected bool isOnActiveVessel;
         public bool IsOnActiveVessel
@@ -88,15 +83,9 @@ namespace HydroTech
             }
         }
 
-        public Vector3 CrossPos
-        {
-            get { return this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.camCrossPos); }
-        }
+        public Vector3 CrossPos => this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.camCrossPos);
 
-        protected override string ModuleShort
-        {
-            get { return "Cam"; }
-        }
+        protected override string ModuleShort => "Cam";
         #endregion
 
         #region Methods

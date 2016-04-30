@@ -8,10 +8,7 @@ namespace HydroTech.Panels
     public class PanelLanding : PanelAP
     {
         #region Static properties
-        private static APLanding LA
-        {
-            get { return HydroFlightManager.Instance.LandingAutopilot; }
-        }
+        private static APLanding LA => HydroFlightManager.Instance.LandingAutopilot;
         #endregion
 
         #region Fields
@@ -123,25 +120,25 @@ namespace HydroTech.Panels
             if (this.Settings) { DrawSettingsUI(); }
             else
             {
-                GUILayout.Label(string.Format("Pod orientation: {0}", LA.vabPod ? "Up" : "Horizon"));
-                GUILayout.Label(string.Format("Touchdown speed: {0:#0.0}m/s", LA.safeTouchDownSpeed));
-                GUILayout.Label(string.Format("Use engines: {0}", LA.Engines ? "true" : "false"));
+                GUILayout.Label($"Pod orientation: {(LA.vabPod ? "Up" : "Horizon")}");
+                GUILayout.Label($"Touchdown speed: {LA.safeTouchDownSpeed:#0.0}m/s");
+                GUILayout.Label($"Use engines: {(LA.Engines ? "true" : "false")}");
                 if (LA.Engines)
                 {
-                    GUILayout.Label(string.Format("Max throttle: {0:#0.0}", LA.maxThrottle * 100));
+                    GUILayout.Label($"Max throttle: {LA.maxThrottle * 100:#0.0}");
                 }
                 if (LA.touchdown)
                 {
                     GUILayout.Label("Perform touchdown");
-                    if (GUILayout.Button(string.Format("Hover at {0:#0.00}m {1}", LA.altKeep, LA.useTrueAlt ? "AGL" : "ASL")))
+                    if (GUILayout.Button($"Hover at {LA.altKeep:#0.00}m {(LA.useTrueAlt ? "AGL" : "ASL")}"))
                     {
                         LA.touchdown = false;
                     }
                 }
                 else
                 {
-                    GUILayout.Label(string.Format("Hover at {0:#0.00}m {1}", LA.altKeep, LA.useTrueAlt ? "AGL" : "ASL"));
-                    GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", LA.AltKeepTrue * 0.01f));
+                    GUILayout.Label($"Hover at {LA.altKeep:#0.00}m {(LA.useTrueAlt ? "AGL" : "ASL")}");
+                    GUILayout.Label($"Max allowed horizontal speed: {LA.AltKeepTrue * 0.01f:#0.0}m/s");
                     if (GUILayout.Button("Switch True/ASL"))
                     {
                         if (LA.useTrueAlt)
@@ -229,8 +226,8 @@ namespace HydroTech.Panels
                     {
                         this.tempAltKeep = temp;
                         float tempAltKeepAsl = this.tempAltKeep + LA.TerrainHeight;
-                        GUILayout.Label(string.Format("ASL alt: {0:#0.0}m", tempAltKeepAsl));
-                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", 0.01f * this.tempAltKeep));
+                        GUILayout.Label($"ASL alt: {tempAltKeepAsl:#0.0}m");
+                        GUILayout.Label($"Max allowed horizontal speed: {0.01f * this.tempAltKeep:#0.0}m/s");
                     }
                     else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }
@@ -240,8 +237,8 @@ namespace HydroTech.Panels
                     {
                         this.tempAltKeep = temp;
                         float tempAltKeepTrue = Mathf.Max(this.tempAltKeep - LA.TerrainHeight, APLanding.finalDescentHeight);
-                        GUILayout.Label(string.Format("True alt: {0:#0.0}m", tempAltKeepTrue));
-                        GUILayout.Label(string.Format("Max allowed horizontal speed: {0:#0.0}m/s", 0.01f * tempAltKeepTrue));
+                        GUILayout.Label($"True alt: {tempAltKeepTrue:#0.0}m");
+                        GUILayout.Label($"Max allowed horizontal speed: {0.01f * tempAltKeepTrue:#0.0}m/s");
                     }
                     else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
                 }

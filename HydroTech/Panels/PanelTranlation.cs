@@ -9,10 +9,7 @@ namespace HydroTech.Panels
     public class PanelTranslation : PanelAP
     {
         #region Static Properties
-        private static APTranslation TA
-        {
-            get { return HydroFlightManager.Instance.TranslationAutopilot; }
-        }
+        private static APTranslation TA => HydroFlightManager.Instance.TranslationAutopilot;
         #endregion
 
         #region Fields
@@ -81,7 +78,7 @@ namespace HydroTech.Panels
             {
                 GUILayout.Label("Translation direction");
                 GUILayout.TextArea(TA.TransMode == TranslationDirection.ADVANCED ? TA.thrustVector.ToString("#0.00") : EnumUtils.GetName(TA.TransMode));
-                GUILayout.Label(string.Format("Thrust rate: {0:#0.00}", TA.thrustRate));
+                GUILayout.Label($"Thrust rate: {TA.thrustRate:#0.00}");
                 GUILayout.Label("Respond to main throttle: " + TA.mainThrottleRespond);
                 GUILayout.Label("Hold current orientation: " + TA.HoldOrient);
 

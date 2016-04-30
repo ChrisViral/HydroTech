@@ -18,10 +18,7 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Static properties
-        private static string NameStringTarget
-        {
-            get { return "DockAP.Target"; }
-        }
+        private static string NameStringTarget => "DockAP.Target";
         #endregion
 
         #region Fields
@@ -134,30 +131,15 @@ namespace HydroTech.Autopilots
             }
         }
 
-        public bool NullCamera
-        {
-            get { return this.Cam == null || !this.Cam.IsOnActiveVessel; }
-        }
+        public bool NullCamera => this.Cam == null || !this.Cam.IsOnActiveVessel;
 
-        public bool NullTarget
-        {
-            get { return this.target == null || !this.target.IsNear; }
-        }
+        public bool NullTarget => this.target == null || !this.target.IsNear;
 
-        public bool TargetHasJeb
-        {
-            get { return this.jebsTargetVessel.Count != 0; }
-        }
+        public bool TargetHasJeb => this.jebsTargetVessel.Count != 0;
 
-        public Vector3 RelV
-        {
-            get { return this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity); }
-        }
+        public Vector3 RelV => this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity);
 
-        protected override string NameString
-        {
-            get { return "DockAP.Active"; }
-        }
+        protected override string NameString => "DockAP.Active";
 
         public override bool Engaged
         {

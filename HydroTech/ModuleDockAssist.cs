@@ -50,30 +50,15 @@ namespace HydroTech
         #endregion
 
         #region Properties
-        public Vector3 Dir
-        {
-            get { return ReverseTransform(this.assistFwd); }
-        }
+        public Vector3 Dir => ReverseTransform(this.assistFwd);
 
-        public Vector3 Down
-        {
-            get { return ReverseTransform(-this.assistUp); }
-        }
+        public Vector3 Down => ReverseTransform(-this.assistUp);
 
-        public Vector3 Right
-        {
-            get { return -Vector3.Cross(this.Down, this.Dir); }
-        }
+        public Vector3 Right => -Vector3.Cross(this.Down, this.Dir);
 
-        public Vector3 Pos
-        {
-            get { return this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.assistPos); }
-        }
+        public Vector3 Pos => this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.assistPos);
 
-        public Vector3 RelPos
-        {
-            get { return SwitchTransformCalculator.VectorTransform(this.Pos - this.vessel.findWorldCenterOfMass(), this.vessel.ReferenceTransform); }
-        }
+        public Vector3 RelPos => SwitchTransformCalculator.VectorTransform(this.Pos - this.vessel.findWorldCenterOfMass(), this.vessel.ReferenceTransform);
 
         internal string TempName { get; set; }
 

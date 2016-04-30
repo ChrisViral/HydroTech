@@ -45,7 +45,7 @@ namespace HydroTech.Utils
             /// <param name="enumType">Type of converter. Must be an enum type.</param>
             public EnumConverter(Type enumType)
             {
-                if (enumType == null) { throw new ArgumentNullException("enumType", "Enum conversion type cannot be null"); }
+                if (enumType == null) { throw new ArgumentNullException(nameof(enumType), "Enum conversion type cannot be null"); }
                 Array values = Enum.GetValues(enumType);
                 this.orderedNames = new string[values.Length];
                 this.orderedValues = new TEnum[values.Length];

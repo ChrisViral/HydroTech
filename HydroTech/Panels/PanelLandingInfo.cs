@@ -9,35 +9,17 @@ namespace HydroTech.Panels
     public class PanelLandingInfo : Panel
     {
         #region Static properties
-        private static APLanding LA
-        {
-            get { return HydroFlightManager.Instance.LandingAutopilot; }
-        }
+        private static APLanding LA => HydroFlightManager.Instance.LandingAutopilot;
 
-        private static float SlopeN
-        {
-            get { return LA.groundCalc.Slope(Direction.NORTH) * HTUtils.radToDeg; }
-        }
+        private static float SlopeN => LA.groundCalc.Slope(Direction.NORTH) * HTUtils.radToDeg;
 
-        private static float SlopeS
-        {
-            get { return LA.groundCalc.Slope(Direction.SOUTH) * HTUtils.radToDeg; }
-        }
+        private static float SlopeS => LA.groundCalc.Slope(Direction.SOUTH) * HTUtils.radToDeg;
 
-        private static float SlopeW
-        {
-            get { return LA.groundCalc.Slope(Direction.WEST) * HTUtils.radToDeg; }
-        }
+        private static float SlopeW => LA.groundCalc.Slope(Direction.WEST) * HTUtils.radToDeg;
 
-        private static float SlopeE
-        {
-            get { return LA.groundCalc.Slope(Direction.EAST) * HTUtils.radToDeg; }
-        }
+        private static float SlopeE => LA.groundCalc.Slope(Direction.EAST) * HTUtils.radToDeg;
 
-        private static float TwrTotal
-        {
-            get { return LA.TwrRCS + LA.TwrEng; }
-        }
+        private static float TwrTotal => LA.TwrRCS + LA.TwrEng;
 
         private static GUIStyle TwrLabelStyle
         {
@@ -85,12 +67,12 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.Label("Orbiting body: " + FlightGlobals.currentMainBody.bodyName);
-            GUILayout.Label(string.Format("Surface g: {0:#0.00}m/s²", LA.GeeASL));
-            GUILayout.Label(string.Format("RCS TWR: {0:#0.00}m/s²", LA.TwrRCS), TwrLabelStyle);
-            GUILayout.Label(string.Format("Engine TWR: {0:#0.00}m/s²", LA.TwrEng), TwrLabelStyle);
-            GUILayout.Label(string.Format("Altitude (AGL): {0:#0.00}m", LA.AltTrue));
-            GUILayout.Label(string.Format("Vertical speed: {0:#0.00}m/s", FlightGlobals.ActiveVessel.verticalSpeed));
-            GUILayout.Label(string.Format("Horizontal speed: {0:#0.00}m/s", FlightGlobals.ActiveVessel.horizontalSrfSpeed));
+            GUILayout.Label($"Surface g: {LA.GeeASL:#0.00}m/s²");
+            GUILayout.Label($"RCS TWR: {LA.TwrRCS:#0.00}m/s²", TwrLabelStyle);
+            GUILayout.Label($"Engine TWR: {LA.TwrEng:#0.00}m/s²", TwrLabelStyle);
+            GUILayout.Label($"Altitude (AGL): {LA.AltTrue:#0.00}m");
+            GUILayout.Label($"Vertical speed: {FlightGlobals.ActiveVessel.verticalSpeed:#0.00}m/s");
+            GUILayout.Label($"Horizontal speed: {FlightGlobals.ActiveVessel.horizontalSrfSpeed:#0.00}m/s");
             if (!this.SlopeDetection)
             {
                 GUILayout.BeginHorizontal();
@@ -110,17 +92,17 @@ namespace HydroTech.Panels
                 GUILayout.Label("Slope detection:");
                 GUILayout.BeginHorizontal();
                 TripleLabel();
-                TripleLabel(string.Format("N {0:#0.0}°", SlopeN));
+                TripleLabel($"N {SlopeN:#0.0}°");
                 TripleLabel();
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
-                TripleLabel(string.Format("W {0:#0.0}°", SlopeW));
-                TripleLabel(string.Format("({0:#0}m)", LA.groundCalc.Radius));
-                TripleLabel(string.Format("E {0:#0.0}°", SlopeE));
+                TripleLabel($"W {SlopeW:#0.0}°");
+                TripleLabel($"({LA.groundCalc.Radius:#0}m)");
+                TripleLabel($"E {SlopeE:#0.0}°");
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 TripleLabel();
-                TripleLabel(string.Format("S {0:#0.0}°", SlopeS));
+                TripleLabel($"S {SlopeS:#0.0}°");
                 TripleLabel();
                 GUILayout.EndHorizontal();
             }

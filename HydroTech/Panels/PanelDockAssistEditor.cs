@@ -49,7 +49,7 @@ namespace HydroTech.Panels
                 assist.AidShown = GUILayout.Toggle(assist.AidShown, "Show visual aid");               
                 GUILayout.BeginVertical(GUILayout.MaxHeight(40));
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(string.Format("Rename {0}:", type), GUILayout.MaxWidth(70));
+                GUILayout.Label($"Rename {type}:", GUILayout.MaxWidth(70));
                 GUILayout.BeginVertical();
                 GUILayout.FlexibleSpace();
                 assist.TempName = GUILayout.TextField(assist.TempName, 20);
@@ -84,7 +84,7 @@ namespace HydroTech.Panels
                 else if (this.showTargets) { DrawAssistUI(a); any = true; }
             }
             //Double ternaries ftw
-            if (!any) { GUILayout.Label(string.Format("No docking {0} on the vessel", this.showCams ? this.showTargets ? "assists" : "cameras" : "targets")); }
+            if (!any) { GUILayout.Label($"No docking {(this.showCams ? this.showTargets ? "assists" : "cameras" : "targets")} on the vessel"); }
             GUILayout.EndScrollView();
         }
         #endregion

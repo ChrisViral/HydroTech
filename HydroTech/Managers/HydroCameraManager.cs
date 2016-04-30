@@ -12,10 +12,7 @@ namespace HydroTech.Managers
             #endregion
 
             #region Static properties
-            private static HydroCameraManager CameraManager
-            {
-                get { return HydroFlightManager.Instance.CameraManager; }
-            }
+            private static HydroCameraManager CameraManager => HydroFlightManager.Instance.CameraManager;
             #endregion
 
             #region Fields
@@ -80,26 +77,20 @@ namespace HydroTech.Managers
             #region Overrides
             public override string ToString()
             {
-                return string.Format("Vessel is{0} ActiveVessel\n{1} Target\n{2} Parent\nFoV = {3}\nPosition = {4}\nRotation = {5}\nClip = {6}\nIs{7} Callback", this.vessel.isActiveVessel ? string.Empty : " not", this.tgt == null ? "Null" : "Has", this.parent == null ? "Null" : "Has", this.fov, this.position, this.rotation, this.clip, this.callback == null ? " not" : string.Empty);
+                return $"Vessel is{(this.vessel.isActiveVessel ? string.Empty : " not")} ActiveVessel\n{(this.tgt == null ? "Null" : "Has")} Target\n{(this.parent == null ? "Null" : "Has")} Parent\nFoV = {this.fov}\nPosition = {this.position}\nRotation = {this.rotation}\nClip = {this.clip}\nIs{(this.callback == null ? " not" : string.Empty)} Callback";
             }
 
             public string ToString(string format)
             {
-                return string.Format("Vessel is{0} ActiveVessel\n{1} Target\n{2} Parent\n" + "FoV = {3}\n" + "Position = {4}\n" + "Rotation = {5}\n" + "Clip = {6}\n" + "Is{7} Callback", this.vessel.isActiveVessel ? string.Empty : " not", this.tgt == null ? "Null" : "Has", this.parent == null ? "Null" : "Has", this.fov.ToString(format), this.position.ToString(format), this.rotation.ToString(format), this.clip.ToString(format), this.callback == null ? " not" : string.Empty);
+                return $"Vessel is{(this.vessel.isActiveVessel ? string.Empty : " not")} ActiveVessel\n{(this.tgt == null ? "Null" : "Has")} Target\n{(this.parent == null ? "Null" : "Has")} Parent\n" + $"FoV = {this.fov.ToString(format)}\n" + $"Position = {this.position.ToString(format)}\n" + $"Rotation = {this.rotation.ToString(format)}\n" + $"Clip = {this.clip.ToString(format)}\n" + $"Is{(this.callback == null ? " not" : string.Empty)} Callback";
             }
             #endregion
 
             #region Debug
 #if DEBUG
-            public static int StackCount
-            {
-                get { return settingsStack.Count; }
-            }
+            public static int StackCount => settingsStack.Count;
 
-            public static Settings Top
-            {
-                get { return settingsStack.Peek(); }
-            }
+            public static Settings Top => settingsStack.Peek();
 #endif
             #endregion
         }
@@ -127,12 +118,7 @@ namespace HydroTech.Managers
             }
         }
 
-        private Callback camCallback;
-        public Callback CamCallback
-        {
-            get { return this.camCallback; }
-            set { this.camCallback = value; }
-        }
+        public Callback CamCallback { get; set; }
 
         public Transform TransformParent
         {
@@ -207,18 +193,18 @@ namespace HydroTech.Managers
             this.origVessel = FlightGlobals.ActiveVessel;
             this.target = FlightGlobals.ActiveVessel.transform;
             this.origParent = this.TransformParent;
-            this.camCallback = null;
+            this.CamCallback = null;
         }
 
         internal void Update()
         {
-            if (!this.origVessel.isActiveVessel && this.camCallback == null)
+            if (!this.origVessel.isActiveVessel && this.CamCallback == null)
             {
                 this.origVessel = FlightGlobals.ActiveVessel;
                 this.origParent = this.TransformParent;
                 this.target = FlightGlobals.ActiveVessel.transform;
             }
-            if (this.camCallback != null) { this.camCallback(); }
+            this.CamCallback?.Invoke();
         }
         #endregion
 
