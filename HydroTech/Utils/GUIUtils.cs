@@ -108,6 +108,18 @@ namespace HydroTech.Utils
             if (GUILayout.Toggle(!state, labelB, style)) { state = false; }
             return state;
         }
+
+        public static bool CheckRange(float f, float min, float max)
+        {
+            return f >= min && f <= max;
+        }
+
+        public static void CreateEntryArea(string label, ref string value, float min, float max)
+        {
+            float f;
+            GUILayout.Label(label, float.TryParse(value, out f) && CheckRange(f, min, max) ? GUI.skin.label : ColouredLabel(XKCDColors.Red));
+            value = GUILayout.TextField(value, 10);
+        }
         #endregion
     }
 }

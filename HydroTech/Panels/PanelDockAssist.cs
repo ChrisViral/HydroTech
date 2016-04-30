@@ -141,12 +141,12 @@ namespace HydroTech.Panels
             else
             {
                 GUILayout.Label("Camera:");
-                if (DA.Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(DA.Cam.ToString(), DA.Cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
+                if (DA.Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(DA.Cam.ToString(), DA.Cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
                 {
                     this.ChoosingCamera = true;
                 }
                 GUILayout.Label("Target:");
-                if (DA.target == null ? GUILayout.Button("Choose target") : GUILayout.Button(DA.target.vessel.vesselName + "\n" + DA.target, DA.target.IsNear ? GUIUtils.ButtonStyle(Color.green, true) : GUIUtils.ButtonStyle(Color.red, true)))
+                if (DA.target == null ? GUILayout.Button("Choose target") : GUILayout.Button(DA.target.vessel.vesselName + "\n" + DA.target, DA.target.IsNear ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
                 {
                     this.ChoosingTarget = true;
                 }
@@ -162,9 +162,9 @@ namespace HydroTech.Panels
 
         protected override void DrawSettingsUI()
         {
-            GUILayout.Label("Angular acceleration (rad/s²)");
+            GUILayout.Label("Angular acceleration (rad/s²):");
             this.angularAccText = GUILayout.TextField(this.angularAccText);
-            GUILayout.Label("Acceleration (m/s²)");
+            GUILayout.Label("Acceleration (m/s²):");
             this.accText = GUILayout.TextField(this.accText);
 
             if (!DA.NullCamera)
