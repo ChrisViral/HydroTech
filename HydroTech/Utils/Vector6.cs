@@ -2,7 +2,7 @@
 
 namespace HydroTech.Utils
 {
-    public class Vector6
+    public struct Vector6
     {
         #region Fields
         public float xp, xn;
@@ -35,22 +35,18 @@ namespace HydroTech.Utils
         #endregion
 
         #region Constructors
-        public Vector6() { }
-
         public Vector6(Vector6 vec)
         {
-            this.xp = vec.xp;
-            this.xn = vec.xn;
-            this.yp = vec.yp;
-            this.yn = vec.yn;
-            this.zp = vec.zp;
-            this.zn = vec.zn;
+            this.xp = vec.xp; this.xn = vec.xn;
+            this.yp = vec.yp; this.yn = vec.yn;
+            this.zp = vec.zp; this.zn = vec.zn;
         }
 
         public Vector6(Vector3 vectorP, Vector3 vectorN)
         {
-            this.VectorPositive = vectorP;
-            this.VectorNegative = vectorN;
+            this.xp = vectorP.x; this.xn = vectorN.x;
+            this.yp = vectorP.y; this.yn = vectorN.y;
+            this.zp = vectorP.z; this.zn = vectorN.z;
         }
         #endregion
 
@@ -87,7 +83,7 @@ namespace HydroTech.Utils
             return $"({this.xp}, -{this.xn}; {this.yp}, -{this.yn}; {this.zp}, -{this.zn})";
         }
 
-        public virtual string ToString(string format)
+        public string ToString(string format)
         {
             return $"({this.xp.ToString(format)}, -{this.xn.ToString(format)}; {this.yp.ToString(format)}, -{this.yn.ToString(format)}; {this.zp.ToString(format)}, -{this.zn.ToString(format)})";
         }
