@@ -13,10 +13,10 @@ namespace HydroTech.Utils
         #region Constants
         public const float radToDeg = 180 / Mathf.PI;
         public const string localPluginDataURL = "GameData/HydroTech/Plugins/PluginData";
-        public const string localIconURL = "GameData/HydroTech/Plugins/PluginData/HydroTech_icon.png";
-        public const string localActiveIconURL = "GameData/HydroTech/Plugins/PluginData/HydroTech_active_icon.png";
-        public const string localInactiveIconURL = "GameData/HydroTech/Plugins/PluginData/HydroTech_inactive_icon.png";
-        public static readonly Vector2 anchor = new Vector2(0.5f, 0.5f);
+        public const string localIconURL = "GameData/HydroTech/Plugins/PluginData/default.png";
+        public const string localActiveIconURL = "GameData/HydroTech/Plugins/PluginData/active.png";
+        public const string localInactiveIconURL = "GameData/HydroTech/Plugins/PluginData/inactive.png";
+        private static readonly Vector2 anchor = new Vector2(0.5f, 0.5f);
         #endregion
 
         #region Properties
