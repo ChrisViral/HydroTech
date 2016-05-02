@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace HydroTech.UI
 {
+    /// <summary>
+    /// A set of linked exclusive UI toggles (radio buttons)
+    /// </summary>
+    /// <typeparam name="T">The object type returned by the active toggle</typeparam>
     public class UILinkedToggles<T>
     {
         /// <summary>
