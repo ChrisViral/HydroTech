@@ -68,9 +68,10 @@ namespace HydroTech.UI
         }
 
         #region Fields
-        private readonly Callback<T> onShow, onHide;                    //On Show/Hide callbacks
-        private readonly List<Toggle> toggles = new List<Toggle>();     //List of all current toggles
-        private readonly GUIStyle normal, active;                       //Normal/Selected GUIStyles
+        private readonly Callback<T> onShow, onHide;                            //On Show/Hide callbacks
+        private readonly List<Toggle> toggles = new List<Toggle>();             //List of all current toggles
+        private readonly Dictionary<T, int> indexes = new Dictionary<T, int>(); //Dictionary of values/indexes, to assure injectivity
+        private readonly GUIStyle normal, active;                               //Normal/Selected GUIStyles
         #endregion
 
         #region Properties
@@ -108,12 +109,15 @@ namespace HydroTech.UI
         public UILinkedToggles(IEnumerable<T> collection, Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide) : this(normalStyle, activeStyle, onShow, onHide)
         {
             if (collection == null) { throw new ArgumentNullException(nameof(collection), "Cannot initialize with null collection"); }
-            using (IEnumerator<T> e = collection.GetEnumerator())
+            if (getName == null)    { throw new ArgumentNullException(nameof(getName), "Name getter function cannot be null"); }
+
+            int i = 0;
+            foreach (T t in collection)
             {
-                while (e.MoveNext())
-                {
-                    this.toggles.Add(new Toggle(getName(e.Current), e.Current, this));
-                }
+                if (this.indexes.ContainsKey(t)) { continue; }  //Skip if already added
+
+                this.toggles.Add(new Toggle(getName(t), t, this));
+                this.indexes.Add(t, i++);
             }
         }
         #endregion
@@ -151,6 +155,7 @@ namespace HydroTech.UI
         /// <param name="value">Value of the Toggle</param>
         public void AddToggle(string name, T value)
         {
+            this.indexes.Add(value, this.toggles.Count);        //Throws if adding dupplicates
             this.toggles.Add(new Toggle(name, value, this));
         }
 
@@ -160,15 +165,8 @@ namespace HydroTech.UI
         /// <param name="value">Value of the Toggle to find</param>
         public void RemoveToggle(T value)
         {
-            EqualityComparer<T> comp = EqualityComparer<T>.Default;
-            for (int i = 0; i < this.toggles.Count; i++)
-            {
-                if (comp.Equals(this.toggles[i].Value, value))
-                {
-                    this.toggles.RemoveAt(i);
-                    return;
-                }
-            }
+            this.toggles.RemoveAt(this.indexes[value]);
+            this.indexes.Remove(value);
         }
         #endregion
     }
