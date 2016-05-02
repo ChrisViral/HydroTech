@@ -18,22 +18,10 @@ namespace HydroTech
 
         //TODO: use transforms instead of manually typing camera/target positions
         [KSPField]
-        public Vector3 assistPos = Vector3.zero;
+        public string assistTransformName;
 
         [KSPField]
-        public Vector3 assistUp = Vector3.up;
-
-        [KSPField]
-        public Vector3 assistFwd = Vector3.forward;
-
-        [KSPField]
-        public Vector3 previewPos = Vector3.back;
-
-        [KSPField]
-        public Vector3 previewUp = Vector3.up;
-
-        [KSPField]
-        public Vector3 previewFwd = Vector3.forward;
+        public string previewTransformName;
 
         [KSPField]
         public float previewFoV = 90;
@@ -46,17 +34,18 @@ namespace HydroTech
         private LineRenderer[] lines;
         private Vector3[] directions;
         protected Rigidbody rigidbody;
+        protected Transform assist, preview;
         internal bool highlight;
         #endregion
 
         #region Properties
-        public Vector3 Dir => ReverseTransform(this.assistFwd);
+        public Vector3 Dir => this.assist.forward;
 
-        public Vector3 Down => ReverseTransform(-this.assistUp);
+        public Vector3 Down => -this.assist.up;
 
-        public Vector3 Right => -Vector3.Cross(this.Down, this.Dir);
+        public Vector3 Right => this.assist.right;
 
-        public Vector3 Pos => this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.assistPos);
+        public Vector3 Pos => this.assist.position;
 
         public Vector3 RelPos => SwitchTransformCalculator.VectorTransform(this.Pos - this.vessel.findWorldCenterOfMass(), this.vessel.ReferenceTransform);
 
@@ -131,15 +120,9 @@ namespace HydroTech
             GUILayout.EndVertical();
         }
 
-        private void ShowUI()
-        {
-            this.hid = false;
-        }
+        private void ShowUI() => this.hid = false;
 
-        private void HideUI()
-        {
-            this.hid = true;
-        }
+        private void HideUI() => this.hid = true;
 
         protected Vector3 ReverseTransform(Vector3 vec)
         {
@@ -157,7 +140,7 @@ namespace HydroTech
                 Color colour = colours[i];
                 lr.transform.parent = this.transform;
                 lr.useWorldSpace = false;
-                lr.transform.localPosition = this.assistPos;
+                lr.transform.localPosition = this.assist.localPosition;
                 lr.transform.localEulerAngles = Vector3.zero;
                 lr.material = new Material(shader);
                 lr.SetColors(colour, colour);
@@ -193,19 +176,13 @@ namespace HydroTech
             camMngr.Target = null;
             camMngr.TransformParent = this.transform;
             camMngr.FoV = this.previewFoV;
-            camMngr.Position = this.previewPos;
-            camMngr.SetLookRotation(this.previewFwd, this.previewUp);
+            camMngr.Position = this.preview.position;
+            camMngr.SetLookRotation(this.preview.forward, this.preview.up);
         }
 
-        public Callback<Rect> GetDrawModulePanelCallback()
-        {
-            return null;
-        }
+        public Callback<Rect> GetDrawModulePanelCallback() => null;
 
-        public string GetPrimaryField()
-        {
-            return string.Empty;
-        }
+        public string GetPrimaryField() => string.Empty;
         #endregion
 
         #region Abstract methods
@@ -240,11 +217,13 @@ namespace HydroTech
                 this.Fields["assistName"].guiName = this.ModuleShort + " name";
                 if (string.IsNullOrEmpty(this.assistName)) { this.assistName = this.part.name.Replace('.', ' '); }
                 this.TempName = this.assistName;
+                this.assist = this.part.FindModelTransform(this.assistTransformName);
+                this.preview = this.part.FindModelTransform(this.previewTransformName);
             }
 
             if (HighLogic.LoadedSceneIsEditor)
             {
-                this.directions = new Vector3[] { this.assistFwd, this.assistUp, -Vector3.Cross(this.assistFwd, this.assistUp) };
+                this.directions = new Vector3[] { this.assist.forward, this.assist.up, this.assist.right };
                 CreateLineRenderers();
                 HideEditorAid();
             }
@@ -258,10 +237,7 @@ namespace HydroTech
             }
         }
 
-        public override string ToString()
-        {
-            return this.assistName;
-        }
+        public override string ToString() => this.assistName;
 
         protected virtual void OnDestroy()
         {

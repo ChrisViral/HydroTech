@@ -367,7 +367,7 @@ namespace HydroTech.Autopilots
             else
             {
                 this.line.SetWidth(0.01f, 0.01f);
-                this.line.SetPosition(0, this.Cam.CrossPos);
+                this.line.SetPosition(0, this.Cam.Pos);
                 this.line.SetPosition(1, this.target.Pos);
             }
 

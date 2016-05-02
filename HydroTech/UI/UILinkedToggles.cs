@@ -8,7 +8,7 @@ namespace HydroTech.UI
     /// A set of linked exclusive UI toggles (radio buttons)
     /// </summary>
     /// <typeparam name="T">The object type returned by the active toggle</typeparam>
-    public class UILinkedToggles<T>
+    public class UILinkedToggles<T> where T : class
     {
         /// <summary>
         /// Toggle construct
@@ -51,7 +51,7 @@ namespace HydroTech.UI
             public T Value { get; }
             #endregion
 
-            #region Constructor
+            #region Constructors
             /// <summary>
             /// Creates a new Toggle instance
             /// </summary>
@@ -70,7 +70,7 @@ namespace HydroTech.UI
         #region Fields
         private readonly Callback<T> onShow, onHide;                            //On Show/Hide callbacks
         private readonly List<Toggle> toggles = new List<Toggle>();             //List of all current toggles
-        private readonly Dictionary<T, int> indexes = new Dictionary<T, int>(); //Dictionary of values/indexes, to assure injectivity
+        private readonly Dictionary<T, int> indexes = new Dictionary<T, int>(); //Dictionary of values/indexes, to ensure injectivity
         private readonly GUIStyle normal, active;                               //Normal/Selected GUIStyles
         #endregion
 
@@ -81,7 +81,7 @@ namespace HydroTech.UI
         public Toggle Toggled { get; private set; }
         #endregion
 
-        #region Constructor
+        #region Constructors
         /// <summary>
         /// Creates a new blank UILinkedToggles
         /// </summary>
@@ -106,7 +106,7 @@ namespace HydroTech.UI
         /// <param name="activeStyle">SelectedGUIStyle</param>
         /// <param name="onShow">Callback when selecting a toggle</param>
         /// <param name="onHide">Callback when hiding a toggle</param>
-        public UILinkedToggles(IEnumerable<T> collection, Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide) : this(normalStyle, activeStyle, onShow, onHide)
+        public UILinkedToggles(IEnumerable<T> collection, Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide): this(normalStyle, activeStyle, onShow, onHide)
         {
             if (collection == null) { throw new ArgumentNullException(nameof(collection), "Cannot initialize with null collection"); }
             if (getName == null)    { throw new ArgumentNullException(nameof(getName), "Name getter function cannot be null"); }
@@ -129,14 +129,12 @@ namespace HydroTech.UI
         /// <returns>The current selected value</returns>
         public T DrawUI()
         {
-            T value = default(T);
             for (int i = 0; i < this.toggles.Count; i++)
             {
                 Toggle t = this.toggles[i];
                 t.Active = GUILayout.Toggle(t.Active, t.Name, t.Active ? this.active : this.normal);
                 if (t.Active)
                 {
-                    value = t.Value;
                     if (this.Toggled != t)
                     {
                         if (this.Toggled != null) { this.Toggled.Active = false; }
@@ -145,7 +143,7 @@ namespace HydroTech.UI
                 }
                 else if (this.Toggled == t) { this.Toggled = null; }
             }
-            return value;
+            return this.Toggled?.Value;
         }
 
         /// <summary>

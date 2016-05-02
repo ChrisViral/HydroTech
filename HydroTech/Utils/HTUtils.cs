@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HydroTech.Autopilots.Calculators;
@@ -30,6 +31,8 @@ namespace HydroTech.Utils
         public static int ElectricChargeID { get; }
 
         public static PartResourceDefinition Electricity { get; }
+
+        public static List<PartResourceDefinition> ElectrictyList { get; }
         #endregion
 
         #region Constructor
@@ -48,6 +51,7 @@ namespace HydroTech.Utils
 
             Electricity = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge");
             ElectricChargeID = Electricity.id;
+            ElectrictyList = new List<PartResourceDefinition>(1) { Electricity };
         }
         #endregion
 
@@ -58,30 +62,18 @@ namespace HydroTech.Utils
             return x <= min ? min : x;
         }
 
-        public static float Clamp0(float f)
-        {
-            return f > 0 ? f : 0;
-        }
+        public static float Clamp0(float f) => f > 0 ? f : 0;
 
-        public static float Clamp100(float f)
-        {
-            return f < 100 ? f : 100;
-        }
+        public static float Clamp100(float f) => f < 100 ? f : 100;
 
         public static void SpawnPopupDialog(string title, string message, string button)
         {
             PopupDialog.SpawnPopupDialog(anchor, anchor, title, message, button, false, HighLogic.UISkin);
         }
 
-        public static bool GetState(Vessel vessel, KSPActionGroup action)
-        {
-            return vessel.ActionGroups[action];
-        }
+        public static bool GetState(Vessel vessel, KSPActionGroup action) => vessel.ActionGroups[action];
 
-        public static void SetState(Vessel vessel, KSPActionGroup action, bool active)
-        {
-            vessel.ActionGroups.SetGroup(action, active);
-        }
+        public static void SetState(Vessel vessel, KSPActionGroup action, bool active) => vessel.ActionGroups.SetGroup(action, active);
 
         public static float GetBodySyncAltitude(CelestialBody body)
         {

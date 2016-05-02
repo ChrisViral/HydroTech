@@ -34,53 +34,23 @@ namespace HydroTech
         #endregion
 
         #region Methods
-        public Transform GetTransform()
-        {
-            //Change to target transform
-            return this.part.transform;
-        }
+        public Transform GetTransform() => this.assist;
 
-        public Vector3 GetObtVelocity()
-        {
-            return this.vessel.obt_velocity;
-        }
+        public Vector3 GetObtVelocity() => this.vessel.obt_velocity;
 
-        public Vector3 GetSrfVelocity()
-        {
-            return this.vessel.srf_velocity;
-        }
+        public Vector3 GetSrfVelocity() => this.vessel.srf_velocity;
 
-        public Vector3 GetFwdVector()
-        {
-            //Change to -assistTransform.fwd
-            //Negative because forward points into the target (but the target faces the other way)
-            return -this.assistFwd;
-        }
+        public Vector3 GetFwdVector() => -this.assist.forward;
 
-        public Vessel GetVessel()
-        {
-            return this.vessel;
-        }
+        public Vessel GetVessel() => this.vessel;
 
-        public string GetName()
-        {
-            return this.assistName + " target";
-        }
+        public string GetName() => this.assistName + " target";
 
-        public Orbit GetOrbit()
-        {
-            return this.vessel.orbit;
-        }
+        public Orbit GetOrbit() => this.vessel.orbit;
 
-        public OrbitDriver GetOrbitDriver()
-        {
-            return this.vessel.orbitDriver;
-        }
+        public OrbitDriver GetOrbitDriver() => this.vessel.orbitDriver;
 
-        public VesselTargetModes GetTargetingMode()
-        {
-            return VesselTargetModes.DirectionVelocityAndOrientation;
-        }
+        public VesselTargetModes GetTargetingMode() => VesselTargetModes.DirectionVelocityAndOrientation;
         #endregion
 
         #region Functions
@@ -98,15 +68,9 @@ namespace HydroTech
         #endregion
 
         #region Overrides
-        public override string GetModuleTitle()
-        {
-            return "Docking Target";
-        }
+        public override string GetModuleTitle() => "Docking Target";
 
-        public override string GetInfo()
-        {
-            return "Active Docking Target";
-        }
+        public override string GetInfo() => "Active Docking Target";
         #endregion
     }
 }

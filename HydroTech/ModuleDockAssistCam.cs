@@ -25,9 +25,6 @@ namespace HydroTech
         public float camClip = 0.01f;
 
         [KSPField]
-        public Vector3 camCrossPos = Vector3.zero;
-
-        [KSPField]
         public float camDefFoV = 60;
 
         [KSPField]
@@ -83,8 +80,6 @@ namespace HydroTech
             }
         }
 
-        public Vector3 CrossPos => this.part.GetComponentCached(ref this.rigidbody).worldCenterOfMass + ReverseTransform(this.camCrossPos);
-
         protected override string ModuleShort => "Cam";
         #endregion
 
@@ -94,8 +89,8 @@ namespace HydroTech
             HydroCameraManager camMngr = HydroFlightManager.Instance.CameraManager;
             camMngr.Target = null;
             camMngr.TransformParent = this.transform;
-            camMngr.Position = this.assistPos;
-            camMngr.SetLookRotation(this.assistFwd, this.assistUp);
+            camMngr.Position = this.assist.position;
+            camMngr.SetLookRotation(this.assist.forward, this.assist.up);
             camMngr.FoV = this.camDefFoV / this.Mag;
             camMngr.NearClipPlane = this.camClip;
         }
@@ -105,17 +100,11 @@ namespace HydroTech
             return SwitchTransformCalculator.VectorTransform(vec, this.Right, this.Down, this.Dir);
         }
 
-        public List<PartResourceDefinition> GetConsumedResources()
-        {
-            return new List<PartResourceDefinition>(1) { HTUtils.Electricity };
-        }
+        public List<PartResourceDefinition> GetConsumedResources() => HTUtils.ElectrictyList;
         #endregion
 
         #region Static methods
-        public static Vector3 VectorTransform(Vector3 vec, ModuleDockAssistCam mcam)
-        {
-            return mcam.VectorTransform(vec);
-        }
+        public static Vector3 VectorTransform(Vector3 vec, ModuleDockAssistCam mcam) => mcam.VectorTransform(vec);
         #endregion
 
         #region Functions
@@ -144,17 +133,14 @@ namespace HydroTech
         #endregion
 
         #region Overrides
-        public override string GetModuleTitle()
-        {
-            return "Docking Camera";
-        }
+        public override string GetModuleTitle() => "Docking Camera";
 
         public override string GetInfo()
         {
             StringBuilder sb = new StringBuilder("Active Docking Camera");
             sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
             sb.AppendLine("ElectricCharge");
-            sb.AppendFormat("Rate: {0:0.###}U/s", this.electricityConsumption);
+            sb.Append($"Rate: {this.electricityConsumption:0.###}U/s");
             return sb.ToString();
         }
         #endregion

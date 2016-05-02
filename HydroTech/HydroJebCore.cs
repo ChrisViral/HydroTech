@@ -39,25 +39,13 @@ namespace HydroTech
         #endregion
 
         #region Methods
-        public string GetModuleTitle()
-        {
-            return "HydroTech Autopilot";
-        }
+        public string GetModuleTitle() => "HydroTech Autopilot";
 
-        public Callback<Rect> GetDrawModulePanelCallback()
-        {
-            return null;
-        }
+        public Callback<Rect> GetDrawModulePanelCallback() => null;
 
-        public string GetPrimaryField()
-        {
-            return string.Empty;
-        }
+        public string GetPrimaryField() => string.Empty;
 
-        public List<PartResourceDefinition> GetConsumedResources()
-        {
-            return new List<PartResourceDefinition>(1) { HTUtils.Electricity };
-        }
+        public List<PartResourceDefinition> GetConsumedResources() => HTUtils.ElectrictyList;
         #endregion
 
         #region Functions
@@ -124,7 +112,7 @@ namespace HydroTech
             StringBuilder sb = new StringBuilder("HydroJeb Autopilot Unit");
             sb.AppendLine("\n\n<b><color=#99ff00ff>Input:</color></b>");
             sb.AppendLine("ElectricCharge");
-            sb.AppendFormat("Rate: {0:0.###}U/s", this.electricityConsumption);
+            sb.Append($"Rate: {this.electricityConsumption:0.###}U/s");
             return sb.ToString();
         }
         #endregion
