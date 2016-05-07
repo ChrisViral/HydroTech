@@ -7,7 +7,9 @@ namespace HydroTech.Utils
     public struct Matrix3x3 : IEquatable<Matrix3x3>
     {
         #region Static properties
-        public static Matrix3x3 I { get; } = new Matrix3x3 { m00 = 1, m11 = 1, m22 = 1 };
+        public static Matrix3x3 Zero { get; } = new Matrix3x3();
+
+        public static Matrix3x3 Identity { get; } = new Matrix3x3 { m00 = 1, m11 = 1, m22 = 1 };
         #endregion
 
         #region Fields
@@ -106,7 +108,7 @@ namespace HydroTech.Utils
         public Matrix3x3 GetInverse()
         {
             Matrix3x3 thisMatrix = this;
-            Matrix3x3 resMatrix = I;
+            Matrix3x3 resMatrix = Identity;
             /*  We start with
              *  m00 m01 m02 | 1   0   0
              *  m10 m11 m12 | 0   1   0
@@ -174,7 +176,7 @@ namespace HydroTech.Utils
             /*  1   0   0  |  m00 m01 m02
              *  0   1   0  |  m10 m11 m12
              *  0   0   1  |  m20 m21 m22 */
-            if (thisMatrix != I) { throw new InvalidOperationException("Matrix3x3 Inverse failed at final check"); }
+            if (thisMatrix != Identity) { throw new InvalidOperationException("Matrix3x3 Inverse failed at final check"); }
             return resMatrix;
         }
         #endregion
@@ -192,7 +194,6 @@ namespace HydroTech.Utils
 
         public override bool Equals(object obj)
         {
-            if (obj == null) { return false; }
             return obj is Matrix3x3 && Equals((Matrix3x3)obj);
         }
 
@@ -205,16 +206,19 @@ namespace HydroTech.Utils
 
         public override int GetHashCode()
         {
-            int hashCode = this.m00.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m01.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m02.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m10.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m11.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m12.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m20.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m21.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.m22.GetHashCode();
-            return hashCode;
+            unchecked
+            {
+                int hashCode = this.m00.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m01.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m02.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m10.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m11.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m12.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m20.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m21.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.m22.GetHashCode();
+                return hashCode;
+            }
         }
         #endregion
 

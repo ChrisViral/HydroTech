@@ -1,9 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace HydroTech.Utils
 {
-    public struct Vector6
+    public struct Vector6 : IEquatable<Vector6>
     {
+        #region Static properties
+        public static Vector6 Zero { get; } = new Vector6();
+
+        public static Vector6 One { get; } = new Vector6 { xp = 1, yp = 1, zp = 1 };
+        #endregion
+
         #region Fields
         public float xp, xn;
         public float yp, yn;
@@ -80,9 +87,49 @@ namespace HydroTech.Utils
         {
             return $"({this.xp.ToString(format)}, -{this.xn.ToString(format)}; {this.yp.ToString(format)}, -{this.yn.ToString(format)}; {this.zp.ToString(format)}, -{this.zn.ToString(format)})";
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Vector6 && Equals((Vector6)obj);
+        }
+
+        public bool Equals(Vector6 other)
+        {
+            return this.xp.Equals(other.xp) && this.xn.Equals(other.xn)
+                && this.yp.Equals(other.xp) && this.yn.Equals(other.xn)
+                && this.zp.Equals(other.xp) && this.zn.Equals(other.xn);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = this.xp.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.xn.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.yp.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.yn.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.zp.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.zn.GetHashCode();
+                return hashCode;
+            }
+        }
         #endregion
 
         #region Operators
+        public static explicit operator Vector3(Vector6 v)
+        {
+            return new Vector3(v.xp + v.xn, v.yp + v.yn, v.zp + v.zn);
+        }
+
+        public static explicit operator Vector6(Vector3 v)
+        {
+            Vector6 result = new Vector6();
+            result.AddX(v.x);
+            result.AddY(v.y);
+            result.AddZ(v.z);
+            return result;
+        }
+
         public static Vector6 operator *(Vector6 v, float f)
         {
             return new Vector6(v.Positive * f, v.Negative * f);
@@ -111,6 +158,20 @@ namespace HydroTech.Utils
             result.yp *= v2.y; result.yn *= v2.y;
             result.zp *= v2.z; result.zn *= v2.z;
             return result;
+        }
+
+        public static bool operator ==(Vector6 v1, Vector6 v2)
+        {
+            return v1.xp == v2.xp && v1.xn == v2.xn
+                && v1.yp == v2.xp && v1.yn == v2.xn
+                && v1.zp == v2.xp && v1.zn == v2.xn;
+        }
+
+        public static bool operator !=(Vector6 v1, Vector6 v2)
+        {
+            return v1.xp != v2.xp || v1.xn != v2.xn
+                || v1.yp != v2.xp || v1.yn != v2.xn
+                || v1.zp != v2.xp || v1.zn != v2.xn;
         }
         #endregion
     }
