@@ -11,7 +11,7 @@ namespace HydroTech.Utils
         #endregion
 
         #region Properties
-        public Vector3 VectorPositive
+        public Vector3 Positive
         {
             get { return new Vector3(this.xp, this.yp, this.zp); }
             set
@@ -22,7 +22,7 @@ namespace HydroTech.Utils
             }
         }
 
-        public Vector3 VectorNegative
+        public Vector3 Negative
         {
             get { return new Vector3(this.xn, this.yn, this.zn); }
             set
@@ -35,13 +35,6 @@ namespace HydroTech.Utils
         #endregion
 
         #region Constructors
-        public Vector6(Vector6 vec)
-        {
-            this.xp = vec.xp; this.xn = vec.xn;
-            this.yp = vec.yp; this.yn = vec.yn;
-            this.zp = vec.zp; this.zn = vec.zn;
-        }
-
         public Vector6(Vector3 vectorP, Vector3 vectorN)
         {
             this.xp = vectorP.x; this.xn = vectorN.x;
@@ -90,31 +83,34 @@ namespace HydroTech.Utils
         #endregion
 
         #region Operators
-        public static Vector6 operator *(Vector6 vec, float num)
+        public static Vector6 operator *(Vector6 v, float f)
         {
-            return new Vector6(vec.VectorPositive * num, vec.VectorNegative * num);
+            return new Vector6(v.Positive * f, v.Negative * f);
         }
 
-        public static Vector6 operator /(Vector6 vec, float num)
+        public static Vector6 operator /(Vector6 v, float f)
         {
-            return vec * (1 / num);
+            f = 1 / f;
+            return new Vector6(v.Positive * f, v.Negative * f);
         }
 
-        public static Vector6 operator *(Vector6 vec, Vector3 vec2)
+        public static Vector6 operator *(Vector6 v1, Vector3 v2)
         {
-            Vector6 res = new Vector6(vec);
-            res.xp *= vec2.x;
-            res.xn *= vec2.x;
-            res.yp *= vec2.y;
-            res.yn *= vec2.y;
-            res.zp *= vec2.z;
-            res.zn *= vec2.z;
-            return res;
+            Vector6 result = v1;
+            result.xp *= v2.x; result.xn *= v2.x;
+            result.yp *= v2.y; result.yn *= v2.y;
+            result.zp *= v2.z; result.zn *= v2.z;
+            return result;
         }
 
-        public static Vector6 operator /(Vector6 vec, Vector3 vec2)
+        public static Vector6 operator /(Vector6 v1, Vector3 v2)
         {
-            return vec * new Vector3(1 / vec2.x, 1 / vec2.y, 1 / vec2.y);
+            Vector6 result = v1;
+            v2.Set(1 / v2.x, 1 / v2.y, 1 / v2.y);
+            result.xp *= v2.x; result.xn *= v2.x;
+            result.yp *= v2.y; result.yn *= v2.y;
+            result.zp *= v2.z; result.zn *= v2.z;
+            return result;
         }
         #endregion
     }

@@ -115,7 +115,7 @@ namespace HydroTech.Utils
             {
                 if (thisMatrix.m10 == 0)
                 {
-                    if (thisMatrix.m20 == 0) { throw new InvalidOperationException("Matrix3x3.InverseMatrix failed at column 0"); }
+                    if (thisMatrix.m20 == 0) { throw new InvalidOperationException("Matrix3x3 Inverse failed at column 0"); }
                     resMatrix.RowX += resMatrix.RowZ;
                     thisMatrix.RowX += thisMatrix.RowZ;
                 }
@@ -141,7 +141,7 @@ namespace HydroTech.Utils
              *  0   m21 m22 | m20 0   1 */
             if (thisMatrix.m11 == 0)
             {
-                if (thisMatrix.m21 == 0) { throw new InvalidOperationException("Matrix3x3.InverseMatrix failed at column 1"); }
+                if (thisMatrix.m21 == 0) { throw new InvalidOperationException("Matrix3x3 Inverse failed at column 1"); }
                 resMatrix.RowY += resMatrix.RowZ;
                 thisMatrix.RowY += thisMatrix.RowZ;
             }
@@ -159,7 +159,7 @@ namespace HydroTech.Utils
             /*  1   0   m02 | m00 m01 m02
              *  0   1   m12 | m10 m11 0
              *  0   0   m22 | m20 m21 1 */
-            if (thisMatrix.m22 == 0) { throw new InvalidOperationException("Matrix3x3.InverseMatrix failed at column 2"); }
+            if (thisMatrix.m22 == 0) { throw new InvalidOperationException("Matrix3x3 Inverse failed at column 2"); }
             resMatrix.RowZ /= thisMatrix.m22;
             thisMatrix.RowZ /= thisMatrix.m22;
 
@@ -174,7 +174,7 @@ namespace HydroTech.Utils
             /*  1   0   0  |  m00 m01 m02
              *  0   1   0  |  m10 m11 m12
              *  0   0   1  |  m20 m21 m22 */
-            if (thisMatrix != I) { throw new InvalidOperationException("Matrix3x3.InverseMatrix failed at final check"); }
+            if (thisMatrix != I) { throw new InvalidOperationException("Matrix3x3 Inverse failed at final check"); }
             return resMatrix;
         }
         #endregion
@@ -205,19 +205,16 @@ namespace HydroTech.Utils
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hashCode = this.m00.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m01.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m02.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m10.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m11.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m12.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m20.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m21.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.m22.GetHashCode();
-                return hashCode;
-            }
+            int hashCode = this.m00.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m01.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m02.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m10.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m11.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m12.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m20.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m21.GetHashCode();
+            hashCode = (hashCode * 397) ^ this.m22.GetHashCode();
+            return hashCode;
         }
         #endregion
 
@@ -229,7 +226,8 @@ namespace HydroTech.Utils
 
         public static Vector3 operator /(Vector3 vec, Matrix3x3 matrix)
         {
-            return matrix.GetInverse() * vec;
+            matrix = matrix.GetInverse();
+            return new Vector3(Vector3.Dot(matrix.RowX, vec), Vector3.Dot(matrix.RowY, vec), Vector3.Dot(matrix.RowZ, vec));
         }
 
         public static bool operator ==(Matrix3x3 m1, Matrix3x3 m2)

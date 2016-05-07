@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("HydroTech FC")]
+[assembly: AssemblyTitle("HydroTech")]
 [assembly: AssemblyDescription("RCS autopilot/docking assistant for KSP")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("HydroTech FC")]
+[assembly: AssemblyProduct("HydroTech")]
 [assembly: AssemblyCopyright("Copyright © Christophe Savard (stupid_chris) 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
