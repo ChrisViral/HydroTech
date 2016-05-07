@@ -88,12 +88,6 @@ namespace HydroTech.Utils
             return new Vector6(v.Positive * f, v.Negative * f);
         }
 
-        public static Vector6 operator /(Vector6 v, float f)
-        {
-            f = 1 / f;
-            return new Vector6(v.Positive * f, v.Negative * f);
-        }
-
         public static Vector6 operator *(Vector6 v1, Vector3 v2)
         {
             Vector6 result = v1;
@@ -101,6 +95,12 @@ namespace HydroTech.Utils
             result.yp *= v2.y; result.yn *= v2.y;
             result.zp *= v2.z; result.zn *= v2.z;
             return result;
+        }
+
+        public static Vector6 operator /(Vector6 v, float f)
+        {
+            f = 1 / f;
+            return new Vector6(v.Positive * f, v.Negative * f);
         }
 
         public static Vector6 operator /(Vector6 v1, Vector3 v2)

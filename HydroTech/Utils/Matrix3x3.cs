@@ -219,15 +219,15 @@ namespace HydroTech.Utils
         #endregion
 
         #region Operators
-        public static Vector3 operator *(Matrix3x3 matrix, Vector3 vec)
+        public static Vector3 operator *(Matrix3x3 m, Vector3 v)
         {
-            return new Vector3(Vector3.Dot(matrix.RowX, vec), Vector3.Dot(matrix.RowY, vec), Vector3.Dot(matrix.RowZ, vec));
+            return new Vector3(Vector3.Dot(m.RowX, v), Vector3.Dot(m.RowY, v), Vector3.Dot(m.RowZ, v));
         }
 
-        public static Vector3 operator /(Vector3 vec, Matrix3x3 matrix)
+        public static Vector3 operator /(Vector3 v, Matrix3x3 m)
         {
-            matrix = matrix.GetInverse();
-            return new Vector3(Vector3.Dot(matrix.RowX, vec), Vector3.Dot(matrix.RowY, vec), Vector3.Dot(matrix.RowZ, vec));
+            m = m.GetInverse();
+            return new Vector3(Vector3.Dot(m.RowX, v), Vector3.Dot(m.RowY, v), Vector3.Dot(m.RowZ, v));
         }
 
         public static bool operator ==(Matrix3x3 m1, Matrix3x3 m2)
