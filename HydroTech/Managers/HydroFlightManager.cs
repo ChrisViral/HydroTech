@@ -45,26 +45,11 @@ namespace HydroTech.Managers
         #endregion
 
         #region Methods
-        public bool IsActiveJeb(HydroJebCore core)
-        {
-            return this.Active == core;
-        }
+        public bool IsActiveJeb(HydroJebCore core) => this.Active == core;
 
-        private void OnPause()
-        {
-            foreach (Autopilot ap in this.Autopilots)
-            {
-                ap.OnGamePause();
-            }
-        }
+        private void OnPause() => this.Autopilots.ForEach(ap => ap.OnGamePause());
 
-        private void OnResume()
-        {
-            foreach (Autopilot ap in this.Autopilots)
-            {
-                ap.OnGameResume();
-            }
-        }
+        private void OnResume() => this.Autopilots.ForEach(ap => ap.OnGameResume());
         #endregion
 
         #region Functions
@@ -103,14 +88,8 @@ namespace HydroTech.Managers
         {
             this.CameraManager.Start();
             this.InputManager.Start();
-            foreach (Autopilot ap in this.Autopilots)
-            {
-                ap.OnFlightStart();
-            }
-            foreach (Panel panel in FlightMainPanel.Instance.Panels)
-            {
-                panel.OnFlightStart();
-            }
+            this.Autopilots.ForEach(ap => ap.OnFlightStart());
+            FlightMainPanel.Instance.Panels.ForEach(p => p.OnFlightStart());
         }
 
         private void OnDestroy()
@@ -163,10 +142,7 @@ namespace HydroTech.Managers
             }
 
             this.ActiveRCS.OnUpdate(FlightGlobals.ActiveVessel);
-            foreach (Autopilot ap in this.Autopilots)
-            {
-                ap.OnUpdate();
-            }
+            this.Autopilots.ForEach(ap => ap.OnUpdate());
         }
         #endregion
     }

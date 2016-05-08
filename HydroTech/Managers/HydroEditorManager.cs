@@ -20,10 +20,7 @@ namespace HydroTech.Managers
         #endregion
 
         #region Methods
-        public void SetActive(bool state)
-        {
-            this.active = state;
-        }
+        public void SetActive(bool state) => this.active = state;
         #endregion
 
         #region Static methods
@@ -31,7 +28,7 @@ namespace HydroTech.Managers
         {
             foreach (PartModule pm in part.Modules)
             {
-                if (pm is ModuleDockAssist && ((ModuleDockAssist)pm).highlight) { return true; }
+                if ((pm as ModuleDockAssist)?.highlight ?? false) { return true; }
             }
             return false;
         }

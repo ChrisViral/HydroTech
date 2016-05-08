@@ -17,12 +17,10 @@ namespace HydroTech.Managers
 
             #region Fields
             private Vessel vessel;
-            private Transform tgt;
-            private Transform parent;
-            private float fov = 60;
+            private Transform tgt, parent;
+            private float fov = 60, clip = 0.01f;
             private Vector3 position;
             private Quaternion rotation;
-            private float clip = 0.01f;
             private Callback callback;
             #endregion
 
@@ -63,15 +61,9 @@ namespace HydroTech.Managers
             #endregion
 
             #region Static methods
-            public static void SaveCurrent()
-            {
-                settingsStack.Push(new Settings());
-            }
+            public static void SaveCurrent() => settingsStack.Push(new Settings());
 
-            public static void RetrieveLast()
-            {
-                settingsStack.Pop().Set();
-            }
+            public static void RetrieveLast() => settingsStack.Pop().Set();
             #endregion
 
             #region Overrides
@@ -152,10 +144,7 @@ namespace HydroTech.Managers
         #endregion
 
         #region Methods
-        public void SetLookRotation(Vector3 forward, Vector3 up)
-        {
-            this.Rotation = Quaternion.LookRotation(forward, up);
-        }
+        public void SetLookRotation(Vector3 forward, Vector3 up) => this.Rotation = Quaternion.LookRotation(forward, up);
 
         public void ResetToActiveVessel()
         {
@@ -210,35 +199,17 @@ namespace HydroTech.Managers
 
         #region Debug
 #if DEBUG
-        public string StringCameraState()
-        {
-            return new Settings().ToString("#0.00");
-        }
+        public string StringCameraState() => new Settings().ToString("#0.00");
 
-        public void PrintCameraState()
-        {
-            Debug.Log(StringCameraState());
-        }
+        public void PrintCameraState() => Debug.Log(StringCameraState());
 
-        public string StringCameraStack()
-        {
-            return "Stack count = " + Settings.StackCount;
-        }
+        public string StringCameraStack() => "Stack count = " + Settings.StackCount;
 
-        public void PrintCameraStack()
-        {
-            Debug.Log(StringCameraStack());
-        }
+        public void PrintCameraStack() => Debug.Log(StringCameraStack());
 
-        public string StringTopState()
-        {
-            return Settings.StackCount == 0 ? string.Empty : Settings.Top.ToString("#0.00");
-        }
+        public string StringTopState() => Settings.StackCount == 0 ? string.Empty : Settings.Top.ToString("#0.00");
 
-        public void PrintTopState()
-        {
-            Debug.Log(StringTopState());
-        }
+        public void PrintTopState() => Debug.Log(StringTopState());
 #endif
         #endregion
     }

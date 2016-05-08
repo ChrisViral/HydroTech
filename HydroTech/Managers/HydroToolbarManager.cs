@@ -157,10 +157,7 @@ namespace HydroTech.Managers
                 }
             }
 
-            public bool IsActive(HydroJebCore jeb)
-            {
-                return this.core == jeb;
-            }
+            public bool IsActive(HydroJebCore jeb) => this.core == jeb;
 
             private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
             {
@@ -249,10 +246,7 @@ namespace HydroTech.Managers
 
             private void Empty() { }
 
-            public void SetFalse()
-            {
-                this.button.SetFalse();
-            }
+            public void SetFalse() => this.button.SetFalse();
             #endregion
         }
 
@@ -265,15 +259,9 @@ namespace HydroTech.Managers
         #endregion
 
         #region Static methods
-        public static void CloseEditor()
-        {
-            Editor.button.SetFalse();
-        }
+        public static void CloseEditor() => Editor.button.SetFalse();
 
-        public static void CloseFlight()
-        {
-            Flight.button.SetFalse();
-        }
+        public static void CloseFlight() => Flight.button.SetFalse();
         #endregion
 
         #region Functions

@@ -29,8 +29,8 @@ namespace HydroTech.Managers
         {
             #region Fields
             public readonly Dictionary<string, FlightInputCallback> flightInputList;
-            public bool isDestroyed;
             public readonly Vessel vessel;
+            public bool isDestroyed;
             public Part vesselRootPart;
             #endregion
 
@@ -55,20 +55,18 @@ namespace HydroTech.Managers
             return this.handlerList.Any(handler => handler.vessel == vessel);
         }
 
-        public bool ContainsNameString(string str)
-        {
-            return this.handlerList.Any(handler => !handler.isDestroyed && handler.flightInputList.Keys.Contains(str));
-        }
+        public bool ContainsNameString(string str) => this.handlerList.Any(handler => !handler.isDestroyed && handler.flightInputList.Keys.Contains(str));
 
         private Dictionary<string, FlightInputCallback> InputList(Vessel vessel)
         {
-            InputHandler h;
-            try {h = Handler(vessel); }
+            try
+            {
+                return Handler(vessel).flightInputList;
+            }
             catch (Exception e)
             {
                 throw new InvalidOperationException("HydroFlightInputHandler.InputList fail: vessel not found; please check before calling", e);
             }
-            return h.flightInputList;
         }
 
         private InputHandler Handler(Vessel vessel)
@@ -107,22 +105,13 @@ namespace HydroTech.Managers
 #endif
         }
 
-        public void AddOnFlyByWire(Vessel vessel, string nameString, FlightInputCallback callback)
-        {
-            AddOnFlyByWire(new InputCallback(vessel, nameString, callback));
-        }
+        public void AddOnFlyByWire(Vessel vessel, string nameString, FlightInputCallback callback) => AddOnFlyByWire(new InputCallback(vessel, nameString, callback));
 
-        public void RemoveOnFlyByWire(Vessel vessel, string nameString, FlightInputCallback callback)
-        {
-            RemoveOnFlyByWire(new InputCallback(vessel, nameString, callback));
-        }
+        public void RemoveOnFlyByWire(Vessel vessel, string nameString, FlightInputCallback callback) => RemoveOnFlyByWire(new InputCallback(vessel, nameString, callback));
         #endregion
 
         #region Functions
-        public void Start()
-        {
-            this.handlerList.Clear();
-        }
+        public void Start() => this.handlerList.Clear();
 
         public void Update()
         {
@@ -152,10 +141,7 @@ namespace HydroTech.Managers
                 }
                 else { handler.vesselRootPart = handler.vessel.rootPart; }
             }
-            foreach (InputHandler h in listToRemove)
-            {
-                this.handlerList.Remove(h);
-            }
+            listToRemove.ForEach(h => this.handlerList.Remove(h));
 #if DEBUG
             if (listToRemove.Count != 0)
             {
@@ -207,10 +193,7 @@ namespace HydroTech.Managers
             return msgStr;
         }
 
-        public void PrintList()
-        {
-            Debug.Log(StringList());
-        }
+        public void PrintList() => Debug.Log(StringList());
 #endif
         #endregion
     }
