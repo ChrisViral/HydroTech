@@ -53,6 +53,8 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
+
+        public override string Title => "Precise Control";
         #endregion
 
         #region Constructor

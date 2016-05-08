@@ -25,6 +25,8 @@ namespace HydroTech.Panels
                 if (this.cameraMgr) { this.peektop = value; }
             }
         }
+
+        public override string Title => "Debug";
         #endregion
 
         #region Constructor

@@ -62,6 +62,8 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
+
+        public override string Title => "Translation Autopilot";
         #endregion
 
         #region Constructor

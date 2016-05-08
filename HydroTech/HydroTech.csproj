@@ -81,6 +81,7 @@
     <Compile Include="ModuleDockAssistTarget.cs" />
     <Compile Include="Panels\EditorMainPanel.cs" />
     <Compile Include="Panels\FlightMainPanel.cs" />
+    <Compile Include="Panels\MainPanel.cs" />
     <Compile Include="Panels\SettingsPanel.cs" />
     <Compile Include="Autopilots\Calculators\CtrlStateCalculator.cs" />
     <Compile Include="HydroJebCore.cs" />

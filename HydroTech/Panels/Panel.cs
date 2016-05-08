@@ -15,6 +15,10 @@ namespace HydroTech.Panels
         public virtual bool Visible { get; set; }
         #endregion
 
+        #region Abstract properties
+        public abstract string Title { get; }
+        #endregion
+
         #region Constructors
         protected Panel(Rect window, int id, string title)
         {

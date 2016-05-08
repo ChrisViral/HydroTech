@@ -1,84 +1,90 @@
-﻿using System.Collections.Generic;
-using HydroTech.Managers;
+﻿using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 
 namespace HydroTech.Panels
 {
-    public class FlightMainPanel : MonoBehaviour
+    /// <summary>
+    /// The main flight GUI panel, controlling the visibility of the specific panels
+    /// </summary>
+    public class FlightMainPanel : MainPanel
     {
         #region Instance
+        /// <summary>
+        /// The current instance of the main panel
+        /// </summary>
         public static FlightMainPanel Instance { get; private set; }
         #endregion
 
-        #region Fields
-        private Rect pos, drag;
-        private bool visible, hid;
-        private int id;
-        #endregion
-
         #region Properties
+        /// <summary>
+        /// The current instance of the Dock Assist panel
+        /// </summary>
         public PanelDockAssist DockAssist { get; private set; }
 
+        /// <summary>
+        /// The current instance of the Landing panel
+        /// </summary>
         public PanelLanding Landing { get; private set; }
 
+        /// <summary>
+        /// The current instance of the Landing Info panel
+        /// </summary>
         public PanelLandingInfo LandingInfo { get; private set; }
 
+        /// <summary>
+        /// The current instance of the Main Throttle panel
+        /// </summary>
         public PanelMainThrottle MainThrottle { get; private set; }
 
+        /// <summary>
+        /// The current instance of the PreciseControl panel
+        /// </summary>
         public PanelPreciseControl PreciseControl { get; private set; }
 
+        /// <summary>
+        /// The current instance of the RCS Info panel
+        /// </summary>
         public PanelRCSThrustInfo RCSInfo { get; private set; }
 
+        /// <summary>
+        /// The current instance of the Translation panel
+        /// </summary>
         public PanelTranslation Translation { get; private set; }
 #if DEBUG
+        /// <summary>
+        /// The current instance of the Debug panel
+        /// </summary>
         public PanelDebug Debug { get; private set; }
 #endif
-        public List<Panel> Panels { get; private set; }
+        private bool hid;
+        /// <summary>
+        /// This MainPanel's visibility
+        /// </summary>
+        protected override bool Visible => base.Visible && !this.hid;
+
+        /// <summary>
+        /// Title of this MainPanel
+        /// </summary>
+        protected override string Title => "HydroTech Flight Window";
         #endregion
 
         #region Methods
-        internal void ShowPanel()
-        {
-            if (!this.visible) { this.visible = true; }
-        }
+        /// <summary>
+        /// Shows the flight UI (F2)
+        /// </summary>
+        private void ShowUI() => this.hid = false;
 
-        internal void HidePanel()
-        {
-            if (this.visible) { this.visible = false; }
-        }
-
-        private void ShowUI()
-        {
-            this.hid = false;
-        }
-
-        private void HideUI()
-        {
-            this.hid = true;
-        }
-
-        private void Window(int id)
-        {
-            GUI.DragWindow(this.drag);
-
-            GUILayout.BeginVertical(GUI.skin.box);
-            this.DockAssist.Visible = GUILayout.Toggle(this.DockAssist.Visible, "Docking Autopilot");
-            this.Landing.Visible = GUILayout.Toggle(this.Landing.Visible, "Landing Autopilot");
-            this.MainThrottle.Visible = GUILayout.Toggle(this.MainThrottle.Visible, "Main Throttle Control");
-            this.PreciseControl.Visible = GUILayout.Toggle(this.PreciseControl.Visible, "RCS Precise Control");
-            this.RCSInfo.Visible = GUILayout.Toggle(this.RCSInfo.Visible, "RCS Info");
-            this.Translation.Visible = GUILayout.Toggle(this.Translation.Visible, "Translation Autopilot");
-#if DEBUG
-            this.Debug.Visible = GUILayout.Toggle(this.Debug.Visible, "Debug");
-#endif
-            GUILayout.EndVertical();
-            
-            GUIUtils.CenteredButton("Close", HydroToolbarManager.CloseFlight, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
-        }
+        /// <summary>
+        /// Hides the flight UI (F2)
+        /// </summary>
+        private void HideUI() => this.hid = true;
         #endregion
 
         #region Functions
+        /// <summary>
+        /// Unity Awake function
+        /// </summary>
         private void Awake()
         {
             if (Instance != null) { Destroy(this); return; }
@@ -91,28 +97,31 @@ namespace HydroTech.Panels
             this.PreciseControl = new PanelPreciseControl();
             this.RCSInfo = new PanelRCSThrustInfo(false);
             this.Translation = new PanelTranslation();
-            this.Panels = new List<Panel>(7)
-            {
-                this.DockAssist,
-                this.Landing,
-                this.LandingInfo,
-                this.MainThrottle,
-                this.PreciseControl,
-                this.RCSInfo,
-                this.Translation
-            };
+
+            this.Panels.Add(this.DockAssist);
+            this.Panels.Add(this.Landing);
+            this.Panels.Add(this.LandingInfo);
+            this.Panels.Add(this.MainThrottle);
+            this.Panels.Add(this.PreciseControl);
+            this.Panels.Add(this.RCSInfo);
+            this.Panels.Add(this.Translation);
+            this.Panels.Add(this.DockAssist);
 #if DEBUG
             this.Debug = new PanelDebug();
             this.Panels.Add(this.Debug);
 #endif
-
             this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 100);
             this.drag = new Rect(0, 0, 250, 30);
             this.id = IDProvider.GetID<FlightMainPanel>();
+            this.close = HydroToolbarManager.CloseFlight;
+
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
         }
 
+        /// <summary>
+        /// Unity OnDestroy function
+        /// </summary>
         private void OnDestroy()
         {
             if (Instance == this)
@@ -120,21 +129,6 @@ namespace HydroTech.Panels
                 Instance = null;
                 GameEvents.onShowUI.Remove(ShowUI);
                 GameEvents.onHideUI.Remove(HideUI);
-            }
-        }
-
-        private void OnGUI()
-        {
-            if (this.visible && !this.hid)
-            {
-                GUI.skin = GUIUtils.Skin;
-
-                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "HydroTech Flight Window", GUILayout.ExpandHeight(true)));
-
-                foreach (Panel p in this.Panels)
-                {
-                    if (p.Visible) { p.DrawGUI(); }
-                }
             }
         }
         #endregion

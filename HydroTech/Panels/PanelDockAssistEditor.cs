@@ -9,7 +9,11 @@ namespace HydroTech.Panels
         #region Fields    
         private bool showCams = true, showTargets = true;
         private Vector2 scroll;
-        private readonly List<ModuleDockAssist> assists = new List<ModuleDockAssist>(); 
+        private readonly List<ModuleDockAssist> assists = new List<ModuleDockAssist>();
+        #endregion
+
+        #region Properties
+        public override string Title => "Docking Assists";
         #endregion
 
         #region Constructor

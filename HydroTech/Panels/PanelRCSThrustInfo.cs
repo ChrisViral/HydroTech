@@ -14,6 +14,8 @@ namespace HydroTech.Panels
 
         #region Properties
         protected RCSCalculator ActiveRCS => this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS;
+
+        public override string Title => "RCS Thrust Info";
         #endregion
 
         #region Constructor

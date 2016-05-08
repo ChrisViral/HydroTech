@@ -46,6 +46,8 @@ namespace HydroTech.Panels
                 return this.slopeDetection;
             }
         }
+
+        public override string Title => "Landing Info";
         #endregion
 
         #region Constructor

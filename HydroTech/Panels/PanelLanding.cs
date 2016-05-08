@@ -94,6 +94,8 @@ namespace HydroTech.Panels
             get { return LA.Engaged; }
             set { LA.Engaged = value; }
         }
+
+        public override string Title => "Landing Autopilot";
         #endregion
 
         #region Constructor

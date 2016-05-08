@@ -118,6 +118,8 @@ namespace HydroTech.Panels
                 base.Settings = value;
             }
         }
+
+        public override string Title => "Docking Autopilot";
         #endregion
 
         #region Constructor
