@@ -10,18 +10,15 @@ namespace HydroTech
     {
         #region Static fields
         private static readonly Color[] colours = { Color.blue, Color.green, Color.red };
+        private static readonly Shader shader = Shader.Find("Particles/Additive");
         #endregion
 
         #region KSPFields
         [KSPField(isPersistant = true, guiName = "Name", guiActive = true, guiActiveEditor = true)]
         public string assistName;
-
-        //TODO: use transforms instead of manually typing camera/target positions
+        
         [KSPField]
-        public string assistTransformName;
-
-        [KSPField]
-        public string previewTransformName;
+        public string assistTransformName, previewTransformName;
 
         [KSPField]
         public float previewFoV = 90;
@@ -124,14 +121,8 @@ namespace HydroTech
 
         private void HideUI() => this.hid = true;
 
-        protected Vector3 ReverseTransform(Vector3 vec)
-        {
-            return SwitchTransformCalculator.ReverseVectorTransform(vec, this.transform.right, this.transform.up, this.transform.forward);
-        }
-
         private void CreateLineRenderers()
         {
-            Shader shader = Shader.Find("Particles/Additive");
             this.lines = new LineRenderer[3];
             for (int i = 0; i < 3; i++)
             {
@@ -172,12 +163,11 @@ namespace HydroTech
 
         public void ShowPreview()
         {
-            HydroCameraManager camMngr = HydroFlightManager.Instance.CameraManager;
-            camMngr.Target = null;
-            camMngr.TransformParent = this.transform;
-            camMngr.FoV = this.previewFoV;
-            camMngr.Position = this.preview.position;
-            camMngr.SetLookRotation(this.preview.forward, this.preview.up);
+            HydroFlightManager.Instance.CameraManager.Target = null;
+            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
+            HydroFlightManager.Instance.CameraManager.FoV = this.previewFoV;
+            HydroFlightManager.Instance.CameraManager.Position = this.preview.position;
+            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.preview.forward, this.preview.up);
         }
 
         public Callback<Rect> GetDrawModulePanelCallback() => null;
@@ -203,7 +193,6 @@ namespace HydroTech
             if (this.visible && !this.hid)
             {
                 GUI.skin = GUIUtils.Skin;
-
                 this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "Rename Part"));
             }
         }
@@ -223,7 +212,7 @@ namespace HydroTech
 
             if (HighLogic.LoadedSceneIsEditor)
             {
-                this.directions = new Vector3[] { this.assist.forward, this.assist.up, this.assist.right };
+                this.directions = new[] { this.assist.forward, this.assist.up, this.assist.right };
                 CreateLineRenderers();
                 HideEditorAid();
             }

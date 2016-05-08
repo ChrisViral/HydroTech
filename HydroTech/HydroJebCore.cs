@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using HydroTech.Managers;
 using HydroTech.Utils;
@@ -8,6 +9,7 @@ namespace HydroTech
 {
     public class HydroJebCore : PartModule, IModuleInfo, IResourceConsumer
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum AutopilotStatus
         {
             Online,

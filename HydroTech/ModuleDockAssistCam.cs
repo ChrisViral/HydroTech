@@ -86,25 +86,17 @@ namespace HydroTech
         #region Methods
         public void ShowCamera()
         {
-            HydroCameraManager camMngr = HydroFlightManager.Instance.CameraManager;
-            camMngr.Target = null;
-            camMngr.TransformParent = this.transform;
-            camMngr.Position = this.assist.position;
-            camMngr.SetLookRotation(this.assist.forward, this.assist.up);
-            camMngr.FoV = this.camDefFoV / this.Mag;
-            camMngr.NearClipPlane = this.camClip;
+            HydroFlightManager.Instance.CameraManager.Target = null;
+            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
+            HydroFlightManager.Instance.CameraManager.Position = this.assist.position;
+            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.assist.forward, this.assist.up);
+            HydroFlightManager.Instance.CameraManager.FoV = this.camDefFoV / this.Mag;
+            HydroFlightManager.Instance.CameraManager.NearClipPlane = this.camClip;
         }
 
-        public Vector3 VectorTransform(Vector3 vec)
-        {
-            return SwitchTransformCalculator.VectorTransform(vec, this.Right, this.Down, this.Dir);
-        }
+        public Vector3 VectorTransform(Vector3 vec) => SwitchTransformCalculator.VectorTransform(vec, this.Right, this.Down, this.Dir);
 
         public List<PartResourceDefinition> GetConsumedResources() => HTUtils.ElectrictyList;
-        #endregion
-
-        #region Static methods
-        public static Vector3 VectorTransform(Vector3 vec, ModuleDockAssistCam mcam) => mcam.VectorTransform(vec);
         #endregion
 
         #region Functions
