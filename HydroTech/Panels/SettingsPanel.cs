@@ -66,7 +66,7 @@ namespace HydroTech.Panels
             Instance = this;
             this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 50);
             this.drag = new Rect(0, 0, 250, 30);
-            this.id = GuidProvider.GetGuid<SettingsPanel>();
+            this.id = IDProvider.GetID<SettingsPanel>();
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
             GameEvents.onGUIAstronautComplexSpawn.Add(HideUI);

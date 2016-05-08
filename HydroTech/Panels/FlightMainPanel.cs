@@ -108,7 +108,7 @@ namespace HydroTech.Panels
 
             this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 100);
             this.drag = new Rect(0, 0, 250, 30);
-            this.id = GuidProvider.GetGuid<FlightMainPanel>();
+            this.id = IDProvider.GetID<FlightMainPanel>();
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
         }

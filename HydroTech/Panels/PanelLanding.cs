@@ -97,7 +97,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelLanding() : base(new Rect(548, 80, 200, 184), GuidProvider.GetGuid<PanelLanding>(), "Landing Autopilot") { }
+        public PanelLanding() : base(new Rect(548, 80, 200, 184), IDProvider.GetID<PanelLanding>(), "Landing Autopilot") { }
         #endregion
 
         #region Overrides

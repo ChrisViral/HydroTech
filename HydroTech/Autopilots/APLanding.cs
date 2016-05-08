@@ -92,7 +92,7 @@ namespace HydroTech.Autopilots
         #region Static properties
         private static Vector3 SurfVel => ActiveVessel.srf_velocity;
 
-        private static Vector3 SurfVelVessel => HTUtils.VectorTransform(SurfVel, ActiveVessel.ReferenceTransform);
+        private static Vector3 SurfVelVessel => SwitchTransformCalculator.VectorTransform(SurfVel, ActiveVessel.ReferenceTransform);
 
         private static float SurfXSpeed => SurfVelVessel.x;
 
@@ -182,7 +182,7 @@ namespace HydroTech.Autopilots
             ActiveRCS.MakeRotation(ctrlState, stateCal.Steer(0.05f /*2.87°*/) ? 5 : 20);
 
             // Kill rotation
-            Vector3 angularVelocity = HTUtils.VectorTransform(ActiveVessel.GetComponent<Rigidbody>().angularVelocity, ActiveVessel.ReferenceTransform);
+            Vector3 angularVelocity = SwitchTransformCalculator.VectorTransform(ActiveVessel.GetComponent<Rigidbody>().angularVelocity, ActiveVessel.ReferenceTransform);
             SetRotationRoll(ctrlState, angularVelocity.z);
 
             return stateCal.Steer(0.05f); //2.87°
@@ -190,7 +190,7 @@ namespace HydroTech.Autopilots
 
         private void CheckAltitudeAndDeployLandingGears()
         {
-            if (ActiveVessel.horizontalSrfSpeed < 0.1 && this.AltTrue <= 200) { HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.Gear, true); }
+            if (ActiveVessel.horizontalSrfSpeed < 0.1 && this.AltTrue <= 200) { FlightGlobals.ActiveVessel.SetState(KSPActionGroup.Gear, true); }
         }
 
         private void DriveHorizontalDec(FlightCtrlState ctrlState)
@@ -284,7 +284,7 @@ namespace HydroTech.Autopilots
                 this.indicator = Indicator.LOWTWR;
                 this.engaged = false;
             }
-            else if (this.AltASL > HTUtils.GetBodySyncAltitude(MainBody))
+            else if (this.AltASL > MainBody.SyncAltitude())
             {
                 this.indicator = Indicator.OUTSYNC;
                 this.engaged = false;
@@ -324,7 +324,7 @@ namespace HydroTech.Autopilots
         {
             base.DriveAutopilot(ctrlState);
 
-            HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+            FlightGlobals.ActiveVessel.SetState(KSPActionGroup.SAS, false);
 
             if (this.touchdown || this.status != Status.HOVER) { RemoveUserInput(ctrlState); }
 

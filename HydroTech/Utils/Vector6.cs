@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace HydroTech.Utils
 {
+    /// <summary>
+    /// A 3 component vector with separate positive/negative components value type
+    /// </summary>
     public struct Vector6 : IEquatable<Vector6>
     {
         #region Static properties

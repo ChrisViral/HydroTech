@@ -71,7 +71,7 @@ namespace HydroTech.Autopilots
         #region Methods
         private Vector3 GetVector(TranslationDirection dir)
         {
-            return dir != TranslationDirection.ADVANCED ? HTUtils.GetUnitVector(dir) : this.thrustVector;
+            return dir != TranslationDirection.ADVANCED ? dir.GetUnitVector() : this.thrustVector;
         }
         #endregion
 
@@ -82,7 +82,7 @@ namespace HydroTech.Autopilots
 
             if (this.HoldOrient)
             {
-                HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+                FlightGlobals.ActiveVessel.SetState(KSPActionGroup.SAS, false);
                 HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
                 stateCal.Calculate(this.curOrient, this.curRoll, ActiveVessel);
                 stateCal.SetCtrlStateRotation(ctrlState);

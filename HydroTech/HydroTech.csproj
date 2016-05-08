@@ -89,7 +89,7 @@
     <Compile Include="UI\UILinkedToggles.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
-    <Compile Include="Utils\GuidProvider.cs" />
+    <Compile Include="Utils\IDProvider.cs" />
     <Compile Include="Utils\GUIUtils.cs" />
     <Compile Include="Panels\Panel.cs" />
     <Compile Include="Panels\PanelDebug.cs" />

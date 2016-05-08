@@ -1,41 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using HydroTech.Autopilots.Calculators;
 using UnityEngine;
-using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
 
 namespace HydroTech.Utils
 {
+    /// <summary>
+    /// A collection of general utility fields and methods
+    /// </summary>
     public static class HTUtils
     {
         #region Constants
+        /// <summary>
+        /// Radians to degrees conversion constant
+        /// </summary>
         public const float radToDeg = 180 / Mathf.PI;
-        public const string localPluginDataURL = "GameData/HydroTech/Plugins/PluginData";
-        public const string localIconURL = "GameData/HydroTech/Plugins/PluginData/default.png";
-        public const string localActiveIconURL = "GameData/HydroTech/Plugins/PluginData/active.png";
-        public const string localInactiveIconURL = "GameData/HydroTech/Plugins/PluginData/inactive.png";
+
+        /// <summary>
+        /// Local HydroTech PluginData folder URL
+        /// </summary>
+        private const string localPluginDataURL = "GameData/HydroTech/Plugins/PluginData";
+
+        /// <summary>
+        /// Local HydroTech default icon URL
+        /// </summary>
+        private const string localIconURL = "GameData/HydroTech/Plugins/PluginData/default.png";
+
+        /// <summary>
+        /// Local HydroTech active icon URL
+        /// </summary>
+        private const string localActiveIconURL = "GameData/HydroTech/Plugins/PluginData/active.png";
+
+        /// <summary>
+        /// Local HydroTech inactive icon URL
+        /// </summary>
+        private const string localInactiveIconURL = "GameData/HydroTech/Plugins/PluginData/inactive.png";
+
+        /// <summary>
+        /// PopupDialog anchor
+        /// </summary>
         private static readonly Vector2 anchor = new Vector2(0.5f, 0.5f);
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Absolute HydroTech PluginData URL
+        /// </summary>
         public static string PluginDataURL { get; }
 
+        /// <summary>
+        /// Default HydroTech AppLauncher icon
+        /// </summary>
         public static Texture2D LauncherIcon { get; }
 
+        /// <summary>
+        /// Active HydroTech AppLauncher icon
+        /// </summary>
         public static Texture2D ActiveIcon { get; }
 
+        /// <summary>
+        /// Inactive HydroTech AppLauncher icon
+        /// </summary>
         public static Texture2D InactiveIcon { get; }
 
+        /// <summary>
+        /// The ElectricCharge PartResourceDefinition ID
+        /// </summary>
         public static int ElectricChargeID { get; }
 
-        public static PartResourceDefinition Electricity { get; }
-
+        /// <summary>
+        /// A list containing only the ElectricCharge PartResourceDefinition, for IResourceConsumer usage
+        /// </summary>
         public static List<PartResourceDefinition> ElectrictyList { get; }
+
+        /// <summary>
+        /// The current HydroTech version string
+        /// </summary>
+        public static string AssemblyVersion { get; }
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Initiates the HTUtils properties
+        /// </summary>
         static HTUtils()
         {
             PluginDataURL = Path.Combine(KSPUtil.ApplicationRootPath, localPluginDataURL);
@@ -49,97 +100,74 @@ namespace HydroTech.Utils
             InactiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
             InactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localInactiveIconURL)));
 
-            Electricity = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge");
-            ElectricChargeID = Electricity.id;
-            ElectrictyList = new List<PartResourceDefinition>(1) { Electricity };
+            PartResourceDefinition electricity = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge");
+            ElectricChargeID = electricity.id;
+            ElectrictyList = new List<PartResourceDefinition>(1) { electricity };
+
+            Version version = new Version(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+            AssemblyVersion = "v" + version.ToString(version.Revision == 0 ? (version.Build == 0 ? 2 : 3) : 4);
         }
         #endregion
 
         #region Methods
-        public static float Clamp(float x, float min, float max)
-        {
-            if (x >= max) { return max; }
-            return x <= min ? min : x;
-        }
+        /// <summary>
+        /// Clamps the value between the given minimum and maximum
+        /// </summary>
+        /// <param name="f">Value to clamp</param>
+        /// <param name="min">Minimum value</param>
+        /// <param name="max">Maximum value</param>
+        /// <returns>The clamped value</returns>
+        public static float Clamp(float f, float min, float max) => f < max ? (f > min ? f : min) : max;
 
-        public static float Clamp0(float f) => f > 0 ? f : 0;
+        /// <summary>
+        /// Clamps the given value to a minimum of 0
+        /// </summary>
+        /// <param name="f">Value to clamp</param>
+        /// <returns>The clamped value</returns>
+        public static float Clamp0(float f) => Mathf.Max(0, f);
 
-        public static float Clamp100(float f) => f < 100 ? f : 100;
+        /// <summary>
+        /// Clamps the given value to a maximum of 100
+        /// </summary>
+        /// <param name="f">Value to clamp</param>
+        /// <returns>The clamped value</returns>
+        public static float Clamp100(float f) => Mathf.Min(f, 100);
 
+        /// <summary>
+        /// Spawns a PopupDialog of the given title, message, and button text
+        /// </summary>
+        /// <param name="title">Title of the PopupDialog</param>
+        /// <param name="message">Message of the popupDialog</param>
+        /// <param name="button">Button text of the PopupDialog</param>
         public static void SpawnPopupDialog(string title, string message, string button)
         {
             PopupDialog.SpawnPopupDialog(anchor, anchor, title, message, button, false, HighLogic.UISkin);
         }
 
-        public static bool GetState(Vessel vessel, KSPActionGroup action) => vessel.ActionGroups[action];
-
-        public static void SetState(Vessel vessel, KSPActionGroup action, bool active) => vessel.ActionGroups.SetGroup(action, active);
-
-        public static float GetBodySyncAltitude(CelestialBody body)
-        {
-            return (float)Math.Pow((body.gravParameter * body.rotationPeriod * body.rotationPeriod) / (4 * Math.PI * Math.PI), 1d / 3);
-        }
-
-        public static void CamToVesselRot(FlightCtrlState ctrlState, ModuleDockAssist mcam)
+        /// <summary>
+        /// Sets the camera's rotation to the vessel's
+        /// </summary>
+        /// <param name="ctrlState">Current vessel's FlightCtrlState</param>
+        /// <param name="cam">Camera to set the rotation for</param>
+        public static void CamToVesselRot(FlightCtrlState ctrlState, ModuleDockAssistCam cam)
         {
             SwitchTransformCalculator sCal = new SwitchTransformCalculator();
             sCal.GetRotation(ctrlState);
-            sCal.ChangeTransformRotation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
+            sCal.ChangeTransformRotation(cam.Right, cam.Down, cam.Dir, cam.vessel.ReferenceTransform);
             sCal.SetRotation(ctrlState);
         }
 
-        public static void CamToVesselTrans(FlightCtrlState ctrlState, ModuleDockAssist mcam)
+        /// <summary>
+        /// Sets the camera's translation to the vessel's
+        /// </summary>
+        /// <param name="ctrlState">Current vessel's FlightCtrlState</param>
+        /// <param name="cam">Camera to set the translation for</param>
+        public static void CamToVesselTrans(FlightCtrlState ctrlState, ModuleDockAssistCam cam)
         {
             SwitchTransformCalculator sCal = new SwitchTransformCalculator();
             sCal.GetTranslation(ctrlState);
-            sCal.ChangeTransformTranslation(mcam.Right, mcam.Down, mcam.Dir, mcam.vessel.ReferenceTransform);
+            sCal.ChangeTransformTranslation(cam.Right, cam.Down, cam.Dir, cam.vessel.ReferenceTransform);
             sCal.SetTranslation(ctrlState);
-        }
-
-        public static Vector3 GetUnitVector(TranslationDirection dir)
-        {
-            switch (dir)
-            {
-                case TranslationDirection.RIGHT:
-                    return Vector3.right;
-
-                case TranslationDirection.LEFT:
-                    return Vector3.left;
-
-                case TranslationDirection.DOWN:
-                    return Vector3.up;
-
-                case TranslationDirection.UP:
-                    return Vector3.down;
-
-                case TranslationDirection.FORWARD:
-                    return Vector3.forward;
-
-                case TranslationDirection.BACK:
-                    return Vector3.back;
-            }
-
-            return Vector3.zero;
-        }
-
-        public static Vector3 VectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return SwitchTransformCalculator.VectorTransform(vec, x, y, z);
-        }
-
-        public static Vector3 VectorTransform(Vector3 vec, Transform trans)
-        {
-            return SwitchTransformCalculator.VectorTransform(vec, trans);
-        }
-
-        public static Vector3 ReverseVectorTransform(Vector3 vec, Vector3 x, Vector3 y, Vector3 z)
-        {
-            return SwitchTransformCalculator.ReverseVectorTransform(vec, x, y, z);
-        }
-
-        public static Vector3 ReverseVectorTransform(Vector3 vec, Transform trans)
-        {
-            return SwitchTransformCalculator.ReverseVectorTransform(vec, trans);
         }
         #endregion
     }

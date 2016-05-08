@@ -64,7 +64,7 @@ namespace HydroTech.Panels
             };
             this.pos = new Rect(Screen.width * 0.8f, Screen.height * 0.2f, 250, 50);
             this.drag = new Rect(0, 0, 200, 30);
-            this.id = GuidProvider.GetGuid<EditorMainPanel>();
+            this.id = IDProvider.GetID<EditorMainPanel>();
         }
 
         private void OnDestroy()

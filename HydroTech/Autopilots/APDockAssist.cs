@@ -195,8 +195,8 @@ namespace HydroTech.Autopilots
 
         private void DriveTargetAutopilot(FlightCtrlState ctrlState)
         {
-            HTUtils.SetState(this.target.vessel, KSPActionGroup.RCS, true);
-            HTUtils.SetState(this.target.vessel, KSPActionGroup.SAS, false);
+            this.target.vessel.SetState(KSPActionGroup.RCS, true);
+            this.target.vessel.SetState(KSPActionGroup.SAS, false);
             Vector3 dir = (this.target.Pos - this.Cam.Pos).normalized;
             HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
             stateCal.Calculate(dir, Vector3.zero, this.target.Dir, this.target.Right, this.target.vessel);
@@ -397,12 +397,12 @@ namespace HydroTech.Autopilots
             {
                 if (this.AutoOrient)
                 {
-                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+                    FlightGlobals.ActiveVessel.SetState(KSPActionGroup.SAS, false);
                     DriveAutoOrient(ctrlState);
                 }
                 if (this.CamView && !this.AutoOrient)
                 {
-                    HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+                    FlightGlobals.ActiveVessel.SetState(KSPActionGroup.SAS, false);
                     HTUtils.CamToVesselRot(ctrlState, this.Cam);
                 }
                 bool killingRelV = this.KillRelV && ctrlState.X == 0 && ctrlState.Y == 0 && ctrlState.Z == 0;
@@ -415,7 +415,7 @@ namespace HydroTech.Autopilots
             }
             else //!Manual
             {
-                HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.SAS, false);
+                FlightGlobals.ActiveVessel.SetState(KSPActionGroup.SAS, false);
                 if (this.DriveTarget)
                 {
                     if (this.targetOrientReady)
@@ -427,7 +427,7 @@ namespace HydroTech.Autopilots
                         bool orientReady = stateCal.Steer(0.05f); //2.87°
                         if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < 0.01f)
                         {
-                            DriveFinalStage(ctrlState, HTUtils.VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), this.RelV);
+                            DriveFinalStage(ctrlState, SwitchTransformCalculator.VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), this.RelV);
                             HTUtils.CamToVesselTrans(ctrlState, this.Cam);
                         }
                         else

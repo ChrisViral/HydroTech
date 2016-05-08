@@ -105,7 +105,7 @@ namespace HydroTech.Autopilots
         #region Virtual methods
         protected virtual void DriveAutopilot(FlightCtrlState ctrlState)
         {
-            HTUtils.SetState(FlightGlobals.ActiveVessel, KSPActionGroup.RCS, true);
+            FlightGlobals.ActiveVessel.SetState(KSPActionGroup.RCS, true);
         }
 
         public virtual void OnFlightStart()

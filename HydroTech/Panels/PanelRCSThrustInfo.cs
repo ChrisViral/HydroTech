@@ -17,7 +17,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), GuidProvider.GetGuid<PanelRCSThrustInfo>(), "RCS Info")
+        public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), IDProvider.GetID<PanelRCSThrustInfo>(), "RCS Info")
         {
             this.editor = editor;
         }

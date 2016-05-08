@@ -3,7 +3,11 @@ using UnityEngine;
 
 namespace HydroTech.Utils
 {
-    //ReSharper disable once InconsistentNaming
+
+    /// <summary>
+    /// A 3 per 3 2D matrix value type
+    /// </summary>
+    /// ReSharper disable once InconsistentNaming
     public struct Matrix3x3 : IEquatable<Matrix3x3>
     {
         #region Static properties

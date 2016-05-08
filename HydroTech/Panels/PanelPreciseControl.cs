@@ -56,7 +56,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelPreciseControl() : base(new Rect(349, 60, 200, 122), GuidProvider.GetGuid<PanelPreciseControl>(), "Precise Control") { }
+        public PanelPreciseControl() : base(new Rect(349, 60, 200, 122), IDProvider.GetID<PanelPreciseControl>(), "Precise Control") { }
         #endregion
 
         #region Overrides

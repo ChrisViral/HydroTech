@@ -65,7 +65,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelTranslation() : base(new Rect(142, 475, 200, 260), GuidProvider.GetGuid<PanelTranslation>(), "Auto Translation") { }
+        public PanelTranslation() : base(new Rect(142, 475, 200, 260), IDProvider.GetID<PanelTranslation>(), "Auto Translation") { }
         #endregion
 
         #region Overrides
