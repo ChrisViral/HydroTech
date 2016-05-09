@@ -108,6 +108,12 @@ namespace HydroTech.Utils
         #endregion
 
         #region PartExtensions
+        /// <summary>
+        /// Returns all the PartModules implementing <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">Implementation type to look for</typeparam>
+        /// <param name="parts">Parts list to search</param>
+        /// <returns>Streaming enumerable of the found <typeparamref name="T"/></returns>
         public static IEnumerable<T> FindModulesImplementing<T>(this IEnumerable<Part> parts) where T : PartModule
         {
             foreach (Part p in parts)
@@ -117,7 +123,7 @@ namespace HydroTech.Utils
                     if (pm is T) { yield return (T)pm; }
                 }
             }
-        } 
+        }
         #endregion
     }
 }

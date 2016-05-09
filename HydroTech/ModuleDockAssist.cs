@@ -6,11 +6,14 @@ using UnityEngine;
 
 namespace HydroTech
 {
+    /// <summary>
+    /// Docking assist base class
+    /// </summary>
     public abstract class ModuleDockAssist : PartModule, IModuleInfo
     {
         #region Static fields
-        private static readonly Color[] colours = { Color.blue, Color.green, Color.red };
-        private static readonly Shader shader = Shader.Find("Particles/Additive");
+        private static readonly Color[] colours = { Color.blue, Color.green, Color.red };   //Editor assists colours
+        private static readonly Shader shader = Shader.Find("Particles/Additive");          //Editor assists shader
         #endregion
 
         #region KSPFields
@@ -25,32 +28,61 @@ namespace HydroTech
         #endregion
 
         #region Fields
+        //GUI stuff
         private Rect pos, drag;
         private int id;
         private bool visible, hid;
+
+        //Editor assists
         private LineRenderer[] lines;
         private Vector3[] directions;
+        internal bool highlight;
+
+        //Flight stuff
         protected Rigidbody rigidbody;
         protected Transform assist, preview;
-        internal bool highlight;
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Assist world forward vector
+        /// </summary>
         public Vector3 Dir => this.assist.forward;
 
+        /// <summary>
+        /// Assist world down vector
+        /// </summary>
         public Vector3 Down => -this.assist.up;
 
+        /// <summary>
+        /// Assist world right vector
+        /// </summary>
         public Vector3 Right => this.assist.right;
 
+        /// <summary>
+        /// Assist world position
+        /// </summary>
         public Vector3 Pos => this.assist.position;
 
+        /// <summary>
+        /// Assist local vessel position
+        /// </summary>
         public Vector3 RelPos => SwitchTransformCalculator.VectorTransform(this.Pos - this.vessel.findWorldCenterOfMass(), this.vessel.ReferenceTransform);
 
+        /// <summary>
+        /// Temporary name edit GUI field
+        /// </summary>
         internal string TempName { get; set; }
 
+        /// <summary>
+        /// GUI toggle state
+        /// </summary>
         public bool InfoShown { get; set; }
 
         private bool aidShown;
+        /// <summary>
+        /// Editor assist aid state
+        /// </summary>
         public bool AidShown
         {
             get { return this.aidShown; }
@@ -67,10 +99,16 @@ namespace HydroTech
         #endregion
 
         #region Abstract properties
+        /// <summary>
+        /// Module type shorthand
+        /// </summary>
         protected abstract string ModuleShort { get; }
         #endregion
 
         #region KSPEvents
+        /// <summary>
+        /// Shows rename window in flight
+        /// </summary>
         [KSPEvent(guiName = "Rename", active = true, guiActive = true)]
         public void GUIRename()
         {
@@ -84,6 +122,9 @@ namespace HydroTech
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Sets assist name
+        /// </summary>
         public void SetName()
         {
             if (!string.IsNullOrEmpty(this.TempName) && this.assistName != this.TempName)
@@ -93,6 +134,10 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// Flight name editing
+        /// </summary>
+        /// <param name="id">Window ID</param>
         private void Window(int id)
         {
             GUI.DragWindow(this.drag);
@@ -117,10 +162,19 @@ namespace HydroTech
             GUILayout.EndVertical();
         }
 
+        /// <summary>
+        /// Shows UI in flight (F2)
+        /// </summary>
         private void ShowUI() => this.hid = false;
 
+        /// <summary>
+        /// Hides UI in flight (F2)
+        /// </summary>
         private void HideUI() => this.hid = true;
 
+        /// <summary>
+        /// Initiates the editor LineRenderer assists
+        /// </summary>
         private void CreateLineRenderers()
         {
             this.lines = new LineRenderer[3];
@@ -139,6 +193,9 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// Shows editor aid
+        /// </summary>
         public void ShowEditorAid()
         {
             for (int i = 0; i < 3; i++)
@@ -150,6 +207,9 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// Hides editor aid
+        /// </summary>
         public void HideEditorAid()
         {
             for (int i = 0; i < 3; i++)
@@ -161,6 +221,9 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// Shows preview camera
+        /// </summary>
         public void ShowPreview()
         {
             HydroFlightManager.Instance.CameraManager.Target = null;
@@ -170,16 +233,31 @@ namespace HydroTech
             HydroFlightManager.Instance.CameraManager.SetLookRotation(this.preview.forward, this.preview.up);
         }
 
+        /// <summary>
+        /// Unused
+        /// </summary>
+        /// <returns>null</returns>
         public Callback<Rect> GetDrawModulePanelCallback() => null;
 
+        /// <summary>
+        /// Unused
+        /// </summary>
+        /// <returns>Empty string</returns>
         public string GetPrimaryField() => string.Empty;
         #endregion
 
         #region Abstract methods
+        /// <summary>
+        /// Forces IModuleInfo.GetModuleTitle() implementation in child classes
+        /// </summary>
+        /// <returns>Module title</returns>
         public abstract string GetModuleTitle();
         #endregion
 
         #region Functions
+        /// <summary>
+        /// Update function
+        /// </summary>
         private void Update()
         {
             if (FlightGlobals.ready && this.visible && !this.vessel.isActiveVessel)
@@ -187,7 +265,10 @@ namespace HydroTech
                 this.visible = false;
             }        
         }
-
+        
+        /// <summary>
+        /// OnGUI function
+        /// </summary>
         private void OnGUI()
         {
             if (this.visible && !this.hid)
@@ -199,6 +280,10 @@ namespace HydroTech
         #endregion
 
         #region Overrides
+        /// <summary>
+        /// Initializes PartModule
+        /// </summary>
+        /// <param name="state">Current starting state</param>
         public override void OnStart(StartState state)
         {
             if (HighLogic.LoadedScene != GameScenes.LOADING)
@@ -226,8 +311,15 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// Module name
+        /// </summary>
+        /// <returns>The modules name identifier</returns>
         public override string ToString() => this.assistName;
 
+        /// <summary>
+        /// OnDestroy function
+        /// </summary>
         protected virtual void OnDestroy()
         {
             this.visible = false;

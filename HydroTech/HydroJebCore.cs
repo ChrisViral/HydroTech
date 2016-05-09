@@ -7,14 +7,17 @@ using UnityEngine;
 
 namespace HydroTech
 {
+    /// <summary>
+    /// HydroTech autopilot core
+    /// </summary>
     public class HydroJebCore : PartModule, IModuleInfo, IResourceConsumer
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum AutopilotStatus
         {
-            Online,
-            Offline,
-            Idle
+            Online,     //Running
+            Offline,    //Out of EC
+            Idle        //Inactive/other core on vessel is active
         }
 
         #region KSPFields
@@ -27,6 +30,9 @@ namespace HydroTech
 
         #region Properties
         private AutopilotStatus state;
+        /// <summary>
+        /// Current state
+        /// </summary>
         public AutopilotStatus State
         {
             get { return this.state; }
@@ -37,20 +43,42 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// If this core is currently online
+        /// </summary>
         public bool IsOnline => this.state == AutopilotStatus.Online;
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Module title
+        /// </summary>
+        /// <returns>Module title</returns>
         public string GetModuleTitle() => "HydroTech Autopilot";
 
+        /// <summary>
+        /// Unused
+        /// </summary>
+        /// <returns>Null</returns>
         public Callback<Rect> GetDrawModulePanelCallback() => null;
 
+        /// <summary>
+        /// Unused
+        /// </summary>
+        /// <returns>Empty string</returns>
         public string GetPrimaryField() => string.Empty;
 
+        /// <summary>
+        /// Used resources
+        /// </summary>
+        /// <returns>ElectricCharge</returns>
         public List<PartResourceDefinition> GetConsumedResources() => HTUtils.ElectrictyList;
         #endregion
 
         #region Functions
+        /// <summary>
+        /// Update function
+        /// </summary>
         private void Update()
         {
             if (!HighLogic.LoadedSceneIsFlight || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
@@ -61,12 +89,16 @@ namespace HydroTech
             else if (this.IsOnline) { this.State = AutopilotStatus.Idle; }
         }
 
+        /// <summary>
+        /// FixedUpdate function
+        /// </summary>
         private void FixedUpdate()
         {
             if (!HighLogic.LoadedSceneIsFlight || !this.IsOnline && this != this.vessel.GetMasterJeb() || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
             if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(HTUtils.ElectricChargeID, this.electricityConsumption * TimeWarp.fixedDeltaTime)) <= 0)
             {
+                //If out of EC
                 if (this.IsOnline)
                 {
                     this.vessel.FindPartModulesImplementing<HydroJebCore>().ForEach(m => m.State = AutopilotStatus.Offline);
@@ -76,8 +108,9 @@ namespace HydroTech
             {
                 if (!this.IsOnline)
                 {
+                    //If returning from offline mode
                     this.State = AutopilotStatus.Online;
-                    foreach (HydroJebCore jeb in this.vessel.FindPartModulesImplementing<HydroJebCore>())
+                    foreach (HydroJebCore jeb in this.vessel.parts.FindModulesImplementing<HydroJebCore>())
                     {
                         if (jeb == this) { continue; }
                         jeb.State = AutopilotStatus.Idle;
@@ -86,6 +119,9 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// OnDestroy function
+        /// </summary>
         private void OnDestroy()
         {
             if (HighLogic.LoadedSceneIsEditor) { HydroToolbarManager.Editor.RemoveEnabler(); }
@@ -93,6 +129,10 @@ namespace HydroTech
         #endregion
 
         #region Overrides
+        /// <summary>
+        /// Initializes module
+        /// </summary>
+        /// <param name="state">Current start state</param>
         public override void OnStart(StartState state)
         {
             if (HighLogic.LoadedSceneIsEditor)
@@ -109,6 +149,10 @@ namespace HydroTech
             }
         }
 
+        /// <summary>
+        /// Module info
+        /// </summary>
+        /// <returns>Info string</returns>
         public override string GetInfo()
         {
             StringBuilder sb = new StringBuilder("HydroJeb Autopilot Unit");
