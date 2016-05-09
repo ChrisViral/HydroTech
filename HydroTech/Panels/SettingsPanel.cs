@@ -52,7 +52,7 @@ namespace HydroTech.Panels
             }
             if (GUILayout.Button("Close"))
             {
-                HydroToolbarManager.Settings.SetFalse();
+                HydroToolbarManager.CloseSettings();
             }
             GUILayout.EndHorizontal();
         }

@@ -17,7 +17,6 @@ namespace HydroTech.Managers
 
             #region Fields
             internal ApplicationLauncherButton button;
-            private GameObject go;
             private EditorMainPanel panel;
             private bool added;
             private int enablers;
@@ -37,9 +36,7 @@ namespace HydroTech.Managers
             {
                 if (!this.added)
                 {
-                    this.go = new GameObject("EditorMainPanel", typeof(EditorMainPanel));
-                    DontDestroyOnLoad(this.go);
-                    this.panel = this.go.GetComponent<EditorMainPanel>();
+                    this.panel = go.AddComponent<EditorMainPanel>();
                     this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
                                   Empty, Empty, Empty, Empty, AppScenes.NEVER, HTUtils.LauncherIcon);
                     this.added = true;
@@ -52,7 +49,7 @@ namespace HydroTech.Managers
                 {
                     ApplicationLauncher.Instance.RemoveModApplication(this.button);
                     Destroy(this.button);
-                    Destroy(this.go);
+                    Destroy(this.panel);
                     this.added = false;
                 }
             }
@@ -95,7 +92,6 @@ namespace HydroTech.Managers
             #region Fields
             internal ApplicationLauncherButton button;
             private HydroJebCore core;
-            private GameObject go;
             private FlightMainPanel panel;
             private bool added, enabled;
             #endregion
@@ -114,9 +110,7 @@ namespace HydroTech.Managers
             {
                 if (!this.added)
                 {
-                    this.go = new GameObject("FlightMainPanel", typeof(FlightMainPanel));
-                    DontDestroyOnLoad(this.go);
-                    this.panel = this.go.GetComponent<FlightMainPanel>();
+                    this.panel = go.AddComponent<FlightMainPanel>();
                     this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
                                   Empty, Empty, SetActive, SetInactive, AppScenes.NEVER, HTUtils.LauncherIcon);
                     this.enabled = true;
@@ -130,7 +124,7 @@ namespace HydroTech.Managers
                 {
                     ApplicationLauncher.Instance.RemoveModApplication(this.button);
                     Destroy(this.button);
-                    Destroy(this.go);
+                    Destroy(this.panel);
                     this.core = null;
                     this.added = false;
                 }
@@ -140,21 +134,15 @@ namespace HydroTech.Managers
 
             private void SetActive()
             {
-                if (!this.enabled)
-                {
-                    this.enabled = true;
-                    this.button.SetTexture(HTUtils.LauncherIcon);
-                }
+                this.enabled = true;
+                this.button.SetTexture(HTUtils.LauncherIcon);
             }
 
             private void SetInactive()
             {
-                if (this.enabled)
-                {
-                    this.button.SetFalse();
-                    this.enabled = false;
-                    this.button.SetTexture(HTUtils.InactiveIcon);
-                }
+                this.button.SetFalse();
+                this.enabled = false;
+                this.button.SetTexture(HTUtils.InactiveIcon);
             }
 
             public bool IsActive(HydroJebCore jeb) => this.core == jeb;
@@ -205,8 +193,7 @@ namespace HydroTech.Managers
         public class SettingsToolbar
         {
             #region Fields
-            private ApplicationLauncherButton button;
-            private GameObject go;
+            internal ApplicationLauncherButton button;
             private SettingsPanel panel;
             private bool added;
             #endregion
@@ -224,9 +211,7 @@ namespace HydroTech.Managers
             {
                 if (!this.added)
                 {
-                    this.go = new GameObject("SettingsPanel", typeof(SettingsPanel));
-                    DontDestroyOnLoad(this.go);
-                    this.panel = this.go.GetComponent<SettingsPanel>();
+                    this.panel = go.GetComponent<SettingsPanel>();
                     this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
                                   Empty, Empty, Empty, Empty, AppScenes.SPACECENTER, HTUtils.LauncherIcon);
                     this.added = true;
@@ -239,16 +224,18 @@ namespace HydroTech.Managers
                 {
                     ApplicationLauncher.Instance.RemoveModApplication(this.button);
                     Destroy(this.button);
-                    Destroy(this.go);
+                    Destroy(this.panel);
                     this.added = false;
                 }
             }
 
             private void Empty() { }
-
-            public void SetFalse() => this.button.SetFalse();
             #endregion
         }
+
+        #region Static fields
+        private static GameObject go; //GameObject to which the main panels are attached
+        #endregion
 
         #region Static properties
         public static EditorToolbar Editor { get; private set; }
@@ -262,11 +249,18 @@ namespace HydroTech.Managers
         public static void CloseEditor() => Editor.button.SetFalse();
 
         public static void CloseFlight() => Flight.button.SetFalse();
+
+        public static void CloseSettings() => Settings.button.SetFalse();
         #endregion
 
         #region Functions
         private void Awake()
         {
+            if (go != null) { Destroy(this); return; }
+
+            go = new GameObject("HydroTechPanels");
+            DontDestroyOnLoad(go);
+
             Editor = new EditorToolbar();
             Flight = new FlightToolbar();
             Settings = new SettingsToolbar();
