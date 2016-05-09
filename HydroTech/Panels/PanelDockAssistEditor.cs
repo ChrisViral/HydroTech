@@ -30,7 +30,7 @@ namespace HydroTech.Panels
         /// <summary>
         /// Initiates window size and ID
         /// </summary>
-        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 300, 360, 300, 400), IDProvider.GetID<PanelDockAssistEditor>()) { }
+        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 300, 360, 300, 400), GUIUtils.GetID<PanelDockAssistEditor>()) { }
         #endregion
 
         #region Methods

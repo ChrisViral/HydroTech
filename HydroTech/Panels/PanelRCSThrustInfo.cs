@@ -28,7 +28,7 @@ namespace HydroTech.Panels
         /// Initializes window size and id, as well as current game state
         /// </summary>
         /// <param name="editor">If in the editor scene or not</param>
-        public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), IDProvider.GetID<PanelRCSThrustInfo>())
+        public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), GUIUtils.GetID<PanelRCSThrustInfo>())
         {
             this.editor = editor;
             this.activeRCS = this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS;

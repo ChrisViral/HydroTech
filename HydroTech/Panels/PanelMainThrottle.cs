@@ -23,7 +23,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelMainThrottle() : base(new Rect(100, 240, 250, 236), IDProvider.GetID<PanelMainThrottle>()) { }
+        public PanelMainThrottle() : base(new Rect(100, 240, 250, 236), GUIUtils.GetID<PanelMainThrottle>()) { }
         #endregion
 
         #region Overrides

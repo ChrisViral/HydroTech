@@ -50,7 +50,7 @@ namespace HydroTech.Panels
 
             this.pos = new Rect(Screen.width * 0.8f, Screen.height * 0.2f, 250, 50);
             this.drag = new Rect(0, 0, 250, 30);
-            this.id = IDProvider.GetID<EditorMainPanel>();
+            this.id = GUIUtils.GetID<EditorMainPanel>();
             this.close = HydroToolbarManager.CloseEditor;
         }
 

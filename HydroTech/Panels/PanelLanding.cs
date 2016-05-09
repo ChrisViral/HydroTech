@@ -99,7 +99,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelLanding() : base(new Rect(548, 80, 200, 184), IDProvider.GetID<PanelLanding>()) { }
+        public PanelLanding() : base(new Rect(548, 80, 200, 184), GUIUtils.GetID<PanelLanding>()) { }
         #endregion
 
         #region Overrides

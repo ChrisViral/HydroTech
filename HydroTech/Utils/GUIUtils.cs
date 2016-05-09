@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,14 +9,16 @@ namespace HydroTech.Utils
     /// </summary>
     public static class GUIUtils
     {
-        #region Fields
+        #region Static fields
         private static float f;     //Temporary float parsing field
+        private static readonly HashSet<int> ids = new HashSet<int>();                                              //ID cache
+        private static readonly Dictionary<Type, int> types = new Dictionary<Type, int>(12);                        //Type cache
         private static readonly Dictionary<Color, GUIStyle> buttonStyles = new Dictionary<Color, GUIStyle>();       //Buton storage
         private static readonly Dictionary<Color, GUIStyle> wrapButtonStyles = new Dictionary<Color, GUIStyle>();   //Wrapped button storage
         private static readonly Dictionary<Color, GUIStyle> labelStyles = new Dictionary<Color, GUIStyle>();        //Label storage
         #endregion
 
-        #region Properties
+        #region Static properties
         private static bool usingDefaultSkin;
         /// <summary>
         /// If the UI is using the default Unity skin
@@ -67,7 +70,29 @@ namespace HydroTech.Utils
         }
         #endregion
 
-        #region Methods
+        #region Static methods
+        /// <summary>
+        /// Provides a unique, distinct int id, for each type, for GUI window purposes
+        /// </summary>
+        /// <typeparam name="T">Type to get the id for</typeparam>
+        /// <returns></returns>
+        public static int GetID<T>()
+        {
+            Type t = typeof(T);
+            int id;
+            if (!types.TryGetValue(t, out id))  //Only create one if none exist for this type
+            {
+                do
+                {
+                    //Trying to minimize collisions and maintain randomness
+                    id = Guid.NewGuid().GetHashCode();
+                }
+                while (!ids.Add(id));   //Make sure id is unique
+                types.Add(t, id);
+            }
+            return id;
+        }
+
         /// <summary>
         /// Obtains the button style of the given text colour and wrap style
         /// </summary>
@@ -194,7 +219,7 @@ namespace HydroTech.Utils
         /// <returns>The modified string value of the entry field</returns>
         public static string NumericalEntryArea(string value, string label,float min, float max)
         {
-            GUILayout.Label(label, float.TryParse(value, out f) && CheckRange(f, min, max) ? Skin.label : ColouredLabel(XKCDColors.Red));
+            GUILayout.Label(label, Single.TryParse(value, out f) && CheckRange(f, min, max) ? Skin.label : ColouredLabel(XKCDColors.Red));
             return GUILayout.TextField(value, 20);
         }
         #endregion

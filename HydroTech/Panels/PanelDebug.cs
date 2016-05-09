@@ -42,7 +42,7 @@ namespace HydroTech.Panels
         /// <summary>
         /// Initiates window size and ID
         /// </summary>
-        public PanelDebug() : base(new Rect(Screen.width - 200, 0, 200, 0), IDProvider.GetID<PanelDebug>()) { }
+        public PanelDebug() : base(new Rect(Screen.width - 200, 0, 200, 0), GUIUtils.GetID<PanelDebug>()) { }
         #endregion
 
         #region Methods

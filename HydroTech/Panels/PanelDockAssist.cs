@@ -123,7 +123,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), IDProvider.GetID<PanelDockAssist>()) { }
+        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), GUIUtils.GetID<PanelDockAssist>()) { }
         #endregion
 
         #region Methods

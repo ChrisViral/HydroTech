@@ -51,7 +51,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelLandingInfo() : base(new Rect(548, 300, 200, 0), IDProvider.GetID<PanelLandingInfo>()) { }
+        public PanelLandingInfo() : base(new Rect(548, 300, 200, 0), GUIUtils.GetID<PanelLandingInfo>()) { }
         #endregion
 
         #region Methods

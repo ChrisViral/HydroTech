@@ -303,7 +303,7 @@ namespace HydroTech
             }
             else if (HighLogic.LoadedSceneIsFlight)
             {
-                this.id = IDProvider.GetID<ModuleDockAssist>();
+                this.id = GUIUtils.GetID<ModuleDockAssist>();
                 this.pos = new Rect(Screen.width * 0.5f, Screen.height * 0.45f, 250, 100);
                 this.drag = new Rect(0, 0, 250, 30);
                 GameEvents.onShowUI.Add(ShowUI);
