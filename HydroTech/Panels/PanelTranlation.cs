@@ -67,7 +67,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelTranslation() : base(new Rect(142, 475, 200, 260), IDProvider.GetID<PanelTranslation>(), "Auto Translation") { }
+        public PanelTranslation() : base(new Rect(142, 475, 200, 260), IDProvider.GetID<PanelTranslation>()) { }
         #endregion
 
         #region Overrides
@@ -75,7 +75,7 @@ namespace HydroTech.Panels
         {
             GUI.DragWindow(this.drag);
 
-            if (this.Settings) { DrawSettingsUI(); }
+            if (this.Settings) { DrawSettings(); }
             else
             {
                 GUILayout.Label("Translation direction");
@@ -88,11 +88,11 @@ namespace HydroTech.Panels
                 {
                     this.Settings = true;
                 }
-                if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
+                if (EngageButton(this.Engaged)) { this.Engaged = !this.Engaged; }
             }
         }
 
-        protected override void DrawSettingsUI()
+        protected override void DrawSettings()
         {
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
@@ -143,7 +143,7 @@ namespace HydroTech.Panels
             GUILayout.EndHorizontal();
             this.tempRespond = GUILayout.Toggle(this.tempRespond, "Respond to main throttle");
             this.tempHoldOrient = GUILayout.Toggle(this.tempHoldOrient, "Hold current orientation");
-            base.DrawSettingsUI();
+            base.DrawSettings();
         }
         #endregion
     }

@@ -119,11 +119,11 @@ namespace HydroTech.Panels
             }
         }
 
-        public override string Title => "Docking Autopilot";
+        public override string Title => "Docking Assistant";
         #endregion
 
         #region Constructor
-        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), IDProvider.GetID<PanelDockAssist>(), "Docking Assistant") { }
+        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), IDProvider.GetID<PanelDockAssist>()) { }
         #endregion
 
         #region Methods
@@ -140,7 +140,7 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginVertical();
-            if (this.Settings) { DrawSettingsUI(); }
+            if (this.Settings) { DrawSettings(); }
             else
             {
                 GUILayout.Label("Camera:");
@@ -158,12 +158,12 @@ namespace HydroTech.Panels
                 {
                     this.Settings = true;
                 }
-                if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
+                if (EngageButton(this.Engaged)) { this.Engaged = !this.Engaged; }
             }
             GUILayout.EndVertical();
         }
 
-        protected override void DrawSettingsUI()
+        protected override void DrawSettings()
         {
             GUILayout.Label("Angular acceleration (rad/s²):");
             this.angularAccText = GUILayout.TextField(this.angularAccText);
@@ -204,7 +204,7 @@ namespace HydroTech.Panels
                 }
             }
 
-            base.DrawSettingsUI();
+            base.DrawSettings();
         }
         #endregion
     }

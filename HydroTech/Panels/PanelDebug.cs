@@ -30,7 +30,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelDebug() : base(new Rect(Screen.width - 200, 0, 200, 0), IDProvider.GetID<PanelDebug>(), "Debug") { }
+        public PanelDebug() : base(new Rect(Screen.width - 200, 0, 200, 0), IDProvider.GetID<PanelDebug>()) { }
         #endregion
 
         #region Methods

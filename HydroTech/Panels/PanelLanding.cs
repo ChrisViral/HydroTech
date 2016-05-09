@@ -99,7 +99,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelLanding() : base(new Rect(548, 80, 200, 184), IDProvider.GetID<PanelLanding>(), "Landing Autopilot") { }
+        public PanelLanding() : base(new Rect(548, 80, 200, 184), IDProvider.GetID<PanelLanding>()) { }
         #endregion
 
         #region Overrides
@@ -119,7 +119,7 @@ namespace HydroTech.Panels
         {
             GUI.DragWindow(this.drag);
 
-            if (this.Settings) { DrawSettingsUI(); }
+            if (this.Settings) { DrawSettings(); }
             else
             {
                 GUILayout.Label($"Pod orientation: {(LA.vabPod ? "Up" : "Horizon")}");
@@ -165,13 +165,13 @@ namespace HydroTech.Panels
                     this.Settings = true;
                 }
                 this.panelInfo.Visible = GUILayout.Toggle(this.panelInfo.Visible, "Advanced info");
-                if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
+                if (EngageButton(this.Engaged)) { this.Engaged = !this.Engaged; }
                 GUILayout.Label("Status: " + LA.StatusString);
                 GUILayout.Label(LA.WarningString, GUIUtils.ColouredLabel(LA.WarningColor));
             }
         }
 
-        protected override void DrawSettingsUI()
+        protected override void DrawSettings()
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("Pod orientation: ");
@@ -246,7 +246,7 @@ namespace HydroTech.Panels
                 }
             }
 
-            base.DrawSettingsUI();
+            base.DrawSettings();
         }
         #endregion
     }

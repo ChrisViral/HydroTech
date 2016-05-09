@@ -17,7 +17,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 300, 360, 300, 400), IDProvider.GetID<PanelDockAssistEditor>(), "Docking Assistants") { }
+        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 300, 360, 300, 400), IDProvider.GetID<PanelDockAssistEditor>()) { }
         #endregion
 
         #region Methods

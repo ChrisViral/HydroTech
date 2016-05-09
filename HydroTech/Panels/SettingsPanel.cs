@@ -102,7 +102,6 @@ namespace HydroTech.Panels
             if (this.visible && !this.hid)
             {
                 GUI.skin = GUIUtils.Skin;
-
                 this.pos = GUIUtils.ClampedWindow(this.id, this.pos, Window, "HydroTech Settings");
             }
         }

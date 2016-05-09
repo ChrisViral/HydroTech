@@ -3,10 +3,16 @@ using UnityEngine;
 
 namespace HydroTech.Panels
 {
+    /// <summary>
+    /// Autopilot panel base class
+    /// </summary>
     public abstract class PanelAP : Panel
     {
         #region Properties
         protected bool settings;
+        /// <summary>
+        /// If the panel is currently in settings mode
+        /// </summary>
         protected virtual bool Settings
         {
             get { return this.settings; }
@@ -19,22 +25,38 @@ namespace HydroTech.Panels
         #endregion
 
         #region Abstract properties
+        /// <summary>
+        /// If this autopilot is currently engaged
+        /// </summary>
         protected abstract bool Engaged { get; set; }
         #endregion
 
         #region Constructor
-        protected PanelAP(Rect window, int id, string title) : base(window, id, title) { }
+        /// <summary>
+        /// Autopilot panel constructor, relays window information to base constructor
+        /// </summary>
+        /// <param name="window">Window rect</param>
+        /// <param name="id">Window ID</param>
+        protected PanelAP(Rect window, int id) : base(window, id) { }
         #endregion
 
         #region Methods
-        protected bool LayoutEngageBtn(bool engaged)
+        /// <summary>
+        /// A engaging/disengaging button
+        /// </summary>
+        /// <param name="engaged">If the autopilot is currently engaged</param>
+        /// <returns>The state of the button</returns>
+        protected bool EngageButton(bool engaged)
         {
             return GUILayout.Button(engaged ? "DISENGAGE" : "ENGAGE", GUIUtils.ButtonStyle(engaged ? XKCDColors.DeepRed : XKCDColors.Green));
         }
         #endregion
 
         #region Virtual methods
-        protected virtual void DrawSettingsUI()
+        /// <summary>
+        /// Draws the settings window
+        /// </summary>
+        protected virtual void DrawSettings()
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Ok")) { this.Settings = false; }

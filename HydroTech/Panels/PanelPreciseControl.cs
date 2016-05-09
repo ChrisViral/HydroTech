@@ -58,7 +58,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelPreciseControl() : base(new Rect(349, 60, 200, 122), IDProvider.GetID<PanelPreciseControl>(), "Precise Control") { }
+        public PanelPreciseControl() : base(new Rect(349, 60, 200, 122), IDProvider.GetID<PanelPreciseControl>()) { }
         #endregion
 
         #region Overrides
@@ -66,7 +66,7 @@ namespace HydroTech.Panels
         {
             GUI.DragWindow(this.drag);
 
-            if (this.Settings) { DrawSettingsUI(); }
+            if (this.Settings) { DrawSettings(); }
             else
             {
                 if (PC.byRate)
@@ -83,11 +83,11 @@ namespace HydroTech.Panels
                 {
                     this.Settings = true;
                 }
-                if (LayoutEngageBtn(this.Engaged)) { this.Engaged = !this.Engaged; }
+                if (EngageButton(this.Engaged)) { this.Engaged = !this.Engaged; }
             }
         }
 
-        protected override void DrawSettingsUI()
+        protected override void DrawSettings()
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("by Rate", this.tempByRate ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
@@ -124,7 +124,7 @@ namespace HydroTech.Panels
                 GUILayout.EndHorizontal();
             }
 
-            base.DrawSettingsUI();
+            base.DrawSettings();
         }
         #endregion
     }
