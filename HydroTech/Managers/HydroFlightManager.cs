@@ -7,52 +7,114 @@ using UnityEngine;
 
 namespace HydroTech.Managers
 {
+    /// <summary>
+    /// HydroTech general flight manager
+    /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class HydroFlightManager : MonoBehaviour
     {
         #region Instance
+        /// <summary>
+        /// Current instance
+        /// </summary>
         public static HydroFlightManager Instance { get; private set; }
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Current RCS calculator
+        /// </summary>
         public RCSCalculator ActiveRCS { get; private set; }
 
+        /// <summary>
+        /// Current active core
+        /// </summary>
         public HydroJebCore Active { get; private set; }
 
+        /// <summary>
+        /// All target cores on other vessels
+        /// </summary>
         public List<HydroJebCore> Targets { get; private set; }
 
+        /// <summary>
+        /// All cameras on this vessel
+        /// </summary>
         public List<ModuleDockAssistCam> ActiveCams { get; private set; }
 
+        /// <summary>
+        /// All cameras on nearby vessels
+        /// </summary>
         public List<ModuleDockAssistCam> NearbyCams { get; private set; }
 
+        /// <summary>
+        /// All targets on this vessel
+        /// </summary>
         public List<ModuleDockAssistTarget> ActiveTargets { get; private set; }
 
+        /// <summary>
+        /// All targets on nearby vessels
+        /// </summary>
         public List<ModuleDockAssistTarget> NearbyTargets { get; private set; }
 
+        /// <summary>
+        /// Current camera manager
+        /// </summary>
         public HydroCameraManager CameraManager { get; private set; }
 
+        /// <summary>
+        /// Current input manager
+        /// </summary>
         public HydroInputManager InputManager { get; private set; }
 
+        /// <summary>
+        /// Current docking autopilot
+        /// </summary>
         public APDockAssist DockingAutopilot { get; private set; }
 
+        /// <summary>
+        /// Current landing autopilot
+        /// </summary>
         public APLanding LandingAutopilot { get; private set; }
 
+        /// <summary>
+        /// Current precise control autopilot
+        /// </summary>
         public APPreciseControl PreciseControlAutopilot { get; private set; }
 
+        /// <summary>
+        /// Current translation autopilot
+        /// </summary>
         public APTranslation TranslationAutopilot { get; private set; }
 
+        /// <summary>
+        /// All current autopilots
+        /// </summary>
         public List<Autopilot> Autopilots { get; private set; }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// If the current core is the active one
+        /// </summary>
+        /// <param name="core">Core to check</param>
+        /// <returns>If the core is active</returns>
         public bool IsActiveJeb(HydroJebCore core) => this.Active == core;
 
+        /// <summary>
+        /// Pauses all autopilots
+        /// </summary>
         private void OnPause() => this.Autopilots.ForEach(ap => ap.OnGamePause());
 
+        /// <summary>
+        /// Resumes all autopilots
+        /// </summary>
         private void OnResume() => this.Autopilots.ForEach(ap => ap.OnGameResume());
         #endregion
 
         #region Functions
+        /// <summary>
+        /// Awake function
+        /// </summary>
         private void Awake()
         {
             if (Instance != null) { Destroy(this); return; }
@@ -84,6 +146,9 @@ namespace HydroTech.Managers
             GameEvents.onGameUnpause.Add(OnResume);
         }
 
+        /// <summary>
+        /// Start function
+        /// </summary>
         private void Start()
         {
             this.CameraManager.Start();
@@ -92,6 +157,9 @@ namespace HydroTech.Managers
             FlightMainPanel.Instance.Panels.ForEach(p => p.OnFlightStart());
         }
 
+        /// <summary>
+        /// OnDestroy function
+        /// </summary>
         private void OnDestroy()
         {
             if (Instance == this)
@@ -102,6 +170,9 @@ namespace HydroTech.Managers
             }
         }
 
+        /// <summary>
+        /// Update function
+        /// </summary>
         private void Update()
         {
             HydroToolbarManager.Flight.Update(this.Active);
@@ -109,6 +180,9 @@ namespace HydroTech.Managers
             this.InputManager.Update();
         }
 
+        /// <summary>
+        /// FixedUpdate function
+        /// </summary>
         private void FixedUpdate()
         {
             if (!FlightGlobals.ready) { return; }

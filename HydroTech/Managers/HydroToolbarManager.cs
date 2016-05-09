@@ -3,26 +3,37 @@ using HydroTech.Utils;
 using KSP.UI.Screens;
 using UnityEngine;
 using AppScenes = KSP.UI.Screens.ApplicationLauncher.AppScenes;
+using FromToAction = GameEvents.FromToAction<GameScenes, GameScenes>;
 
 namespace HydroTech.Managers
 {
+    /// <summary>
+    /// AppLauncher manager for HydroTech buttons
+    /// </summary>
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
     public class HydroToolbarManager : MonoBehaviour
     {
+        /// <summary>
+        /// Editor button manager
+        /// </summary>
         public class EditorToolbar
         {
             #region Constants
+            //Editor app scenes
             private const AppScenes editors = AppScenes.VAB | AppScenes.SPH;
             #endregion
 
             #region Fields
-            internal ApplicationLauncherButton button;
-            private EditorMainPanel panel;
-            private bool added;
-            private int enablers;
+            internal ApplicationLauncherButton button;  //Button
+            private EditorMainPanel panel;              //Panel
+            private bool added;                         //Added flag
+            private int enablers;                       //Active flag
             #endregion
 
             #region Constructors
+            /// <summary>
+            /// Initiates the toolbar manager
+            /// </summary>
             public EditorToolbar()
             {
                 GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
@@ -32,6 +43,9 @@ namespace HydroTech.Managers
             #endregion
 
             #region Methods
+            /// <summary>
+            /// Adds the button to the AppLauncher
+            /// </summary>
             private void AddButton()
             {
                 if (!this.added)
@@ -42,7 +56,10 @@ namespace HydroTech.Managers
                     this.added = true;
                 }
             }
-
+            
+            /// <summary>
+            /// Removes the button from the AppLauncher
+            /// </summary>
             private void RemoveButton()
             {
                 if (this.added)
@@ -54,9 +71,16 @@ namespace HydroTech.Managers
                 }
             }
 
+            /// <summary>
+            /// Empty filler method
+            /// </summary>
             private void Empty() { }
 
-            private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
+            /// <summary>
+            /// Checkup when changing scenes
+            /// </summary>
+            /// <param name="evnt">From/to scenes</param>
+            private void GameSceneChanging(FromToAction evnt)
             {
                 if (evnt.from == GameScenes.EDITOR)
                 {
@@ -66,6 +90,9 @@ namespace HydroTech.Managers
                 else if (evnt.to == GameScenes.EDITOR) { this.enablers = 0; }
             }
 
+            /// <summary>
+            /// Adds an active core to keep button active
+            /// </summary>
             public void AddEnabler()
             {
                 if (++this.enablers == 1)
@@ -75,6 +102,9 @@ namespace HydroTech.Managers
                 }
             }
 
+            /// <summary>
+            /// Removes an active core to keep button active
+            /// </summary>
             public void RemoveEnabler()
             {
                 if (--this.enablers == 0)
@@ -87,16 +117,22 @@ namespace HydroTech.Managers
             #endregion
         }
 
+        /// <summary>
+        /// Flight button manager
+        /// </summary>
         public class FlightToolbar
         {
             #region Fields
-            internal ApplicationLauncherButton button;
-            private HydroJebCore core;
-            private FlightMainPanel panel;
-            private bool added, enabled;
+            internal ApplicationLauncherButton button;  //Button
+            private HydroJebCore core;                  //Active HydroTechCore
+            private FlightMainPanel panel;              //Panel
+            private bool added, enabled;                //Visible flags
             #endregion
 
             #region Constructors
+            /// <summary>
+            /// Initiates the toolbar manager
+            /// </summary>
             public FlightToolbar()
             {
                 GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
@@ -106,6 +142,9 @@ namespace HydroTech.Managers
             #endregion
 
             #region Methods
+            /// <summary>
+            /// Adds the button to the AppLauncher
+            /// </summary>
             private void AddButton()
             {
                 if (!this.added)
@@ -118,6 +157,9 @@ namespace HydroTech.Managers
                 }
             }
 
+            /// <summary>
+            /// Removes the button from the AppLauncher
+            /// </summary>
             private void RemoveButton()
             {
                 if (this.added)
@@ -130,14 +172,23 @@ namespace HydroTech.Managers
                 }
             }
 
+            /// <summary>
+            /// Empty filler method
+            /// </summary>
             private void Empty() { }
 
+            /// <summary>
+            /// OnActive event delegate
+            /// </summary>
             private void SetActive()
             {
                 this.enabled = true;
                 this.button.SetTexture(HTUtils.LauncherIcon);
             }
 
+            /// <summary>
+            /// OnInactive event delegate
+            /// </summary>
             private void SetInactive()
             {
                 this.button.SetFalse();
@@ -145,9 +196,18 @@ namespace HydroTech.Managers
                 this.button.SetTexture(HTUtils.InactiveIcon);
             }
 
+            /// <summary>
+            /// If a given core is the active core
+            /// </summary>
+            /// <param name="jeb">Core to check</param>
+            /// <returns>If the core is the active one</returns>
             public bool IsActive(HydroJebCore jeb) => this.core == jeb;
 
-            private void GameSceneChanging(GameEvents.FromToAction<GameScenes, GameScenes> evnt)
+            /// <summary>
+            /// Checkup when changing scenes
+            /// </summary>
+            /// <param name="evnt">From/to scenes</param>
+            private void GameSceneChanging(FromToAction evnt)
             {
                 if (evnt.from == GameScenes.FLIGHT && this.core != null)
                 {
@@ -156,6 +216,10 @@ namespace HydroTech.Managers
                 }
             }
 
+            /// <summary>
+            /// Update function
+            /// </summary>
+            /// <param name="jeb">Core to update for</param>
             internal void Update(HydroJebCore jeb)
             {
                 if (this.core != jeb)
@@ -190,15 +254,21 @@ namespace HydroTech.Managers
             #endregion
         }
 
+        /// <summary>
+        /// Settings button manager
+        /// </summary>
         public class SettingsToolbar
         {
             #region Fields
-            internal ApplicationLauncherButton button;
-            private SettingsPanel panel;
-            private bool added;
+            internal ApplicationLauncherButton button;  //Button
+            private SettingsPanel panel;                //Panel
+            private bool added;                         //Added flag
             #endregion
 
             #region Constructors
+            /// <summary>
+            /// Initiates the toolbar manager
+            /// </summary>
             public SettingsToolbar()
             {
                 GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
@@ -207,6 +277,9 @@ namespace HydroTech.Managers
             #endregion
 
             #region Methods
+            /// <summary>
+            /// Adds the button to the AppLauncher
+            /// </summary>
             private void AddButton()
             {
                 if (!this.added)
@@ -218,6 +291,9 @@ namespace HydroTech.Managers
                 }
             }
 
+            /// <summary>
+            /// Removes the button from the AppLauncher
+            /// </summary>
             private void RemoveButton()
             {
                 if (this.added)
@@ -229,6 +305,9 @@ namespace HydroTech.Managers
                 }
             }
 
+            /// <summary>
+            /// Empty filler method
+            /// </summary>
             private void Empty() { }
             #endregion
         }
@@ -238,22 +317,43 @@ namespace HydroTech.Managers
         #endregion
 
         #region Static properties
+        /// <summary>
+        /// Current editor toolbar
+        /// </summary>
         public static EditorToolbar Editor { get; private set; }
 
+        /// <summary>
+        /// Current flight toolbar
+        /// </summary>
         public static FlightToolbar Flight { get; private set; }
 
+        /// <summary>
+        /// Current settings toolbar
+        /// </summary>
         public static SettingsToolbar Settings { get; private set; }
         #endregion
 
         #region Static methods
+        /// <summary>
+        /// Closes the editor button
+        /// </summary>
         public static void CloseEditor() => Editor.button.SetFalse();
 
+        /// <summary>
+        /// Closes the flight button
+        /// </summary>
         public static void CloseFlight() => Flight.button.SetFalse();
 
+        /// <summary>
+        /// Closes the settings button
+        /// </summary>
         public static void CloseSettings() => Settings.button.SetFalse();
         #endregion
 
         #region Functions
+        /// <summary>
+        /// Initialization - Awake function
+        /// </summary>
         private void Awake()
         {
             if (go != null) { Destroy(this); return; }
