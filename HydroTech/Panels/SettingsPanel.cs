@@ -4,38 +4,32 @@ using UnityEngine;
 
 namespace HydroTech.Panels
 {
+    /// <summary>
+    /// Main settings panel
+    /// </summary>
     public class SettingsPanel : MonoBehaviour
     {
         #region Instance
+        /// <summary>
+        /// Current panel instance
+        /// </summary>
         public static SettingsPanel Instance { get; private set; }
         #endregion
 
         #region Fields
-        private Rect pos, drag;
-        private bool visible, hid;
-        private int id;
+        private Rect pos, drag;     //Window position
+        private bool visible, hid;  //Window visibility
+        private int id;             //Window ID
         #endregion
 
         #region Methods
-        internal void ShowPanel()
-        {
-            if (!this.visible && !this.hid) { this.visible = true; }
-        }
+        internal void ShowPanel() => this.visible = true;
 
-        internal void HidePanel()
-        {
-            if (this.visible) { this.visible = false; }
-        }
+        internal void HidePanel() => this.visible = false;
 
-        private void ShowUI()
-        {
-            this.hid = false;
-        }
+        private void ShowUI() => this.hid = false;
 
-        private void HideUI()
-        {
-            this.hid = true;
-        }
+        private void HideUI() => this.hid = true;
 
         private void Window(int id)
         {
@@ -67,6 +61,7 @@ namespace HydroTech.Panels
             this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 50);
             this.drag = new Rect(0, 0, 250, 30);
             this.id = IDProvider.GetID<SettingsPanel>();
+
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
             GameEvents.onGUIAstronautComplexSpawn.Add(HideUI);

@@ -106,5 +106,18 @@ namespace HydroTech.Utils
             return Vector3.zero;
         }
         #endregion
+
+        #region PartExtensions
+        public static IEnumerable<T> FindModulesImplementing<T>(this IEnumerable<Part> parts) where T : PartModule
+        {
+            foreach (Part p in parts)
+            {
+                foreach (PartModule pm in p.Modules)
+                {
+                    if (pm is T) { yield return (T)pm; }
+                }
+            }
+        } 
+        #endregion
     }
 }

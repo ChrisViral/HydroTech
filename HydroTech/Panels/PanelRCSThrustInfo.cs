@@ -5,19 +5,29 @@ using UnityEngine;
 
 namespace HydroTech.Panels
 {
+    /// <summary>
+    /// RCS thrust info panel
+    /// </summary>
     public class PanelRCSThrustInfo : Panel
     {
         #region Fields         
-        public bool showRotation = true;
-        private readonly bool editor;
-        private readonly RCSCalculator activeRCS;
+        public bool showRotation = true;            //GUI, showing rotation/translation
+        private readonly bool editor;               //If in the editor scene or not
+        private readonly RCSCalculator activeRCS;   //Current RCS calculator
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Panel title
+        /// </summary>
         public override string Title => "RCS Info";
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Initializes window size and id, as well as current game state
+        /// </summary>
+        /// <param name="editor">If in the editor scene or not</param>
         public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), IDProvider.GetID<PanelRCSThrustInfo>())
         {
             this.editor = editor;
@@ -26,18 +36,22 @@ namespace HydroTech.Panels
         #endregion
 
         #region Methods
-        public void ShowInEditor()
-        {
-            this.Visible = true;
-        }
+        /// <summary>
+        /// Editor toggle on
+        /// </summary>
+        public void ShowInEditor() => this.Visible = true;
 
-        public void HideInEditor()
-        {
-            this.Visible = false;
-        }
+        /// <summary>
+        /// EDitor toggle off
+        /// </summary>
+        public void HideInEditor() => this.Visible = false;
         #endregion
 
         #region Overrides
+        /// <summary>
+        /// Window function
+        /// </summary>
+        /// <param name="id">Window ID</param>
         protected override void Window(int id)
         {
             GUI.DragWindow(this.drag);
