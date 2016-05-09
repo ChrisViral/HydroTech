@@ -81,11 +81,11 @@ namespace HydroTech.Panels
             {
                 GUI.skin = GUIUtils.Skin;
 
-                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, this.Title, GUILayout.ExpandHeight(true)));
+                this.pos = GUIUtils.ClampedWindow(this.id, this.pos, Window, this.Title, GUILayout.ExpandHeight(true));
 
                 foreach (Panel p in this.Panels)
                 {
-                    if (p.Visible) { p.DrawGUI(); }
+                    if (p.Visible) { p.Draw(); }
                 }
             }
         }

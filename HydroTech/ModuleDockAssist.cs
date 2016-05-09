@@ -193,7 +193,7 @@ namespace HydroTech
             if (this.visible && !this.hid)
             {
                 GUI.skin = GUIUtils.Skin;
-                this.pos = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.pos, Window, "Rename Part"));
+                this.pos = GUIUtils.ClampedWindow(this.id, this.pos, Window, "Rename Part");
             }
         }
         #endregion

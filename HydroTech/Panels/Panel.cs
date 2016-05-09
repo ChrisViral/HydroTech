@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+﻿using HydroTech.Utils;
+using UnityEngine;
 
 namespace HydroTech.Panels
 {
     public abstract class Panel
     {
         #region Fields
-        protected Rect window;
-        protected readonly Rect drag;
+        protected Rect window, drag;
         private readonly int id;
         private readonly string title;
         #endregion
@@ -30,15 +30,9 @@ namespace HydroTech.Panels
         #endregion
 
         #region Methods
-        public void ResetHeight()
-        {
-            this.window.height = 0;
-        }
+        public void ResetHeight() => this.window.height = 0;
 
-        internal void DrawGUI()
-        {
-            this.window = KSPUtil.ClampRectToScreen(GUILayout.Window(this.id, this.window, Window, this.title));
-        }
+        internal void Draw() => this.window = GUIUtils.ClampedWindow(this.id, this.window, Window, this.title);
         #endregion
 
         #region Abstract Methods
@@ -46,10 +40,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Virtual methods
-        public virtual void OnFlightStart()
-        {
-            this.Visible = false;
-        }
+        public virtual void OnFlightStart() { }
 
         public virtual void OnUpdate() { }
         #endregion

@@ -153,6 +153,20 @@ namespace HydroTech.Utils
         }
 
         /// <summary>
+        /// Creates a GUILayout window clamped to the screen
+        /// </summary>
+        /// <param name="id">Integer ID of the window</param>
+        /// <param name="rect">Window position Rect</param>
+        /// <param name="function">Draw function</param>
+        /// <param name="title">Window title</param>
+        /// <param name="options">GUILayout option parameters</param>
+        /// <returns>The new position Rect</returns>
+        public static Rect ClampedWindow(int id, Rect rect, GUI.WindowFunction function, string title, params GUILayoutOption[] options)
+        {
+            return KSPUtil.ClampRectToScreen(GUILayout.Window(id, rect, function, title, options));
+        }
+
+        /// <summary>
         /// Checks if the passed float is within the specified range, inclusively
         /// </summary>
         /// <param name="f">Float to check</param>
