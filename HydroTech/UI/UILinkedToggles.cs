@@ -68,10 +68,11 @@ namespace HydroTech.UI
         }
 
         #region Fields
-        private readonly Callback<T> onShow, onHide;                            //On Show/Hide callbacks
-        private readonly List<Toggle> toggles = new List<Toggle>();             //List of all current toggles
-        private readonly Dictionary<T, int> indexes = new Dictionary<T, int>(); //Dictionary of values/indexes, to ensure injectivity
-        private readonly GUIStyle normal, active;                               //Normal/Selected GUIStyles
+        private readonly Func<T, string> getName;           //Function to obtain string toggle name from T
+        private readonly GUIStyle normal, active;           //Normal/Selected GUIStyles
+        private readonly Callback<T> onShow, onHide;        //On Show/Hide callbacks
+        private List<Toggle> toggles = new List<Toggle>();  //List of all current toggles
+        private Dictionary<T, Toggle> dict = new Dictionary<T, Toggle>(); //Dictionary of values/indexes, to ensure uniqueness
         #endregion
 
         #region Properties
@@ -85,12 +86,14 @@ namespace HydroTech.UI
         /// <summary>
         /// Creates a new blank UILinkedToggles
         /// </summary>
+        /// <param name="getName">Function to obtain a string name for the toggle from a <typeparamref name="T"/></param>
         /// <param name="normalStyle">Normal GUIStyle</param>
         /// <param name="activeStyle">SelectedGUIStyle</param>
         /// <param name="onShow">Callback when selecting a toggle</param>
         /// <param name="onHide">Callback when hiding a toggle</param>
-        public UILinkedToggles(GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide)
+        public UILinkedToggles(Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide)
         {
+            this.getName = getName;
             this.normal = normalStyle;
             this.active = activeStyle;
             this.onShow = onShow;
@@ -106,18 +109,19 @@ namespace HydroTech.UI
         /// <param name="activeStyle">SelectedGUIStyle</param>
         /// <param name="onShow">Callback when selecting a toggle</param>
         /// <param name="onHide">Callback when hiding a toggle</param>
-        public UILinkedToggles(IEnumerable<T> collection, Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide): this(normalStyle, activeStyle, onShow, onHide)
+        public UILinkedToggles(IEnumerable<T> collection, Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide)
+            : this(getName, normalStyle, activeStyle, onShow, onHide)
         {
             if (collection == null) { throw new ArgumentNullException(nameof(collection), "Cannot initialize with null collection"); }
             if (getName == null)    { throw new ArgumentNullException(nameof(getName), "Name getter function cannot be null"); }
-
-            int i = 0;
+            
             foreach (T t in collection)
             {
-                if (this.indexes.ContainsKey(t)) { continue; }  //Skip if already added
+                if (this.dict.ContainsKey(t)) { continue; }  //Skip if already added
 
-                this.toggles.Add(new Toggle(getName(t), t, this));
-                this.indexes.Add(t, i++);
+                Toggle toggle = new Toggle(getName(t), t, this);
+                this.toggles.Add(toggle);
+                this.dict.Add(t, toggle);
             }
         }
         #endregion
@@ -127,7 +131,7 @@ namespace HydroTech.UI
         /// Draws the UILinkedToggles
         /// </summary>
         /// <returns>The current selected value</returns>
-        public T DrawUI()
+        public T Draw()
         {
             for (int i = 0; i < this.toggles.Count; i++)
             {
@@ -147,24 +151,23 @@ namespace HydroTech.UI
         }
 
         /// <summary>
-        /// Adds a new Toggle to the list
+        /// Update the backup list of toggles with a newer reference list. Old toggles are deleted, new toggles are added, toggles already present are kept the same.
         /// </summary>
-        /// <param name="name">Name of the Toggle</param>
-        /// <param name="value">Value of the Toggle</param>
-        public void AddToggle(string name, T value)
+        /// <param name="reference">Reference list to update with.</param>
+        public void Update(List<T> reference)
         {
-            this.indexes.Add(value, this.toggles.Count);        //Throws if adding dupplicates
-            this.toggles.Add(new Toggle(name, value, this));
-        }
+            List<Toggle> toggles = new List<Toggle>(reference.Count);
+            Dictionary<T, Toggle> dict = new Dictionary<T, Toggle>(reference.Count);
+            foreach (T t in reference)
+            {
+                Toggle toggle;
+                if (!this.dict.TryGetValue(t, out toggle)) { toggle = new Toggle(this.getName(t), t, this); }
+                toggles.Add(toggle);
+                dict.Add(t, toggle);
+            }
 
-        /// <summary>
-        /// Removes the first Toggle to have the given value
-        /// </summary>
-        /// <param name="value">Value of the Toggle to find</param>
-        public void RemoveToggle(T value)
-        {
-            this.toggles.RemoveAt(this.indexes[value]);
-            this.indexes.Remove(value);
+            this.toggles = toggles;
+            this.dict = dict;
         }
         #endregion
     }

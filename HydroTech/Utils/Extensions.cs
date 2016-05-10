@@ -27,13 +27,12 @@ namespace HydroTech.Utils
                 coreCache.Clear();
                 lastFixedTime = Time.fixedTime;
             }
-
-            Guid vesselKey = vessel.id;
+            
             HydroJebCore jeb;
-            if (!coreCache.TryGetValue(vesselKey, out jeb))
+            if (!coreCache.TryGetValue(vessel.id, out jeb))
             {
-                jeb = vessel.FindPartModulesImplementing<HydroJebCore>().FirstOrDefault();
-                if (jeb != null) { coreCache.Add(vesselKey, jeb); }
+                jeb = vessel.FindModulesImplementing<HydroJebCore>().FirstOrDefault();
+                if (jeb != null) { coreCache.Add(vessel.id, jeb); }
             }
             return jeb;
         }
@@ -53,6 +52,14 @@ namespace HydroTech.Utils
         /// <param name="action">ActionGroup to set the state for</param>
         /// <param name="active">State to set the ActionGroup to</param>
         public static void SetState(this Vessel vessel, KSPActionGroup action, bool active) => vessel.ActionGroups.SetGroup(action, active);
+
+        /// <summary>
+        /// Returns all the PartModules implementing <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">Implementation type to look for</typeparam>
+        /// <param name="vessel">Vessel to search</param>
+        /// <returns>Streaming enumerable of the found <typeparamref name="T"/></returns>
+        public static IEnumerable<T> FindModulesImplementing<T>(this Vessel vessel) where T : PartModule => vessel.parts.FindModulesImplementing<T>();
         #endregion
 
         #region CelestialBodyExtensions

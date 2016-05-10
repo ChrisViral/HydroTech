@@ -28,9 +28,6 @@ namespace HydroTech.Panels
         #endregion
 
         #region Fields
-        private UILinkedToggles<Vessel> vessels;
-        private UILinkedToggles<ModuleDockAssistCam> cams;
-        private UILinkedToggles<ModuleDockAssistTarget> targets;
         protected Vessel targetVessel;
         protected string accText;
         protected string angularAccText;
@@ -45,6 +42,12 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
+        public UILinkedToggles<HydroJebCore> TargetVessels { get; }
+
+        public UILinkedToggles<ModuleDockAssistCam> Cameras { get; }
+
+        public UILinkedToggles<ModuleDockAssistTarget> Targets { get; }
+
         private ModuleDockAssist PreviewPart { get; set; }
 
         private bool ChoosingCamera { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Panels;
@@ -34,22 +35,12 @@ namespace HydroTech.Managers
         /// <summary>
         /// All target cores on other vessels
         /// </summary>
-        public List<HydroJebCore> Targets { get; private set; }
+        public List<HydroJebCore> TargetVessels { get; private set; }
 
         /// <summary>
         /// All cameras on this vessel
         /// </summary>
         public List<ModuleDockAssistCam> ActiveCams { get; private set; }
-
-        /// <summary>
-        /// All cameras on nearby vessels
-        /// </summary>
-        public List<ModuleDockAssistCam> NearbyCams { get; private set; }
-
-        /// <summary>
-        /// All targets on this vessel
-        /// </summary>
-        public List<ModuleDockAssistTarget> ActiveTargets { get; private set; }
 
         /// <summary>
         /// All targets on nearby vessels
@@ -120,12 +111,9 @@ namespace HydroTech.Managers
             if (Instance != null) { Destroy(this); return; }
 
             Instance = this;
-
             this.ActiveRCS = new RCSCalculator();
-            this.Targets = new List<HydroJebCore>();
+            this.TargetVessels = new List<HydroJebCore>();
             this.ActiveCams = new List<ModuleDockAssistCam>();
-            this.NearbyCams = new List<ModuleDockAssistCam>();
-            this.ActiveTargets = new List<ModuleDockAssistTarget>();
             this.NearbyTargets = new List<ModuleDockAssistTarget>();
 
             this.CameraManager = new HydroCameraManager();
@@ -187,33 +175,31 @@ namespace HydroTech.Managers
         {
             if (!FlightGlobals.ready) { return; }
 
-            if (this.Targets.Count != 0) { this.Targets.Clear(); }
-            if (this.ActiveCams.Count != 0) { this.ActiveCams.Clear(); }
-            if (this.NearbyCams.Count != 0) { this.NearbyCams.Clear(); }
-            if (this.ActiveTargets.Count != 0) { this.ActiveTargets.Clear(); }
+            if (this.TargetVessels.Count != 0) { this.TargetVessels.Clear(); }
+            if (this.ActiveCams.Count != 0)    { this.ActiveCams.Clear(); }
             if (this.NearbyTargets.Count != 0) { this.NearbyTargets.Clear(); }
 
-            foreach (Vessel vessel in FlightGlobals.Vessels)
+            foreach (Vessel vessel in FlightGlobals.Vessels.Where(v => v.loaded))
             {
                 HydroJebCore jeb = vessel.GetMasterJeb();
-                List<ModuleDockAssistCam> cams = vessel.FindPartModulesImplementing<ModuleDockAssistCam>();
-                List<ModuleDockAssistTarget> targets = vessel.FindPartModulesImplementing<ModuleDockAssistTarget>();
                 if (jeb != null)
                 {
                     if (vessel.isActiveVessel)
                     {
                         this.Active = jeb;
-                        this.ActiveCams.AddRange(cams);
-                        this.ActiveTargets.AddRange(targets);
+                        this.ActiveCams.AddRange(vessel.FindModulesImplementing<ModuleDockAssistCam>());
                     }
                     else
                     {
-                        this.Targets.Add(jeb);
-                        this.NearbyCams.AddRange(cams);
-                        this.NearbyTargets.AddRange(targets);
+                        this.TargetVessels.Add(jeb);
+                        this.NearbyTargets.AddRange(vessel.FindModulesImplementing<ModuleDockAssistTarget>());
                     }
                 }
             }
+
+            FlightMainPanel.Instance.DockAssist.TargetVessels.Update(this.TargetVessels);
+            FlightMainPanel.Instance.DockAssist.Cameras.Update(this.ActiveCams);
+            FlightMainPanel.Instance.DockAssist.Targets.Update(this.NearbyTargets);
 
             this.ActiveRCS.OnUpdate(FlightGlobals.ActiveVessel);
             this.Autopilots.ForEach(ap => ap.OnUpdate());

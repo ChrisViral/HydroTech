@@ -181,7 +181,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APDockAssist()
         {
-            this.jebsTargetVessel = new SubList<HydroJebCore>(HydroFlightManager.Instance.Targets, IsJebTargetVessel);
+            this.jebsTargetVessel = new SubList<HydroJebCore>(HydroFlightManager.Instance.TargetVessels, IsJebTargetVessel);
         }
         #endregion
 
