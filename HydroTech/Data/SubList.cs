@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using static System.Linq.Enumerable;
 
 namespace HydroTech.Data
 {
@@ -22,11 +22,13 @@ namespace HydroTech.Data
         }
         #endregion
 
+        #region Virtual methods
         public virtual void OnUpdate()
         {
             //I know this means a lot of wasted memory, but I gotta see if its really necessary first
             Clear();
             AddRange(this.parentList.Where(i => this.requirement(i)));
         }
+        #endregion
     }
 }

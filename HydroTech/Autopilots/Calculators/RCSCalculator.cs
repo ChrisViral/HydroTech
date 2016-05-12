@@ -7,8 +7,8 @@ namespace HydroTech.Autopilots.Calculators
     public class RCSCalculator : VesselInfoCalculatorBase
     {
         #region Fields
-        public Vector6 maxAcc = new Vector6();
-        public Vector6 maxAngularAcc = new Vector6();
+        public Vector6 maxAcc;
+        public Vector6 maxAngularAcc;
         public Vector6 maxForce = new Vector6();
         public Vector6 maxTorque = new Vector6();
         #endregion

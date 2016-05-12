@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using HydroTech.Extensions;
 using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Extensions.VesselExtensions;
+using static HydroTech.Extensions.PartExtensions;
+using static HydroTech.Utils.HTUtils;
 
 namespace HydroTech
 {
@@ -73,7 +75,7 @@ namespace HydroTech
         /// Used resources
         /// </summary>
         /// <returns>ElectricCharge</returns>
-        public List<PartResourceDefinition> GetConsumedResources() => HTUtils.ElectrictyList;
+        public List<PartResourceDefinition> GetConsumedResources() => ElectrictyList;
         #endregion
 
         #region Functions
@@ -97,7 +99,7 @@ namespace HydroTech
         {
             if (!HighLogic.LoadedSceneIsFlight || !this.IsOnline && this != this.vessel.GetMasterJeb() || !this.vessel.loaded || !this.vessel.IsControllable) { return; }
 
-            if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(HTUtils.ElectricChargeID, this.electricityConsumption * TimeWarp.fixedDeltaTime)) <= 0)
+            if ((CheatOptions.InfiniteElectricity ? 1 : this.part.RequestResource(ElectricChargeID, this.electricityConsumption * TimeWarp.fixedDeltaTime)) <= 0)
             {
                 //If out of EC
                 if (this.IsOnline)

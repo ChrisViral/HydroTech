@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using HydroTech.Autopilots.Calculators;
 using UnityEngine;
+using static System.Linq.Enumerable;
 using static UnityEngine.Mathf;
 using Debug = UnityEngine.Debug;
 

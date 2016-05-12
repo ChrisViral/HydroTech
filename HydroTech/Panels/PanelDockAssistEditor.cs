@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using HydroTech.Extensions;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Extensions.PartExtensions;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -30,7 +30,7 @@ namespace HydroTech.Panels
         /// <summary>
         /// Initiates window size and ID
         /// </summary>
-        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 300, 360, 300, 400), GUIUtils.GetID<PanelDockAssistEditor>()) { }
+        public PanelDockAssistEditor() : base(new Rect((Screen.width * 0.95f) - 300, 360, 300, 400), GetID<PanelDockAssistEditor>()) { }
         #endregion
 
         #region Methods
@@ -73,7 +73,7 @@ namespace HydroTech.Panels
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
 
-                GUIUtils.CenteredButton("Apply", assist.SetName, string.IsNullOrEmpty(assist.TempName) ? GUIUtils.ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
+                CenteredButton("Apply", assist.SetName, string.IsNullOrEmpty(assist.TempName) ? ButtonStyle(XKCDColors.DeepRed) : GUI.skin.button, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
             }
         }
         #endregion

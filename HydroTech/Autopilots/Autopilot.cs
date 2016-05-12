@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using HydroTech.Autopilots.Calculators;
-using HydroTech.Extensions;
+﻿using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static System.Linq.Enumerable;
+using static HydroTech.Extensions.VesselExtensions;
 
 namespace HydroTech.Autopilots
 {

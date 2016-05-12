@@ -1,10 +1,10 @@
 ﻿using HydroTech.Autopilots.Calculators;
 using HydroTech.Data;
-using HydroTech.Extensions;
 using HydroTech.Managers;
 using HydroTech.Panels;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Extensions.VesselExtensions;
+using static HydroTech.Utils.HTUtils;
 
 namespace HydroTech.Autopilots
 {
@@ -317,7 +317,7 @@ namespace HydroTech.Autopilots
                     }
                 }
             }
-            HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+            CamToVesselTrans(ctrlState, this.Cam);
         }
 
         private bool IsJebTargetVessel(Vessel vessel)
@@ -405,15 +405,15 @@ namespace HydroTech.Autopilots
                 if (this.CamView && !this.AutoOrient)
                 {
                     FlightGlobals.ActiveVessel.SetState(KSPActionGroup.SAS, false);
-                    HTUtils.CamToVesselRot(ctrlState, this.Cam);
+                    CamToVesselRot(ctrlState, this.Cam);
                 }
                 bool killingRelV = this.KillRelV && ctrlState.X == 0 && ctrlState.Y == 0 && ctrlState.Z == 0;
                 if (killingRelV)
                 {
                     DriveKillRelV(ctrlState);
-                    HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                    CamToVesselTrans(ctrlState, this.Cam);
                 }
-                else if (this.CamView) { HTUtils.CamToVesselTrans(ctrlState, this.Cam); }
+                else if (this.CamView) { CamToVesselTrans(ctrlState, this.Cam); }
             }
             else //!Manual
             {
@@ -430,18 +430,18 @@ namespace HydroTech.Autopilots
                         if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < 0.01f)
                         {
                             DriveFinalStage(ctrlState, SwitchTransformCalculator.VectorTransform(r, this.Target.Right, this.Target.Down, this.Target.Dir), this.RelV);
-                            HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                            CamToVesselTrans(ctrlState, this.Cam);
                         }
                         else
                         {
                             DriveKillRelV(ctrlState);
-                            HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                            CamToVesselTrans(ctrlState, this.Cam);
                         }
                     }
                     else
                     {
                         DriveKillRelV(ctrlState);
-                        HTUtils.CamToVesselTrans(ctrlState, this.Cam);
+                        CamToVesselTrans(ctrlState, this.Cam);
                         ctrlState.yaw = 0;
                         ctrlState.roll = 0;
                         ctrlState.pitch = 0;

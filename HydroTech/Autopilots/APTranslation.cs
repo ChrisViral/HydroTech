@@ -1,7 +1,7 @@
 ﻿using HydroTech.Autopilots.Calculators;
-using HydroTech.Extensions;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Extensions.EnumExtensions;
+using static HydroTech.Extensions.VesselExtensions;
 
 namespace HydroTech.Autopilots
 {
@@ -70,10 +70,7 @@ namespace HydroTech.Autopilots
         #endregion
 
         #region Methods
-        private Vector3 GetVector(TranslationDirection dir)
-        {
-            return dir != TranslationDirection.ADVANCED ? dir.GetUnitVector() : this.thrustVector;
-        }
+        private Vector3 GetVector(TranslationDirection dir) => dir != TranslationDirection.ADVANCED ? dir.GetUnitVector() : this.thrustVector;
         #endregion
 
         #region Overrides

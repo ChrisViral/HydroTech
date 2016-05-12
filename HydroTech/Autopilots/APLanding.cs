@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using HydroTech.Autopilots.Calculators;
-using HydroTech.Extensions;
 using HydroTech.Managers;
 using HydroTech.Panels;
-using HydroTech.Utils;
 using UnityEngine;
+using static System.Linq.Enumerable;
+using static HydroTech.Extensions.CelestialBodyExtensions;
+using static HydroTech.Extensions.VesselExtensions;
+using static HydroTech.Utils.HTUtils;
 
 namespace HydroTech.Autopilots
 {
@@ -196,8 +197,8 @@ namespace HydroTech.Autopilots
 
         private void DriveHorizontalDec(FlightCtrlState ctrlState)
         {
-            ctrlState.X = HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(0, SurfXSpeed * 5), -1, 1);
-            SetTranslationY(ctrlState, HTUtils.Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * 5), -1, 1));
+            ctrlState.X = Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(0, SurfXSpeed * 5), -1, 1);
+            SetTranslationY(ctrlState, Clamp(HydroFlightManager.Instance.ActiveRCS.GetThrustRateFromAcc3(this.vabPod ? 1 : 2, this.SurfYSpeed * 5), -1, 1));
         }
 
         private void DriveHorizontalBrake(FlightCtrlState ctrlState)
@@ -209,7 +210,7 @@ namespace HydroTech.Autopilots
         private void DriveFinalDescent(FlightCtrlState ctrlState)
         {
             DriveHorizontalDec(ctrlState);
-            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + ((this.safeTouchDownSpeed + (float)ActiveVessel.verticalSpeed) / this.TWR), -1, 0));
+            SetTranslationZ(ctrlState, Clamp(-this.hoverThrustRate + ((this.safeTouchDownSpeed + (float)ActiveVessel.verticalSpeed) / this.TWR), -1, 0));
         }
 
         private void DriveAvoidContact(FlightCtrlState ctrlState)
@@ -225,7 +226,7 @@ namespace HydroTech.Autopilots
         private void DriveHoverManeuver(FlightCtrlState ctrlState)
         {
             float modifier = Mathf.Max(this.AltDiff, -10) + (float)ActiveVessel.verticalSpeed;
-            SetTranslationZ(ctrlState, HTUtils.Clamp(-this.hoverThrustRate + (modifier / this.TWR), -1, 0));
+            SetTranslationZ(ctrlState, Clamp(-this.hoverThrustRate + (modifier / this.TWR), -1, 0));
             if ((float)ActiveVessel.horizontalSrfSpeed > this.SafeHorizontalSpeed) { DriveHorizontalDec(ctrlState); }
         }
 

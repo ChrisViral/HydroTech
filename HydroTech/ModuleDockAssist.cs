@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using HydroTech.Autopilots.Calculators;
+﻿using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using UnityEngine;
+using static System.Linq.Enumerable;
 using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech

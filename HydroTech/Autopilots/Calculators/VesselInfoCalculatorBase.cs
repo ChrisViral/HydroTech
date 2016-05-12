@@ -7,8 +7,9 @@ namespace HydroTech.Autopilots.Calculators
     public class VesselInfoCalculatorBase
     {
         #region Fields
-        public Matrix3x3 moI = new Matrix3x3();
+        public Matrix3x3 moI;
         protected List<Part> partList;
+        //ReSharper disable once InconsistentNaming
         protected Vector3 CoM, transformDown, transformForward, transformRight;
         #endregion
 

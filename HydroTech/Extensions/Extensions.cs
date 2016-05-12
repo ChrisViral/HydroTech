@@ -1,69 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using static System.Linq.Enumerable;
 using static HydroTech.Autopilots.APTranslation.TranslationDirection;
 using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
 
 namespace HydroTech.Extensions
 {
-    /// <summary>
-    /// Vessel extension methods
-    /// </summary>
-    internal static class VesselExtensions
-    {
-        #region Extension methods
-        private static float lastFixedTime;     //Last FixedUpdate frame, prevents recalculation multiple time per frame
-        private static readonly Dictionary<Guid, HydroJebCore> coreCache = new Dictionary<Guid, HydroJebCore>();    //Module cache
-        /// <summary>
-        /// Obtains the controlling/active HydroJebCore of a vessel
-        /// From https://github.com/MuMech/MechJeb2/blob/master/MechJeb2/VesselExtensions.cs#L47-L66
-        /// </summary>
-        /// <param name="vessel">Vessel to get the master core from</param>
-        /// <returns>The master HydroJebCore of the vessel</returns>
-        public static HydroJebCore GetMasterJeb(this Vessel vessel)
-        {
-            if (lastFixedTime != Time.fixedTime)
-            {
-                coreCache.Clear();
-                lastFixedTime = Time.fixedTime;
-            }
-            
-            HydroJebCore jeb;
-            if (!coreCache.TryGetValue(vessel.id, out jeb))
-            {
-                jeb = vessel.FindModulesImplementing<HydroJebCore>().FirstOrDefault();
-                if (jeb != null) { coreCache.Add(vessel.id, jeb); }
-            }
-            return jeb;
-        }
-
-        /// <summary>
-        /// Gets the current state of the specified ActionGroup
-        /// </summary>
-        /// <param name="vessel">Vessel to get the state for</param>
-        /// <param name="action">ActionGroup to get the state for</param>
-        /// <returns>Current state of the action group</returns>
-        public static bool GetState(this Vessel vessel, KSPActionGroup action) => vessel.ActionGroups[action];
-
-        /// <summary>
-        /// Sets the current state of the specified ActionGroup
-        /// </summary>
-        /// <param name="vessel">Vessel to set the state for</param>
-        /// <param name="action">ActionGroup to set the state for</param>
-        /// <param name="active">State to set the ActionGroup to</param>
-        public static void SetState(this Vessel vessel, KSPActionGroup action, bool active) => vessel.ActionGroups.SetGroup(action, active);
-
-        /// <summary>
-        /// Returns all the PartModules implementing <typeparamref name="T"/>
-        /// </summary>
-        /// <typeparam name="T">Implementation type to look for</typeparam>
-        /// <param name="vessel">Vessel to search</param>
-        /// <returns>Streaming enumerable of the found <typeparamref name="T"/></returns>
-        public static IEnumerable<T> FindModulesImplementing<T>(this Vessel vessel) where T : PartModule => vessel.parts.FindModulesImplementing<T>();
-        #endregion
-    }
-
     /// <summary>
     /// CelestialBody extension methods
     /// </summary>
@@ -164,6 +107,63 @@ namespace HydroTech.Extensions
         /// <param name="part">Part to get the mass from</param>
         /// <returns>Total mass of the part. Zero if the part is physically insignifiant</returns>
         public static float TotalMass(this Part part) => part.IsPhysicallySignificant() ? 0 : part.mass + part.GetResourceMass();
+        #endregion
+    }
+
+    /// <summary>
+    /// Vessel extension methods
+    /// </summary>
+    internal static class VesselExtensions
+    {
+        #region Extension methods
+        private static float lastFixedTime;     //Last FixedUpdate frame, prevents recalculation multiple time per frame
+        private static readonly Dictionary<Guid, HydroJebCore> coreCache = new Dictionary<Guid, HydroJebCore>();    //Module cache
+        /// <summary>
+        /// Obtains the controlling/active HydroJebCore of a vessel
+        /// From https://github.com/MuMech/MechJeb2/blob/master/MechJeb2/VesselExtensions.cs#L47-L66
+        /// </summary>
+        /// <param name="vessel">Vessel to get the master core from</param>
+        /// <returns>The master HydroJebCore of the vessel</returns>
+        public static HydroJebCore GetMasterJeb(this Vessel vessel)
+        {
+            if (lastFixedTime != Time.fixedTime)
+            {
+                coreCache.Clear();
+                lastFixedTime = Time.fixedTime;
+            }
+
+            HydroJebCore jeb;
+            if (!coreCache.TryGetValue(vessel.id, out jeb))
+            {
+                jeb = vessel.FindModulesImplementing<HydroJebCore>().FirstOrDefault();
+                if (jeb != null) { coreCache.Add(vessel.id, jeb); }
+            }
+            return jeb;
+        }
+
+        /// <summary>
+        /// Gets the current state of the specified ActionGroup
+        /// </summary>
+        /// <param name="vessel">Vessel to get the state for</param>
+        /// <param name="action">ActionGroup to get the state for</param>
+        /// <returns>Current state of the action group</returns>
+        public static bool GetState(this Vessel vessel, KSPActionGroup action) => vessel.ActionGroups[action];
+
+        /// <summary>
+        /// Sets the current state of the specified ActionGroup
+        /// </summary>
+        /// <param name="vessel">Vessel to set the state for</param>
+        /// <param name="action">ActionGroup to set the state for</param>
+        /// <param name="active">State to set the ActionGroup to</param>
+        public static void SetState(this Vessel vessel, KSPActionGroup action, bool active) => vessel.ActionGroups.SetGroup(action, active);
+
+        /// <summary>
+        /// Returns all the PartModules implementing <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">Implementation type to look for</typeparam>
+        /// <param name="vessel">Vessel to search</param>
+        /// <returns>Streaming enumerable of the found <typeparamref name="T"/></returns>
+        public static IEnumerable<T> FindModulesImplementing<T>(this Vessel vessel) where T : PartModule => vessel.parts.FindModulesImplementing<T>();
         #endregion
     }
 }
