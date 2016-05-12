@@ -24,7 +24,6 @@ namespace HydroTech.Autopilots
         #region Fields
         private readonly RCSCalculator rcsTarget = new RCSCalculator();
         private Vessel drivingTargetVessel;
-        public ModuleDockAssistTarget target;
         private bool targetOrientReady = true;
         private LineRenderer line;
         public SubList<Vessel> jebsTargetVessel;
@@ -107,7 +106,7 @@ namespace HydroTech.Autopilots
             set
             {
                 if (!this.Active || this.Manual || !this.TargetHasJeb) { return; }
-                if (value && !this.driveTarget) { this.drivingTargetVessel = this.target.vessel; }
+                if (value && !this.driveTarget) { this.drivingTargetVessel = this.Target.vessel; }
                 if (this.Engaged)
                 {
                     if (value)
@@ -131,13 +130,15 @@ namespace HydroTech.Autopilots
             }
         }
 
+        public ModuleDockAssistTarget Target { get; set; }
+
         public bool NullCamera => this.Cam == null || !this.Cam.IsOnActiveVessel;
 
-        public bool NullTarget => this.target == null || !this.target.IsNear;
+        public bool NullTarget => this.Target == null || !this.Target.IsNear;
 
         public bool TargetHasJeb => this.jebsTargetVessel.Count != 0;
 
-        public Vector3 RelV => this.Cam.VectorTransform(this.target.vessel.obt_velocity - this.Cam.vessel.obt_velocity);
+        public Vector3 RelV => this.Cam.VectorTransform(this.Target.vessel.obt_velocity - this.Cam.vessel.obt_velocity);
 
         protected override string NameString => "DockAP.Active";
 
@@ -189,20 +190,20 @@ namespace HydroTech.Autopilots
         private void DriveAutoOrient(FlightCtrlState ctrlState)
         {
             DockingAssistCalculator stateCal = new DockingAssistCalculator();
-            stateCal.Calculate(this.Cam, this.target);
+            stateCal.Calculate(this.Cam, this.Target);
             stateCal.SetCtrlStateRotation(ctrlState);
         }
 
         private void DriveTargetAutopilot(FlightCtrlState ctrlState)
         {
-            this.target.vessel.SetState(KSPActionGroup.RCS, true);
-            this.target.vessel.SetState(KSPActionGroup.SAS, false);
-            Vector3 dir = (this.target.Pos - this.Cam.Pos).normalized;
+            this.Target.vessel.SetState(KSPActionGroup.RCS, true);
+            this.Target.vessel.SetState(KSPActionGroup.SAS, false);
+            Vector3 dir = (this.Target.Pos - this.Cam.Pos).normalized;
             HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
-            stateCal.Calculate(dir, Vector3.zero, this.target.Dir, this.target.Right, this.target.vessel);
+            stateCal.Calculate(dir, Vector3.zero, this.Target.Dir, this.Target.Right, this.Target.vessel);
             stateCal.SetCtrlStateRotation(ctrlState);
             this.targetOrientReady = stateCal.Steer(0.05f); //2.87°
-            this.rcsTarget.OnUpdate(this.target.vessel);
+            this.rcsTarget.OnUpdate(this.Target.vessel);
             this.rcsTarget.MakeRotation(ctrlState, this.angularAcc);
         }
 
@@ -241,7 +242,7 @@ namespace HydroTech.Autopilots
         private void DriveAutoDocking(FlightCtrlState ctrlState)
         {
             DockingAssistCalculator stateCal = new DockingAssistCalculator();
-            stateCal.Calculate(this.Cam, this.target);
+            stateCal.Calculate(this.Cam, this.Target);
             DriveAutoOrient(ctrlState);
             if (!stateCal.Steer(0.05f /*2.87°*/)) { DriveKillRelV(ctrlState); }
             else //HoldErr
@@ -320,18 +321,18 @@ namespace HydroTech.Autopilots
 
         private bool IsJebTargetVessel(Vessel vessel)
         {
-            return !this.NullTarget && vessel == this.target.vessel;
+            return !this.NullTarget && vessel == this.Target.vessel;
         }
 
         private void AddDriveTarget()
         {
-            HydroFlightManager.Instance.InputManager.AddOnFlyByWire(this.target.vessel, NameStringTarget, DriveTargetAutopilot);
-            this.drivingTargetVessel = this.target.vessel;
+            HydroFlightManager.Instance.InputManager.AddOnFlyByWire(this.Target.vessel, NameStringTarget, DriveTargetAutopilot);
+            this.drivingTargetVessel = this.Target.vessel;
         }
 
         private void RemoveDriveTarget()
         {
-            HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.target.vessel, NameStringTarget, DriveTargetAutopilot);
+            HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.Target.vessel, NameStringTarget, DriveTargetAutopilot);
             this.drivingTargetVessel = null;
         }
 
@@ -368,14 +369,14 @@ namespace HydroTech.Autopilots
             {
                 this.line.SetWidth(0.01f, 0.01f);
                 this.line.SetPosition(0, this.Cam.Pos);
-                this.line.SetPosition(1, this.target.Pos);
+                this.line.SetPosition(1, this.Target.Pos);
             }
 
             if (this.Engaged)
             {
                 if (this.DriveTarget)
                 {
-                    if (this.drivingTargetVessel != this.target.vessel) //Vessel change detected
+                    if (this.drivingTargetVessel != this.Target.vessel) //Vessel change detected
                     {
                         if (this.drivingTargetVessel != null) { HydroFlightManager.Instance.InputManager.RemoveOnFlyByWire(this.drivingTargetVessel, NameStringTarget, DriveTargetAutopilot); }
                         AddDriveTarget();
@@ -420,14 +421,14 @@ namespace HydroTech.Autopilots
                 {
                     if (this.targetOrientReady)
                     {
-                        Vector3 r = this.target.Pos - this.Cam.Pos;
+                        Vector3 r = this.Target.Pos - this.Cam.Pos;
                         HoldDirectionCalculator stateCal = new HoldDirectionCalculator();
-                        stateCal.Calculate(r.normalized, this.target.Right, this.Cam.Dir, this.Cam.Right, ActiveVessel);
+                        stateCal.Calculate(r.normalized, this.Target.Right, this.Cam.Dir, this.Cam.Right, ActiveVessel);
                         stateCal.SetCtrlStateRotation(ctrlState);
                         bool orientReady = stateCal.Steer(0.05f); //2.87°
                         if (orientReady && ActiveVessel.GetComponent<Rigidbody>().angularVelocity.magnitude < 0.01f)
                         {
-                            DriveFinalStage(ctrlState, SwitchTransformCalculator.VectorTransform(r, this.target.Right, this.target.Down, this.target.Dir), this.RelV);
+                            DriveFinalStage(ctrlState, SwitchTransformCalculator.VectorTransform(r, this.Target.Right, this.Target.Down, this.Target.Dir), this.RelV);
                             HTUtils.CamToVesselTrans(ctrlState, this.Cam);
                         }
                         else

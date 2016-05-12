@@ -110,12 +110,13 @@ namespace HydroTech
         /// </summary>
         public void ShowCamera()
         {
-            HydroFlightManager.Instance.CameraManager.Target = null;
-            HydroFlightManager.Instance.CameraManager.TransformParent = this.transform;
-            HydroFlightManager.Instance.CameraManager.Position = this.assist.position;
-            HydroFlightManager.Instance.CameraManager.SetLookRotation(this.assist.forward, this.assist.up);
-            HydroFlightManager.Instance.CameraManager.FoV = this.camDefFoV / this.Mag;
-            HydroFlightManager.Instance.CameraManager.NearClipPlane = this.camClip;
+            HydroCameraManager man = HydroFlightManager.Instance.CameraManager;
+            man.Target = null;
+            man.TransformParent = this.transform;
+            man.Position = this.assist.position;
+            man.SetLookRotation(this.assist.forward, this.assist.up);
+            man.FoV = this.camDefFoV / this.Mag;
+            man.NearClipPlane = this.camClip;
         }
 
         /// <summary>

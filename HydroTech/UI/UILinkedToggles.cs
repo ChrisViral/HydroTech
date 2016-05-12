@@ -33,8 +33,8 @@ namespace HydroTech.UI
                     if (value != this.active)
                     {
                         //On select/deselect of the toggle
-                        if (value) { this.toggles.onShow(this.Value); }
-                        else { this.toggles.onHide(this.Value); }
+                        if (value) { this.toggles.onShow?.Invoke(this.Value); }
+                        else { this.toggles.onHide?.Invoke(); }
                         this.active = value;
                     }
                 }
@@ -69,8 +69,9 @@ namespace HydroTech.UI
 
         #region Fields
         private readonly Func<T, string> getName;           //Function to obtain string toggle name from T
-        private readonly GUIStyle normal, active;           //Normal/Selected GUIStyles
-        private readonly Callback<T> onShow, onHide;        //On Show/Hide callbacks
+        private readonly GUIStyle style;                    //Normal/Selected GUIStyles
+        private readonly Callback<T> onShow;                //On Show callback
+        private readonly Callback onHide;                   //OnHide callback
         private List<Toggle> toggles = new List<Toggle>();  //List of all current toggles
         private Dictionary<T, Toggle> dict = new Dictionary<T, Toggle>(); //Dictionary of values/indexes, to ensure uniqueness
         #endregion
@@ -87,15 +88,13 @@ namespace HydroTech.UI
         /// Creates a new blank UILinkedToggles
         /// </summary>
         /// <param name="getName">Function to obtain a string name for the toggle from a <typeparamref name="T"/></param>
-        /// <param name="normalStyle">Normal GUIStyle</param>
-        /// <param name="activeStyle">SelectedGUIStyle</param>
+        /// <param name="style">GUIStyle of the toggles</param>
         /// <param name="onShow">Callback when selecting a toggle</param>
         /// <param name="onHide">Callback when hiding a toggle</param>
-        public UILinkedToggles(Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide)
+        public UILinkedToggles(Func<T, string> getName, GUIStyle style, Callback<T> onShow = null, Callback onHide = null)
         {
             this.getName = getName;
-            this.normal = normalStyle;
-            this.active = activeStyle;
+            this.style = style;
             this.onShow = onShow;
             this.onHide = onHide;
         }
@@ -105,12 +104,10 @@ namespace HydroTech.UI
         /// </summary>
         /// <param name="collection">Collection to create the toggles from</param>
         /// <param name="getName">Function to obtain a string name for the toggle from a <typeparamref name="T"/></param>
-        /// <param name="normalStyle">Normal GUIStyle</param>
-        /// <param name="activeStyle">SelectedGUIStyle</param>
+        /// <param name="style">GUIStyle of the toggles</param>
         /// <param name="onShow">Callback when selecting a toggle</param>
         /// <param name="onHide">Callback when hiding a toggle</param>
-        public UILinkedToggles(IEnumerable<T> collection, Func<T, string> getName, GUIStyle normalStyle, GUIStyle activeStyle, Callback<T> onShow, Callback<T> onHide)
-            : this(getName, normalStyle, activeStyle, onShow, onHide)
+        public UILinkedToggles(IEnumerable<T> collection, Func<T, string> getName, GUIStyle style, Callback<T> onShow = null, Callback onHide = null) : this(getName, style, onShow, onHide)
         {
             if (collection == null) { throw new ArgumentNullException(nameof(collection), "Cannot initialize with null collection"); }
             if (getName == null)    { throw new ArgumentNullException(nameof(getName), "Name getter function cannot be null"); }
@@ -136,7 +133,7 @@ namespace HydroTech.UI
             for (int i = 0; i < this.toggles.Count; i++)
             {
                 Toggle t = this.toggles[i];
-                t.Active = GUILayout.Toggle(t.Active, t.Name, t.Active ? this.active : this.normal);
+                t.Active = GUILayout.Toggle(t.Active, t.Name, this.style);
                 if (t.Active)
                 {
                     if (this.Toggled != t)

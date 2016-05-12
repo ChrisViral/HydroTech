@@ -15,8 +15,8 @@ namespace HydroTech
         /// </summary>
         private static ModuleDockAssistTarget Current
         {
-            get { return HydroFlightManager.Instance.DockingAutopilot.target; }
-            set { HydroFlightManager.Instance.DockingAutopilot.target = value; }
+            get { return HydroFlightManager.Instance.DockingAutopilot.Target; }
+            set { HydroFlightManager.Instance.DockingAutopilot.Target = value; }
         }
         #endregion
 

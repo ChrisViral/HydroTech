@@ -48,15 +48,97 @@ namespace HydroTech.Panels
 
         public UILinkedToggles<ModuleDockAssistTarget> Targets { get; }
 
-        public bool ChoosingCamera { get; set; }
+        private bool choosingCamera;
+        public bool ChoosingCamera
+        {
+            get { return this.choosingCamera; }
+            private set
+            {
+                if (value != this.choosingCamera)
+                {
+                    ResetHeight();
+                    DA.CameraPaused = value;
+                    this.choosingCamera = value;
+                }
+            }
+        }
 
-        public bool ChoosingVessel { get; set; }
+        private bool choosingVessel;
+        public bool ChoosingVessel
+        {
+            get { return this.choosingVessel; }
+            private set
+            {
+                if (value != this.choosingVessel)
+                {
+                    ResetHeight();
+                    this.choosingVessel = value;
+                }
+            }
+        }
 
-        public bool ChoosingTarget { get; set; }
+        private bool choosingTarget;
+        public bool ChoosingTarget
+        {
+            get { return this.choosingTarget; }
+            private set
+            {
+                if (value != this.choosingTarget)
+                {
+                    ResetHeight();
+                    if (value)
+                    {
+                        DA.CameraPaused = true;
+                        if (this.targetVessel == null) { this.ChoosingVessel = true; }
+                        else { this.PreviewVessel = this.targetVessel; }
+                    }
+                    else
+                    {
+                        this.PreviewAssist = null;
+                        DA.CameraPaused = false;
+                    }
+                    this.choosingTarget = value;
+                }
+            }
+        }
 
-        public Vessel PreviewVessel { get; set; }
+        private Vessel previewVessel;
+        public Vessel PreviewVessel
+        {
+            get { return this.previewVessel; }
+            private set
+            {
+                if (value != this.previewVessel)
+                {
+                    if (value == null) { HydroFlightManager.Instance.CameraManager.RetrieveLast(); }
+                    else
+                    {
+                        if (this.previewVessel == null && this.PreviewAssist == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                        HydroFlightManager.Instance.CameraManager.CamCallback = this.previewVessel.ShowPreview;
+                    }
+                    this.previewVessel = value;
+                }
+            }
+        }
 
-        private ModuleDockAssist PreviewModule { get; set; }
+        private ModuleDockAssist previewAssist;
+        public ModuleDockAssist PreviewAssist
+        {
+            get { return this.previewAssist; }
+            private set
+            {
+                if (value != this.previewAssist)
+                {
+                    if (value == null) { HydroFlightManager.Instance.CameraManager.RetrieveLast(); }
+                    else
+                    {
+                        if (this.previewAssist == null && this.PreviewVessel == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
+                        HydroFlightManager.Instance.CameraManager.CamCallback = value.ShowPreview;
+                    }
+                    this.previewAssist = value;
+                }
+            }
+        }
 
         private bool TempManual
         {
@@ -126,14 +208,28 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), GUIUtils.GetID<PanelDockAssist>()) { }
+        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), GUIUtils.GetID<PanelDockAssist>())
+        {
+            this.Cameras = new UILinkedToggles<ModuleDockAssistCam>(c => c.assistName, GUIUtils.Skin.button);
+            this.TargetVessels = new UILinkedToggles<Vessel>(v => v.vesselName, GUIUtils.Skin.button);
+            this.Targets = new UILinkedToggles<ModuleDockAssistTarget>(t => t.assistName, GUIUtils.Skin.button);
+        }
         #endregion
 
         #region Methods
-        private void ShowPreviewVessel()
+        private void DrawChooseCamera()
         {
-            HydroFlightManager.Instance.CameraManager.FoV = 60;
-            HydroFlightManager.Instance.CameraManager.Target = this.PreviewVessel.transform;
+            
+        }
+
+        private void DrawChooseVessel()
+        {
+            
+        }
+
+        private void DrawChooseTarget()
+        {
+            
         }
         #endregion
 
@@ -143,16 +239,21 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginVertical();
-            if (this.Settings) { DrawSettings(); }
+            if (this.ChoosingCamera) { DrawChooseCamera(); }
+            else if (this.ChoosingVessel) { DrawChooseVessel(); }
+            else if (this.ChoosingTarget) { DrawChooseTarget(); }
+            else if (this.Settings) { DrawSettings(); }
             else
             {
                 GUILayout.Label("Camera:");
-                if (DA.Cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(DA.Cam.ToString(), DA.Cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
+                ModuleDockAssistCam cam = DA.Cam;
+                if (cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(cam.ToString(), cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
                 {
                     this.ChoosingCamera = true;
                 }
                 GUILayout.Label("Target:");
-                if (DA.target == null ? GUILayout.Button("Choose target") : GUILayout.Button(DA.target.vessel.vesselName + "\n" + DA.target, DA.target.IsNear ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
+                ModuleDockAssistTarget tgt = DA.Target;
+                if (tgt == null ? GUILayout.Button("Choose target") : GUILayout.Button(tgt.vessel.vesselName + "\n" + tgt, tgt.IsNear ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
                 {
                     this.ChoosingTarget = true;
                 }
