@@ -2,6 +2,7 @@
 using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -32,7 +33,7 @@ namespace HydroTech.Panels
         /// Initializes window size and id, as well as current game state
         /// </summary>
         /// <param name="editor">If in the editor scene or not</param>
-        public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), GUIUtils.GetID<PanelRCSThrustInfo>())
+        public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), GetID<PanelRCSThrustInfo>())
         {
             this.editor = editor;
         }
@@ -60,7 +61,7 @@ namespace HydroTech.Panels
             GUI.DragWindow(this.drag);
 
             GUILayout.BeginHorizontal();
-            this.showRotation = GUIUtils.TwinToggle(this.showRotation, "Rotation", "Translation", GUI.skin.button);
+            this.showRotation = TwinToggle(this.showRotation, "Rotation", "Translation", GUI.skin.button);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginVertical(GUI.skin.box);
@@ -92,7 +93,7 @@ namespace HydroTech.Panels
 
             if (!this.editor && !this.ActiveRCS.AllRCSEnabled)
             {
-                GUILayout.Label("Some RCS thrusters are disabled.", GUIUtils.ColouredLabel(Color.red));
+                GUILayout.Label("Some RCS thrusters are disabled.", ColouredLabel(Color.red));
                 if (GUILayout.Button("Enable all"))
                 {
                     this.ActiveRCS.EnableAllRcs();

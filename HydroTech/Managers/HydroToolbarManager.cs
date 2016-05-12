@@ -1,7 +1,7 @@
 ﻿using HydroTech.Panels;
-using HydroTech.Utils;
 using KSP.UI.Screens;
 using UnityEngine;
+using static HydroTech.Utils.HTUtils;
 using AppScenes = KSP.UI.Screens.ApplicationLauncher.AppScenes;
 using FromToAction = GameEvents.FromToAction<GameScenes, GameScenes>;
 
@@ -52,7 +52,7 @@ namespace HydroTech.Managers
                 {
                     this.panel = go.AddComponent<EditorMainPanel>();
                     this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
-                                  Empty, Empty, Empty, Empty, AppScenes.NEVER, HTUtils.LauncherIcon);
+                                  Empty, Empty, Empty, Empty, AppScenes.NEVER, LauncherIcon);
                     this.added = true;
                 }
             }
@@ -151,7 +151,7 @@ namespace HydroTech.Managers
                 {
                     this.panel = go.AddComponent<FlightMainPanel>();
                     this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
-                                  Empty, Empty, SetActive, SetInactive, AppScenes.NEVER, HTUtils.LauncherIcon);
+                                  Empty, Empty, SetActive, SetInactive, AppScenes.NEVER, LauncherIcon);
                     this.enabled = true;
                     this.added = true;
                 }
@@ -185,7 +185,7 @@ namespace HydroTech.Managers
                 if (this.button != null)
                 {
                     this.enabled = true;
-                    this.button.SetTexture(HTUtils.LauncherIcon);
+                    this.button.SetTexture(LauncherIcon);
                 }
             }
 
@@ -198,7 +198,7 @@ namespace HydroTech.Managers
                 {
                     this.button.SetFalse();
                     this.enabled = false;
-                    this.button.SetTexture(HTUtils.InactiveIcon);
+                    this.button.SetTexture(InactiveIcon);
                 }
             }
 
@@ -248,7 +248,7 @@ namespace HydroTech.Managers
                             this.button.SetFalse();
                             this.button.Disable();
                             this.enabled = false;
-                            this.button.SetTexture(HTUtils.InactiveIcon);
+                            this.button.SetTexture(InactiveIcon);
                         }
                     }
                     else if (this.core.IsOnline)
@@ -292,7 +292,7 @@ namespace HydroTech.Managers
                 {
                     this.panel = go.AddComponent<SettingsPanel>();
                     this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
-                                  Empty, Empty, Empty, Empty, AppScenes.SPACECENTER, HTUtils.LauncherIcon);
+                                  Empty, Empty, Empty, Empty, AppScenes.SPACECENTER, LauncherIcon);
                     this.added = true;
                 }
             }

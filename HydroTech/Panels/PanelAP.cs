@@ -1,5 +1,5 @@
-﻿using HydroTech.Utils;
-using UnityEngine;
+﻿using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -48,7 +48,7 @@ namespace HydroTech.Panels
         /// <returns>The state of the button</returns>
         protected bool EngageButton(bool engaged)
         {
-            return GUILayout.Button(engaged ? "DISENGAGE" : "ENGAGE", GUIUtils.ButtonStyle(engaged ? XKCDColors.DeepRed : XKCDColors.Green));
+            return GUILayout.Button(engaged ? "DISENGAGE" : "ENGAGE", ButtonStyle(engaged ? XKCDColors.DeepRed : XKCDColors.Green));
         }
         #endregion
 
@@ -71,7 +71,7 @@ namespace HydroTech.Panels
             }
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button(this.Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE", GUIUtils.ButtonStyle(this.Engaged ? XKCDColors.DeepRed : XKCDColors.Green)))
+            if (GUILayout.Button(this.Engaged ? "DISENGAGE\nwithout applying" : "Apply and\nENGAGE", ButtonStyle(this.Engaged ? XKCDColors.DeepRed : XKCDColors.Green)))
             {
                 if (!this.Engaged)
                 {

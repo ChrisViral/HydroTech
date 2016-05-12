@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -42,7 +42,7 @@ namespace HydroTech.Panels
         /// <summary>
         /// Initiates window size and ID
         /// </summary>
-        public PanelDebug() : base(new Rect(Screen.width - 200, 0, 200, 0), GUIUtils.GetID<PanelDebug>()) { }
+        public PanelDebug() : base(new Rect(Screen.width - 200, 0, 200, 0), GetID<PanelDebug>()) { }
         #endregion
 
         #region Methods

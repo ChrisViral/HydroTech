@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -67,7 +67,7 @@ namespace HydroTech.Panels
             }
             GUILayout.EndVertical();
 
-            GUIUtils.CenteredButton("Close", this.close, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
+            CenteredButton("Close", this.close, GUILayout.MaxWidth(80), GUILayout.MaxHeight(25));
         }
         #endregion
 
@@ -79,9 +79,8 @@ namespace HydroTech.Panels
         {
             if (this.Visible)
             {
-                GUI.skin = GUIUtils.Skin;
-
-                this.pos = GUIUtils.ClampedWindow(this.id, this.pos, Window, this.Title, GUILayout.ExpandHeight(true));
+                GUI.skin = Skin;
+                this.pos = ClampedWindow(this.id, this.pos, Window, this.Title, GUILayout.ExpandHeight(true));
 
                 foreach (Panel p in this.Panels)
                 {

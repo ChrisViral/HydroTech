@@ -1,7 +1,7 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -99,19 +99,17 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelLanding() : base(new Rect(548, 80, 200, 184), GUIUtils.GetID<PanelLanding>()) { }
+        public PanelLanding() : base(new Rect(548, 80, 200, 184), GetID<PanelLanding>()) { }
         #endregion
 
         #region Overrides
         public override void OnFlightStart()
         {
-            base.OnFlightStart();
             this.panelInfo.OnFlightStart();
         }
 
         public override void OnUpdate()
         {
-            base.OnUpdate();
             this.panelInfo.OnUpdate();
         }
 
@@ -167,7 +165,7 @@ namespace HydroTech.Panels
                 this.panelInfo.Visible = GUILayout.Toggle(this.panelInfo.Visible, "Advanced info");
                 if (EngageButton(this.Engaged)) { this.Engaged = !this.Engaged; }
                 GUILayout.Label("Status: " + LA.StatusString);
-                GUILayout.Label(LA.WarningString, GUIUtils.ColouredLabel(LA.WarningColor));
+                GUILayout.Label(LA.WarningString, ColouredLabel(LA.WarningColor));
             }
         }
 
@@ -197,7 +195,7 @@ namespace HydroTech.Panels
             if (!this.TempTouchdown)
             {
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("True Alt", this.tempUseTrueAlt ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
+                if (GUILayout.Button("True Alt", this.tempUseTrueAlt ? ButtonStyle(Color.green) : Skin.button))
                 {
                     if (!this.tempUseTrueAlt)
                     {
@@ -207,7 +205,7 @@ namespace HydroTech.Panels
                     }
                     this.tempUseTrueAlt = true;
                 }
-                if (GUILayout.Button("ASL Alt", this.tempUseTrueAlt ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
+                if (GUILayout.Button("ASL Alt", this.tempUseTrueAlt ? Skin.button : ButtonStyle(Color.green)))
                 {
                     if (this.tempUseTrueAlt)
                     {
@@ -231,7 +229,7 @@ namespace HydroTech.Panels
                         GUILayout.Label($"ASL alt: {tempAltKeepAsl:#0.0}m");
                         GUILayout.Label($"Max allowed horizontal speed: {0.01f * this.tempAltKeep:#0.0}m/s");
                     }
-                    else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
+                    else { GUILayout.Label("Invalid altitude", ColouredLabel(Color.red)); }
                 }
                 else
                 {
@@ -242,7 +240,7 @@ namespace HydroTech.Panels
                         GUILayout.Label($"True alt: {tempAltKeepTrue:#0.0}m");
                         GUILayout.Label($"Max allowed horizontal speed: {0.01f * tempAltKeepTrue:#0.0}m/s");
                     }
-                    else { GUILayout.Label("Invalid altitude", GUIUtils.ColouredLabel(Color.red)); }
+                    else { GUILayout.Label("Invalid altitude", ColouredLabel(Color.red)); }
                 }
             }
 

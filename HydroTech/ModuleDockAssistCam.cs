@@ -3,8 +3,8 @@ using System.Text;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
 using HydroTech.Panels;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.HTUtils;
 
 namespace HydroTech
 {
@@ -130,7 +130,7 @@ namespace HydroTech
         /// Consumed resources
         /// </summary>
         /// <returns>Electricity</returns>
-        public List<PartResourceDefinition> GetConsumedResources() => HTUtils.ElectrictyList;
+        public List<PartResourceDefinition> GetConsumedResources() => ElectrictyList;
         #endregion
 
         #region Functions
@@ -141,7 +141,7 @@ namespace HydroTech
         {
             if (!FlightGlobals.ready || !this.CamActive) { return;}
 
-            if (!CheatOptions.InfiniteElectricity && this.part.RequestResource(HTUtils.ElectricChargeID, this.electricityConsumption * TimeWarp.deltaTime) <= 0)
+            if (!CheatOptions.InfiniteElectricity && this.part.RequestResource(ElectricChargeID, this.electricityConsumption * TimeWarp.deltaTime) <= 0)
             {
                 this.CamActive = false;
             }

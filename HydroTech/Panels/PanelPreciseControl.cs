@@ -1,7 +1,7 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -58,7 +58,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelPreciseControl() : base(new Rect(349, 60, 200, 122), GUIUtils.GetID<PanelPreciseControl>()) { }
+        public PanelPreciseControl() : base(new Rect(349, 60, 200, 122), GetID<PanelPreciseControl>()) { }
         #endregion
 
         #region Overrides
@@ -90,11 +90,11 @@ namespace HydroTech.Panels
         protected override void DrawSettings()
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("by Rate", this.tempByRate ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
+            if (GUILayout.Button("by Rate", this.tempByRate ? ButtonStyle(Color.green) : Skin.button))
             {
                 this.tempByRate = true;
             }
-            if (GUILayout.Button("by Acceleration", this.tempByRate ? GUIUtils.Skin.button : GUIUtils.ButtonStyle(Color.green)))
+            if (GUILayout.Button("by Acceleration", this.tempByRate ? Skin.button : ButtonStyle(Color.green)))
             {
                 this.tempByRate = false;
             }

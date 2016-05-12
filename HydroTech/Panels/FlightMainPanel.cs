@@ -1,6 +1,6 @@
 ﻿using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -112,7 +112,7 @@ namespace HydroTech.Panels
 #endif
             this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 100);
             this.drag = new Rect(0, 0, 250, 30);
-            this.id = GUIUtils.GetID<FlightMainPanel>();
+            this.id = GetID<FlightMainPanel>();
             this.close = HydroToolbarManager.CloseFlight;
 
             GameEvents.onShowUI.Add(ShowUI);

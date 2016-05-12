@@ -1,6 +1,6 @@
 ﻿using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -50,7 +50,7 @@ namespace HydroTech.Panels
 
             this.pos = new Rect(Screen.width * 0.8f, Screen.height * 0.2f, 250, 50);
             this.drag = new Rect(0, 0, 250, 30);
-            this.id = GUIUtils.GetID<EditorMainPanel>();
+            this.id = GetID<EditorMainPanel>();
             this.close = HydroToolbarManager.CloseEditor;
         }
 

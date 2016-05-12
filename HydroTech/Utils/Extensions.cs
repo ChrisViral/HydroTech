@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HydroTech.Managers;
 using UnityEngine;
 using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
 
@@ -61,16 +60,6 @@ namespace HydroTech.Utils
         /// <param name="vessel">Vessel to search</param>
         /// <returns>Streaming enumerable of the found <typeparamref name="T"/></returns>
         public static IEnumerable<T> FindModulesImplementing<T>(this Vessel vessel) where T : PartModule => vessel.parts.FindModulesImplementing<T>();
-
-        /// <summary>
-        /// Shows the a preview camera of the targeted vessel
-        /// </summary>
-        /// <param name="vessel">Vessel to get the preview for</param>
-        public static void ShowPreview(this Vessel vessel)
-        {
-            HydroFlightManager.Instance.CameraManager.FoV = 60;
-            HydroFlightManager.Instance.CameraManager.Target = vessel.transform;
-        }
         #endregion
 
         #region CelestialBodyExtensions

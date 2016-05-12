@@ -1,5 +1,5 @@
-﻿using HydroTech.Utils;
-using UnityEngine;
+﻿using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -50,7 +50,7 @@ namespace HydroTech.Panels
         /// <summary>
         /// Renders the Panel
         /// </summary>
-        internal void Draw() => this.window = GUIUtils.ClampedWindow(this.id, this.window, Window, this.Title);
+        internal void Draw() => this.window = ClampedWindow(this.id, this.window, Window, this.Title);
         #endregion
 
         #region Abstract Methods

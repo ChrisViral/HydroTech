@@ -1,8 +1,9 @@
 ﻿using HydroTech.Autopilots;
 using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
 using Direction = HydroTech.Autopilots.Calculators.GroundContactCalculator.Direction;
+using static HydroTech.Utils.GUIUtils;
+using static HydroTech.Utils.HTUtils;
 
 namespace HydroTech.Panels
 {
@@ -11,13 +12,13 @@ namespace HydroTech.Panels
         #region Static properties
         private static APLanding LA => HydroFlightManager.Instance.LandingAutopilot;
 
-        private static float SlopeN => LA.groundCalc.Slope(Direction.NORTH) * HTUtils.radToDeg;
+        private static float SlopeN => LA.groundCalc.Slope(Direction.NORTH) * radToDeg;
 
-        private static float SlopeS => LA.groundCalc.Slope(Direction.SOUTH) * HTUtils.radToDeg;
+        private static float SlopeS => LA.groundCalc.Slope(Direction.SOUTH) * radToDeg;
 
-        private static float SlopeW => LA.groundCalc.Slope(Direction.WEST) * HTUtils.radToDeg;
+        private static float SlopeW => LA.groundCalc.Slope(Direction.WEST) * radToDeg;
 
-        private static float SlopeE => LA.groundCalc.Slope(Direction.EAST) * HTUtils.radToDeg;
+        private static float SlopeE => LA.groundCalc.Slope(Direction.EAST) * radToDeg;
 
         private static float TwrTotal => LA.TwrRCS + LA.TwrEng;
 
@@ -25,8 +26,8 @@ namespace HydroTech.Panels
         {
             get
             {
-                if (TwrTotal < LA.GeeASL) { return GUIUtils.ColouredLabel(Color.red); }
-                return TwrTotal < LA.GeeASL * 1.5f ? GUIUtils.ColouredLabel(Color.yellow) : GUI.skin.label;
+                if (TwrTotal < LA.GeeASL) { return ColouredLabel(Color.red); }
+                return TwrTotal < LA.GeeASL * 1.5f ? ColouredLabel(Color.yellow) : GUI.skin.label;
             }
         }
         #endregion
@@ -51,7 +52,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelLandingInfo() : base(new Rect(548, 300, 200, 0), GUIUtils.GetID<PanelLandingInfo>()) { }
+        public PanelLandingInfo() : base(new Rect(548, 300, 200, 0), GetID<PanelLandingInfo>()) { }
         #endregion
 
         #region Methods
@@ -79,14 +80,14 @@ namespace HydroTech.Panels
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Slope detection: ");
-                GUILayout.Label("out of range", GUIUtils.ColouredLabel(Color.red));
+                GUILayout.Label("out of range", ColouredLabel(Color.red));
                 GUILayout.EndHorizontal();
             }
             else if (!LA.groundCalc.terrain)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Slope detection: ");
-                GUILayout.Label("not available", GUIUtils.ColouredLabel(Color.red));
+                GUILayout.Label("not available", ColouredLabel(Color.red));
                 GUILayout.EndHorizontal();
             }
             else

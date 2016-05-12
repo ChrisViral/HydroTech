@@ -3,6 +3,7 @@ using HydroTech.Managers;
 using HydroTech.Utils;
 using UnityEngine;
 using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -67,7 +68,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelTranslation() : base(new Rect(142, 475, 200, 260), GUIUtils.GetID<PanelTranslation>()) { }
+        public PanelTranslation() : base(new Rect(142, 475, 200, 260), GetID<PanelTranslation>()) { }
         #endregion
 
         #region Overrides
@@ -99,7 +100,7 @@ namespace HydroTech.Panels
             for (int i = 0; i <= 6; i++)
             {
                 TranslationDirection x = (TranslationDirection)i;
-                if (GUILayout.Button(x.ToString(), this.tempTransMode == x ? GUIUtils.ButtonStyle(Color.green) : GUIUtils.Skin.button))
+                if (GUILayout.Button(x.ToString(), this.tempTransMode == x ? ButtonStyle(Color.green) : Skin.button))
                 {
                     this.tempTransMode = x;
                     if (i != 6) { ResetHeight(); }
@@ -135,7 +136,7 @@ namespace HydroTech.Panels
                     GUILayout.Label("Normalized vector:");
                     GUILayout.Label(tempThrustVector.ToString("#0.00"));
                 }
-                else { GUILayout.Label("Invalid input", GUIUtils.ColouredLabel(Color.red)); }
+                else { GUILayout.Label("Invalid input", ColouredLabel(Color.red)); }
             }
             GUILayout.BeginHorizontal();
             GUILayout.Label("Thrust rate (0-1)");

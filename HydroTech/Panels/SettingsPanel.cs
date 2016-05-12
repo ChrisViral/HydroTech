@@ -1,6 +1,6 @@
 ﻿using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -19,7 +19,7 @@ namespace HydroTech.Panels
         #region Fields
         private Rect pos, drag;     //Window position
         private bool visible, hid;  //Window visibility
-        private int id;             //Window ID
+        private readonly int id = GetID<SettingsPanel>();   //Window ID
         #endregion
 
         #region Methods
@@ -60,7 +60,6 @@ namespace HydroTech.Panels
             Instance = this;
             this.pos = new Rect(Screen.width * 0.2f, Screen.height * 0.2f, 250, 50);
             this.drag = new Rect(0, 0, 250, 30);
-            this.id = GUIUtils.GetID<SettingsPanel>();
 
             GameEvents.onShowUI.Add(ShowUI);
             GameEvents.onHideUI.Add(HideUI);
@@ -96,8 +95,8 @@ namespace HydroTech.Panels
         {
             if (this.visible && !this.hid)
             {
-                GUI.skin = GUIUtils.Skin;
-                this.pos = GUIUtils.ClampedWindow(this.id, this.pos, Window, "HydroTech Settings");
+                GUI.skin = Skin;
+                this.pos = ClampedWindow(this.id, this.pos, Window, "HydroTech Settings");
             }
         }
         #endregion

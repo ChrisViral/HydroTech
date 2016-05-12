@@ -1,5 +1,6 @@
-﻿using HydroTech.Utils;
-using UnityEngine;
+﻿using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
+using static HydroTech.Utils.HTUtils;
 
 namespace HydroTech.Panels
 {
@@ -23,7 +24,7 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelMainThrottle() : base(new Rect(100, 240, 250, 236), GUIUtils.GetID<PanelMainThrottle>()) { }
+        public PanelMainThrottle() : base(new Rect(100, 240, 250, 236), GetID<PanelMainThrottle>()) { }
         #endregion
 
         #region Overrides
@@ -37,8 +38,8 @@ namespace HydroTech.Panels
         {
             GUI.DragWindow(this.drag);
 
-            GUIStyle curThrStyle = GUIUtils.Skin.button;
-            GUIStyle editBtnStyle = GUIUtils.ButtonStyle(Color.yellow);
+            GUIStyle curThrStyle = Skin.button;
+            GUIStyle editBtnStyle = ButtonStyle(Color.yellow);
             GUILayout.BeginVertical();
             for (int i = 7; i > 0; i -= 3)
             {
@@ -46,7 +47,7 @@ namespace HydroTech.Panels
                 for (int j = 0; j < 3; j++)
                 {
                     float thr = (i + j) * 10;
-                    if (GUILayout.Button(thr.ToString("#0"), Throttle == thr ? curThrStyle : GUIUtils.Skin.button))
+                    if (GUILayout.Button(thr.ToString("#0"), Throttle == thr ? curThrStyle : Skin.button))
                     {
                         Throttle = thr;
                     }
@@ -55,20 +56,20 @@ namespace HydroTech.Panels
             }
             GUILayout.BeginHorizontal();
             //The conditionals only change the label colour... not obvious <.<
-            if (GUILayout.Button("OFF", Throttle == 0 ? curThrStyle : GUIUtils.Skin.button))
+            if (GUILayout.Button("OFF", Throttle == 0 ? curThrStyle : Skin.button))
             {
                 Throttle = 0;
             }
-            if (GUILayout.Button("100", Throttle == 100 ? curThrStyle : GUIUtils.Skin.button))
+            if (GUILayout.Button("100", Throttle == 100 ? curThrStyle : Skin.button))
             {
                 Throttle = 100;
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("-1")) { Throttle = HTUtils.Clamp0(Throttle - 1); }
-            if (GUILayout.Button("+1")) { Throttle = HTUtils.Clamp100(Throttle + 1); }
-            if (GUILayout.Button("-5")) { Throttle = HTUtils.Clamp0(Throttle - 5); }
-            if (GUILayout.Button("+5")) { Throttle = HTUtils.Clamp100(Throttle +5); }
+            if (GUILayout.Button("-1")) { Throttle = Clamp0(Throttle - 1); }
+            if (GUILayout.Button("+1")) { Throttle = Clamp100(Throttle + 1); }
+            if (GUILayout.Button("-5")) { Throttle = Clamp0(Throttle - 5); }
+            if (GUILayout.Button("+5")) { Throttle = Clamp100(Throttle +5); }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

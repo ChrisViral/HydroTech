@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using HydroTech.Autopilots.Calculators;
 using HydroTech.Managers;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech
 {
@@ -273,8 +273,8 @@ namespace HydroTech
         {
             if (this.visible && !this.hid)
             {
-                GUI.skin = GUIUtils.Skin;
-                this.pos = GUIUtils.ClampedWindow(this.id, this.pos, Window, "Rename Part");
+                GUI.skin = Skin;
+                this.pos = ClampedWindow(this.id, this.pos, Window, "Rename Part");
             }
         }
         #endregion
@@ -303,7 +303,7 @@ namespace HydroTech
             }
             else if (HighLogic.LoadedSceneIsFlight)
             {
-                this.id = GUIUtils.GetID<ModuleDockAssist>();
+                this.id = GetID<ModuleDockAssist>();
                 this.pos = new Rect(Screen.width * 0.5f, Screen.height * 0.45f, 250, 100);
                 this.drag = new Rect(0, 0, 250, 30);
                 GameEvents.onShowUI.Add(ShowUI);

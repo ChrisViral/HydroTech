@@ -2,8 +2,8 @@
 using HydroTech.Autopilots;
 using HydroTech.Managers;
 using HydroTech.UI;
-using HydroTech.Utils;
 using UnityEngine;
+using static HydroTech.Utils.GUIUtils;
 
 namespace HydroTech.Panels
 {
@@ -114,7 +114,7 @@ namespace HydroTech.Panels
                     else
                     {
                         if (this.previewVessel == null && this.PreviewAssist == null) { HydroFlightManager.Instance.CameraManager.SaveCurrent(); }
-                        HydroFlightManager.Instance.CameraManager.CamCallback = this.previewVessel.ShowPreview;
+                        HydroFlightManager.Instance.CameraManager.CamCallback = ShowPreview;
                     }
                     this.previewVessel = value;
                 }
@@ -208,11 +208,11 @@ namespace HydroTech.Panels
         #endregion
 
         #region Constructor
-        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), GUIUtils.GetID<PanelDockAssist>())
+        public PanelDockAssist() : base(new Rect(349, 215, 200, 252), GetID<PanelDockAssist>())
         {
-            this.Cameras = new UILinkedToggles<ModuleDockAssistCam>(c => c.assistName, GUIUtils.Skin.button);
-            this.TargetVessels = new UILinkedToggles<Vessel>(v => v.vesselName, GUIUtils.Skin.button);
-            this.Targets = new UILinkedToggles<ModuleDockAssistTarget>(t => t.assistName, GUIUtils.Skin.button);
+            this.Cameras = new UILinkedToggles<ModuleDockAssistCam>(c => c.assistName, Skin.button);
+            this.TargetVessels = new UILinkedToggles<Vessel>(v => v.vesselName, Skin.button);
+            this.Targets = new UILinkedToggles<ModuleDockAssistTarget>(t => t.assistName, Skin.button);
         }
         #endregion
 
@@ -231,6 +231,12 @@ namespace HydroTech.Panels
         {
             
         }
+
+        public void ShowPreview()
+        {
+            HydroFlightManager.Instance.CameraManager.FoV = 60;
+            HydroFlightManager.Instance.CameraManager.Target = this.targetVessel.transform;
+        }
         #endregion
 
         #region Overrides
@@ -247,13 +253,13 @@ namespace HydroTech.Panels
             {
                 GUILayout.Label("Camera:");
                 ModuleDockAssistCam cam = DA.Cam;
-                if (cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(cam.ToString(), cam.IsOnActiveVessel ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
+                if (cam == null ? GUILayout.Button("Choose camera") : GUILayout.Button(cam.ToString(), ButtonStyle(cam.IsOnActiveVessel ? XKCDColors.Green : XKCDColors.Red, true)))
                 {
                     this.ChoosingCamera = true;
                 }
                 GUILayout.Label("Target:");
                 ModuleDockAssistTarget tgt = DA.Target;
-                if (tgt == null ? GUILayout.Button("Choose target") : GUILayout.Button(tgt.vessel.vesselName + "\n" + tgt, tgt.IsNear ? GUIUtils.ButtonStyle(XKCDColors.Green, true) : GUIUtils.ButtonStyle(XKCDColors.Red, true)))
+                if (tgt == null ? GUILayout.Button("Choose target") : GUILayout.Button(tgt.vessel.vesselName + "\n" + tgt, ButtonStyle(tgt.IsNear ? XKCDColors.Green : XKCDColors.Red, true)))
                 {
                     this.ChoosingTarget = true;
                 }
