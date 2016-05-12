@@ -182,8 +182,11 @@ namespace HydroTech.Managers
             /// </summary>
             private void SetActive()
             {
-                this.enabled = true;
-                this.button.SetTexture(HTUtils.LauncherIcon);
+                if (this.button != null)
+                {
+                    this.enabled = true;
+                    this.button.SetTexture(HTUtils.LauncherIcon);
+                }
             }
 
             /// <summary>
@@ -191,9 +194,12 @@ namespace HydroTech.Managers
             /// </summary>
             private void SetInactive()
             {
-                this.button.SetFalse();
-                this.enabled = false;
-                this.button.SetTexture(HTUtils.InactiveIcon);
+                if (this.button != null)
+                {
+                    this.button.SetFalse();
+                    this.enabled = false;
+                    this.button.SetTexture(HTUtils.InactiveIcon);
+                }
             }
 
             /// <summary>
@@ -284,7 +290,7 @@ namespace HydroTech.Managers
             {
                 if (!this.added)
                 {
-                    this.panel = go.GetComponent<SettingsPanel>();
+                    this.panel = go.AddComponent<SettingsPanel>();
                     this.button = ApplicationLauncher.Instance.AddModApplication(this.panel.ShowPanel, this.panel.HidePanel,
                                   Empty, Empty, Empty, Empty, AppScenes.SPACECENTER, HTUtils.LauncherIcon);
                     this.added = true;

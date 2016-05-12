@@ -13,10 +13,14 @@ namespace HydroTech.Panels
         #region Fields         
         public bool showRotation = true;            //GUI, showing rotation/translation
         private readonly bool editor;               //If in the editor scene or not
-        private readonly RCSCalculator activeRCS;   //Current RCS calculator
         #endregion
 
         #region Properties
+        /// <summary>
+        /// The current RCSCalculator
+        /// </summary>
+        public RCSCalculator ActiveRCS => this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS;
+
         /// <summary>
         /// Panel title
         /// </summary>
@@ -31,7 +35,6 @@ namespace HydroTech.Panels
         public PanelRCSThrustInfo(bool editor) : base(editor ? new Rect((Screen.width * 0.95f) - 250, 80, 250, 0) : new Rect(747, 80, 250, 280), GUIUtils.GetID<PanelRCSThrustInfo>())
         {
             this.editor = editor;
-            this.activeRCS = this.editor ? HydroEditorManager.Instance.ActiveRCS : HydroFlightManager.Instance.ActiveRCS;
         }
         #endregion
 
@@ -63,8 +66,8 @@ namespace HydroTech.Panels
             GUILayout.BeginVertical(GUI.skin.box);
             if (this.showRotation)
             {
-                Vector6 torque = this.activeRCS.maxTorque;
-                Vector6 angular = this.activeRCS.maxAngularAcc;
+                Vector6 torque = this.ActiveRCS.maxTorque;
+                Vector6 angular = this.ActiveRCS.maxAngularAcc;
                 GUILayout.Label("Torque(N·m), angular acc(rad/s²)");
                 GUILayout.Label($"Pitch down: {torque.xp:#0.00}, {angular.xp:#0.00}");
                 GUILayout.Label($"Pitch up: {torque.xn:#0.00}, {angular.xn:#0.00}");
@@ -75,8 +78,8 @@ namespace HydroTech.Panels
             }
             else
             {
-                Vector6 thrust = this.activeRCS.maxForce;
-                Vector6 acc = this.activeRCS.maxAcc;
+                Vector6 thrust = this.ActiveRCS.maxForce;
+                Vector6 acc = this.ActiveRCS.maxAcc;
                 GUILayout.Label("Thrust(N), acceleration(m/s²)");
                 GUILayout.Label($"Translate left: {thrust.xp:#0.00}, {acc.xp:#0.00}");
                 GUILayout.Label($"Translate right: {thrust.xn:#0.00}, {acc.xn:#0.00}");
@@ -87,12 +90,12 @@ namespace HydroTech.Panels
             }
             GUILayout.EndVertical();
 
-            if (!this.editor && !this.activeRCS.AllRCSEnabled)
+            if (!this.editor && !this.ActiveRCS.AllRCSEnabled)
             {
                 GUILayout.Label("Some RCS thrusters are disabled.", GUIUtils.ColouredLabel(Color.red));
                 if (GUILayout.Button("Enable all"))
                 {
-                    this.activeRCS.EnableAllRcs();
+                    this.ActiveRCS.EnableAllRcs();
                 }
             }
         }

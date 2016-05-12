@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace HydroTech.Utils
@@ -61,7 +62,9 @@ namespace HydroTech.Utils
         static GUIUtils()
         {
             kspSkin = HighLogic.Skin;
-            unitySkin = GUI.skin;
+            unitySkin = (GUISkin)typeof(GUIUtility)
+                        .GetMethod("GetDefaultSkin", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod)
+                        .Invoke(null, null);
 
             //TODO: when custom settings are implemented, set the right one to start with
             Skin = kspSkin;
