@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static HydroTech.Autopilots.APTranslation.TranslationDirection;
 using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
 
 namespace HydroTech.Extensions
 {
     /// <summary>
-    /// Extensions class
+    /// Vessel extension methods
     /// </summary>
-    internal static class Extensions
+    internal static class VesselExtensions
     {
-        #region VesselExtensions
+        #region Extension methods
         private static float lastFixedTime;     //Last FixedUpdate frame, prevents recalculation multiple time per frame
         private static readonly Dictionary<Guid, HydroJebCore> coreCache = new Dictionary<Guid, HydroJebCore>();    //Module cache
         /// <summary>
@@ -61,8 +62,14 @@ namespace HydroTech.Extensions
         /// <returns>Streaming enumerable of the found <typeparamref name="T"/></returns>
         public static IEnumerable<T> FindModulesImplementing<T>(this Vessel vessel) where T : PartModule => vessel.parts.FindModulesImplementing<T>();
         #endregion
+    }
 
-        #region CelestialBodyExtensions
+    /// <summary>
+    /// CelestialBody extension methods
+    /// </summary>
+    internal static class CelestialBodyExtensions
+    {
+        #region Extension methods
         private static readonly Dictionary<CelestialBody, float> syncAlts = new Dictionary<CelestialBody, float>();     //Geosync alt cache
         /// <summary>
         /// Gets the geosynchronous altitude for the specified body
@@ -80,8 +87,14 @@ namespace HydroTech.Extensions
             return alt;
         }
         #endregion
+    }
 
-        #region EnumExtensions
+    /// <summary>
+    /// Enum extension methods
+    /// </summary>
+    internal static class EnumExtensions
+    {
+        #region Extension methods
         /// <summary>
         /// Gets the unit vector associated to this TranslationDirection
         /// </summary>
@@ -91,30 +104,36 @@ namespace HydroTech.Extensions
         {
             switch (dir)
             {
-                case TranslationDirection.RIGHT:
+                case RIGHT:
                     return Vector3.right;
 
-                case TranslationDirection.LEFT:
+                case LEFT:
                     return Vector3.left;
 
-                case TranslationDirection.DOWN:
+                case DOWN:
                     return Vector3.up;
 
-                case TranslationDirection.UP:
+                case UP:
                     return Vector3.down;
 
-                case TranslationDirection.FORWARD:
+                case FORWARD:
                     return Vector3.forward;
 
-                case TranslationDirection.BACK:
+                case BACK:
                     return Vector3.back;
             }
 
             return Vector3.zero;
         }
         #endregion
+    }
 
-        #region PartExtensions
+    /// <summary>
+    /// Part extension methods
+    /// </summary>
+    internal static class PartExtensions
+    {
+        #region Extension methods
         /// <summary>
         /// Returns all the PartModules implementing <typeparamref name="T"/>
         /// </summary>
@@ -131,6 +150,20 @@ namespace HydroTech.Extensions
                 }
             }
         }
+
+        /// <summary>
+        /// Returns true only when the part is not fully physically insignificant
+        /// </summary>
+        /// <param name="part">Part to get physical significance for</param>
+        /// <returns>If the part is physically significant</returns>
+        public static bool IsPhysicallySignificant(this Part part) => part.physicalSignificance != Part.PhysicalSignificance.NONE;
+
+        /// <summary>
+        /// Returns the total mass of the part, including resources, and it's physical significance
+        /// </summary>
+        /// <param name="part">Part to get the mass from</param>
+        /// <returns>Total mass of the part. Zero if the part is physically insignifiant</returns>
+        public static float TotalMass(this Part part) => part.IsPhysicallySignificant() ? 0 : part.mass + part.GetResourceMass();
         #endregion
     }
 }

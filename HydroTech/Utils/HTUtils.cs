@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using HydroTech.Autopilots.Calculators;
 using UnityEngine;
+using static UnityEngine.Mathf;
 using Debug = UnityEngine.Debug;
 
 namespace HydroTech.Utils
@@ -19,7 +20,7 @@ namespace HydroTech.Utils
         /// <summary>
         /// Radians to degrees conversion constant
         /// </summary>
-        public const float radToDeg = 180 / Mathf.PI;
+        public const float radToDeg = 180 / PI;
         /// <summary>
         /// Local HydroTech PluginData folder URL
         /// </summary>
@@ -136,14 +137,14 @@ namespace HydroTech.Utils
         /// </summary>
         /// <param name="f">Value to clamp</param>
         /// <returns>The clamped value</returns>
-        public static float Clamp0(float f) => Mathf.Max(0, f);
+        public static float Clamp0(float f) => Max(0, f);
 
         /// <summary>
         /// Clamps the given value to a maximum of 100
         /// </summary>
         /// <param name="f">Value to clamp</param>
         /// <returns>The clamped value</returns>
-        public static float Clamp100(float f) => Mathf.Min(f, 100);
+        public static float Clamp100(float f) => Min(f, 100);
 
         /// <summary>
         /// Spawns a PopupDialog of the given title, message, and button text

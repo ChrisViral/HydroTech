@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace HydroTech.Utils
 {
     /// <summary>
-    /// Various Enum utilities methods, featuring fast parsing/ToString. Should ONLY ever be called through EnumUtils.
+    /// Unused. Anything in here should ONLY ever be called through EnumUtils.
     /// </summary>
     /// <typeparam name="TEnum">Type should be Enum. Really, it's gonna throw if you don't.</typeparam>
     [Obsolete("This class is only a helper class, do not use this, use EnumUtils instead")]

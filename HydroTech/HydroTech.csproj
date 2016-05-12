@@ -72,6 +72,7 @@
     <Compile Include="Autopilots\Calculators\EngineCalculator.cs" />
     <Compile Include="Autopilots\Calculators\VesselInfoCalculatorBase.cs" />
     <Compile Include="Data\SubList.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Managers\HydroEditorManager.cs" />
     <Compile Include="Managers\HydroCameraManager.cs" />
     <Compile Include="Managers\HydroFlightManager.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Managers\HydroInputManager.cs" />
     <Compile Include="UI\UILinkedToggles.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
-    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GUIUtils.cs" />
     <Compile Include="Panels\Panel.cs" />
     <Compile Include="Panels\PanelDebug.cs" />

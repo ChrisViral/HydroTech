@@ -61,14 +61,14 @@ namespace HydroTech.Utils
         static GUIUtils()
         {
             kspSkin = HighLogic.Skin;
-            unitySkin = (GUISkin)typeof(GUIUtility)
+            unitySkin = (GUISkin)typeof(GUIUtility)     //Gets the default Unity GUISkin, without causing weird errors because GUI.skin outside of OnGUI throws
                         .GetMethod("GetDefaultSkin", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod)
                         .Invoke(null, null);
 
             //TODO: when custom settings are implemented, set the right one to start with
             Skin = kspSkin;
 
-            WrapButton = new GUIStyle(Skin.button) { wordWrap = true };
+            WrapButton = new GUIStyle(Skin.button) { wordWrap = true };           
         }
         #endregion
 
