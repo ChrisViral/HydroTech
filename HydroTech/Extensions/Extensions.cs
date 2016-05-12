@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using TranslationDirection = HydroTech.Autopilots.APTranslation.TranslationDirection;
 
-namespace HydroTech.Utils
+namespace HydroTech.Extensions
 {
     /// <summary>
     /// Extensions class

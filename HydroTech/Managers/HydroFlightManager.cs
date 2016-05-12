@@ -2,6 +2,7 @@
 using System.Linq;
 using HydroTech.Autopilots;
 using HydroTech.Autopilots.Calculators;
+using HydroTech.Extensions;
 using HydroTech.Panels;
 using HydroTech.Utils;
 using UnityEngine;

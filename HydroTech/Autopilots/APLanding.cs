@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HydroTech.Autopilots.Calculators;
+using HydroTech.Extensions;
 using HydroTech.Managers;
 using HydroTech.Panels;
 using HydroTech.Utils;
