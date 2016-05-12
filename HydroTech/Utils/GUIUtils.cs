@@ -42,8 +42,7 @@ namespace HydroTech.Utils
             }
         }
 
-        private static readonly GUISkin kspSkin;
-        private static readonly GUISkin unitySkin;
+        private static readonly GUISkin kspSkin, unitySkin;
         /// <summary>
         /// The currently used GUISkin
         /// </summary>

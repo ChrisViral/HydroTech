@@ -42,21 +42,21 @@ namespace HydroTech.Panels
         #endregion
 
         #region Properties
-        public UILinkedToggles<HydroJebCore> TargetVessels { get; }
+        public UILinkedToggles<Vessel> TargetVessels { get; }
 
         public UILinkedToggles<ModuleDockAssistCam> Cameras { get; }
 
         public UILinkedToggles<ModuleDockAssistTarget> Targets { get; }
 
-        private ModuleDockAssist PreviewPart { get; set; }
+        public bool ChoosingCamera { get; set; }
 
-        private bool ChoosingCamera { get; set; }
+        public bool ChoosingVessel { get; set; }
 
-        private Vessel PreviewVessel { get; set; }
+        public bool ChoosingTarget { get; set; }
 
-        private bool ChoosingVessel { get; set; }
+        public Vessel PreviewVessel { get; set; }
 
-        private bool ChoosingTarget { get; set; }
+        private ModuleDockAssist PreviewModule { get; set; }
 
         private bool TempManual
         {

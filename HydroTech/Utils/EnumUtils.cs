@@ -200,7 +200,7 @@ namespace HydroTech.Utils
     }
 
     /// <summary>
-    /// Enum utility class, dummy to force parameters to be Enums. Cannot be instantiated.
+    /// Enum utility class, containing various enum parsing/tostring methods.
     /// </summary>
     public sealed class EnumUtils : EnumConstraint<Enum>
     {

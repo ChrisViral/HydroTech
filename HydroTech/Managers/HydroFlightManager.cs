@@ -33,14 +33,14 @@ namespace HydroTech.Managers
         public HydroJebCore Active { get; private set; }
 
         /// <summary>
-        /// All target cores on other vessels
-        /// </summary>
-        public List<HydroJebCore> TargetVessels { get; private set; }
-
-        /// <summary>
         /// All cameras on this vessel
         /// </summary>
         public List<ModuleDockAssistCam> ActiveCams { get; private set; }
+
+        /// <summary>
+        /// All target cores on other vessels
+        /// </summary>
+        public List<Vessel> TargetVessels { get; private set; }
 
         /// <summary>
         /// All targets on nearby vessels
@@ -175,9 +175,10 @@ namespace HydroTech.Managers
         {
             if (!FlightGlobals.ready) { return; }
 
-            if (this.TargetVessels.Count != 0) { this.TargetVessels.Clear(); }
-            if (this.ActiveCams.Count != 0)    { this.ActiveCams.Clear(); }
-            if (this.NearbyTargets.Count != 0) { this.NearbyTargets.Clear(); }
+            PanelDockAssist panel = FlightMainPanel.Instance.DockAssist;
+            if (this.ActiveCams.Count != 0 && panel.ChoosingCamera)    { this.ActiveCams.Clear(); }
+            if (this.TargetVessels.Count != 0 && panel.ChoosingVessel) { this.TargetVessels.Clear(); }
+            if (this.NearbyTargets.Count != 0 && panel.ChoosingTarget) { this.NearbyTargets.Clear(); }
 
             foreach (Vessel vessel in FlightGlobals.Vessels.Where(v => v.loaded))
             {
@@ -187,19 +188,22 @@ namespace HydroTech.Managers
                     if (vessel.isActiveVessel)
                     {
                         this.Active = jeb;
-                        this.ActiveCams.AddRange(vessel.FindModulesImplementing<ModuleDockAssistCam>());
+                        if (panel.ChoosingCamera) { this.ActiveCams.AddRange(vessel.FindModulesImplementing<ModuleDockAssistCam>()); }
                     }
                     else
                     {
-                        this.TargetVessels.Add(jeb);
-                        this.NearbyTargets.AddRange(vessel.FindModulesImplementing<ModuleDockAssistTarget>());
+                        if (panel.ChoosingVessel) { this.TargetVessels.Add(vessel); }
+                        else if (panel.ChoosingTarget && panel.PreviewVessel == vessel)
+                        {
+                            this.NearbyTargets.AddRange(vessel.FindModulesImplementing<ModuleDockAssistTarget>());
+                        }
                     }
                 }
+                else if (vessel.isActiveVessel) { this.Active = null; }
             }
-
-            FlightMainPanel.Instance.DockAssist.TargetVessels.Update(this.TargetVessels);
-            FlightMainPanel.Instance.DockAssist.Cameras.Update(this.ActiveCams);
-            FlightMainPanel.Instance.DockAssist.Targets.Update(this.NearbyTargets);
+            if (panel.ChoosingCamera) { panel.Cameras.Update(this.ActiveCams); }
+            if (panel.ChoosingVessel) { panel.TargetVessels.Update(this.TargetVessels); }
+            if (panel.ChoosingTarget) { panel.Targets.Update(this.NearbyTargets); }
 
             this.ActiveRCS.OnUpdate(FlightGlobals.ActiveVessel);
             this.Autopilots.ForEach(ap => ap.OnUpdate());
