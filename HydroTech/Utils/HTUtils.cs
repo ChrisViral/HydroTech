@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using HydroTech.Autopilots.Calculators;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace HydroTech.Utils
 {
@@ -19,27 +20,30 @@ namespace HydroTech.Utils
         /// Radians to degrees conversion constant
         /// </summary>
         public const float radToDeg = 180 / Mathf.PI;
-
         /// <summary>
         /// Local HydroTech PluginData folder URL
         /// </summary>
         private const string localPluginDataURL = "GameData/HydroTech/Plugins/PluginData";
-
         /// <summary>
         /// Local HydroTech default icon URL
         /// </summary>
-        private const string localIconURL = "GameData/HydroTech/Plugins/PluginData/default.png";
-
+        private const string defaultIconName = "default.png";
         /// <summary>
         /// Local HydroTech active icon URL
         /// </summary>
-        private const string localActiveIconURL = "GameData/HydroTech/Plugins/PluginData/active.png";
-
+        private const string activeIconName = "active.png";
         /// <summary>
         /// Local HydroTech inactive icon URL
         /// </summary>
-        private const string localInactiveIconURL = "GameData/HydroTech/Plugins/PluginData/inactive.png";
-
+        private const string inactiveIconName = "inactive.png";
+        /// <summary>
+        /// Local HydroTech reticle URL
+        /// </summary>
+        private const string reticleName = "reticle.png";
+        /// <summary>
+        /// The HydroTech prefix to debug messages
+        /// </summary>
+        private const string prefix = "[HydroTech]: ";
         /// <summary>
         /// PopupDialog anchor
         /// </summary>
@@ -68,6 +72,11 @@ namespace HydroTech.Utils
         public static Texture2D InactiveIcon { get; }
 
         /// <summary>
+        /// The on screen HydroTech reticle
+        /// </summary>
+        public static Texture2D Reticle { get; }
+
+        /// <summary>
         /// The ElectricCharge PartResourceDefinition ID
         /// </summary>
         public static int ElectricChargeID { get; }
@@ -92,13 +101,16 @@ namespace HydroTech.Utils
             PluginDataURL = Path.Combine(KSPUtil.ApplicationRootPath, localPluginDataURL);
 
             LauncherIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
-            LauncherIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localIconURL)));
+            LauncherIcon.LoadImage(File.ReadAllBytes(Path.Combine(PluginDataURL, defaultIconName)));
 
             ActiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
-            ActiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localActiveIconURL)));
+            ActiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(PluginDataURL, activeIconName)));
 
             InactiveIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
-            InactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, localInactiveIconURL)));
+            InactiveIcon.LoadImage(File.ReadAllBytes(Path.Combine(PluginDataURL, inactiveIconName)));
+
+            Reticle = new Texture2D(900, 900, TextureFormat.ARGB32, false);
+            Reticle.LoadImage(File.ReadAllBytes(Path.Combine(PluginDataURL, reticleName)));
 
             PartResourceDefinition electricity = PartResourceLibrary.Instance.resourceDefinitions.First(r => r.name == "ElectricCharge");
             ElectricChargeID = electricity.id;
@@ -143,6 +155,24 @@ namespace HydroTech.Utils
         {
             PopupDialog.SpawnPopupDialog(anchor, anchor, title, message, button, false, HighLogic.UISkin);
         }
+
+        /// <summary>
+        /// Logs a message with the correct header
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        public static void Log(string message) => Debug.Log(prefix + message);
+
+        /// <summary>
+        /// Logs a warning message with the correct header
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        public static void LogWarning(string message) => Debug.LogWarning(prefix + message);
+
+        /// <summary>
+        /// Logs an error message with the correct header
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        public static void LogError(string message) => Debug.LogError(prefix + message);
 
         /// <summary>
         /// Sets the camera's rotation to the vessel's
