@@ -27,7 +27,7 @@ namespace HydroTech.Autopilots
         public ModuleDockAssistTarget target;
         private bool targetOrientReady = true;
         private LineRenderer line;
-        public SubList<HydroJebCore> jebsTargetVessel;
+        public SubList<Vessel> jebsTargetVessel;
         public float angularAcc = 0.5f;
         public float acc = 0.5f;
         public float finalStageSpeed = 0.4f;
@@ -181,7 +181,7 @@ namespace HydroTech.Autopilots
         #region Constructor
         public APDockAssist()
         {
-            this.jebsTargetVessel = new SubList<HydroJebCore>(HydroFlightManager.Instance.TargetVessels, IsJebTargetVessel);
+            this.jebsTargetVessel = new SubList<Vessel>(HydroFlightManager.Instance.TargetVessels, IsJebTargetVessel);
         }
         #endregion
 
@@ -318,9 +318,9 @@ namespace HydroTech.Autopilots
             HTUtils.CamToVesselTrans(ctrlState, this.Cam);
         }
 
-        private bool IsJebTargetVessel(HydroJebCore jeb)
+        private bool IsJebTargetVessel(Vessel vessel)
         {
-            return !this.NullTarget && jeb.vessel == this.target.vessel;
+            return !this.NullTarget && vessel == this.target.vessel;
         }
 
         private void AddDriveTarget()

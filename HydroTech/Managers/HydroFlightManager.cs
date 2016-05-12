@@ -112,7 +112,7 @@ namespace HydroTech.Managers
 
             Instance = this;
             this.ActiveRCS = new RCSCalculator();
-            this.TargetVessels = new List<HydroJebCore>();
+            this.TargetVessels = new List<Vessel>();
             this.ActiveCams = new List<ModuleDockAssistCam>();
             this.NearbyTargets = new List<ModuleDockAssistTarget>();
 
